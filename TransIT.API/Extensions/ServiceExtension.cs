@@ -4,7 +4,7 @@ using TransIT.BLL.Services;
 using TransIT.BLL.Services.ImplementedServices;
 using TransIT.BLL.Services.Interfaces;
 using TransIT.DAL.Models.Entities;
-using TransIT.DAL.Models.Mappings;
+using TransIT.BLL.Mappings;
 using TransIT.DAL.Repositories;
 using TransIT.DAL.Repositories.ImplementedRepositories;
 using TransIT.DAL.Repositories.InterfacesRepositories;

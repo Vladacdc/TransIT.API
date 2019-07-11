@@ -1,7 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using TransIT.DAL.Models.DTOs;
+using TransIT.BLL.DTOs;
 
 namespace TransIT.BLL.Helpers.Abstractions
 {

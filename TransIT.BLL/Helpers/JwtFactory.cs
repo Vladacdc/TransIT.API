@@ -4,7 +4,7 @@ using System.Security.Claims;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using TransIT.BLL.Helpers.Abstractions;
-using TransIT.DAL.Models.DTOs;
+using TransIT.BLL.DTOs;
 
 namespace TransIT.BLL.Helpers
 {

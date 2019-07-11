@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TransIT.BLL.Services;
 using TransIT.BLL.Services.Interfaces;
-using TransIT.DAL.Models.DTOs;
+using TransIT.BLL.DTOs;
 using TransIT.DAL.Models.Entities;
 
 namespace TransIT.API.Controllers

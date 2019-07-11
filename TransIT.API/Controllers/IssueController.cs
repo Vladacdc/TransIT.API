@@ -10,7 +10,7 @@ using TransIT.API.Extensions;
 using TransIT.API.Hubs;
 using TransIT.BLL.Services;
 using TransIT.BLL.Services.Interfaces;
-using TransIT.DAL.Models.DTOs;
+using TransIT.BLL.DTOs;
 using TransIT.DAL.Models.Entities;
 using TransIT.DAL.Models.ViewModels;
 
