@@ -52,11 +52,11 @@ namespace TransIT.API.Controllers
         [HttpGet]
         public override async Task<IActionResult> Get([FromQuery] uint offset = 0, uint amount = 1000)
         {
-            switch (User.FindFirst(ROLE.ROLE_SCHEMA)?.Value)
+            switch (User.FindFirst(RoleConsts.RoleSchema)?.Value)
             {
-                case ROLE.ADMIN:
+                case RoleConsts.Admin:
                     return await base.Get(offset, amount);
-                case ROLE.ENGINEER:
+                case RoleConsts.Engineer:
                     var result = await _userService.GetAssignees(offset, amount);
                     return result != null
                         ? Json(_mapper.Map<IEnumerable<UserDTO>>(result))

@@ -104,7 +104,7 @@ namespace TransIT.BLL.Services.ImplementedServices
         public virtual async Task<IEnumerable<User>> GetAssignees(uint offset, uint amount) =>
             (await _repository.GetAllAsync())
             .AsQueryable()
-            .Where(x => x.Role.Name == ROLE.WORKER)
+            .Where(x => x.Role.Name == RoleConsts.Worker)
             .Skip((int)offset)
             .Take((int)amount);
     }

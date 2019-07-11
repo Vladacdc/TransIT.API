@@ -13,7 +13,7 @@ namespace TransIT.API.Hubs
         {
             await Groups.AddToGroupAsync(
                 Context.ConnectionId,
-                Context.User.FindFirst(ROLE.ROLE_SCHEMA)?.Value
+                Context.User.FindFirst(RoleConsts.RoleSchema)?.Value
                 );
             await base.OnConnectedAsync();
         }
@@ -22,7 +22,7 @@ namespace TransIT.API.Hubs
         {
             await Groups.RemoveFromGroupAsync(
                 Context.ConnectionId,
-                Context.User.FindFirst(ROLE.ROLE_SCHEMA)?.Value
+                Context.User.FindFirst(RoleConsts.RoleSchema)?.Value
                 );
             await base.OnDisconnectedAsync(exception);
         }

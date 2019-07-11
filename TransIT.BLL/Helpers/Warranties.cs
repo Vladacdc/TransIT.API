@@ -1,8 +1,9 @@
 ﻿namespace TransIT.BLL.Helpers
 {
-    public static class Warranties
+    // needs to investigate if this enum is realy needed
+    enum Warranties : int
     {
-        public const int NON_WARRANTY_CASE = 0;
-        public const int WARRANTY_CASE = 1;
+        NonWarrantyCase = 0,
+        WarrantyCase = 1
     }
 }
