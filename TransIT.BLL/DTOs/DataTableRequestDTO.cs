@@ -1,6 +1,6 @@
-﻿namespace TransIT.DAL.Models.ViewModels
+﻿namespace TransIT.BLL.DTOs
 {
-    public class DataTableRequestViewModel
+    public class DataTableRequestDTO
     {
         public const string DataTableAscending = "asc";
         public const string DataTableDescending = "desc";

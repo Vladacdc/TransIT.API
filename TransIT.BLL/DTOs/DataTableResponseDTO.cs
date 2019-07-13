@@ -1,6 +1,6 @@
-﻿namespace TransIT.DAL.Models.ViewModels
+﻿namespace TransIT.BLL.DTOs
 {
-    public class DataTableResponseViewModel
+    public class DataTableResponseDTO
     {
         public ulong Draw { get; set; }
         public ulong RecordsTotal { get; set; }
