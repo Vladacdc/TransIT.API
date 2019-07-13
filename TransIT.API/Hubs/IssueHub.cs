@@ -13,16 +13,16 @@ namespace TransIT.API.Hubs
         {
             await Groups.AddToGroupAsync(
                 Context.ConnectionId,
-                Context.User.FindFirst(RoleConsts.RoleSchema)?.Value
+                Context.User.FindFirst(Role.Schema)?.Value
                 );
             await base.OnConnectedAsync();
         }
-        
+
         public override async Task OnDisconnectedAsync(Exception exception)
         {
             await Groups.RemoveFromGroupAsync(
                 Context.ConnectionId,
-                Context.User.FindFirst(RoleConsts.RoleSchema)?.Value
+                Context.User.FindFirst(Role.Schema)?.Value
                 );
             await base.OnDisconnectedAsync(exception);
         }
