@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using TransIT.API.Extensions;
 using TransIT.BLL.Security.Hashers;
 using TransIT.BLL.Services.Interfaces;
 using TransIT.DAL.Models.Entities;
@@ -17,7 +16,6 @@ namespace TransIT.BLL.Services.ImplementedServices
     /// User model CRUD
     /// </summary>
     /// <see cref="IUserService"/>
-
     public class UserService : CrudService<User>, IUserService
     {
         /// <summary>
@@ -28,7 +26,8 @@ namespace TransIT.BLL.Services.ImplementedServices
         protected IRoleRepository _roleRepository;
 
         /// <summary>
-        /// Ctor
+        /// Initializes a new instance of the <see cref="UserService"/> class.
+        /// Ctor.
         /// </summary>
         /// <param name="unitOfWork">Unit of work pattern</param>
         /// <param name="logger">Log on error</param>
@@ -80,7 +79,6 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public virtual async Task<User> UpdatePasswordAsync(User user, string newPassword)
         {
-            
             try
             {
                 user.Password = _hasher.HashPassword(newPassword);
@@ -104,7 +102,7 @@ namespace TransIT.BLL.Services.ImplementedServices
         public virtual async Task<IEnumerable<User>> GetAssignees(uint offset, uint amount) =>
             (await _repository.GetAllAsync())
             .AsQueryable()
-            .Where(x => x.Role.Name == RoleConsts.Worker)
+            .Where(x => x.Role.Name == API.Extensions.Role.Worker)
             .Skip((int)offset)
             .Take((int)amount);
     }

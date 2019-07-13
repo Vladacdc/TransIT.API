@@ -78,7 +78,7 @@ namespace TransIT.API.Extensions
             services.AddScoped<ICrudService<Issue>, IssueService>();
             services.AddScoped<ICrudService<IssueLog>, IssueLogService>();
             services.AddScoped<ICrudService<Supplier>, SupplierService>();
-            services.AddScoped<ICrudService<Role>, RoleService>();
+            services.AddScoped<ICrudService<DAL.Models.Entities.Role>, RoleService>();
             services.AddScoped<ICrudService<State>, StateService>();
             services.AddScoped<ICrudService<Currency>, CurrencyService>();
             services.AddScoped<ICrudService<Country>, CountryService>();
@@ -100,7 +100,7 @@ namespace TransIT.API.Extensions
             services.AddScoped<IFilterService<Issue>, FilterService<Issue>>();
             services.AddScoped<IFilterService<IssueLog>, FilterService<IssueLog>>();
             services.AddScoped<IFilterService<Supplier>, FilterService<Supplier>>();
-            services.AddScoped<IFilterService<Role>, FilterService<Role>>();
+            services.AddScoped<IFilterService<DAL.Models.Entities.Role>, FilterService<DAL.Models.Entities.Role>>();
             services.AddScoped<IFilterService<State>, FilterService<State>>();
             services.AddScoped<IFilterService<Currency>, FilterService<Currency>>();
             services.AddScoped<IFilterService<Country>, FilterService<Country>>();
@@ -121,7 +121,7 @@ namespace TransIT.API.Extensions
             services.AddScoped<IQueryRepository<Malfunction>, MalfunctionRepository>();
             services.AddScoped<IQueryRepository<MalfunctionGroup>, MalfunctionGroupRepository>();
             services.AddScoped<IQueryRepository<MalfunctionSubgroup>, MalfunctionSubgroupRepository>();
-            services.AddScoped<IQueryRepository<Role>, RoleRepository>();
+            services.AddScoped<IQueryRepository<DAL.Models.Entities.Role>, RoleRepository>();
             services.AddScoped<IQueryRepository<State>, StateRepository>();
             services.AddScoped<IQueryRepository<Supplier>, SupplierRepository>();
             services.AddScoped<IQueryRepository<Token>, TokenRepository>();

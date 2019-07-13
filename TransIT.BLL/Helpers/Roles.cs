@@ -1,6 +1,6 @@
 namespace TransIT.API.Extensions
 {
-    public static class RoleConsts
+    public class Role
     {
         public const string Register = "REGISTER";
         public const string Engineer = "ENGINEER";
@@ -8,6 +8,6 @@ namespace TransIT.API.Extensions
         public const string Analyst = "ANALYST";
         public const string Worker = "WORKER";
 
-        public const string RoleSchema = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role";
+        public const string Schema = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role";
     }
 }
