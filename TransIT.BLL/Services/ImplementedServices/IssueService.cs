@@ -16,7 +16,7 @@ using TransIT.DAL.UnitOfWork;
 namespace TransIT.BLL.Services.ImplementedServices
 {
     /// <summary>
-    /// Issue CRUD service
+    /// Issue CRUD service.
     /// </summary>
     /// <see cref="IIssueService"/>
     public class IssueService : CrudService<Issue>, IIssueService
@@ -24,7 +24,8 @@ namespace TransIT.BLL.Services.ImplementedServices
         private IVehicleRepository _vehicleRepository;
 
         /// <summary>
-        /// Ctor
+        /// Initializes a new instance of the <see cref="IssueService"/> class.
+        /// Ctor.
         /// </summary>
         /// <param name="unitOfWork">Unit of work pattern</param>
         /// <param name="logger">Log on error</param>
@@ -50,7 +51,7 @@ namespace TransIT.BLL.Services.ImplementedServices
         {
             Vehicle vehicle = await _vehicleRepository.GetByIdAsync(issue.VehicleId);
             if (IsWarrantyCase(vehicle))
-                issue.Warranty = (int?)Warranties.WarrantyCase;
+                issue.Warranty = Warranties.WarrantyCase;
 
             return await base.CreateAsync(issue);
         }
@@ -99,6 +100,7 @@ namespace TransIT.BLL.Services.ImplementedServices
                     _logger.LogDebug(sqlExc, $"Number of sql exception: {sqlExc.Number.ToString()}");
                     throw new ConstraintException("There are constrained entities, delete them firstly.", sqlExc);
                 }
+
                 _logger.LogError(e, nameof(DeleteAsync), e.Entries);
             }
             catch (Exception e)

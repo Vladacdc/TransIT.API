@@ -1,9 +1,9 @@
 ﻿namespace TransIT.BLL.Helpers
 {
     // needs to investigate if this enum is realy needed
-    enum Warranties : int
+    public class Warranties
     {
-        NonWarrantyCase = 0,
-        WarrantyCase = 1
+        public const bool NonWarrantyCase = false;
+        public const bool WarrantyCase = true;
     }
 }

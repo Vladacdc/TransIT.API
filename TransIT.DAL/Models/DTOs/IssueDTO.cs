@@ -6,7 +6,7 @@ namespace TransIT.DAL.Models.DTOs
     {
         public int? Id { get; set; }
         public string Summary { get; set; }
-        public int? Warranty { get; set; }
+        public bool Warranty { get; set; }
         public DateTime? Deadline { get; set; }
         public StateDTO State { get; set; }
         public EmployeeDTO AssignedTo { get; set; }

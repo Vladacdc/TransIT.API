@@ -27,7 +27,7 @@ namespace TransIT.DAL.Models.Mappings
                 .ForMember(i => i.NewState, opt => opt.Ignore())
                 .ForMember(i => i.OldState, opt => opt.Ignore())
                 .ForMember(i => i.ActionType, opt => opt.Ignore());
-            
+
             CreateMap<IssueLog, IssueLogDTO>()
                 .ForMember(i => i.Documents, opt => opt.MapFrom(x => x.Document))
                 .PreserveReferences();
