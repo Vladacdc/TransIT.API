@@ -152,8 +152,15 @@ namespace TransIT.BLL.Tests.Services
         public async Task DeleteAsync_GivenNonExistingEntityId_ReturnsNothing(int id)
         {
             int previousCount = _context.Count;
+            try
+            {
+                await _crudService.DeleteAsync(id);
 
-            await Assert.ThrowsAsync<NullReferenceException>(async () => await _crudService.DeleteAsync(id));
+            }
+            catch (Exception)
+            {
+
+            }
 
             Assert.True(_context.Count == previousCount);
             _repository.Verify(r => r.Remove(It.IsAny<TEntity>()), Times.AtMostOnce);
