@@ -51,7 +51,7 @@ namespace TransIT.BLL.Services.ImplementedServices
         {
             Vehicle vehicle = await _vehicleRepository.GetByIdAsync(issue.VehicleId);
             if (IsWarrantyCase(vehicle))
-                issue.Warranty = Warranties.WarrantyCase;
+                issue.Warranty = true;
 
             return await base.CreateAsync(issue);
         }
