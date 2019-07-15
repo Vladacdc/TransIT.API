@@ -1,6 +1,6 @@
 namespace TransIT.API.Extensions
 {
-    public class Role
+    public class RoleNames
     {
         public const string Register = "REGISTER";
         public const string Engineer = "ENGINEER";

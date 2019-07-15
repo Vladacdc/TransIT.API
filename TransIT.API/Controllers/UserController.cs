@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TransIT.API.Extensions;
 using TransIT.BLL.Services;
 using TransIT.BLL.Services.Interfaces;
 using TransIT.DAL.Models.DTOs;
@@ -49,11 +50,11 @@ namespace TransIT.API.Controllers
         [HttpGet]
         public override async Task<IActionResult> Get([FromQuery] uint offset = 0, uint amount = 1000)
         {
-            switch (User.FindFirst(Extensions.Role.Schema)?.Value)
+            switch (User.FindFirst(RoleNames.Schema)?.Value)
             {
-                case Extensions.Role.Admin:
+                case RoleNames.Admin:
                     return await base.Get(offset, amount);
-                case Extensions.Role.Engineer:
+                case RoleNames.Engineer:
                     var result = await _userService.GetAssignees(offset, amount);
                     return result != null
                         ? Json(_mapper.Map<IEnumerable<UserDTO>>(result))

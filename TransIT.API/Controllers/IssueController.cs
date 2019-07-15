@@ -12,6 +12,7 @@ using TransIT.BLL.Services.Interfaces;
 using TransIT.DAL.Models.DTOs;
 using TransIT.DAL.Models.Entities;
 using TransIT.DAL.Models.ViewModels;
+using TransIT.API.Extensions;
 
 namespace TransIT.API.Controllers
 {
@@ -36,7 +37,7 @@ namespace TransIT.API.Controllers
         [HttpPost(DataTableTemplateUri)]
         public override async Task<IActionResult> Filter(DataTableRequestViewModel model)
         {
-            var isCustomer = User.FindFirst(Extensions.Role.Schema)?.Value == Extensions.Role.Register;
+            var isCustomer = User.FindFirst(RoleNames.Schema)?.Value == RoleNames.Register;
             var userId = GetUserId();
 
             return Json(
@@ -68,12 +69,12 @@ namespace TransIT.API.Controllers
         [HttpGet]
         public override async Task<IActionResult> Get([FromQuery] uint offset = 0, uint amount = 1000)
         {
-            switch (User.FindFirst(Extensions.Role.Schema)?.Value)
+            switch (User.FindFirst(RoleNames.Schema)?.Value)
             {
-                case Extensions.Role.Register:
+                case RoleNames.Register:
                     return Json(await GetForCustomer(offset, amount));
-                case Extensions.Role.Engineer:
-                case Extensions.Role.Analyst:
+                case RoleNames.Engineer:
+                case RoleNames.Analyst:
                     return Json(await GetIssues(offset, amount));
                 default:
                     return BadRequest();
@@ -84,7 +85,7 @@ namespace TransIT.API.Controllers
         public override async Task<IActionResult> Create([FromBody] IssueDTO obj)
         {
             IActionResult result = await base.Create(obj);
-            await _issueHub.Clients.Group(Extensions.Role.Engineer).SendAsync("ReceiveIssues");
+            await _issueHub.Clients.Group(RoleNames.Engineer).SendAsync("ReceiveIssues");
             return result;
         }
 
