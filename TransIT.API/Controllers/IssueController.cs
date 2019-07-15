@@ -12,7 +12,6 @@ using TransIT.BLL.Services;
 using TransIT.BLL.Services.Interfaces;
 using TransIT.BLL.DTOs;
 using TransIT.DAL.Models.Entities;
-using TransIT.DAL.Models.ViewModels;
 
 namespace TransIT.API.Controllers
 {
@@ -35,13 +34,13 @@ namespace TransIT.API.Controllers
 
         [DataTableFilterExceptionFilter]
         [HttpPost(DataTableTemplateUri)]
-        public override async Task<IActionResult> Filter(DataTableRequestViewModel model)
+        public override async Task<IActionResult> Filter(DataTableRequestDTO model)
         {
             var isCustomer = User.FindFirst(ROLE.ROLE_SCHEMA)?.Value == ROLE.REGISTER;
             var userId = GetUserId();
 
             return Json(
-                ComposeDataTableResponseViewModel(
+                ComposeDataTableResponseDTO(
                     await GetQueryiedForSpecificUser(model, userId, isCustomer),
                     model,
                     GetTotalRecordsForSpecificUser(userId, isCustomer)
@@ -50,7 +49,7 @@ namespace TransIT.API.Controllers
         }
         
         private async Task<IEnumerable<IssueDTO>> GetQueryiedForSpecificUser(
-            DataTableRequestViewModel model,
+            DataTableRequestDTO model,
             int userId,
             bool isCustomer) =>
             _mapper.Map<IEnumerable<IssueDTO>>(
