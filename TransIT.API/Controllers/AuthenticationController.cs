@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TransIT.BLL.Services.Interfaces;
-using TransIT.DAL.Models.DTOs;
+using TransIT.BLL.DTOs;
 using TransIT.DAL.Models.ViewModels;
 
 namespace TransIT.API.Controllers

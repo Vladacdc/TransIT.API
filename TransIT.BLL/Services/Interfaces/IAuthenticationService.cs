@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using TransIT.DAL.Models.DTOs;
+using TransIT.BLL.DTOs;
 using TransIT.DAL.Models.ViewModels;
 
 namespace TransIT.BLL.Services.Interfaces
