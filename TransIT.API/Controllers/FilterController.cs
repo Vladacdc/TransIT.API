@@ -33,7 +33,7 @@ namespace TransIT.API.Controllers
         [HttpPost(DataTableTemplateUri)]
         public virtual async Task<IActionResult> Filter(DataTableRequestDTO model) =>
             Json(
-                ComposeDataTableResponseViewModel(
+                ComposeDataTableResponseDTO(
                     await GetMappedEntitiesByModel(model),
                     model,
                     _filterService.TotalRecordsAmount()
@@ -45,12 +45,12 @@ namespace TransIT.API.Controllers
                 await _filterService.GetQueriedAsync(model)
                 );
 
-        protected virtual ComposeDataTableResponseDTO ComposeDataTableResponseViewModel(
+        protected virtual DataTableResponseDTO ComposeDataTableResponseDTO(
             IEnumerable<TEntityDTO> res,
             DataTableRequestDTO model,
             ulong totalAmount,   
             string errorMessage = "") =>
-            new ComposeDataTableResponseDTO
+            new DataTableResponseDTO
             {
                 Draw = (ulong) model.Draw,
                 Data = res.ToArray(),

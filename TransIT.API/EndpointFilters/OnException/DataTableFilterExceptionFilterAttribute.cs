@@ -10,7 +10,7 @@ namespace TransIT.API.EndpointFilters.OnException
     {
         public Task OnExceptionAsync(ExceptionContext context)
         {
-            context.Result = new BadRequestObjectResult(new ComposeDataTableResponseDTO { Error = context.Exception.Message });
+            context.Result = new BadRequestObjectResult(new DataTableResponseDTO { Error = context.Exception.Message });
             context.ExceptionHandled = true;
             return Task.CompletedTask;
         }

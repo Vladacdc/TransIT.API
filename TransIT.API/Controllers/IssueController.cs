@@ -40,7 +40,7 @@ namespace TransIT.API.Controllers
             var userId = GetUserId();
 
             return Json(
-                ComposeDataTableResponseViewModel(
+                ComposeDataTableResponseDTO(
                     await GetQueryiedForSpecificUser(model, userId, isCustomer),
                     model,
                     GetTotalRecordsForSpecificUser(userId, isCustomer)

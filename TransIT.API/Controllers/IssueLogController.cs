@@ -43,7 +43,7 @@ namespace TransIT.API.Controllers
             int issueId,
             DataTableRequestDTO model)
         {
-            var dtResponse = ComposeDataTableResponseViewModel(
+            var dtResponse = ComposeDataTableResponseDTO(
                 await GetMappedEntitiesByIssueId(issueId, model),
                 model,
                 _filterService.TotalRecordsAmount()
