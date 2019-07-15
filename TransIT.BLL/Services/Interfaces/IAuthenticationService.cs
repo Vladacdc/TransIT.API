@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using TransIT.BLL.DTOs;
-using TransIT.DAL.Models.ViewModels;
 
 namespace TransIT.BLL.Services.Interfaces
 {
@@ -14,7 +13,7 @@ namespace TransIT.BLL.Services.Interfaces
         /// </summary>
         /// <param name="credentials">User login and password</param>
         /// <returns>Access and refresh tokens</returns>
-        Task<TokenDTO> SignInAsync(LoginViewModel credentials);
+        Task<TokenDTO> SignInAsync(LoginDTO credentials);
         /// <summary>
         /// Renews a token
         /// </summary>

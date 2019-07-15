@@ -1,7 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Security.AccessControl;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -12,7 +9,6 @@ using TransIT.BLL.Services;
 using TransIT.BLL.Services.Interfaces;
 using TransIT.BLL.DTOs;
 using TransIT.DAL.Models.Entities;
-using TransIT.DAL.Models.ViewModels;
 
 namespace TransIT.API.Controllers
 {
@@ -45,7 +41,7 @@ namespace TransIT.API.Controllers
         [HttpPost(DataTableTemplateIssueLogByIssueUrl)]
         public virtual async Task<IActionResult> Filter(
             int issueId,
-            DataTableRequestViewModel model)
+            DataTableRequestDTO model)
         {
             var dtResponse = ComposeDataTableResponseViewModel(
                 await GetMappedEntitiesByIssueId(issueId, model),
@@ -56,7 +52,7 @@ namespace TransIT.API.Controllers
             return Json(dtResponse);
         }
 
-        private async Task<IEnumerable<IssueLogDTO>> GetMappedEntitiesByIssueId(int issueId, DataTableRequestViewModel model) =>
+        private async Task<IEnumerable<IssueLogDTO>> GetMappedEntitiesByIssueId(int issueId, DataTableRequestDTO model) =>
             _mapper.Map<IEnumerable<IssueLogDTO>>(
                 await _filterService.GetQueriedWithWhereAsync(
                     model, 

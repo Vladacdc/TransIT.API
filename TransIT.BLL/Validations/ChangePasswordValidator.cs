@@ -1,9 +1,9 @@
 ﻿using FluentValidation;
-using TransIT.DAL.Models.ViewModels;
+using TransIT.BLL.DTOs;
 
 namespace TransIT.BLL.Validations
 {
-    public class ChangePasswordValidator : AbstractValidator<ChangePasswordViewModel>
+    public class ChangePasswordValidator : AbstractValidator<ChangePasswordDTO>
     {
         public ChangePasswordValidator()
         {
