@@ -35,7 +35,7 @@ namespace TransIT.DAL.Models
         public virtual DbSet<VehicleType> VehicleType { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
-
+    
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("ProductVersion", "2.2.3-servicing-35854");

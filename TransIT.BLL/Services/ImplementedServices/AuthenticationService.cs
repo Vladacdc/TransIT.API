@@ -7,7 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using TransIT.BLL.Helpers.Abstractions;
 using TransIT.BLL.Security.Hashers;
 using TransIT.BLL.Services.Interfaces;
-using TransIT.DAL.Models.DTOs;
+using TransIT.BLL.DTOs;
 using TransIT.DAL.Models.Entities;
 using TransIT.DAL.Models.ViewModels;
 using TransIT.DAL.UnitOfWork;

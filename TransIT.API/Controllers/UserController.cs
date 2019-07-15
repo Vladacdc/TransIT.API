@@ -1,15 +1,13 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using TransIT.API.Extensions;
 using TransIT.BLL.Services;
 using TransIT.BLL.Services.Interfaces;
-using TransIT.DAL.Models.DTOs;
+using TransIT.BLL.DTOs;
 using TransIT.DAL.Models.Entities;
 using TransIT.DAL.Models.ViewModels;
 
