@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TransIT.BLL.Services;
-using TransIT.DAL.Models.Entities;
 using TransIT.DAL.Models.Entities.Abstractions;
 using TransIT.DAL.Repositories;
 using TransIT.DAL.UnitOfWork;
