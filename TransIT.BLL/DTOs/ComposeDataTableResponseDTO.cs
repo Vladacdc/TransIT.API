@@ -1,6 +1,6 @@
 ﻿namespace TransIT.BLL.DTOs
 {
-    public class DataTableResponseDTO
+    public class ComposeDataTableResponseDTO
     {
         public ulong Draw { get; set; }
         public ulong RecordsTotal { get; set; }

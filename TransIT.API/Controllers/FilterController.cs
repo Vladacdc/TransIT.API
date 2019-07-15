@@ -39,18 +39,18 @@ namespace TransIT.API.Controllers
                     _filterService.TotalRecordsAmount()
                     )
                 );
-
+        
         protected async Task<IEnumerable<TEntityDTO>> GetMappedEntitiesByModel(DataTableRequestDTO model) =>
             _mapper.Map<IEnumerable<TEntityDTO>>(
                 await _filterService.GetQueriedAsync(model)
                 );
 
-        protected virtual DataTableResponseDTO ComposeDataTableResponseViewModel(
+        protected virtual ComposeDataTableResponseDTO ComposeDataTableResponseViewModel(
             IEnumerable<TEntityDTO> res,
             DataTableRequestDTO model,
             ulong totalAmount,   
             string errorMessage = "") =>
-            new DataTableResponseDTO
+            new ComposeDataTableResponseDTO
             {
                 Draw = (ulong) model.Draw,
                 Data = res.ToArray(),
