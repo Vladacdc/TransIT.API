@@ -4,7 +4,7 @@ using TransIT.DAL.Repositories.InterfacesRepositories;
 
 namespace TransIT.BLL.Tests.Services.ImplementedServices
 {
-    class CountryServiceTests : CrudServiceTest<Country>
+    public class CountryServiceTests : CrudServiceTest<Country>
     {
         protected override void InitializeService()
         {

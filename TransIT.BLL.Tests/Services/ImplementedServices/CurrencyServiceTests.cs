@@ -4,7 +4,7 @@ using TransIT.DAL.Repositories.InterfacesRepositories;
 
 namespace TransIT.BLL.Tests.Services.ImplementedServices
 {
-    class CurrencyServiceTests : CrudServiceTest<Currency>
+    public class CurrencyServiceTests : CrudServiceTest<Currency>
     {
         protected override void InitializeService()
         {

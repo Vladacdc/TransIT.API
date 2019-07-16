@@ -4,7 +4,7 @@ using TransIT.DAL.Repositories.InterfacesRepositories;
 
 namespace TransIT.BLL.Tests.Services.ImplementedServices
 {
-    class SupplierServiceTests : CrudServiceTest<Supplier>
+    public class SupplierServiceTests : CrudServiceTest<Supplier>
     {
         protected override void InitializeService()
         {
