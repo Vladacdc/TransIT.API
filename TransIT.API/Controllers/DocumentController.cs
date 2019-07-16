@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 using TransIT.BLL.Services;
 using TransIT.BLL.Services.Interfaces;
-using TransIT.DAL.Models.DTOs;
+using TransIT.BLL.DTOs;
 using TransIT.DAL.Models.Entities;
 using TransIT.BLL.Helpers.FileStorageLogger.FileStorageInterface;
 using TransIT.BLL.Helpers.FileStorageLogger;

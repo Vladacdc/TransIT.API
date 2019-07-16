@@ -7,9 +7,8 @@ using Microsoft.IdentityModel.Tokens;
 using TransIT.BLL.Helpers.Abstractions;
 using TransIT.BLL.Security.Hashers;
 using TransIT.BLL.Services.Interfaces;
-using TransIT.DAL.Models.DTOs;
+using TransIT.BLL.DTOs;
 using TransIT.DAL.Models.Entities;
-using TransIT.DAL.Models.ViewModels;
 using TransIT.DAL.UnitOfWork;
 
 namespace TransIT.BLL.Services.ImplementedServices
@@ -36,7 +35,7 @@ namespace TransIT.BLL.Services.ImplementedServices
             _jwtFactory = jwtFactory;
         }
         
-        public async Task<TokenDTO> SignInAsync(LoginViewModel credentials)
+        public async Task<TokenDTO> SignInAsync(LoginDTO credentials)
         {
             try
             {

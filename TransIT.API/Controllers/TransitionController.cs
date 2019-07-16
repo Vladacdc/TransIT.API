@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using TransIT.DAL.Models.Entities;
-using TransIT.DAL.Models.DTOs;
-using System.Data;
+using TransIT.BLL.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using TransIT.BLL.Services.Interfaces;
 using AutoMapper;

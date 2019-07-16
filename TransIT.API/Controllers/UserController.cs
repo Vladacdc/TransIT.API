@@ -7,9 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using TransIT.API.Extensions;
 using TransIT.BLL.Services;
 using TransIT.BLL.Services.Interfaces;
-using TransIT.DAL.Models.DTOs;
+using TransIT.BLL.DTOs;
 using TransIT.DAL.Models.Entities;
-using TransIT.DAL.Models.ViewModels;
 
 namespace TransIT.API.Controllers
 {
@@ -37,7 +36,7 @@ namespace TransIT.API.Controllers
 
         [HttpPut("{id}/password")]
         [Authorize(Roles = "ADMIN")]
-        public async Task<IActionResult> ChangePassword(int id, [FromBody] ChangePasswordViewModel changePassword)
+        public async Task<IActionResult> ChangePassword(int id, [FromBody] ChangePasswordDTO changePassword)
         {
             var user = await _userService.GetAsync(id);
             var adminId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);

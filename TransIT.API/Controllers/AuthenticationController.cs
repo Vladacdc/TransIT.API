@@ -3,8 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TransIT.BLL.Services.Interfaces;
-using TransIT.DAL.Models.DTOs;
-using TransIT.DAL.Models.ViewModels;
+using TransIT.BLL.DTOs;
 
 namespace TransIT.API.Controllers
 {
@@ -21,7 +20,7 @@ namespace TransIT.API.Controllers
             _authenticationService = authenticationService;
         
         [HttpPost]
-        public async Task<IActionResult> SignIn([FromBody] LoginViewModel credentials)
+        public async Task<IActionResult> SignIn([FromBody] LoginDTO credentials)
         {
             var result = await _authenticationService.SignInAsync(credentials);
             return result != null 

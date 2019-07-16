@@ -5,9 +5,9 @@ using AutoMapper;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TransIT.API.EndpointFilters.OnException;
+using TransIT.BLL.DTOs;
 using TransIT.BLL.Services;
 using TransIT.DAL.Models.Entities.Abstractions;
-using TransIT.DAL.Models.ViewModels;
 
 namespace TransIT.API.Controllers
 {
@@ -31,26 +31,26 @@ namespace TransIT.API.Controllers
         
         [DataTableFilterExceptionFilter]
         [HttpPost(DataTableTemplateUri)]
-        public virtual async Task<IActionResult> Filter(DataTableRequestViewModel model) =>
+        public virtual async Task<IActionResult> Filter(DataTableRequestDTO model) =>
             Json(
-                ComposeDataTableResponseViewModel(
+                ComposeDataTableResponseDTO(
                     await GetMappedEntitiesByModel(model),
                     model,
                     _filterService.TotalRecordsAmount()
                     )
                 );
-
-        protected async Task<IEnumerable<TEntityDTO>> GetMappedEntitiesByModel(DataTableRequestViewModel model) =>
+        
+        protected async Task<IEnumerable<TEntityDTO>> GetMappedEntitiesByModel(DataTableRequestDTO model) =>
             _mapper.Map<IEnumerable<TEntityDTO>>(
                 await _filterService.GetQueriedAsync(model)
                 );
 
-        protected virtual DataTableResponseViewModel ComposeDataTableResponseViewModel(
+        protected virtual DataTableResponseDTO ComposeDataTableResponseDTO(
             IEnumerable<TEntityDTO> res,
-            DataTableRequestViewModel model,
+            DataTableRequestDTO model,
             ulong totalAmount,   
             string errorMessage = "") =>
-            new DataTableResponseViewModel
+            new DataTableResponseDTO
             {
                 Draw = (ulong) model.Draw,
                 Data = res.ToArray(),

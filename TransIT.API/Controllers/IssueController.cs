@@ -9,10 +9,10 @@ using Microsoft.AspNetCore.SignalR;
 using TransIT.API.Hubs;
 using TransIT.BLL.Services;
 using TransIT.BLL.Services.Interfaces;
-using TransIT.DAL.Models.DTOs;
+using TransIT.BLL.DTOs;
 using TransIT.DAL.Models.Entities;
-using TransIT.DAL.Models.ViewModels;
 using TransIT.API.Extensions;
+
 
 namespace TransIT.API.Controllers
 {
@@ -35,13 +35,13 @@ namespace TransIT.API.Controllers
 
         [DataTableFilterExceptionFilter]
         [HttpPost(DataTableTemplateUri)]
-        public override async Task<IActionResult> Filter(DataTableRequestViewModel model)
+        public override async Task<IActionResult> Filter(DataTableRequestDTO model)
         {
             var isCustomer = User.FindFirst(RoleNames.Schema)?.Value == RoleNames.Register;
             var userId = GetUserId();
 
             return Json(
-                ComposeDataTableResponseViewModel(
+                ComposeDataTableResponseDTO(
                     await GetQueryiedForSpecificUser(model, userId, isCustomer),
                     model,
                     GetTotalRecordsForSpecificUser(userId, isCustomer)
@@ -50,7 +50,7 @@ namespace TransIT.API.Controllers
         }
 
         private async Task<IEnumerable<IssueDTO>> GetQueryiedForSpecificUser(
-            DataTableRequestViewModel model,
+            DataTableRequestDTO model,
             int userId,
             bool isCustomer) =>
             _mapper.Map<IEnumerable<IssueDTO>>(
