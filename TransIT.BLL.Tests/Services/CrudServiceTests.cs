@@ -75,25 +75,15 @@ namespace TransIT.BLL.Tests.Services
         }
 
         [Fact]
-        public async Task CreateAsync_GivenWrongEntity_ReturnsNull()
+        public async Task CreateAsync_GivenWrongEntity_ThrowsException()
         {
             var entity = new TEntity { Id = 1 };
             var exception = new DbUpdateException("", null as Exception);
             _repository.Setup(r => r.AddAsync(entity)).Throws(exception);
-            object result = null;
-            try
-            {
-                result = await _crudService.CreateAsync(entity);
-            }
-            catch (Exception)
-            {
-            }
-            finally
-            {
-                Assert.Null(result);
-                _repository.Verify(r => r.AddAsync(entity), Times.Once);
-                VerifyLogger();
-            }
+            
+            await Assert.ThrowsAsync<DbUpdateException>(async()=> await _crudService.CreateAsync(entity));            
+            _repository.Verify(r => r.AddAsync(entity), Times.Once);
+            VerifyLogger();
         }
 
         [Fact]
@@ -152,15 +142,8 @@ namespace TransIT.BLL.Tests.Services
         public async Task DeleteAsync_GivenNonExistingEntityId_ReturnsNothing(int id)
         {
             int previousCount = _context.Count;
-            try
-            {
-                await _crudService.DeleteAsync(id);
 
-            }
-            catch (Exception)
-            {
-
-            }
+            await Assert.ThrowsAsync<NullReferenceException>(async () => await _crudService.DeleteAsync(id));   
 
             Assert.True(_context.Count == previousCount);
             _repository.Verify(r => r.Remove(It.IsAny<TEntity>()), Times.AtMostOnce);
