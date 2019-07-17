@@ -1,11 +1,11 @@
-﻿using TransIT.DAL.Models.Entities;
+﻿using TransIT.BLL.DTOs;
 
 namespace TransIT.BLL.Services.Interfaces
 {
     /// <summary>
     /// Country model CRUD
     /// </summary>
-    public interface ICountryService : ICrudService<Country>
+    public interface ICountryService : ICrudService<CountryDTO>
     {
     }
 }
