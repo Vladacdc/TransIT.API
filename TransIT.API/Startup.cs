@@ -11,6 +11,8 @@ using TransIT.API.EndpointFilters.OnException;
 using TransIT.BLL.Security.Hashers;
 using TransIT.DAL.Models;
 using TransIT.API.Hubs;
+using AutoMapper;
+using TransIT.BLL.Mappings;
 
 namespace TransIT.API
 {
@@ -50,6 +52,35 @@ namespace TransIT.API
                 .AddJsonOptions(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore)
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>());
+
+            var mappingConfig = new MapperConfiguration(options =>
+            {
+                options.AddProfile(new ActionTypeProfile());
+                options.AddProfile(new BillProfile());
+                options.AddProfile(new CountryProfile());
+                options.AddProfile(new CurrencyProfile());
+                options.AddProfile(new DocumentProfile());
+                options.AddProfile(new EmployeeProfile());
+                options.AddProfile(new IssueLogProfile());
+                options.AddProfile(new IssueProfile());
+                options.AddProfile(new LocationProfile());
+                options.AddProfile(new MalfunctionGroupProfile());
+                options.AddProfile(new MalfunctionProfile());
+                options.AddProfile(new MalfunctionSubgroupProfile());
+                options.AddProfile(new PostProfile());
+                options.AddProfile(new RoleProfile());
+                options.AddProfile(new StateProfile());
+                options.AddProfile(new SupplierProfile());
+                options.AddProfile(new TokenProfile());
+                options.AddProfile(new TransitionProfile());
+                options.AddProfile(new UserProfile());
+                options.AddProfile(new VehicleProfile());
+                options.AddProfile(new VehicleTypeProfile());
+            });
+
+            mappingConfig.AssertConfigurationIsValid();
+            IMapper mapper = mappingConfig.CreateMapper();
+            services.AddSingleton(mapper);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

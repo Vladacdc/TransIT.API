@@ -29,14 +29,14 @@ namespace TransIT.BLL.Services
         /// </summary>
         /// <param name="value">New entity</param>
         /// <returns>Created entity</returns>
-        Task<TEntityDTO> CreateAsync(TEntityDTO value);
+        Task<TEntityDTO> CreateAsync(TEntityDTO dto);
 
         /// <summary>
         /// Updates entity
         /// </summary>
         /// <param name="value">Entity model to update</param>
         /// <returns>Updated entity</returns>
-        Task<TEntityDTO> UpdateAsync(TEntityDTO value);
+        Task<TEntityDTO> UpdateAsync(TEntityDTO dto);
 
         /// <summary>
         /// Removes entity with this id
