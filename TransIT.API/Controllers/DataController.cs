@@ -59,7 +59,7 @@ namespace TransIT.API.Controllers
         public virtual async Task<IActionResult> Create([FromBody] TEntityDTO obj)
         {
             var entity = _mapper.Map<TEntity>(obj);
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
             entity.ModifiedById = userId;
             entity.CreatedById = userId;
@@ -75,7 +75,7 @@ namespace TransIT.API.Controllers
         public virtual async Task<IActionResult> Update(int id, [FromBody] TEntityDTO obj)
         {
             var entity = _mapper.Map<TEntity>(obj);
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
             //entity.Id = id; 
             entity.ModifiedById = userId;
