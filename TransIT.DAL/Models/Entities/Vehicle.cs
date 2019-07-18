@@ -4,7 +4,7 @@ using TransIT.DAL.Models.Entities.Abstractions;
 
 namespace TransIT.DAL.Models.Entities
 {
-    public partial class Vehicle : IEntity
+    public partial class Vehicle : IAuditableEntity
     {
         public Vehicle()
         {
@@ -20,8 +20,8 @@ namespace TransIT.DAL.Models.Entities
         public string Model { get; set; }
         public DateTime? CreateDate { get; set; }
         public DateTime? ModDate { get; set; }
-        public int? CreateId { get; set; }
-        public int? ModId { get; set; }
+        public int? CreatedById { get; set; }
+        public int? ModifiedById { get; set; }
         public DateTime? WarrantyEndDate { get; set; }
         public DateTime? CommissioningDate { get; set; }
         public int? LocationId { get; set; }

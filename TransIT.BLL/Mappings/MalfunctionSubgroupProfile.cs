@@ -9,8 +9,8 @@ namespace TransIT.BLL.Mappings
         public MalfunctionSubgroupProfile()
         {
             CreateMap<MalfunctionSubgroupDTO, MalfunctionSubgroup>()
-                .ForMember(m => m.ModId, opt => opt.Ignore())
-                .ForMember(m => m.CreateId, opt => opt.Ignore())
+                .ForMember(m => m.ModifiedById, opt => opt.Ignore())
+                .ForMember(m => m.CreatedById, opt => opt.Ignore())
                 .ForMember(m => m.Mod, opt => opt.Ignore())
                 .ForMember(m => m.Create, opt => opt.Ignore())
                 .ForMember(m => m.ModDate, opt => opt.Ignore())

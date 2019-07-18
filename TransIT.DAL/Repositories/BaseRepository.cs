@@ -9,7 +9,7 @@ using TransIT.DAL.Models.Entities.Abstractions;
 namespace TransIT.DAL.Repositories
 {
     public abstract class BaseRepository<TEntity> : IBaseRepository<TEntity>, IQueryRepository<TEntity>
-        where TEntity : class, IEntity
+        where TEntity : class, IAuditableEntity
     {
         private readonly DbContext _context;
         protected DbSet<TEntity> _entities;
@@ -21,7 +21,8 @@ namespace TransIT.DAL.Repositories
 
         public virtual Task<TEntity> GetByIdAsync(int id)
         {
-            return ComplexEntities.SingleOrDefaultAsync(t => t.Id == id);
+            throw new NotImplementedException();
+            //return ComplexEntities.SingleOrDefaultAsync(t => t.Id == id);
         }
 
         public virtual Task<TEntity> FindAsync(Expression<Func<TEntity, bool>> predicate)

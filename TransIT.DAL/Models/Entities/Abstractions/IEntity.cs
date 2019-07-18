@@ -4,10 +4,9 @@ using System.Text;
 
 namespace TransIT.DAL.Models.Entities.Abstractions
 {
-    public interface IEntity
+    public interface IAuditableEntity
     {
-        int Id { get; set; }
-        int? CreateId { get; set; }
-        int? ModId { get; set; }
+        string CreatedById { get; set; }
+        string ModifiedById { get; set; }
     }
 }

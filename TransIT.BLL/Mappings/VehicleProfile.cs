@@ -9,8 +9,8 @@ namespace TransIT.BLL.Mappings
         public VehicleProfile()
         {
             CreateMap<VehicleDTO, Vehicle>()
-                .ForMember(v => v.ModId, opt => opt.Ignore())
-                .ForMember(v => v.CreateId, opt => opt.Ignore())
+                .ForMember(v => v.ModifiedById, opt => opt.Ignore())
+                .ForMember(v => v.CreatedById, opt => opt.Ignore())
                 .ForMember(v => v.Mod, opt => opt.Ignore())
                 .ForMember(v => v.Create, opt => opt.Ignore())
                 .ForMember(v => v.Issue, opt => opt.Ignore())

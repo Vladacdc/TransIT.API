@@ -15,7 +15,7 @@ namespace TransIT.API.Controllers
     [Produces("application/json")]
     [Route("api/v1/[controller]")]
     public abstract class DataController<TEntity, TEntityDTO> : FilterController<TEntity, TEntityDTO>
-        where TEntity : class, IEntity, new()
+        where TEntity : class, IAuditableEntity, new()
         where TEntityDTO : class
     {
         private readonly ICrudService<TEntity> _dataService;
@@ -61,8 +61,8 @@ namespace TransIT.API.Controllers
             var entity = _mapper.Map<TEntity>(obj);
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-            entity.ModId = userId;
-            entity.CreateId = userId;
+            entity.ModifiedById = userId;
+            entity.CreatedById = userId;
 
             var createdEntity = await _dataService.CreateAsync(entity);
             return createdEntity != null
@@ -77,8 +77,8 @@ namespace TransIT.API.Controllers
             var entity = _mapper.Map<TEntity>(obj);
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-            entity.Id = id;
-            entity.ModId = userId;
+            //entity.Id = id; 
+            entity.ModifiedById = userId;
 
             var result = await _dataService.UpdateAsync(entity);
             return result != null

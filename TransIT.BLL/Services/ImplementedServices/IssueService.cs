@@ -42,7 +42,7 @@ namespace TransIT.BLL.Services.ImplementedServices
         /// <see cref="IIssueService"/>
         public async Task<IEnumerable<Issue>> GetRegisteredIssuesAsync(uint offset, uint amount, int userId)
         {
-            var issues = await _repository.GetAllAsync(i => i.CreateId == userId);
+            var issues = await _repository.GetAllAsync(i => i.CreatedById == userId);
             return issues.AsQueryable().Skip((int)offset).Take((int)amount);
         }
 
@@ -85,7 +85,7 @@ namespace TransIT.BLL.Services.ImplementedServices
             try
             {
                 var issueToDelete = await GetAsync(issueId);
-                if (issueToDelete?.CreateId != userId)
+                if (issueToDelete?.CreatedById != userId)
                     throw new UnauthorizedAccessException("Current user doesn't have access to delete this issue");
 
                 _repository.Remove(issueToDelete);

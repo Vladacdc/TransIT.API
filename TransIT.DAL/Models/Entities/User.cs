@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using TransIT.DAL.Models.Entities.Abstractions;
 
 namespace TransIT.DAL.Models.Entities
 {
-    public partial class User : IEntity
+    public partial class User : IdentityUser, IAuditableEntity
     {
         public User()
         {
@@ -36,12 +37,8 @@ namespace TransIT.DAL.Models.Entities
             MalfunctionSubgroupMod = new HashSet<MalfunctionSubgroup>();
             PostCreate = new HashSet<Post>();
             PostMod = new HashSet<Post>();
-            RoleCreate = new HashSet<Role>();
-            RoleMod = new HashSet<Role>();
             SupplierCreate = new HashSet<Supplier>();
             SupplierMod = new HashSet<Supplier>();
-            TokenCreate = new HashSet<Token>();
-            TokenMod = new HashSet<Token>();
             TransitionCreate = new HashSet<Transition>();
             TransitionMod = new HashSet<Transition>();
             VehicleCreate = new HashSet<Vehicle>();
@@ -49,25 +46,17 @@ namespace TransIT.DAL.Models.Entities
             VehicleTypeCreate = new HashSet<VehicleType>();
             VehicleTypeMod = new HashSet<VehicleType>();
         }
-
-        public int Id { get; set; }
+        
         public string FirstName { get; set; }
         public string MiddleName { get; set; }
-        public string LastName { get; set; }
-        public string Email { get; set; }
-        public string PhoneNumber { get; set; }
-        public string Login { get; set; }
-        public string Password { get; set; }
-        public int RoleId { get; set; }
+        public string LastName { get; set; } 
         public bool? IsActive { get; set; }
         public DateTime? CreateDate { get; set; }
         public DateTime? ModDate { get; set; }
-        public int? CreateId { get; set; }
-        public int? ModId { get; set; }
-
-        public virtual User Create { get; set; }
-        public virtual User Mod { get; set; }
-        public virtual Role Role { get; set; }
+        public int? CreatedById { get; set; }
+        public int? ModifiedById { get; set; }
+        public virtual User CreatedBy { get; set; }
+        public virtual User ModifiedBy { get; set; }
         public virtual ICollection<ActionType> ActionTypeCreate { get; set; }
         public virtual ICollection<ActionType> ActionTypeMod { get; set; }
         public virtual ICollection<Bill> BillCreate { get; set; }
@@ -96,12 +85,10 @@ namespace TransIT.DAL.Models.Entities
         public virtual ICollection<MalfunctionSubgroup> MalfunctionSubgroupMod { get; set; }
         public virtual ICollection<Post> PostCreate { get; set; }
         public virtual ICollection<Post> PostMod { get; set; }
-        public virtual ICollection<Role> RoleCreate { get; set; }
-        public virtual ICollection<Role> RoleMod { get; set; }
+        public virtual ICollection<Role> RoleCreatedByNavigation { get; set; }
+        public virtual ICollection<Role> RoleModifiedByNavigation { get; set; }
         public virtual ICollection<Supplier> SupplierCreate { get; set; }
         public virtual ICollection<Supplier> SupplierMod { get; set; }
-        public virtual ICollection<Token> TokenCreate { get; set; }
-        public virtual ICollection<Token> TokenMod { get; set; }
         public virtual ICollection<Transition> TransitionCreate { get; set; }
         public virtual ICollection<Transition> TransitionMod { get; set; }
         public virtual ICollection<Vehicle> VehicleCreate { get; set; }

@@ -17,7 +17,7 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
         public override Task<IQueryable<User>> SearchExpressionAsync(IEnumerable<string> strs) =>
             Task.FromResult(
                 GetQueryable().Where(entity =>
-                    strs.Any(str => entity.Login.ToUpperInvariant().Contains(str)
+                    strs.Any(str => entity.UserName.ToUpperInvariant().Contains(str)
                     || entity.Email.ToUpperInvariant().Contains(str)
                     || entity.PhoneNumber.ToUpperInvariant().Contains(str)
                     || entity.LastName.ToUpperInvariant().Contains(str)
@@ -25,8 +25,8 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
                 );
 
         protected override IQueryable<User> ComplexEntities => Entities.
-            Include(u => u.Role).
-            Include(a => a.Create).
-            Include(b => b.Mod).OrderByDescending(u => u.ModDate).ThenByDescending(x => x.CreateDate);
+            //Include(u => u.Role).
+            Include(a => a.CreatedBy).
+            Include(b => b.ModifiedBy).OrderByDescending(u => u.ModDate).ThenByDescending(x => x.CreateDate);
     }
 }

@@ -16,7 +16,7 @@ namespace TransIT.BLL.Services
     /// Entity CRUD service
     /// </summary>
     /// <see cref="ICrudService{T}"/>
-    public abstract class CrudService<TEntity> : ICrudService<TEntity> where TEntity : class, IEntity, new()
+    public abstract class CrudService<TEntity> : ICrudService<TEntity> where TEntity : class, IAuditableEntity, new()
     {
         /// <summary>
         /// Saves changes
@@ -72,7 +72,8 @@ namespace TransIT.BLL.Services
             {
                 await _repository.AddAsync(model);
                 await _unitOfWork.SaveAsync();
-                return await GetAsync(model.Id);
+                //return await GetAsync(model.Id);
+                throw new NotImplementedException();
             }
             catch (DbUpdateException e)
             {
@@ -121,8 +122,8 @@ namespace TransIT.BLL.Services
         {
             try
             {
-                var model = new TEntity { Id = id };
-                _repository.Remove(model);
+               //var model = new TEntity { Id = id };
+               // _repository.Remove(model);
                 await _unitOfWork.SaveAsync();
             }
             catch (DbUpdateException e)

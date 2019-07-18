@@ -13,8 +13,8 @@ namespace TransIT.BLL.Mappings
                 .ForMember(s => s.CurrencyId, opt => opt.MapFrom(x => x.Currency.Id))
                 .ForMember(s => s.Country, opt => opt.Ignore())
                 .ForMember(s => s.Currency, opt => opt.Ignore())
-                .ForMember(s => s.ModId, opt => opt.Ignore())
-                .ForMember(s => s.CreateId, opt => opt.Ignore())
+                .ForMember(s => s.ModifiedById, opt => opt.Ignore())
+                .ForMember(s => s.CreatedById, opt => opt.Ignore())
                 .ForMember(s => s.IssueLog, opt => opt.Ignore());
             CreateMap<Supplier, SupplierDTO>();
         }

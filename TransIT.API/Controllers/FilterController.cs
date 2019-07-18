@@ -16,7 +16,7 @@ namespace TransIT.API.Controllers
     [Produces("application/json")]
     [Route("api/v1/[controller]")]
     public abstract class FilterController<TEntity, TEntityDTO> : Controller
-        where TEntity : class, IEntity, new()
+        where TEntity : class, IAuditableEntity, new()
         where TEntityDTO : class
     {
         protected const string DataTableTemplateUri = "~/api/v1/datatable/[controller]";

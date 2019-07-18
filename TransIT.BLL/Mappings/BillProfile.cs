@@ -9,8 +9,8 @@ namespace TransIT.BLL.Mappings
         public BillProfile()
         {
             CreateMap<BillDTO, Bill>()
-                .ForMember(b => b.ModId, opt => opt.Ignore())
-                .ForMember(b => b.CreateId, opt => opt.Ignore())
+                .ForMember(b => b.ModifiedById, opt => opt.Ignore())
+                .ForMember(b => b.CreatedById, opt => opt.Ignore())
                 .ForMember(b => b.Mod, opt => opt.Ignore())
                 .ForMember(b => b.Create, opt => opt.Ignore())
                 .ForMember(b => b.DocumentId, opt => opt.MapFrom(x => x.Document.Id))

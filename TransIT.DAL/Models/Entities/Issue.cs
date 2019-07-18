@@ -4,7 +4,7 @@ using TransIT.DAL.Models.Entities.Abstractions;
 
 namespace TransIT.DAL.Models.Entities
 {
-    public partial class Issue : IEntity
+    public partial class Issue : IAuditableEntity
     {
         public Issue()
         {
@@ -22,8 +22,8 @@ namespace TransIT.DAL.Models.Entities
         public int? MalfunctionId { get; set; }
         public DateTime? CreateDate { get; set; }
         public DateTime? ModDate { get; set; }
-        public int? CreateId { get; set; }
-        public int? ModId { get; set; }
+        public int? CreatedById { get; set; }
+        public int? ModifiedById { get; set; }
         public int? Number { get; set; }
         public int Priority { get; set; }
         public DateTime Date { get; set; }

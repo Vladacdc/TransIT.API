@@ -54,17 +54,23 @@ namespace TransIT.BLL.Services.ImplementedServices
         /// <returns>Is successful</returns>
         public override async Task<User> CreateAsync(User user)
         {
-            user.Password = _hasher.HashPassword(user.Password);
+            //user.Password = _hasher.HashPassword(user.Password);
             return await base.CreateAsync(user);
+        }
+
+        public Task<IEnumerable<User>> GetAssignees(uint offset, uint amount)
+        {
+            throw new NotImplementedException();
         }
 
         public override async Task<User> UpdateAsync(User model)
         {
             try
             {
-                var res = _repository.UpdateWithIgnoreProperty(model, u => u.Password);
+                //var res = _repository.UpdateWithIgnoreProperty(model, u => u.Password);
                 await _unitOfWork.SaveAsync();
-                return res;
+                throw new NotImplementedException();
+                //return res;
             }
             catch (DbUpdateException e)
             {
@@ -83,7 +89,7 @@ namespace TransIT.BLL.Services.ImplementedServices
             
             try
             {
-                user.Password = _hasher.HashPassword(newPassword);
+                //user.Password = _hasher.HashPassword(newPassword);
 
                 var res = _repository.Update(user);
                 await _unitOfWork.SaveAsync();
@@ -101,11 +107,11 @@ namespace TransIT.BLL.Services.ImplementedServices
             }
         }
 
-        public virtual async Task<IEnumerable<User>> GetAssignees(uint offset, uint amount) =>
-            (await _repository.GetAllAsync())
-            .AsQueryable()
-            .Where(x => x.Role.Name == ROLE.WORKER)
-            .Skip((int)offset)
-            .Take((int)amount);
+        //public virtual async Task<IEnumerable<User>> GetAssignees(uint offset, uint amount) =>
+        //    (await _repository.GetAllAsync())
+        //    .AsQueryable()
+        //    .Where(x => x.Role.Name == ROLE.WORKER)
+        //    .Skip((int)offset)
+        //    .Take((int)amount);
     }
 }

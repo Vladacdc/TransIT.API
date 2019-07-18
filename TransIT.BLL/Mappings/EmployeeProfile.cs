@@ -10,8 +10,8 @@ namespace TransIT.BLL.Mappings
         {
             CreateMap<Employee, EmployeeDTO>();
             CreateMap<EmployeeDTO, Employee>()
-                .ForMember(t => t.ModId, opt => opt.Ignore())
-                .ForMember(t => t.CreateId, opt => opt.Ignore())
+                .ForMember(t => t.ModifiedById, opt => opt.Ignore())
+                .ForMember(t => t.CreatedById, opt => opt.Ignore())
                 .ForMember(t => t.Mod, opt => opt.Ignore())
                 .ForMember(t => t.Create, opt => opt.Ignore())
                 .ForMember(t => t.ModDate, opt => opt.Ignore())

@@ -54,7 +54,7 @@ namespace TransIT.API.Controllers
             bool isCustomer) =>
             _mapper.Map<IEnumerable<IssueDTO>>(
                 isCustomer
-                    ? await _filterService.GetQueriedWithWhereAsync(model, x => x.CreateId == userId)
+                    ? await _filterService.GetQueriedWithWhereAsync(model, x => x.CreatedById == userId)
                     : await _filterService.GetQueriedAsync(model)
                 );
 
@@ -62,7 +62,7 @@ namespace TransIT.API.Controllers
             int userId,
             bool isCustomer) =>
             isCustomer
-                ? _filterService.TotalRecordsAmount(x => x.CreateId == userId)
+                ? _filterService.TotalRecordsAmount(x => x.CreatedById == userId)
                 : _filterService.TotalRecordsAmount();
 
         [HttpGet]

@@ -4,7 +4,7 @@ using TransIT.DAL.Models.Entities.Abstractions;
 
 namespace TransIT.DAL.Models.Entities
 {
-    public partial class ActionType : IEntity
+    public partial class ActionType : IAuditableEntity
     {
         public ActionType()
         {
@@ -16,8 +16,8 @@ namespace TransIT.DAL.Models.Entities
         public string Name { get; set; }
         public DateTime? CreateDate { get; set; }
         public DateTime? ModDate { get; set; }
-        public int? CreateId { get; set; }
-        public int? ModId { get; set; }
+        public string CreatedById { get; set; }
+        public string ModifiedById { get; set; }
         public bool IsFixed { get; set; }
 
         public virtual User Create { get; set; }

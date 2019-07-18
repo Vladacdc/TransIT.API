@@ -64,7 +64,7 @@ namespace TransIT.API.Controllers
         public override async Task<IActionResult> Create([FromBody] IssueLogDTO obj)
         {
             var entity = _mapper.Map<IssueLog>(obj);
-            entity.CreateId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            entity.CreatedById = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             entity = await _issueLogService.CreateAsync(entity);
             return entity != null
                 ? CreatedAtAction(nameof(Create), _mapper.Map<IssueLogDTO>(entity))

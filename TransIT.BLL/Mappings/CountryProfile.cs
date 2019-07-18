@@ -10,8 +10,8 @@ namespace TransIT.BLL.Mappings
         {
             CreateMap<CountryDTO, Country>()
                 .ForMember(m => m.Supplier, opt => opt.Ignore())
-                .ForMember(m => m.ModId, opt => opt.Ignore())
-                .ForMember(m => m.CreateId, opt => opt.Ignore());
+                .ForMember(m => m.ModifiedById, opt => opt.Ignore())
+                .ForMember(m => m.CreatedById, opt => opt.Ignore());
             CreateMap<Country, CountryDTO>();
         }
     }

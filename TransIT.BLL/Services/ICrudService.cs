@@ -8,7 +8,7 @@ namespace TransIT.BLL.Services
     /// <summary>
     /// Set a behavior of services 
     /// </summary>
-    public interface ICrudService<T> where T : class, IEntity, new()
+    public interface ICrudService<T> where T : class, IAuditableEntity, new()
     {
         /// <summary>
         /// Gets entity by id

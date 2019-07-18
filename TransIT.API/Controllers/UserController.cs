@@ -40,7 +40,8 @@ namespace TransIT.API.Controllers
         {
             var user = await _userService.GetAsync(id);
             var adminId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            user.ModId = adminId;
+            throw new System.NotImplementedException(nameof(adminId));
+            //user.ModifiedById = adminId;
             return await _userService.UpdatePasswordAsync(user, changePassword.Password) != null 
                 ? NoContent()
                 : (IActionResult) BadRequest();

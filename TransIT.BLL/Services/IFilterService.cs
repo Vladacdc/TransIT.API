@@ -7,7 +7,7 @@ using TransIT.BLL.DTOs;
 
 namespace TransIT.BLL.Services
 {    
-    public interface IFilterService<TEntity> where TEntity : class, IEntity, new()
+    public interface IFilterService<TEntity> where TEntity : class, new()
     {
         ulong TotalRecordsAmount();
         ulong TotalRecordsAmount(Expression<Func<TEntity, bool>> expression);

@@ -10,8 +10,8 @@ namespace TransIT.BLL.Mappings
         {
             CreateMap<IssueLogDTO, IssueLog>()
                 .ForMember(i => i.Document, opt => opt.Ignore())
-                .ForMember(i => i.ModId, opt => opt.Ignore())
-                .ForMember(i => i.CreateId, opt => opt.Ignore())
+                .ForMember(i => i.ModifiedById, opt => opt.Ignore())
+                .ForMember(i => i.CreatedById, opt => opt.Ignore())
                 .ForMember(i => i.Mod, opt => opt.Ignore())
                 .ForMember(i => i.Create, opt => opt.Ignore())
                 .ForMember(i => i.Document, opt => opt.Ignore())
