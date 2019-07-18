@@ -50,7 +50,7 @@ namespace TransIT.API.Controllers
         
         private async Task<IEnumerable<IssueDTO>> GetQueryiedForSpecificUser(
             DataTableRequestDTO model,
-            int userId,
+            string userId,
             bool isCustomer) =>
             _mapper.Map<IEnumerable<IssueDTO>>(
                 isCustomer
@@ -59,7 +59,7 @@ namespace TransIT.API.Controllers
                 );
 
         private ulong GetTotalRecordsForSpecificUser(
-            int userId,
+            string userId,
             bool isCustomer) =>
             isCustomer
                 ? _filterService.TotalRecordsAmount(x => x.CreatedById == userId)
@@ -90,7 +90,7 @@ namespace TransIT.API.Controllers
 
         private async Task<IEnumerable<IssueDTO>> GetForCustomer(uint offset, uint amount)
         {
-            int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             var res = await _issueService.GetRegisteredIssuesAsync(offset, amount, userId);
             return res != null
                 ? _mapper.Map<IEnumerable<IssueDTO>>(res)
