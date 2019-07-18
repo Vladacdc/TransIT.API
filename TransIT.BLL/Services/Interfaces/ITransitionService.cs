@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using TransIT.DAL.Models.Entities;
+﻿using TransIT.BLL.DTOs;
 
 namespace TransIT.BLL.Services.Interfaces
 {
-    public interface ITransitionService : ICrudService<Transition>
+    public interface ITransitionService : ICrudService<TransitionDTO>
     {
     }
 }
