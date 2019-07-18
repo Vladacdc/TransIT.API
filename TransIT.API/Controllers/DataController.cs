@@ -94,6 +94,6 @@ namespace TransIT.API.Controllers
             return NoContent();
         }
 
-        protected int GetUserId() => int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+        protected string GetUserId() => User.FindFirst(ClaimTypes.NameIdentifier).Value;
     }
 }

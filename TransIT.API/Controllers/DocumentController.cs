@@ -62,10 +62,9 @@ namespace TransIT.API.Controllers
             if (document.File == null&& !(document.File.Length > 0))
                 return Content("file not selected");
             var provider = new FileExtensionContentTypeProvider();
-            string contentType;
 
-            _ = provider.TryGetContentType(Path.GetFileName(document.File.FileName), out contentType);
-           if(contentType!=  "application/pdf") return Content("format is not pdf");
+            _ = provider.TryGetContentType(Path.GetFileName(document.File.FileName), out string contentType);
+            if (contentType!=  "application/pdf") return Content("format is not pdf");
 
             document.Path = _storageLogger.Create(document.File);
             var entity = _mapper.Map<Document>(document);
