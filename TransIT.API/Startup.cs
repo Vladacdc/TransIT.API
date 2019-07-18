@@ -28,7 +28,7 @@ namespace TransIT.API
         {
             services.AddDbContext<DbContext, TransITDBContext>(options =>
             {
-                options.UseSqlServer(Configuration.GetConnectionString("AzureConnection"));
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
 
             services.AddSingleton<IPasswordHasher, PasswordHasher>();
