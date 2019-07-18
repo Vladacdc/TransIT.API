@@ -1,11 +1,11 @@
-﻿using TransIT.DAL.Models.Entities;
+﻿using TransIT.BLL.DTOs;
 
 namespace TransIT.BLL.Services
 {
     /// <summary>
     /// Interface for Vehicle type Service
     /// </summary>
-    public interface IVehicleTypeService : ICrudService<VehicleType>
+    public interface IVehicleTypeService : ICrudService<VehicleTypeDTO>
     {
 
     }

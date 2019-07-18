@@ -1,6 +1,11 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using TransIT.BLL.DTOs;
 using TransIT.DAL.Models.Entities;
-using TransIT.DAL.Repositories.InterfacesRepositories;
 using TransIT.DAL.UnitOfWork;
 
 namespace TransIT.BLL.Services
@@ -8,18 +13,66 @@ namespace TransIT.BLL.Services
     /// <summary>
     /// Service for Vehicle Type
     /// </summary>
-    public class VehicleTypeService : CrudService<VehicleType>, IVehicleTypeService
+    public class VehicleTypeService : IVehicleTypeService
     {
+        private readonly IUnitOfWork _unitOfWork;
+
+        private readonly IMapper _mapper;
+
         /// <summary>
         /// ctor
         /// </summary>
         /// <param name="unitOfWork"></param>
-        /// <param name="logger"></param>
-        /// <param name="repository"></param>
-        public VehicleTypeService(
-            IUnitOfWork unitOfWork,
-            ILogger<CrudService<VehicleType>> logger,
-            IVehicleTypeRepository repository) : base(unitOfWork, logger, repository) { }
+        /// <param name="mapper"></param>
+        public VehicleTypeService(IUnitOfWork unitOfWork, IMapper mapper)
+        {
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
+        }
+                
+
+        public async Task<VehicleTypeDTO> GetAsync(int id)
+        {
+            return _mapper.Map<VehicleTypeDTO>(await _unitOfWork.VehicleTypeRepository.GetByIdAsync(id));
+        }
+
+        public async Task<IEnumerable<VehicleTypeDTO>> GetRangeAsync(uint offset, uint amount)
+        {
+            return (await _unitOfWork.VehicleTypeRepository.GetRangeAsync(offset, amount)).AsQueryable().ProjectTo<VehicleTypeDTO>();
+        }
+
+        public async Task<IEnumerable<VehicleTypeDTO>> SearchAsync(string search)
+        {
+            var vehicleTypes = await _unitOfWork.VehicleTypeRepository.SearchExpressionAsync(
+            search
+                .Split(new[] { ' ', ',', '.' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(x => x.Trim().ToUpperInvariant())
+            );
+
+            return vehicleTypes.ProjectTo<VehicleTypeDTO>();
+        }
+
+        public async Task<VehicleTypeDTO> CreateAsync(VehicleTypeDTO value)
+        {
+            VehicleType model = _mapper.Map<VehicleType>(value);
+            await _unitOfWork.VehicleTypeRepository.AddAsync(model);
+            await _unitOfWork.SaveAsync();
+            return await GetAsync(model.Id);
+        }
+
+        public async Task<VehicleTypeDTO> UpdateAsync(VehicleTypeDTO value)
+        {
+            VehicleType model = _mapper.Map<VehicleType>(value);
+            _unitOfWork.VehicleTypeRepository.Update(model);
+            await _unitOfWork.SaveAsync();
+            return value;
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            _unitOfWork.VehicleTypeRepository.Remove(id);
+            await _unitOfWork.SaveAsync();
+        }
     }
 }
 

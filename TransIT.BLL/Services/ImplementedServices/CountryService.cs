@@ -25,9 +25,10 @@ namespace TransIT.BLL.Services.ImplementedServices
         /// Ctor
         /// </summary>
         /// <param name="unitOfWork">Unit of work pattern</param>
-        public CountryService(IUnitOfWork unitOfWork)
+        public CountryService(IUnitOfWork unitOfWork,  IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
         public async Task<CountryDTO> GetAsync(int id)
