@@ -11,6 +11,7 @@ using TransIT.API.EndpointFilters.OnException;
 using TransIT.BLL.Security.Hashers;
 using TransIT.DAL.Models;
 using TransIT.API.Hubs;
+using TransIT.DAL.Models.Entities;
 
 namespace TransIT.API
 {
@@ -30,6 +31,9 @@ namespace TransIT.API
             {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
+
+            services.AddIdentity<User, Role>()
+                .AddEntityFrameworkStores<TransITDBContext>();
 
             services.AddSingleton<IPasswordHasher, PasswordHasher>();
 
