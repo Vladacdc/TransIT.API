@@ -3,6 +3,8 @@
 
 .DS_Store
 
+*.StyleCop
+
 # User-specific files
 *.suo
 *.user
