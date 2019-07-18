@@ -5,17 +5,6 @@ namespace TransIT.DAL.Models.Extensions
 {
     public static class SeedExtension
     {
-        public static ModelBuilder SeedRoles(this ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Role>().HasData(
-                new Role { Id = 1, Name = "ADMIN", TransName = "Адмін" },
-                new Role { Id = 2, Name = "WORKER", TransName = "Працівник" },
-                new Role { Id = 3, Name = "ENGINEER", TransName = "Інженер" },
-                new Role { Id = 4, Name = "REGISTER", TransName = "Реєстратор" },
-                new Role { Id = 5, Name = "ANALYST", TransName = "Аналітик" });
-            return modelBuilder;
-        }
-        
         public static ModelBuilder SeedStates(this ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<State>().HasData(

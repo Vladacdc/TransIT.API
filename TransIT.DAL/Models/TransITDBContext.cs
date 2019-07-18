@@ -27,12 +27,9 @@ namespace TransIT.DAL.Models
         public virtual DbSet<MalfunctionGroup> MalfunctionGroup { get; set; }
         public virtual DbSet<MalfunctionSubgroup> MalfunctionSubgroup { get; set; }
         public virtual DbSet<Post> Post { get; set; }
-        //public virtual DbSet<Role> Role { get; set; }
         public virtual DbSet<State> State { get; set; }
         public virtual DbSet<Supplier> Supplier { get; set; }
-        //public virtual DbSet<Token> Token { get; set; }
         public virtual DbSet<Transition> Transition { get; set; }
-        //public virtual DbSet<User> User { get; set; }
         public virtual DbSet<Vehicle> Vehicle { get; set; }
         public virtual DbSet<VehicleType> VehicleType { get; set; }
 
@@ -48,7 +45,6 @@ namespace TransIT.DAL.Models
 
             #region Seeding
 
-            modelBuilder.SeedRoles();
             modelBuilder.SeedStates();
 
             #endregion
