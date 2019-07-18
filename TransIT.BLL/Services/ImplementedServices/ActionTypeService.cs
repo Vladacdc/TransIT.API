@@ -65,52 +65,33 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<ActionTypeDTO> UpdateAsync(ActionTypeDTO value)
         {
-            try
-            {
-                ActionType model =await _unitOfWork.ActionTypeRepository.GetByIdAsync(value.Id);
+            ActionType model =await _unitOfWork.ActionTypeRepository.GetByIdAsync(value.Id);
 
-                if (model.IsFixed)
-                {
-                    throw new ConstraintException("Current state can not be edited");
-                }
-                if (value.IsFixed)
-                {
-                    throw new ArgumentException("Incorrect model");
-                }
+            if (model.IsFixed)
+            {
+                throw new ConstraintException("Current state can not be edited");
+            }
+            if (value.IsFixed)
+            {
+                throw new ArgumentException("Incorrect model");
+            }
                 
-
-                _unitOfWork.ActionTypeRepository.Update(model);
-                await _unitOfWork.SaveAsync();
-                return value;
-            }
-            catch (DbUpdateException)
-            {
-                return null;
-            }
+            _unitOfWork.ActionTypeRepository.Update(model);
+            await _unitOfWork.SaveAsync();
+            return value;
         }
 
         public async Task DeleteAsync(int id)
         {
-            try
-            {
-                ActionType model = await _unitOfWork.ActionTypeRepository.GetByIdAsync(id);
+            ActionType model = await _unitOfWork.ActionTypeRepository.GetByIdAsync(id);
 
-                if (model.IsFixed)
-                {
-                    throw new ConstraintException("Current state can not be deleted");
-                }
-
-                _unitOfWork.ActionTypeRepository.Remove(model);
-                await _unitOfWork.SaveAsync();
-            }
-            catch (DbUpdateException e)
+            if (model.IsFixed)
             {
-                var sqlExc = e.GetBaseException() as SqlException;
-                if (sqlExc?.Number == 547)
-                {
-                    throw new ConstraintException("There are constrained entities, delete them firstly.", sqlExc);
-                }
+                throw new ConstraintException("Current state can not be deleted");
             }
+
+            _unitOfWork.ActionTypeRepository.Remove(model);
+            await _unitOfWork.SaveAsync();
         }
     }
 }

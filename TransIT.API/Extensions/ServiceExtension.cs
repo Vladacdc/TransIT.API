@@ -46,7 +46,7 @@ namespace TransIT.API.Extensions
         public static void ConfigureDataAccessServices(this IServiceCollection services)
         {
             //services.AddScoped<IUserService, UserService>();
-            //services.AddScoped<IActionTypeService, ActionTypeService>();
+            services.AddScoped<IActionTypeService, ActionTypeService>();
             services.AddScoped<IVehicleService, VehicleService>();
             services.AddScoped<IVehicleTypeService, VehicleTypeService>();
             services.AddScoped<IMalfunctionService, MalfunctionService>();
@@ -68,7 +68,7 @@ namespace TransIT.API.Extensions
 
 
             //services.AddScoped<ICrudService<UserDTO>, UserService>();
-            //services.AddScoped<ICrudService<ActionType>, ActionTypeService>();
+            services.AddScoped<ICrudService<ActionTypeDTO>, ActionTypeService>();
             services.AddScoped<ICrudService<VehicleDTO>, VehicleService>();
             services.AddScoped<ICrudService<VehicleTypeDTO>, VehicleTypeService>();
             services.AddScoped<ICrudService<MalfunctionDTO>, MalfunctionService>();
