@@ -69,7 +69,7 @@ namespace TransIT.API.Controllers
 
             document.Path = _storageLogger.Create(document.File);
             var entity = _mapper.Map<Document>(document);
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
             entity.ModifiedById = userId;
             entity.CreatedById = userId;

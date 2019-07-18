@@ -40,7 +40,7 @@ namespace TransIT.BLL.Services.ImplementedServices
         }
 
         /// <see cref="IIssueService"/>
-        public async Task<IEnumerable<Issue>> GetRegisteredIssuesAsync(uint offset, uint amount, int userId)
+        public async Task<IEnumerable<Issue>> GetRegisteredIssuesAsync(uint offset, uint amount, string userId)
         {
             var issues = await _repository.GetAllAsync(i => i.CreatedById == userId);
             return issues.AsQueryable().Skip((int)offset).Take((int)amount);
@@ -80,7 +80,7 @@ namespace TransIT.BLL.Services.ImplementedServices
             }
         }
 
-        public async Task DeleteByUserAsync(int issueId, int userId)
+        public async Task DeleteByUserAsync(int issueId, string userId)
         {
             try
             {
