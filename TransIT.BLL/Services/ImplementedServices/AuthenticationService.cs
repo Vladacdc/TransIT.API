@@ -47,26 +47,26 @@ namespace TransIT.BLL.Services.ImplementedServices
         {
             try
             {
-                var user = (await _unitOfWork.UserRepository
-                    .GetAllAsync(u => u.UserName == credentials.Login))
-                    .SingleOrDefault();
+                //var user = (await _unitOfWork.UserRepository
+                //    .GetAllAsync(u => u.UserName == credentials.Login))
+                //    .SingleOrDefault();
 
-                if (user != null && (bool)user.IsActive && _hasher.CheckMatch(credentials.Password, user.Password))
-                {
-                    var role = await _unitOfWork.RoleRepository.GetByIdAsync((int)user.RoleId);
-                    var token = _jwtFactory.GenerateToken(user.Id, user.Login, role?.Name);
+                //if (user != null && (bool)user.IsActive && _hasher.CheckMatch(credentials.Password, user.Password))
+                //{
+                //    var role = await _unitOfWork.RoleRepository.GetByIdAsync((int)user.RoleId);
+                //    var token = _jwtFactory.GenerateToken(user.Id, user.Login, role?.Name);
 
-                    if (token == null) return null;
+                //    if (token == null) return null;
 
-                    await _unitOfWork.TokenRepository.AddAsync(new Token
-                    {
-                        RefreshToken = token.RefreshToken,
-                        CreateId = user.Id,
-                        Create = user
-                    });
-                    await _unitOfWork.SaveAsync();
-                    return token;
-                }
+                //    await _unitOfWork.TokenRepository.AddAsync(new Token
+                //    {
+                //        RefreshToken = token.RefreshToken,
+                //        CreateId = user.Id,
+                //        Create = user
+                //    });
+                //    await _unitOfWork.SaveAsync();
+                //    return token;
+                //}
                 return null;
             }
             catch (Exception e)
@@ -80,20 +80,20 @@ namespace TransIT.BLL.Services.ImplementedServices
         {
             try
             {
-                var user = await _unitOfWork.UserRepository.GetByIdAsync(
-                    int.Parse(
-                        _jwtFactory.GetPrincipalFromExpiredToken(token.AccessToken).jwt.Subject
-                        )
-                    );
-                var newToken = _jwtFactory.GenerateToken(user.Id, user.Login, user.Role.Name);
+                //var user = await _unitOfWork.UserRepository.GetByIdAsync(
+                //    int.Parse(
+                //        _jwtFactory.GetPrincipalFromExpiredToken(token.AccessToken).jwt.Subject
+                //        )
+                //    );
+                //var newToken = _jwtFactory.GenerateToken(user.Id, user.Login, user.Role.Name);
 
-                await _unitOfWork.TokenRepository.AddAsync(new Token
-                {
-                    RefreshToken = newToken.RefreshToken,
-                    CreateId = user.Id,
-                    Create = user
-                });
-                await _unitOfWork.SaveAsync();
+                //await _unitOfWork.TokenRepository.AddAsync(new Token
+                //{
+                //    RefreshToken = newToken.RefreshToken,
+                //    CreateId = user.Id,
+                //    Create = user
+                //});
+                //await _unitOfWork.SaveAsync();
                 return null;
             }
             catch (Exception e) 

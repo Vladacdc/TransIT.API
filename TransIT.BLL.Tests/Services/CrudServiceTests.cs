@@ -69,7 +69,6 @@ namespace TransIT.BLL.Tests.Services
             await _crudService.CreateAsync(entity);
 
             Assert.Contains(entity, _context);
-            throw new NotImplementedException();
             //Assert.Equal(entity.Id, _idCounter - 1);
             _repository.Verify(r => r.AddAsync(entity), Times.Once);
             _unitOfWork.Verify(u => u.SaveAsync(), Times.Once);
@@ -78,14 +77,13 @@ namespace TransIT.BLL.Tests.Services
         [Fact]
         public async Task CreateAsync_GivenWrongEntity_ThrowsException()
         {
-            throw new NotImplementedException();
-            //var entity = new TEntity { Id = 1 };
-            //var exception = new DbUpdateException("", null as Exception);
-            //_repository.Setup(r => r.AddAsync(entity)).Throws(exception);
+            var entity = new TEntity { /*Id = 1*/ };
+            var exception = new DbUpdateException("", null as Exception);
+            _repository.Setup(r => r.AddAsync(entity)).Throws(exception);
 
-            //await Assert.ThrowsAsync<DbUpdateException>(async()=> await _crudService.CreateAsync(entity));            
-            //_repository.Verify(r => r.AddAsync(entity), Times.Once);
-            //VerifyLogger();
+            await Assert.ThrowsAsync<DbUpdateException>(async () => await _crudService.CreateAsync(entity));
+            _repository.Verify(r => r.AddAsync(entity), Times.Once);
+            VerifyLogger();
         }
 
         [Fact]
@@ -102,16 +100,15 @@ namespace TransIT.BLL.Tests.Services
         [InlineData(4)]
         public async Task UpdateAsync_GivenExistingEntity_ReturnsUpdatedEntity(int id)
         {
-            throw new NotImplementedException("Fix IEntity, it doesn't have ID");
-            //var entity = new TEntity { Id = id };
-            //int previousCount = _context.Count;
+            var entity = new TEntity { /*Id = id*/ };
+            int previousCount = _context.Count;
 
-            //var result = await _crudService.UpdateAsync(entity);
+            var result = await _crudService.UpdateAsync(entity);
 
-            //Assert.Equal(result, entity);
-            //Assert.True(_context.Count == previousCount);
-            //_repository.Verify(r => r.Update(entity), Times.Once);
-            //_unitOfWork.Verify(u => u.SaveAsync(), Times.Once);
+            Assert.Equal(result, entity);
+            Assert.True(_context.Count == previousCount);
+            _repository.Verify(r => r.Update(entity), Times.Once);
+            _unitOfWork.Verify(u => u.SaveAsync(), Times.Once);
         }
 
         [Fact]
@@ -132,7 +129,6 @@ namespace TransIT.BLL.Tests.Services
 
             await _crudService.DeleteAsync(id);
 
-            throw new NotImplementedException("Fix IEntity, it doesn't have ID");
             //var entity = _context.Find(e => e.Id == id);
             //Assert.Null(entity);
             Assert.True(_context.Count == previousCount - 1);
@@ -219,10 +215,9 @@ namespace TransIT.BLL.Tests.Services
                 .Callback<TEntity>(entity =>
                 {
                     //var founded = _context.Find(g => g.Id == entity.Id);
-                   // if (founded == null)
-                    {
-                        throw new DbUpdateException("", new Exception());
-                    }
+                    // if (founded == null)
+                    //{ 
+                    //}
                     //_context.Remove(founded);
                 });
 
