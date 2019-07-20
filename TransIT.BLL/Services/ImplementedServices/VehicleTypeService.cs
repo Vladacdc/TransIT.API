@@ -5,10 +5,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TransIT.BLL.DTOs;
+using TransIT.BLL.Interfaces;
 using TransIT.DAL.Models.Entities;
 using TransIT.DAL.UnitOfWork;
 
-namespace TransIT.BLL.Services
+namespace TransIT.BLL.ImplementedServices
 {
     /// <summary>
     /// Service for Vehicle Type

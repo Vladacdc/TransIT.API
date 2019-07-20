@@ -1,6 +1,7 @@
 ﻿using TransIT.BLL.DTOs;
+using TransIT.BLL.Services;
 
-namespace TransIT.BLL.Services
+namespace TransIT.BLL.Interfaces
 {
     /// <summary>
     /// Interface for Vehicle type Service
