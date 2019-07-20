@@ -39,9 +39,8 @@ namespace TransIT.API.Controllers
         public async Task<IActionResult> ChangePassword(int id, [FromBody] ChangePasswordDTO changePassword)
         {
             var user = await _userService.GetAsync(id);
-            var adminId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            throw new System.NotImplementedException(nameof(adminId));
-            //user.ModifiedById = adminId;
+            var adminId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            user.ModifiedById = adminId;
             return await _userService.UpdatePasswordAsync(user, changePassword.Password) != null 
                 ? NoContent()
                 : (IActionResult) BadRequest();

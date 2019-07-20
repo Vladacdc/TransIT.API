@@ -58,19 +58,13 @@ namespace TransIT.BLL.Services.ImplementedServices
             return await base.CreateAsync(user);
         }
 
-        public Task<IEnumerable<User>> GetAssignees(uint offset, uint amount)
-        {
-            throw new NotImplementedException();
-        }
-
         public override async Task<User> UpdateAsync(User model)
         {
             try
             {
                 //var res = _repository.UpdateWithIgnoreProperty(model, u => u.Password);
-                await _unitOfWork.SaveAsync();
-                throw new NotImplementedException();
-                //return res;
+                await _unitOfWork.SaveAsync(); 
+                return new User();
             }
             catch (DbUpdateException e)
             {
@@ -107,11 +101,11 @@ namespace TransIT.BLL.Services.ImplementedServices
             }
         }
 
-        //public virtual async Task<IEnumerable<User>> GetAssignees(uint offset, uint amount) =>
-        //    (await _repository.GetAllAsync())
-        //    .AsQueryable()
-        //    .Where(x => x.Role.Name == ROLE.WORKER)
-        //    .Skip((int)offset)
-        //    .Take((int)amount);
+        public virtual async Task<IEnumerable<User>> GetAssignees(uint offset, uint amount) =>
+            (await _repository.GetAllAsync())
+            .AsQueryable()
+            //.Where(x => x.Role.Name == ROLE.WORKER)
+            .Skip((int)offset)
+            .Take((int)amount);
     }
 }

@@ -33,6 +33,11 @@ namespace TransIT.API
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
 
+            services.AddDbContext<TransITDBContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+            });
+
             services.AddIdentity<User, Role>()
                 .AddEntityFrameworkStores<TransITDBContext>()
                 .AddRoleManager<RoleManager<Role>>().
