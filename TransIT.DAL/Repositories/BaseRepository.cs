@@ -21,7 +21,8 @@ namespace TransIT.DAL.Repositories
 
         public virtual Task<TEntity> GetByIdAsync(int id)
         {
-           return ComplexEntities.SingleOrDefaultAsync(t => t.Id == id);
+           return null;
+           //return ComplexEntities.SingleOrDefaultAsync(t => t.Id == id);
         }
 
         public virtual Task<TEntity> FindAsync(Expression<Func<TEntity, bool>> predicate)

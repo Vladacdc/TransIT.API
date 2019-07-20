@@ -54,7 +54,7 @@ namespace TransIT.BLL.Services.ImplementedServices
         /// <returns>Is successful</returns>
         public override async Task<User> CreateAsync(User user)
         {
-            user.Password = _hasher.HashPassword(user.Password);
+            //user.Password = _hasher.HashPassword(user.Password);
             return await base.CreateAsync(user);
         }
 
@@ -62,9 +62,9 @@ namespace TransIT.BLL.Services.ImplementedServices
         {
             try
             {
-                var res = _repository.UpdateWithIgnoreProperty(model, u => u.Password);
+                //var res = _repository.UpdateWithIgnoreProperty(model, u => u.Password);
                 await _unitOfWork.SaveAsync(); 
-                return res;
+                return new User();
             }
             catch (DbUpdateException e)
             {
@@ -104,7 +104,7 @@ namespace TransIT.BLL.Services.ImplementedServices
         public virtual async Task<IEnumerable<User>> GetAssignees(uint offset, uint amount) =>
             (await _repository.GetAllAsync())
             .AsQueryable()
-            .Where(x => x.Role.Name == ROLE.WORKER)
+            //.Where(x => x.Role.Name == ROLE.WORKER)
             .Skip((int)offset)
             .Take((int)amount);
     }
