@@ -89,6 +89,8 @@ namespace TransIT.API
             {
                 routes.MapHub<IssueHub>("/issuehub");
             });
+
+            app.Seed();
         }
     }
 }

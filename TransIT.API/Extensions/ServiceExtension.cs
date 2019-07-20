@@ -9,6 +9,7 @@ using TransIT.DAL.Repositories;
 using TransIT.DAL.Repositories.ImplementedRepositories;
 using TransIT.DAL.Repositories.InterfacesRepositories;
 using TransIT.DAL.UnitOfWork;
+using Microsoft.AspNetCore.Identity;
 
 namespace TransIT.API.Extensions
 {
@@ -157,6 +158,8 @@ namespace TransIT.API.Extensions
             services.AddScoped<IPostRepository, PostRepository>();
             services.AddScoped<ITransitionRepository, TransitionRepository>();
             services.AddScoped<ILocationRepository, LocationRepository>();
+            //services.AddScoped<UserManager<User>>();
+            //services.AddScoped<RoleManager<Role>>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
