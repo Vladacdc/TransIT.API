@@ -12,6 +12,7 @@ using TransIT.BLL.Security.Hashers;
 using TransIT.DAL.Models;
 using TransIT.API.Hubs;
 using TransIT.DAL.Models.Entities;
+using Microsoft.AspNetCore.Identity;
 
 namespace TransIT.API
 {
@@ -33,7 +34,9 @@ namespace TransIT.API
             });
 
             services.AddIdentity<User, Role>()
-                .AddEntityFrameworkStores<TransITDBContext>();
+                .AddEntityFrameworkStores<TransITDBContext>()
+                .AddRoleManager<RoleManager<Role>>().
+                AddUserManager<UserManager<User>>();
 
             services.AddSingleton<IPasswordHasher, PasswordHasher>();
 

@@ -11,9 +11,9 @@ namespace TransIT.DAL.Models
 {
     public static class DataSeeder
     {
-        public static async Task SeedRolesAsync(IApplicationBuilder app)
+        public static async Task SeedRolesAsync(this IApplicationBuilder app)
         {
-            var roleManager = app.ApplicationServices.GetRequiredService<RoleManager<IdentityRole>>();
+            var roleManager = app.ApplicationServices.GetRequiredService<RoleManager<Role>>();
             await CreateIfNotExsits(roleManager, new Role() { Name = "ADMIN", TransName = "Адмін" });
             await CreateIfNotExsits(roleManager, new Role() { Name = "WORKER", TransName = "Працівник" });
             await CreateIfNotExsits(roleManager, new Role() { Name = "ENGINEER", TransName = "Інженер" });
