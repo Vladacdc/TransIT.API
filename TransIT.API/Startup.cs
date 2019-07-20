@@ -39,7 +39,7 @@ namespace TransIT.API
             });
 
             services.AddIdentity<User, Role>()
-                .AddEntityFrameworkStores<TransITDBContext>()
+                .AddEntityFrameworkStores<DbContext>()
                 .AddRoleManager<RoleManager<Role>>().
                 AddUserManager<UserManager<User>>();
 
@@ -98,7 +98,7 @@ namespace TransIT.API
                 routes.MapHub<IssueHub>("/issuehub");
             });
 
-            app.Seed();
+            //app.Seed();
         }
     }
 }
