@@ -83,7 +83,7 @@ namespace TransIT.BLL.Services.ImplementedServices
             
             try
             {
-                user.Password = _hasher.HashPassword(newPassword);
+                //user.Password = _hasher.HashPassword(newPassword);
 
                 var res = _repository.Update(user);
                 await _unitOfWork.SaveAsync();
