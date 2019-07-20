@@ -9,9 +9,9 @@ namespace TransIT.API.Extensions
 {
     public static class SeedExtension
     {
-        public static void Seed(this IApplicationBuilder app)
+        public static void Seed(this IApplicationBuilder app, IServiceProvider services)
         {
-            app.SeedRolesAsync().Wait();
+            app.SeedRolesAsync(services).Wait();
         }
     }
 }

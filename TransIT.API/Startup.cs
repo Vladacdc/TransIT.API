@@ -13,6 +13,7 @@ using TransIT.DAL.Models;
 using TransIT.API.Hubs;
 using TransIT.DAL.Models.Entities;
 using Microsoft.AspNetCore.Identity;
+using System;
 
 namespace TransIT.API
 {
@@ -39,9 +40,9 @@ namespace TransIT.API
             });
 
             services.AddIdentity<User, Role>()
-                .AddEntityFrameworkStores<DbContext>()
-                .AddRoleManager<RoleManager<Role>>().
-                AddUserManager<UserManager<User>>();
+                .AddEntityFrameworkStores<TransITDBContext>()
+                .AddRoleManager<RoleManager<Role>>()
+                .AddUserManager<UserManager<User>>();
 
             services.AddSingleton<IPasswordHasher, PasswordHasher>();
 
@@ -65,7 +66,7 @@ namespace TransIT.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
             {
@@ -98,7 +99,7 @@ namespace TransIT.API
                 routes.MapHub<IssueHub>("/issuehub");
             });
 
-            //app.Seed();
+            app.Seed(serviceProvider);
         }
     }
 }
