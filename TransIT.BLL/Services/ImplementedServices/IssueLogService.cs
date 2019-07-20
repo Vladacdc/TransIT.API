@@ -63,9 +63,11 @@ namespace TransIT.BLL.Services.ImplementedServices
             return IssueLogs.ProjectTo<IssueLogDTO>();
         }
 
-        public Task<IssueLogDTO> UpdateAsync(IssueLogDTO dto)
+        public async Task<IssueLogDTO> UpdateAsync(IssueLogDTO dto)
         {
-            throw new NotImplementedException();
+            var newDto = _mapper.Map<IssueLogDTO>(_unitOfWork.IssueLogRepository.Update(_mapper.Map<IssueLog>(dto)));
+            await _unitOfWork.SaveAsync();
+            return newDto;
         }
 
         public async Task<IssueLogDTO> CreateAsync(IssueLogDTO issueLogDTO)
