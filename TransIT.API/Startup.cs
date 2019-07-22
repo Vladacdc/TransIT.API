@@ -8,7 +8,6 @@ using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using TransIT.API.EndpointFilters.OnActionExecuting;
 using TransIT.API.EndpointFilters.OnException;
-using TransIT.BLL.Security.Hashers;
 using TransIT.DAL.Models;
 using TransIT.API.Hubs;
 using TransIT.DAL.Models.Entities;
@@ -44,7 +43,10 @@ namespace TransIT.API
                 .AddRoleManager<RoleManager<Role>>()
                 .AddUserManager<UserManager<User>>();
 
-            services.AddSingleton<IPasswordHasher, PasswordHasher>();
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.Password.RequireNonAlphanumeric = false;
+            });
 
             services.AddSignalR();
             services.ConfigureAutoMapper();
@@ -76,11 +78,7 @@ namespace TransIT.API
             {
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
-            }
-            //if (!env.IsDevelopment())
-            //{
-            //    app.UseHttpsRedirection();
-            //}
+            } 
 
             app.UseHttpsRedirection();
             app.UseAuthentication();

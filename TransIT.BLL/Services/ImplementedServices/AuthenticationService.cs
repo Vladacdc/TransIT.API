@@ -6,7 +6,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Identity;
 using TransIT.BLL.Helpers.Abstractions;
-using TransIT.BLL.Security.Hashers;
 using TransIT.BLL.Services.Interfaces;
 using TransIT.BLL.DTOs;
 using TransIT.DAL.Models.Entities;
@@ -24,7 +23,6 @@ namespace TransIT.BLL.Services.ImplementedServices
         private readonly RoleManager<Role> _roleManager;
         private readonly ILogger<AuthenticationService> _logger;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IPasswordHasher _hasher;
         private readonly IJwtFactory _jwtFactory;
         
         public AuthenticationService(
