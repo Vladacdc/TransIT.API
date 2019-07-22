@@ -34,7 +34,7 @@ namespace TransIT.DAL.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=TransITDB_test;Trusted_Connection=True;MultipleActiveResultSets=true");
+            optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=TransITDB;Trusted_Connection=True;MultipleActiveResultSets=true");
         }
     
         protected override void OnModelCreating(ModelBuilder modelBuilder)
