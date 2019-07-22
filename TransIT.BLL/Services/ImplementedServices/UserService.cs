@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using TransIT.API.Extensions;
-using TransIT.BLL.Security.Hashers;
 using TransIT.BLL.Services.Interfaces;
 using TransIT.DAL.Models.Entities;
 using TransIT.DAL.Repositories.InterfacesRepositories;
@@ -20,10 +19,6 @@ namespace TransIT.BLL.Services.ImplementedServices
 
     public class UserService : CrudService<User>, IUserService
     {
-        /// <summary>
-        /// Manages password hashing
-        /// </summary>
-        protected IPasswordHasher _hasher;
 
         protected IRoleRepository _roleRepository;
 
@@ -38,10 +33,8 @@ namespace TransIT.BLL.Services.ImplementedServices
             IUnitOfWork unitOfWork,
             ILogger<CrudService<User>> logger,
             IUserRepository repository,
-            IRoleRepository roleRepository,
-            IPasswordHasher hasher) : base(unitOfWork, logger, repository)
+            IRoleRepository roleRepository) : base(unitOfWork, logger, repository)
         {
-            _hasher = hasher;
             _roleRepository = roleRepository;
         }
 
@@ -49,7 +42,6 @@ namespace TransIT.BLL.Services.ImplementedServices
         /// Creates user if login and password not empty and does not exist in DB
         /// hashes password and set zero to id
         /// </summary>
-        /// <see cref="IPasswordHasher.HashPassword(string)"/>
         /// <param name="user">User model</param>
         /// <returns>Is successful</returns>
         public override async Task<User> CreateAsync(User user)
