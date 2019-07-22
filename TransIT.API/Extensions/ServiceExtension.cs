@@ -20,7 +20,10 @@ namespace TransIT.API.Extensions
 {
     public static class ServiceExtension
     {
-        public static void ConfigureDbContext(this IServiceCollection services, IConfiguration Configuration, IHostingEnvironment Environment)
+        public static void ConfigureDbContext(
+            this IServiceCollection services,
+            IConfiguration Configuration, 
+            IHostingEnvironment Environment)
         {
             Action<DbContextOptionsBuilder> configureConnection = options =>
             {
@@ -36,11 +39,21 @@ namespace TransIT.API.Extensions
 
             services.AddDbContext<DbContext, TransITDBContext>(configureConnection);
             services.AddDbContext<TransITDBContext>(configureConnection);
+        }
 
+        public static void ConfigureIdentity(this IServiceCollection services,
+            IConfiguration Configuration,
+            IHostingEnvironment Environment)
+        {
             services.AddIdentity<User, Role>()
                 .AddEntityFrameworkStores<TransITDBContext>()
                 .AddRoleManager<RoleManager<Role>>()
                 .AddUserManager<UserManager<User>>();
+
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.Password.RequireNonAlphanumeric = false;
+            });
         }
         public static void ConfigureAutoMapper(this IServiceCollection services)
         {

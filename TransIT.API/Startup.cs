@@ -31,11 +31,7 @@ namespace TransIT.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.ConfigureDbContext(Configuration, Environment);
-
-            services.Configure<IdentityOptions>(options =>
-            {
-                options.Password.RequireNonAlphanumeric = false;
-            });
+            services.ConfigureIdentity(Configuration, Environment);
 
             services.AddSignalR();
             services.ConfigureAutoMapper();
