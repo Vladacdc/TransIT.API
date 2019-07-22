@@ -22,7 +22,7 @@ namespace TransIT.DAL.Models
             services.GetRequiredService<TransITDBContext>().Database.Migrate();
 
             await app.SeedRolesAsync(services);
-            await app.SeedAdminAsync(services,configuration);
+            await app.SeedAdminAsync(services, configuration);
             app.SeedStates(services);
         }
 
@@ -32,6 +32,7 @@ namespace TransIT.DAL.Models
             IConfiguration configuration)
         {
             await app.SeeUsersAsync(services, configuration);
+            app.SeedData(services);
         }
 
         public static async Task SeedRolesAsync(
@@ -78,17 +79,145 @@ namespace TransIT.DAL.Models
             IServiceProvider services,
             IConfiguration configuration)
         {
-            await app.SeedAdminAsync(services,configuration);
+            await app.SeedAdminAsync(services, configuration);
 
             await app.SeedUserAsync(services, configuration, "Register", "REGISTER");
             await app.SeedUserAsync(services, configuration, "Engineer", "ENGINEER");
             await app.SeedUserAsync(services, configuration, "Analyst", "ANALYST");
         }
 
-        public static void SeedLocation(this IApplicationBuilder app, IServiceProvider services)
+        public static void SeedData(this IApplicationBuilder app, IServiceProvider services)
         {
-            
+            var context = services.GetRequiredService<TransITDBContext>();
+
+            #region Locations
+            var LKP1 = new Location() { Name = "LKP  \"Lvivelektrotrans\"",
+                Description = "Lviv, Troleibusna Street, 1"
+            };
+            var LKP2 = new Location() { Name = "LKP \"Lvivelektrotrans\"",
+                Description = "Lviv, Sakharova St, 2"
+            };
+            var LK = new Location() { Name = "LK ATP-1",
+                Description = "Lviv, Aviatsiina St, 1" };
+            if (!context.Location.Any())
+            {
+                context.Location.AddRange(LKP1, LKP2, LK);
+            }
+            #endregion
+
+            #region VechileTypes
+            var A185Lviv = new VehicleType(){ Name = "Bus A185 Lviv (115)" };
+            var A185Uzhorod = new VehicleType() { Name = "Bus АA85 Uzhhorod" };
+            var T3LLviv = new VehicleType() { Name = "Tram T3L Lviv" };
+            var T191Lviv = new VehicleType() { Name = "Trolely T191 Lviv" };
+            if (!context.VehicleType.Any())
+            {
+                context.VehicleType.AddRange(A185Lviv,A185Uzhorod, T3LLviv,T191Lviv);
+            }
+            #endregion
+
+            #region Vehicles
+            var vehicle1 = new Vehicle()
+            {
+                VehicleType = A185Lviv,
+                Brand = "Electron",
+                Vincode = "WR0DA76963U153381",
+                InventoryId = "12314",
+                RegNum = "AC4131CC",
+                Model = "S10",
+                Location = LKP1,
+                WarrantyEndDate = new DateTime(2019, 12, 10),
+                CommissioningDate = new DateTime(2017, 12, 10)
+            };
+            var vehicle2 = new Vehicle()
+            {
+                VehicleType = A185Uzhorod,
+                Brand = "Bohdan",
+                Vincode = "WP0CA36863U153382",
+                InventoryId = "124",
+                RegNum = "LV1234VL",
+                Model = "S2",
+                WarrantyEndDate     = new DateTime(2019, 05, 09),
+                CommissioningDate = new DateTime(2017, 05, 22)
+            };
+            if (!context.Vehicle.Any())
+            {
+                context.Vehicle.AddRange(vehicle1, vehicle2);
+            }
+            #endregion
+
+            #region Posts
+            var engineer = new Post { Name = "Engineer" };
+            var boss = new Post { Name = "Boss" };
+            var locksmith = new Post { Name = "Locksmith" };
+            if (!context.Post.Any())
+            {
+                context.Post.AddRange(engineer, boss, locksmith);
+            }
+            #endregion
+
+            #region Employees
+            var Ihora = new Employee()
+            {
+                FirstName = "Ihor",
+                MiddleName = "Oleksandrovych",
+                LastName = "Babiak",
+                ShortName = "Ihora",
+                BoardNumber = 1,
+                Post = boss
+            };
+            var Yura = new Employee()
+            {
+                FirstName = "Yurii",
+                MiddleName = "Vasylovych",
+                LastName = "Medved",
+                ShortName = "Yurik",
+                BoardNumber = 5,
+                Post = locksmith
+            };
+            var Sania = new Employee()
+            {
+                FirstName = "Oleksandr",
+                MiddleName = "Borysovych",
+                LastName = "Vodzianskyi",
+                ShortName = "Sania",
+                BoardNumber = 2,
+                Post = engineer
+            };
+            if (!context.Employee.Any())
+            {
+                context.Employee.AddRange(Ihora, Yura, Sania);
+            }
+            #endregion
+
+            #region Countries
+            var Ukraine = new Country() { Name = "Ukraine" };
+            var Turkey = new Country() { Name = "Turkey" };
+            var Russia = new Country() { Name = "Russia" };
+            var Polland = new Country() { Name = "Polland" };
+            var German = new Country() { Name = "German" };
+            if (!context.Country.Any())
+            {
+                context.AddRange(Ukraine, Turkey, Russia, Polland, German);
+            }
+            #endregion
+
+            #region Currencies
+            var USD = new Currency { ShortName = "USD", FullName = "Dollar" };
+            var UAH = new Currency { ShortName = "UAH", FullName = "Hryvnia" };
+            var RUB = new Currency { ShortName = "RUB", FullName = "Ruble" };
+            var GBR = new Currency { ShortName = "GBR", FullName = "Great British Pound" };
+            var EUR = new Currency { ShortName = "EUR", FullName = "Euro" };
+
+            if (!context.Country.Any())
+            {
+                context.AddRange(USD,UAH,RUB,GBR,EUR);
+            }
+            #endregion
+
+            context.SaveChanges();
         }
+
 
         private static async Task SeedUserAsync(
             this IApplicationBuilder app,
@@ -98,7 +227,7 @@ namespace TransIT.DAL.Models
             string role)
         {
             var userManager = services.GetRequiredService<UserManager<User>>();
-            string username = configuration["Users:"+jsonRecord+":UserName"];
+            string username = configuration["Users:" + jsonRecord + ":UserName"];
             string password = configuration["Users:" + jsonRecord + ":Password"];
             string firstname = configuration["Users:" + jsonRecord + ":FirstName"];
             string middlename = configuration["Users:" + jsonRecord + ":MiddleName"];
