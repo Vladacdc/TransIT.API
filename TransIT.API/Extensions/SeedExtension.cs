@@ -13,6 +13,7 @@ namespace TransIT.API.Extensions
         public static void Seed(this IApplicationBuilder app, IServiceProvider services,IConfiguration configuration)
         {
             app.SeedEssentialAsync(services,configuration).Wait();
+            app.SeedAdditionalAsync(services, configuration).Wait();
         }
     }
 }

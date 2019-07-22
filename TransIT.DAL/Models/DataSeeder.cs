@@ -13,13 +13,27 @@ namespace TransIT.DAL.Models
 {
     public static class DataSeeder
     {
-        public static async Task SeedEssentialAsync(this IApplicationBuilder app, IServiceProvider services, IConfiguration configuration)
+        public static async Task SeedEssentialAsync(
+            this IApplicationBuilder app,
+            IServiceProvider services,
+            IConfiguration configuration)
         {
             await app.SeedRolesAsync(services);
             await app.SeedAdminAsync(services,configuration);
             app.SeedStates(services);
         }
-        public static async Task SeedRolesAsync(this IApplicationBuilder app, IServiceProvider services)
+
+        public static async Task SeedAdditionalAsync(
+            this IApplicationBuilder app,
+            IServiceProvider services,
+            IConfiguration configuration)
+        {
+            await app.SeeUsersAsync(services, configuration);
+        }
+
+        public static async Task SeedRolesAsync(
+            this IApplicationBuilder app,
+            IServiceProvider services)
         {
             var roleManager = services.GetRequiredService<RoleManager<Role>>();
             await CreateIfNotExsits(roleManager, new Role() { Name = "ADMIN", TransName = "Адмін" });
@@ -28,28 +42,18 @@ namespace TransIT.DAL.Models
             await CreateIfNotExsits(roleManager, new Role() { Name = "REGISTER", TransName = "Реєстратор" });
             await CreateIfNotExsits(roleManager, new Role() { Name = "ANALYST", TransName = "Аналітик" });
         }
-        public static async Task SeedAdminAsync(this IApplicationBuilder app, IServiceProvider services, IConfiguration configuration)
-        {
-            var userManager = services.GetRequiredService<UserManager<User>>();
-            string username = configuration["Users:Admin:UserName"];
-            string password = configuration["Users:Admin:Password"];
-            string firstname = configuration["Users:Admin:FirstName"];
-            string middlename = configuration["Users:Admin:MiddleName"];
-            string lastname = configuration["Users:Admin:LastName"];
-            if (await userManager.FindByNameAsync(username) == null)
-            {
-                var admin = new User() { UserName = username, FirstName = firstname,
-                    MiddleName = middlename, LastName = lastname };
 
-                IdentityResult result = await userManager.CreateAsync(admin,password);
-                if (result.Succeeded)
-                {
-                    await userManager.AddToRoleAsync(admin, "ADMIN");
-                }
-            }
+        public static async Task SeedAdminAsync(
+            this IApplicationBuilder app,
+            IServiceProvider services,
+            IConfiguration configuration)
+        {
+            await app.SeedUserAsync(services, configuration, "Admin", "ADMIN");
         }
 
-        public static void SeedStates(this IApplicationBuilder app, IServiceProvider services)
+        public static void SeedStates(
+            this IApplicationBuilder app,
+            IServiceProvider services)
         {
             var context = services.GetRequiredService<TransITDBContext>();
             if (!context.State.Any())
@@ -66,12 +70,52 @@ namespace TransIT.DAL.Models
             }
         }
 
-        public static async Task SeeUsersAsync(this IApplicationBuilder app, IServiceProvider services, IConfiguration configuration)
+        public static async Task SeeUsersAsync(
+            this IApplicationBuilder app,
+            IServiceProvider services,
+            IConfiguration configuration)
         {
             await app.SeedAdminAsync(services,configuration);
+
+            await app.SeedUserAsync(services, configuration, "Register", "REGISTER");
+            await app.SeedUserAsync(services, configuration, "Engineer", "ENGINEER");
+            await app.SeedUserAsync(services, configuration, "Analyst", "ANALYST");
         }
 
-        private static async Task CreateIfNotExsits(RoleManager<Role> roleManager, Role role)
+        private static async Task SeedUserAsync(
+            this IApplicationBuilder app,
+            IServiceProvider services,
+            IConfiguration configuration,
+            string jsonRecord,
+            string role)
+        {
+            var userManager = services.GetRequiredService<UserManager<User>>();
+            string username = configuration["Users:"+jsonRecord+":UserName"];
+            string password = configuration["Users:" + jsonRecord + ":Password"];
+            string firstname = configuration["Users:" + jsonRecord + ":FirstName"];
+            string middlename = configuration["Users:" + jsonRecord + ":MiddleName"];
+            string lastname = configuration["Users:" + jsonRecord + ":LastName"];
+            if (await userManager.FindByNameAsync(username) == null)
+            {
+                var user = new User()
+                {
+                    UserName = username,
+                    FirstName = firstname,
+                    MiddleName = middlename,
+                    LastName = lastname
+                };
+
+                IdentityResult result = await userManager.CreateAsync(user, password);
+                if (result.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(user, role);
+                }
+            }
+        }
+
+        private static async Task CreateIfNotExsits(
+            RoleManager<Role> roleManager,
+            Role role)
         {
             if (await roleManager.FindByNameAsync(role.Name) == null)
             {
