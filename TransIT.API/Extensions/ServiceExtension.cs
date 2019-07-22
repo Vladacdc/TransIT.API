@@ -55,6 +55,7 @@ namespace TransIT.API.Extensions
                 options.Password.RequireNonAlphanumeric = false;
             });
         }
+
         public static void ConfigureAutoMapper(this IServiceCollection services)
         {
             services.AddSingleton(new MapperConfiguration(c =>

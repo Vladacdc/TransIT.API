@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using TransIT.DAL.Models.Entities;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using System.Linq;
@@ -18,6 +19,8 @@ namespace TransIT.DAL.Models
             IServiceProvider services,
             IConfiguration configuration)
         {
+            services.GetRequiredService<TransITDBContext>().Database.Migrate();
+
             await app.SeedRolesAsync(services);
             await app.SeedAdminAsync(services,configuration);
             app.SeedStates(services);
@@ -59,14 +62,14 @@ namespace TransIT.DAL.Models
             if (!context.State.Any())
             {
                 context.State.AddRange(
-                    new State { Id = 1, Name = "NEW", TransName = "Нова" },
-                    new State { Id = 2, Name = "VERIFIED", TransName = "Верифіковано" },
-                    new State { Id = 3, Name = "REJECTED", TransName = "Відхилено" },
-                    new State { Id = 4, Name = "TODO", TransName = "До виконання" },
-                    new State { Id = 5, Name = "EXECUTING", TransName = "В роботі" },
-                    new State { Id = 6, Name = "DONE", TransName = "Готово" },
-                    new State { Id = 7, Name = "CONFIRMED", TransName = "Підтверджено" },
-                    new State { Id = 8, Name = "UNCONFIRMED", TransName = "Не підтверджено" });
+                    new State { Name = "NEW", TransName = "Нова" },
+                    new State { Name = "VERIFIED", TransName = "Верифіковано" },
+                    new State { Name = "REJECTED", TransName = "Відхилено" },
+                    new State { Name = "TODO", TransName = "До виконання" },
+                    new State { Name = "EXECUTING", TransName = "В роботі" },
+                    new State { Name = "DONE", TransName = "Готово" },
+                    new State { Name = "CONFIRMED", TransName = "Підтверджено" },
+                    new State { Name = "UNCONFIRMED", TransName = "Не підтверджено" });
             }
         }
 
@@ -80,6 +83,11 @@ namespace TransIT.DAL.Models
             await app.SeedUserAsync(services, configuration, "Register", "REGISTER");
             await app.SeedUserAsync(services, configuration, "Engineer", "ENGINEER");
             await app.SeedUserAsync(services, configuration, "Analyst", "ANALYST");
+        }
+
+        public static void SeedLocation(this IApplicationBuilder app, IServiceProvider services)
+        {
+            
         }
 
         private static async Task SeedUserAsync(
