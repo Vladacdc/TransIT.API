@@ -26,7 +26,7 @@ namespace TransIT.BLL.Services.ImplementedServices
         /// Ctor
         /// </summary>
         /// <param name="unitOfWork">Unit of work pattern</param>
-        public IssueLogService(IUnitOfWork unitOfWork,IMapper mapper)
+        public IssueLogService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -45,22 +45,17 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<IEnumerable<IssueLogDTO>> GetRangeByIssueIdAsync(int issueId)
         {
-            List<IssueLogDTO> issueLogDTOs = new List<IssueLogDTO>();
-            foreach(var i in await _unitOfWork.IssueLogRepository.GetAllAsync(i => i.IssueId == issueId))
-            {
-                issueLogDTOs.Add(_mapper.Map<IssueLogDTO>(i));
-            }
-
-            return issueLogDTOs;
+            return (await _unitOfWork.IssueLogRepository.GetAllAsync(i => i.IssueId == issueId)).AsQueryable()
+                .ProjectTo<IssueLogDTO>();
         }
 
         public async Task<IEnumerable<IssueLogDTO>> SearchAsync(string search)
         {
             var IssueLogs = await _unitOfWork.IssueLogRepository.SearchExpressionAsync(
                 search
-                    .Split(new[] { ' ', ',', '.' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Split(new[] {' ', ',', '.'}, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => x.Trim().ToUpperInvariant())
-                );
+            );
 
             return IssueLogs.ProjectTo<IssueLogDTO>();
         }
@@ -75,18 +70,19 @@ namespace TransIT.BLL.Services.ImplementedServices
         public async Task<IssueLogDTO> CreateAsync(IssueLogDTO issueLogDTO)
         {
             var oldIssueDTO = issueLogDTO.Issue;
-            issueLogDTO.Issue =_mapper.Map<IssueDTO>(await _unitOfWork.IssueRepository.GetByIdAsync((int)issueLogDTO.Issue.Id));
+            issueLogDTO.Issue =
+                _mapper.Map<IssueDTO>(await _unitOfWork.IssueRepository.GetByIdAsync((int) issueLogDTO.Issue.Id));
             issueLogDTO.OldState.Id = issueLogDTO.Issue.State.Id;
             issueLogDTO.Issue.State.Id = issueLogDTO.NewState.Id;
             issueLogDTO.Issue.Deadline = oldIssueDTO.Deadline;
             issueLogDTO.Issue.AssignedTo.Id = oldIssueDTO.AssignedTo.Id;
-                
+
             if (issueLogDTO.OldState.Id != issueLogDTO.NewState.Id
                 && !(await _unitOfWork.TransitionRepository.GetAllAsync(x =>
-                    x.FromStateId == issueLogDTO.OldState.Id
-                    && x.ActionTypeId == issueLogDTO.ActionType.Id
-                    && x.ToStateId == issueLogDTO.NewState.Id)
-                ).Any())
+                        x.FromStateId == issueLogDTO.OldState.Id
+                        && x.ActionTypeId == issueLogDTO.ActionType.Id
+                        && x.ToStateId == issueLogDTO.NewState.Id)
+                    ).Any())
                 throw new ConstraintException("Can not move to the state according to transition settings.");
 
             var model = _mapper.Map<IssueLog>(issueLogDTO);

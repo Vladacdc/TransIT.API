@@ -29,8 +29,7 @@ namespace TransIT.BLL.Services.ImplementedServices
         /// Ctor
         /// </summary>
         /// <param name="unitOfWork">Unit of work pattern</param>
-
-
+        /// <param name="mapper">Mapper</param>
         public DocumentService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
@@ -40,12 +39,8 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<IEnumerable<DocumentDTO>> GetRangeByIssueLogIdAsync(int issueLogId)
         {
-            List<DocumentDTO> documentDTOs = new List<DocumentDTO>();
-            foreach (var i in await _unitOfWork.DocumentRepository.GetAllAsync(i => i.IssueLogId == issueLogId))
-            {
-                documentDTOs.Add(_mapper.Map<DocumentDTO>(i));
-            }
-            return documentDTOs;
+            return (await _unitOfWork.DocumentRepository.GetAllAsync(i => i.IssueLogId == issueLogId)).AsQueryable()
+                .ProjectTo<DocumentDTO>();
         }
 
         public async Task<DocumentDTO> GetAsync(int id)
