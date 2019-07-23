@@ -18,9 +18,9 @@ namespace TransIT.API.Controllers
         where TEntity : class, IEntity, new()
         where TEntityDTO : class
     {
-        private readonly ICrudService<TEntity> _dataService;
+        protected readonly ICrudService<TEntity> _dataService;
         
-        public DataController(
+        protected DataController(
             IMapper mapper,
             ICrudService<TEntity> dataService,
             IFilterService<TEntity> filterService) : base(filterService, mapper)

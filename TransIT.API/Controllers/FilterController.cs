@@ -23,7 +23,7 @@ namespace TransIT.API.Controllers
         protected readonly IFilterService<TEntity> _filterService;
         protected readonly IMapper _mapper;
 
-        public FilterController(IFilterService<TEntity> filterService, IMapper mapper)
+        protected FilterController(IFilterService<TEntity> filterService, IMapper mapper)
         {
             _filterService = filterService;
             _mapper = mapper;
