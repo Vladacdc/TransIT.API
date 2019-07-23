@@ -73,7 +73,7 @@ namespace TransIT.DAL.Models
 
             if (!context.State.Any())
             {
-                context.State.AddRange(@new, executing, rejected, done, 
+                context.State.AddRange(@new, executing, rejected, done,
                     verified, todo, confirmed, unconfirmed);
             }
             #endregion
@@ -92,7 +92,7 @@ namespace TransIT.DAL.Models
             var tsetExecuting = new Transition { FromState = @new, ToState = executing, ActionType = setExecuting, IsFixed = true };
             var treject1 = new Transition { FromState = @new, ToState = rejected, ActionType = reject, IsFixed = true };
             var treject2 = new Transition { FromState = executing, ToState = rejected, ActionType = reject, IsFixed = true };
-            var tfinish = new Transition { FromState = executing, ToState = done, ActionType = finish, IsFixed = true };  
+            var tfinish = new Transition { FromState = executing, ToState = done, ActionType = finish, IsFixed = true };
             if (!context.Transition.Any())
             {
                 context.Transition.AddRange(tsetExecuting, treject1, treject2, tfinish);
@@ -119,13 +119,19 @@ namespace TransIT.DAL.Models
             var context = services.GetRequiredService<TransITDBContext>();
 
             #region Locations
-            var LKP1 = new Location() { Name = "ЛКП \"Львівелектротранс\"",
+            var LKP1 = new Location()
+            {
+                Name = "ЛКП \"Львівелектротранс\"",
                 Description = "м. Львів вул. Тролейбусна 1"
             };
-            var LKP2 = new Location() { Name = "ЛКП \"Львівелектротранс\"",
+            var LKP2 = new Location()
+            {
+                Name = "ЛКП \"Львівелектротранс\"",
                 Description = "м. Львів вул.Сахарова 2а"
             };
-            var LK = new Location() { Name = "ЛК АТП-1",
+            var LK = new Location()
+            {
+                Name = "ЛК АТП-1",
                 Description = "м. Львів вул. Авіаційна 1"
             };
             if (!context.Location.Any())
@@ -135,13 +141,13 @@ namespace TransIT.DAL.Models
             #endregion
 
             #region VechileTypes
-            var A185 = new VehicleType(){ Name = "Автобус А185" };
+            var A185 = new VehicleType() { Name = "Автобус А185" };
             var E191 = new VehicleType() { Name = "Електробус Е191" };
             var T3L = new VehicleType() { Name = "Трамвай Т3L" };
             var T191 = new VehicleType() { Name = "Тролейбус Т191" };
             if (!context.VehicleType.Any())
             {
-                context.VehicleType.AddRange(A185,E191, T3L,T191);
+                context.VehicleType.AddRange(A185, E191, T3L, T191);
             }
             #endregion
 
@@ -166,7 +172,7 @@ namespace TransIT.DAL.Models
                 InventoryId = "124",
                 RegNum = "LV1234VL",
                 Model = "S2",
-                WarrantyEndDate     = new DateTime(2019, 05, 09),
+                WarrantyEndDate = new DateTime(2019, 05, 09),
                 CommissioningDate = new DateTime(2017, 05, 22)
             };
             if (!context.Vehicle.Any())
@@ -274,6 +280,96 @@ namespace TransIT.DAL.Models
             if (!context.Supplier.Any())
             {
                 context.AddRange(Yunona, Tekhnos, Elephant);
+            }
+            #endregion
+
+            #region MalfunctionsWithGroups
+            var body = new MalfunctionGroup()
+            {
+                Name = "Кузов",
+            };
+
+            var windows = new MalfunctionSubgroup()
+            {
+                Name = "Скління",
+                MalfunctionGroup = body
+            };
+            var brokenWindow = new Malfunction
+            {
+                Name = "Розбите вікно",
+                MalfunctionSubgroup = windows
+            };
+            var waterLeak = new Malfunction
+            {
+                Name = "Вікно протікає",
+                MalfunctionSubgroup = windows
+            };
+
+            var handrails = new MalfunctionSubgroup
+            {
+                Name = "Поручні",
+                MalfunctionGroup = body
+            };
+            var missingHandrail = new Malfunction()
+            {
+                Name = "Зникли поручні",
+                MalfunctionSubgroup = handrails
+            };
+            var brokenHandrail = new Malfunction()
+            {
+                Name = "Зламані поручні",
+                MalfunctionSubgroup = handrails
+            };
+
+            var engine = new MalfunctionGroup()
+            {
+                Name = "Двигун"
+            };
+
+            var gasEngine = new MalfunctionSubgroup()
+            {
+                Name = "Карбюраторний двигун",
+                MalfunctionGroup = engine
+            };
+            var tooMuchGas = new Malfunction()
+            {
+                Name = "Залиті Свічки",
+                MalfunctionSubgroup = gasEngine
+            };
+            var noGas = new Malfunction()
+            {
+                Name = "Перебитий бензонасос",
+                MalfunctionSubgroup = gasEngine
+            };
+
+            var dieselEngine = new MalfunctionSubgroup()
+            {
+                Name = "Дизельний двигун",
+                MalfunctionGroup = engine
+            };
+            var brokenPump = new Malfunction()
+            {
+                Name = "Зламаний насос великого тиску",
+                MalfunctionSubgroup = dieselEngine
+            };
+
+            if (!context.MalfunctionGroup.Any())
+            {
+                context.MalfunctionGroup.AddRange(body,engine);
+            }
+
+            if (!context.MalfunctionSubgroup.Any())
+            {
+                context.AddRange(windows, handrails, gasEngine,dieselEngine);
+            }
+
+            if (!context.Malfunction.Any())
+            {
+                context.AddRange(
+                    brokenWindow,waterLeak,
+                    missingHandrail, brokenHandrail,
+                    tooMuchGas, noGas, 
+                    brokenPump);
             }
             #endregion
 
