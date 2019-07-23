@@ -106,20 +106,20 @@ namespace TransIT.DAL.Models
             #endregion
 
             #region VechileTypes
-            var A185Lviv = new VehicleType(){ Name = "Bus A185 Lviv (115)" };
-            var A185Uzhorod = new VehicleType() { Name = "Bus АA85 Uzhhorod" };
-            var T3LLviv = new VehicleType() { Name = "Tram T3L Lviv" };
-            var T191Lviv = new VehicleType() { Name = "Trolely T191 Lviv" };
+            var A185 = new VehicleType(){ Name = "Bus A185" };
+            var E191 = new VehicleType() { Name = "Electrobus E191" };
+            var T3L = new VehicleType() { Name = "Tram T3L" };
+            var T191 = new VehicleType() { Name = "Trolely T191" };
             if (!context.VehicleType.Any())
             {
-                context.VehicleType.AddRange(A185Lviv,A185Uzhorod, T3LLviv,T191Lviv);
+                context.VehicleType.AddRange(A185,E191, T3L,T191);
             }
             #endregion
 
             #region Vehicles
             var vehicle1 = new Vehicle()
             {
-                VehicleType = A185Lviv,
+                VehicleType = A185,
                 Brand = "Electron",
                 Vincode = "WR0DA76963U153381",
                 InventoryId = "12314",
@@ -131,7 +131,7 @@ namespace TransIT.DAL.Models
             };
             var vehicle2 = new Vehicle()
             {
-                VehicleType = A185Uzhorod,
+                VehicleType = E191,
                 Brand = "Bohdan",
                 Vincode = "WP0CA36863U153382",
                 InventoryId = "124",
