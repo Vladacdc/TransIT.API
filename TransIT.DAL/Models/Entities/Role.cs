@@ -5,7 +5,7 @@ using TransIT.DAL.Models.Entities.Abstractions;
 
 namespace TransIT.DAL.Models.Entities
 {
-    public partial class Role : IdentityRole, IAuditableEntity
+    public partial class Role : IdentityRole, IAuditableEntity, IEntityId<string>
     {
         public Role()
         {

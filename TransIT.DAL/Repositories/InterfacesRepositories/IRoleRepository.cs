@@ -2,7 +2,7 @@
 
 namespace TransIT.DAL.Repositories.InterfacesRepositories
 {
-    public interface IRoleRepository : IBaseRepository<Role>
+    public interface IRoleRepository : IBaseRepository<string, Role>
     {
     }
 }

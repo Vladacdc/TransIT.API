@@ -8,14 +8,14 @@ namespace TransIT.BLL.Services
     /// <summary>
     /// Set a behavior of services 
     /// </summary>
-    public interface ICrudService<T> where T : class, IAuditableEntity, new()
+    public interface ICrudService<TId, T> where T : class, IAuditableEntity, new()
     {
         /// <summary>
         /// Gets entity by id
         /// </summary>
         /// <param name="id">Entity id</param>
         /// <returns>Entity</returns>
-        Task<T> GetAsync(int id);
+        Task<T> GetAsync(TId id);
         /// <summary>
         /// Gets entities with pagination
         /// </summary>
@@ -41,7 +41,7 @@ namespace TransIT.BLL.Services
         /// </summary>
         /// <param name="id">Entity id</param>
         /// <returns>void</returns>
-        Task DeleteAsync(int id);
+        Task DeleteAsync(TId id);
         /// <summary>
         /// Searches for matches
         /// </summary>

@@ -5,7 +5,7 @@ namespace TransIT.BLL.Services.Interfaces
     /// <summary>
     /// Currency model CRUD
     /// </summary>
-    public interface ICurrencyService : ICrudService<Currency>
+    public interface ICurrencyService : ICrudService<int, Currency>
     {
     }
 }

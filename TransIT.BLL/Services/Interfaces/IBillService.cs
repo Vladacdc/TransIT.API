@@ -8,7 +8,7 @@ namespace TransIT.BLL.Services.Interfaces
     /// <summary>
     /// Bill type model CRUD
     /// </summary>
-    public interface IBillService : ICrudService<Bill>
+    public interface IBillService : ICrudService<int, Bill>
     {
     }
 }

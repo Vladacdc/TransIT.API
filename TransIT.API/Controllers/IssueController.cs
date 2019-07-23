@@ -16,7 +16,7 @@ using TransIT.DAL.Models.Entities;
 namespace TransIT.API.Controllers
 {
     [Authorize(Roles = "ENGINEER,REGISTER,ANALYST")]
-    public class IssueController : DataController<Issue, IssueDTO>
+    public class IssueController : DataController<int, Issue, IssueDTO>
     {
         private readonly IIssueService _issueService;
         private readonly IHubContext<IssueHub> _issueHub;
@@ -24,7 +24,7 @@ namespace TransIT.API.Controllers
         public IssueController(
             IMapper mapper,
             IIssueService issueService,
-            IFilterService<Issue> odService,
+            IFilterService<int, Issue> odService,
             IHubContext<IssueHub> issueHub
             ) : base(mapper, issueService, odService)
         {

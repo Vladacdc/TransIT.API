@@ -7,7 +7,7 @@ namespace TransIT.BLL.Services.Interfaces
     /// <summary>
     /// IssueLog type model CRUD
     /// </summary>
-    public interface IIssueLogService : ICrudService<IssueLog>
+    public interface IIssueLogService : ICrudService<int, IssueLog>
     {
         /// <summary>
         /// Find issue logs with related issue

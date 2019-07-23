@@ -8,8 +8,8 @@ using TransIT.DAL.Models.Entities.Abstractions;
 
 namespace TransIT.DAL.Repositories
 {
-    public abstract class BaseRepository<TEntity> : IBaseRepository<TEntity>, IQueryRepository<TEntity>
-        where TEntity : class
+    public abstract class BaseRepository<TId, TEntity> : IBaseRepository<TId, TEntity>, IQueryRepository<TEntity>
+        where TEntity : class, IAuditableEntity, IEntityId<TId>
     {
         private readonly DbContext _context;
         protected DbSet<TEntity> _entities;
@@ -19,10 +19,10 @@ namespace TransIT.DAL.Repositories
             _context = context;
         }
 
-        public virtual Task<TEntity> GetByIdAsync(int id)
+        public virtual Task<TEntity> GetByIdAsync(TId id)
         {
-           return null;
-           //return ComplexEntities.SingleOrDefaultAsync(t => t.Id == id);
+            //throw new NotImplementedException();
+            return ComplexEntities.SingleOrDefaultAsync(t => t.Id.Equals(id));
         }
 
         public virtual Task<TEntity> FindAsync(Expression<Func<TEntity, bool>> predicate)

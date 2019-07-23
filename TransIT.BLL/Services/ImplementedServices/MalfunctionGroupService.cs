@@ -10,7 +10,7 @@ namespace TransIT.BLL.Services.ImplementedServices
     /// Malfunction Group CRUD service
     /// </summary>
     /// <see cref="IMalfunctionGroupService"/>
-    public class MalfunctionGroupService : CrudService<MalfunctionGroup>, IMalfunctionGroupService
+    public class MalfunctionGroupService : CrudService<int, MalfunctionGroup>, IMalfunctionGroupService
     {
         /// <summary>
         /// Ctor
@@ -21,7 +21,7 @@ namespace TransIT.BLL.Services.ImplementedServices
         /// <see cref="CrudService{TEntity}"/>
         public MalfunctionGroupService(
             IUnitOfWork unitOfWork,
-            ILogger<CrudService<MalfunctionGroup>> logger,
+            ILogger<CrudService<int, MalfunctionGroup>> logger,
             IMalfunctionGroupRepository repository) : base(unitOfWork, logger, repository) { }
     }
 }

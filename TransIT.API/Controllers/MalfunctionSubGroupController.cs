@@ -10,14 +10,14 @@ using TransIT.DAL.Models.Entities;
 namespace TransIT.API.Controllers
 {
     [Authorize(Roles = "ADMIN,ENGINEER,ANALYST")]
-    public class MalfunctionSubGroupController : DataController<MalfunctionSubgroup, MalfunctionSubgroupDTO>
+    public class MalfunctionSubGroupController : DataController<int, MalfunctionSubgroup, MalfunctionSubgroupDTO>
     {
         private readonly IMalfunctionSubgroupService _malfunctionSubgroupService;
 
         public MalfunctionSubGroupController(
             IMapper mapper, 
             IMalfunctionSubgroupService malfunctionSubgroupService,
-            IFilterService<MalfunctionSubgroup> odService
+            IFilterService<int, MalfunctionSubgroup> odService
             ) : base(mapper, malfunctionSubgroupService, odService)
         {
             _malfunctionSubgroupService = malfunctionSubgroupService;

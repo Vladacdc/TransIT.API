@@ -17,7 +17,7 @@ using TransIT.BLL.Helpers.FileStorageLogger;
 namespace TransIT.API.Controllers
 {
     [Authorize(Roles = "ADMIN,ENGINEER,ANALYST")]
-    public class DocumentController : DataController<Document, DocumentDTO>
+    public class DocumentController : DataController<int, Document, DocumentDTO>
     {
         private readonly IDocumentService _documentService;
         private readonly IFileStorageLogger _storageLogger;
@@ -25,7 +25,7 @@ namespace TransIT.API.Controllers
         public DocumentController(
             IMapper mapper,
             IDocumentService documentService,
-            IFilterService<Document> odService
+            IFilterService<int, Document> odService
             ) : base(mapper, documentService, odService)
         {
             _documentService = documentService;

@@ -14,16 +14,16 @@ namespace TransIT.API.Controllers
     [EnableCors("CorsPolicy")]
     [Produces("application/json")]
     [Route("api/v1/[controller]")]
-    public abstract class DataController<TEntity, TEntityDTO> : FilterController<TEntity, TEntityDTO>
+    public abstract class DataController<TId, TEntity, TEntityDTO> : FilterController<TId, TEntity, TEntityDTO>
         where TEntity : class, IAuditableEntity, new()
         where TEntityDTO : class
     {
-        private readonly ICrudService<TEntity> _dataService;
+        private readonly ICrudService<TId, TEntity> _dataService;
         
         public DataController(
             IMapper mapper,
-            ICrudService<TEntity> dataService,
-            IFilterService<TEntity> filterService) : base(filterService, mapper)
+            ICrudService<TId, TEntity> dataService,
+            IFilterService<TId, TEntity> filterService) : base(filterService, mapper)
         {
             _dataService = dataService;
         }
@@ -38,7 +38,7 @@ namespace TransIT.API.Controllers
         }
 
         [HttpGet("{id}")]
-        public virtual async Task<IActionResult> Get(int id)
+        public virtual async Task<IActionResult> Get(TId id)
         {
             var result = await _dataService.GetAsync(id);
             return result != null
@@ -72,7 +72,7 @@ namespace TransIT.API.Controllers
 
         [UpdateExceptionFilter]
         [HttpPut("{id}")]
-        public virtual async Task<IActionResult> Update(int id, [FromBody] TEntityDTO obj)
+        public virtual async Task<IActionResult> Update(TId id, [FromBody] TEntityDTO obj)
         {
             var entity = _mapper.Map<TEntity>(obj);
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
@@ -88,7 +88,7 @@ namespace TransIT.API.Controllers
 
         [DeleteExceptionFilter]
         [HttpDelete("{id}")]
-        public virtual async Task<IActionResult> Delete(int id)
+        public virtual async Task<IActionResult> Delete(TId id)
         {
             await _dataService.DeleteAsync(id);
             return NoContent();

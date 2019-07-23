@@ -16,7 +16,7 @@ namespace TransIT.BLL.Services
     /// Entity CRUD service
     /// </summary>
     /// <see cref="ICrudService{T}"/>
-    public abstract class CrudService<TEntity> : ICrudService<TEntity> where TEntity : class, IAuditableEntity, new()
+    public abstract class CrudService<TId, TEntity> : ICrudService<TId, TEntity> where TEntity : class, IAuditableEntity, IEntityId<TId>, new()
     {
         /// <summary>
         /// Saves changes
@@ -26,12 +26,14 @@ namespace TransIT.BLL.Services
         /// <summary>
         /// Logs on error
         /// </summary>
-        protected readonly ILogger<CrudService<TEntity>> _logger;
+        protected readonly ILogger<CrudService<TId, TEntity>> _logger;
 
         /// <summary>
         /// CRUD operations on entity
         /// </summary>
-        protected readonly IBaseRepository<TEntity> _repository;
+        protected readonly IBaseRepository<TId, TEntity> _repository;
+
+        private ICrudService<TId, TEntity> _crudServiceImplementation;
 
         /// <summary>
         /// Ctor
@@ -39,7 +41,7 @@ namespace TransIT.BLL.Services
         /// <param name="unitOfWork">Unit of work pattern</param>
         /// <param name="logger">Log on error</param>
         /// <param name="repository">CRUD operations on model</param>
-        public CrudService(IUnitOfWork unitOfWork, ILogger<CrudService<TEntity>> logger, IBaseRepository<TEntity> repository)
+        public CrudService(IUnitOfWork unitOfWork, ILogger<CrudService<TId, TEntity>> logger, IBaseRepository<TId, TEntity> repository)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
@@ -51,7 +53,7 @@ namespace TransIT.BLL.Services
         /// </summary>
         /// <param name="id">Id of the model to take</param>
         /// <returns>Founded model or null on failure</returns>
-        public virtual Task<TEntity> GetAsync(int id) => _repository.GetByIdAsync(id);
+        public virtual Task<TEntity> GetAsync(TId id) => _repository.GetByIdAsync(id);
 
         /// <summary>
         /// Get enumerable of models
@@ -72,7 +74,7 @@ namespace TransIT.BLL.Services
             {
                 await _repository.AddAsync(model);
                 await _unitOfWork.SaveAsync();
-                //return await GetAsync(model.Id);
+                return await GetAsync(model.Id);
                 throw new NotImplementedException();
             }
             catch (DbUpdateException e)
@@ -118,12 +120,12 @@ namespace TransIT.BLL.Services
         /// <param name="id">Id of model to be deleted</param>
         /// <returns>Nothing</returns>
         /// <exception cref="ConstraintException">Throws when foreign key violation detected</exception>
-        public virtual async Task DeleteAsync(int id)
+        public virtual async Task DeleteAsync(TId id)
         {
             try
             {
-               //var model = new TEntity { Id = id };
-               // _repository.Remove(model);
+                var model = new TEntity { Id = id };
+                _repository.Remove(model);
                 await _unitOfWork.SaveAsync();
             }
             catch (DbUpdateException e)

@@ -3,7 +3,7 @@ using TransIT.DAL.Models.Entities.Abstractions;
 
 namespace TransIT.DAL.Models.Entities
 {
-    public partial class Token : IAuditableEntity
+    public partial class Token : IAuditableEntity, IEntityId<int>
     {
         public int Id { get; set; }
         public string RefreshToken { get; set; }

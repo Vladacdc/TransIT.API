@@ -7,7 +7,7 @@ using TransIT.DAL.Repositories.InterfacesRepositories;
 
 namespace TransIT.DAL.Repositories.ImplementedRepositories
 {
-    public class MalfunctionRepository : BaseRepository<Malfunction>, IMalfunctionRepository
+    public class MalfunctionRepository : BaseRepository<int, Malfunction>, IMalfunctionRepository
     {
         public MalfunctionRepository(DbContext context)
                : base(context)

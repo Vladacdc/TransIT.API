@@ -10,7 +10,7 @@ namespace TransIT.BLL.Services.ImplementedServices
     /// Post CRUD service
     /// </summary>
     /// <see cref="IPostService"/>
-    public class PostService : CrudService<Post>, IPostService
+    public class PostService : CrudService<int, Post>, IPostService
     {
         /// <summary>
         /// Ctor
@@ -21,7 +21,7 @@ namespace TransIT.BLL.Services.ImplementedServices
         /// <see cref="CrudService{TEntity}"/>
         public PostService(
             IUnitOfWork unitOfWork,
-            ILogger<CrudService<Post>> logger,
+            ILogger<CrudService<int, Post>> logger,
             IPostRepository repository) : base(unitOfWork, logger, repository) { }
     }
 }

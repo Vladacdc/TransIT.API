@@ -10,14 +10,14 @@ using TransIT.DAL.Models.Entities;
 namespace TransIT.API.Controllers
 {
     [Authorize(Roles = "ADMIN,ENGINEER,REGISTER,ANALYST")]
-    public class ActionTypeController : DataController<ActionType, ActionTypeDTO>
+    public class ActionTypeController : DataController<int, ActionType, ActionTypeDTO>
     {
         private readonly IActionTypeService _actionTypeService;
 
         public ActionTypeController(
             IMapper mapper,
             IActionTypeService actionType,
-            IFilterService<ActionType> odService
+            IFilterService<int, ActionType> odService
             ) : base(mapper, actionType, odService)
         {
             _actionTypeService = actionType;

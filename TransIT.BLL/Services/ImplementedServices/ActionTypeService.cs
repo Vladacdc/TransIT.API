@@ -15,7 +15,7 @@ namespace TransIT.BLL.Services.ImplementedServices
     /// Malfunction Group CRUD service
     /// </summary>
     /// <see cref="IActionTypeService"/>
-    public class ActionTypeService : CrudService<ActionType>, IActionTypeService
+    public class ActionTypeService : CrudService<int, ActionType>, IActionTypeService
     {
         /// <summary>
         /// Ctor
@@ -26,7 +26,7 @@ namespace TransIT.BLL.Services.ImplementedServices
         /// <see cref="CrudService{TEntity}"/>
         public ActionTypeService(
             IUnitOfWork unitOfWork,
-            ILogger<CrudService<ActionType>> logger,
+            ILogger<CrudService<int, ActionType>> logger,
             IActionTypeRepository repository) : base(unitOfWork, logger, repository) { }
         
         public async override Task<ActionType> UpdateAsync(ActionType model)

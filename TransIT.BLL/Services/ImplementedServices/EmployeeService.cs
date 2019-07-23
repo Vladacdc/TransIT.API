@@ -10,7 +10,7 @@ namespace TransIT.BLL.Services.ImplementedServices
     /// Employee CRUD service
     /// </summary>
     /// <see cref="IEmployeeService"/>
-    public class EmployeeService : CrudService<Employee>, IEmployeeService
+    public class EmployeeService : CrudService<int, Employee>, IEmployeeService
     {
         /// <summary>
         /// Ctor
@@ -21,7 +21,7 @@ namespace TransIT.BLL.Services.ImplementedServices
         /// <see cref="CrudService{TEntity}"/>
         public EmployeeService(
             IUnitOfWork unitOfWork,
-            ILogger<CrudService<Employee>> logger,
+            ILogger<CrudService<int, Employee>> logger,
             IEmployeeRepository repository) : base(unitOfWork, logger, repository) { }
     }
 }

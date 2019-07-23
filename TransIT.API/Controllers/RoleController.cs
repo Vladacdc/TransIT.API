@@ -10,14 +10,14 @@ using TransIT.DAL.Models.Entities;
 namespace TransIT.API.Controllers
 {
     [Authorize(Roles = "ADMIN")]
-    public class RoleController : DataController<Role, RoleDTO>
+    public class RoleController : DataController<string, Role, RoleDTO>
     {
         private readonly IRoleService _roleService;
         
         public RoleController(
             IMapper mapper, 
             IRoleService roleService,
-            IFilterService<Role> odService
+            IFilterService<string, Role> odService
             ) : base(mapper, roleService, odService)
         {
             _roleService = roleService;
@@ -30,14 +30,14 @@ namespace TransIT.API.Controllers
         }
         
         [HttpPut("{id}")]
-        public override Task<IActionResult> Update(int id, [FromBody] RoleDTO obj)
+        public override Task<IActionResult> Update(string id, [FromBody] RoleDTO obj)
         {
             return Task.FromResult(StatusCode(501) as IActionResult);
         }
 
         [HttpDelete("{id}")]
-        public override Task<IActionResult> Delete(int id)
-        {
+        public override Task<IActionResult> Delete(string id)
+        {   
             return Task.FromResult(StatusCode(501) as IActionResult);
         }
     }

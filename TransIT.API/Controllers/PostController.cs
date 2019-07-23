@@ -8,14 +8,14 @@ using TransIT.DAL.Models.Entities;
 namespace TransIT.API.Controllers
 {
     [Authorize(Roles = "ADMIN")]
-    public class PostController : DataController<Post, PostDTO>
+    public class PostController : DataController<int, Post, PostDTO>
     {
         private readonly IPostService _postService;
         
         public PostController(
             IMapper mapper, 
             IPostService postService,
-            IFilterService<Post> odService
+            IFilterService<int, Post> odService
             ) : base(mapper, postService, odService)
         {
             _postService = postService;

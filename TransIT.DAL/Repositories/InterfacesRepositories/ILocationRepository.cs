@@ -2,7 +2,7 @@
 
 namespace TransIT.DAL.Repositories.InterfacesRepositories
 {
-    public interface ILocationRepository : IBaseRepository<Location>
+    public interface ILocationRepository : IBaseRepository<int, Location>
     {
     }
 }

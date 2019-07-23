@@ -5,7 +5,7 @@ using TransIT.DAL.Models.Entities;
 
 namespace TransIT.BLL.Services.Interfaces
 {
-    public interface ITransitionService : ICrudService<Transition>
+    public interface ITransitionService : ICrudService<int, Transition>
     {
     }
 }
