@@ -61,7 +61,7 @@ namespace TransIT.API.Controllers
             var entity = _mapper.Map<TEntity>(obj);
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            entity.ModifiedById = userId;
+            entity.UpdatedById = userId;
             entity.CreatedById = userId;
 
             var createdEntity = await _dataService.CreateAsync(entity);
@@ -78,7 +78,7 @@ namespace TransIT.API.Controllers
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
             //entity.Id = id; 
-            entity.ModifiedById = userId;
+            entity.UpdatedById = userId;
 
             var result = await _dataService.UpdateAsync(entity);
             return result != null

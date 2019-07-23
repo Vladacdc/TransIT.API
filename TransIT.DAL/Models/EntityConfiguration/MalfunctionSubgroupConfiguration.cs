@@ -12,7 +12,7 @@ namespace TransIT.DAL.Models
 
             builder.Property(e => e.Id).HasColumnName("ID");
 
-            builder.Property(e => e.CreateDate)
+            builder.Property(e => e.CreatedDate)
                 .HasColumnName("CREATE_DATE")
                 .HasColumnType("datetime")
                 .HasDefaultValueSql("(getdate())");
@@ -21,12 +21,12 @@ namespace TransIT.DAL.Models
 
             builder.Property(e => e.MalfunctionGroupId).HasColumnName("MALFUNCTION_GROUP_ID");
 
-            builder.Property(e => e.ModDate)
+            builder.Property(e => e.UpdatedDate)
                 .HasColumnName("MOD_DATE")
                 .HasColumnType("datetime")
                 .HasDefaultValueSql("(getdate())");
 
-            builder.Property(e => e.ModifiedById).HasColumnName("MOD_ID");
+            builder.Property(e => e.UpdatedById).HasColumnName("MOD_ID");
 
             builder.Property(e => e.Name)
                 .IsRequired()
@@ -45,7 +45,7 @@ namespace TransIT.DAL.Models
 
             builder.HasOne(d => d.Mod)
                 .WithMany(p => p.MalfunctionSubgroupMod)
-                .HasForeignKey(d => d.ModifiedById)
+                .HasForeignKey(d => d.UpdatedById)
                 .HasConstraintName("FK_MOD_MALFUNCTION_SUBGROUP_USER");
         }
     }

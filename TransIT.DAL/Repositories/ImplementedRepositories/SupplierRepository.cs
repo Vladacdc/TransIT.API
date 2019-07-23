@@ -29,7 +29,7 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
                    .Include(z => z.Mod)
                    .Include(c => c.Currency)
                    .Include(c => c.Country)
-                   .OrderByDescending(u => u.ModDate)
-                   .ThenByDescending(x => x.CreateDate);
+                   .OrderByDescending(u => u.UpdatedDate)
+                   .ThenByDescending(x => x.CreatedDate);
     }
 }

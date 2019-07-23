@@ -10,12 +10,12 @@ namespace TransIT.BLL.Mappings
         {
             CreateMap<Employee, EmployeeDTO>();
             CreateMap<EmployeeDTO, Employee>()
-                .ForMember(t => t.ModifiedById, opt => opt.Ignore())
+                .ForMember(t => t.UpdatedById, opt => opt.Ignore())
                 .ForMember(t => t.CreatedById, opt => opt.Ignore())
                 .ForMember(t => t.Mod, opt => opt.Ignore())
                 .ForMember(t => t.Create, opt => opt.Ignore())
-                .ForMember(t => t.ModDate, opt => opt.Ignore())
-                .ForMember(t => t.CreateDate, opt => opt.Ignore())
+                .ForMember(t => t.UpdatedDate, opt => opt.Ignore())
+                .ForMember(t => t.CreatedDate, opt => opt.Ignore())
                 .ForMember(t => t.Post, opt => opt.Ignore())
                 .ForMember(t => t.PostId, opt => opt.MapFrom(d => d.Post.Id));
         }

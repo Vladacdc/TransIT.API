@@ -22,7 +22,7 @@ namespace TransIT.DAL.Models
 
             builder.Property(e => e.BoardNumber).HasColumnName("BOARD_NUMBER");
 
-            builder.Property(e => e.CreateDate)
+            builder.Property(e => e.CreatedDate)
                 .HasColumnName("CREATE_DATE")
                 .HasColumnType("datetime")
                 .HasDefaultValueSql("(getdate())");
@@ -41,12 +41,12 @@ namespace TransIT.DAL.Models
                 .HasColumnName("MIDDLE_NAME")
                 .HasMaxLength(50);
 
-            builder.Property(e => e.ModDate)
+            builder.Property(e => e.UpdatedDate)
                 .HasColumnName("MOD_DATE")
                 .HasColumnType("datetime")
                 .HasDefaultValueSql("(getdate())");
 
-            builder.Property(e => e.ModifiedById).HasColumnName("MOD_ID");
+            builder.Property(e => e.UpdatedById).HasColumnName("MOD_ID");
 
             builder.Property(e => e.PostId).HasColumnName("POST_ID");
 
@@ -62,7 +62,7 @@ namespace TransIT.DAL.Models
 
             builder.HasOne(d => d.Mod)
                 .WithMany(p => p.EmployeeMod)
-                .HasForeignKey(d => d.ModifiedById)
+                .HasForeignKey(d => d.UpdatedById)
                 .HasConstraintName("FK_MOD_EMPLOYEE_ROLE");
 
             builder.HasOne(d => d.Post)

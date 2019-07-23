@@ -41,7 +41,7 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
             .Include(d => d.OldState)
             .Include(e => e.Supplier)
             .Include(x => x.Document)
-            .OrderByDescending(u => u.ModDate)
-            .ThenByDescending(x => x.CreateDate);
+            .OrderByDescending(u => u.UpdatedDate)
+            .ThenByDescending(x => x.CreatedDate);
     }
 }

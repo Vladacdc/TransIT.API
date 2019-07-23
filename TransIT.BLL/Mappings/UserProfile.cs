@@ -17,12 +17,12 @@ namespace TransIT.BLL.Mappings
         {
 
             CreateMap<UserDTO, User>()                
-                .ForMember(u => u.ModifiedById, opt => opt.Ignore())
+                .ForMember(u => u.UpdatedById, opt => opt.Ignore())
                 .ForMember(u => u.CreatedById, opt => opt.Ignore())
                 .ForMember(u => u.ModifiedBy, opt => opt.Ignore())
                 .ForMember(u => u.CreatedBy, opt => opt.Ignore())
-                .ForMember(u => u.ModDate, opt => opt.Ignore())
-                .ForMember(u => u.CreateDate, opt => opt.Ignore())
+                .ForMember(u => u.UpdatedDate, opt => opt.Ignore())
+                .ForMember(u => u.CreatedDate, opt => opt.Ignore())
 
                 .ForMember(u => u.BillMod, opt => opt.Ignore())
                 .ForMember(u => u.MalfunctionGroupMod, opt => opt.Ignore())

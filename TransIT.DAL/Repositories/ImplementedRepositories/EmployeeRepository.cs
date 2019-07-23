@@ -26,7 +26,7 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
         
         protected override IQueryable<Employee> ComplexEntities => Entities
             .Include(e => e.Create)
-            .Include(e => e.Mod).OrderByDescending(u => u.ModDate).ThenByDescending(x => x.CreateDate)
+            .Include(e => e.Mod).OrderByDescending(u => u.UpdatedDate).ThenByDescending(x => x.CreatedDate)
             .Include(e => e.Post);
     }
 }

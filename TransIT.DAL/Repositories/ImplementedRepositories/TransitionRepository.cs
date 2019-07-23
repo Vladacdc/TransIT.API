@@ -29,6 +29,6 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
            Include(u => u.FromState).
            Include(u => u.ToState).
            Include(t => t.Create).
-           Include(w => w.Mod).OrderByDescending(u => u.ModDate).ThenByDescending(x => x.CreateDate);
+           Include(w => w.Mod).OrderByDescending(u => u.UpdatedDate).ThenByDescending(x => x.CreatedDate);
     }
 }
