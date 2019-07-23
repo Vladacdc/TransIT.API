@@ -52,6 +52,7 @@ namespace TransIT.BLL.Factory
             IDocumentService documentService,
             IEmployeeService employeeService,
             IIssueLogService issueLogService,
+            IIssueService issueService,
             ILocationService locationService,
             IMalfunctionGroupService malfunctionGroupService,
             IMalfunctionService malfunctionService,
@@ -72,6 +73,7 @@ namespace TransIT.BLL.Factory
             DocumentService = documentService;
             EmployeeService = employeeService;
             IssueLogService = issueLogService;
+            IssueService = issueService;
             LocationService = locationService;
             MalfunctionGroupService = malfunctionGroupService;
             MalfunctionService = malfunctionService;
