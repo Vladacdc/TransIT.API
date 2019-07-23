@@ -26,7 +26,7 @@ namespace TransIT.BLL.Services.ImplementedServices
         /// Ctor
         /// </summary>
         /// <param name="unitOfWork">Unit of work pattern</param>
-        public IssueService(IUnitOfWork unitOfWork,IMapper mapper)
+        public IssueService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -39,18 +39,16 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<IEnumerable<IssueDTO>> GetRangeAsync(uint offset, uint amount)
         {
-            return (await _unitOfWork.IssueRepository.GetRangeAsync(offset, amount)).AsQueryable().ProjectTo<IssueDTO>();
+            return (await _unitOfWork.IssueRepository.GetRangeAsync(offset, amount))
+                .AsQueryable().ProjectTo<IssueDTO>();
         }
 
         /// <see cref="IIssueService"/>
         public async Task<IEnumerable<IssueDTO>> GetRegisteredIssuesAsync(uint offset, uint amount, int userId)
         {
-            List<IssueDTO> issues = new List<IssueDTO>(); 
-            foreach(var i in await _unitOfWork.IssueRepository.GetAllAsync(i => i.CreateId == userId))
-            {
-                issues.Add(_mapper.Map<IssueDTO>(i));
-            }
-            return issues.AsQueryable().Skip((int)offset).Take((int)amount);
+            return (await _unitOfWork.IssueRepository.GetAllAsync(i => i.CreateId == userId))
+                .AsQueryable().ProjectTo<IssueDTO>()
+                .Skip((int)offset).Take((int)amount);
         }
 
         public async Task<IEnumerable<IssueDTO>> SearchAsync(string search)
@@ -60,6 +58,7 @@ namespace TransIT.BLL.Services.ImplementedServices
                     .Split(new[] { ' ', ',', '.' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => x.Trim().ToUpperInvariant())
                 );
+
             return issues.ProjectTo<IssueDTO>();
         }
 
@@ -67,7 +66,9 @@ namespace TransIT.BLL.Services.ImplementedServices
         {
             VehicleDTO vehicle = _mapper.Map<VehicleDTO>(await _unitOfWork.VehicleRepository.GetByIdAsync(issueDTO.Vehicle.Id));
             if (IsWarrantyCase(vehicle))
+            {
                 issueDTO.Warranty = Warranties.WARRANTY_CASE;
+            }
 
             var model = _mapper.Map<Issue>(issueDTO);
             await _unitOfWork.IssueRepository.AddAsync(model);
@@ -92,7 +93,9 @@ namespace TransIT.BLL.Services.ImplementedServices
         {
             var issueToDelete = await GetAsync(issueId);
             if (issueToDelete?.CreateId != userId)
+            {
                 throw new UnauthorizedAccessException("Current user doesn't have access to delete this issue");
+            }
 
             _unitOfWork.IssueRepository.Remove(issueToDelete.Id);
             await _unitOfWork.SaveAsync();

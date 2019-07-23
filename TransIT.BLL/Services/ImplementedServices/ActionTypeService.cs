@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Microsoft.EntityFrameworkCore;
 using TransIT.BLL.DTOs;
 using TransIT.BLL.Services.Interfaces;
 using TransIT.DAL.Models.Entities;
@@ -41,7 +39,8 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<IEnumerable<ActionTypeDTO>> GetRangeAsync(uint offset, uint amount)
         {
-            return (await _unitOfWork.ActionTypeRepository.GetRangeAsync(offset, amount)).AsQueryable().ProjectTo<ActionTypeDTO>();
+            return (await _unitOfWork.ActionTypeRepository.GetRangeAsync(offset, amount))
+                .AsQueryable().ProjectTo<ActionTypeDTO>();
         }
 
         public async Task<IEnumerable<ActionTypeDTO>> SearchAsync(string search)
@@ -65,7 +64,7 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<ActionTypeDTO> UpdateAsync(ActionTypeDTO value)
         {
-            ActionType model =await _unitOfWork.ActionTypeRepository.GetByIdAsync(value.Id);
+            ActionType model = await _unitOfWork.ActionTypeRepository.GetByIdAsync(value.Id);
 
             if (model.IsFixed)
             {
@@ -75,7 +74,7 @@ namespace TransIT.BLL.Services.ImplementedServices
             {
                 throw new ArgumentException("Incorrect model");
             }
-                
+
             _unitOfWork.ActionTypeRepository.Update(model);
             await _unitOfWork.SaveAsync();
             return value;

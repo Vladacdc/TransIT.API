@@ -40,7 +40,8 @@ namespace TransIT.BLL.Services.ImplementedServices
         /// <see cref="IStateService"/>
         public async Task<StateDTO> GetStateByNameAsync(string name)
         {
-            return _mapper.Map<StateDTO>((await _unitOfWork.StateRepository.GetAllAsync(s => s.Name == name)).SingleOrDefault());
+            return _mapper.Map<StateDTO>((await _unitOfWork.StateRepository.GetAllAsync(s => s.Name == name))
+                .SingleOrDefault());
         }
 
         public async Task<StateDTO> GetAsync(int id)
@@ -50,7 +51,8 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<IEnumerable<StateDTO>> GetRangeAsync(uint offset, uint amount)
         {
-            return (await _unitOfWork.StateRepository.GetRangeAsync(offset, amount)).AsQueryable().ProjectTo<StateDTO>();
+            return (await _unitOfWork.StateRepository.GetRangeAsync(offset, amount))
+                .AsQueryable().ProjectTo<StateDTO>();
         }
 
         public async Task<IEnumerable<StateDTO>> SearchAsync(string search)
@@ -79,7 +81,7 @@ namespace TransIT.BLL.Services.ImplementedServices
             {
                 throw new ConstraintException("Current state can not be edited");
             }
-            if(stateDTO.IsFixed)
+            if (stateDTO.IsFixed)
             {
                 throw new ArgumentException("Incorrect model");
             }
@@ -96,13 +98,11 @@ namespace TransIT.BLL.Services.ImplementedServices
             var model = await GetAsync(id);
             if (model.IsFixed)
             {
-                throw new ConstraintException("Current state can not be deleted");   
+                throw new ConstraintException("Current state can not be deleted");
             }
 
             _unitOfWork.StateRepository.Remove(model.Id);
             await _unitOfWork.SaveAsync();
         }
-
-
     }
 }

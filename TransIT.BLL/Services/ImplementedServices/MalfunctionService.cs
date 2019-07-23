@@ -15,7 +15,7 @@ namespace TransIT.BLL.Services.ImplementedServices
     /// Malfunction CRUD service
     /// </summary>
     /// <see cref="IMalfunctionService"/>
-    public class MalfunctionService :IMalfunctionService
+    public class MalfunctionService : IMalfunctionService
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -25,7 +25,7 @@ namespace TransIT.BLL.Services.ImplementedServices
         /// Ctor
         /// </summary>
         /// <param name="unitOfWork">Unit of work pattern</param>
-        public MalfunctionService(IUnitOfWork unitOfWork,IMapper mapper)
+        public MalfunctionService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -38,7 +38,8 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<IEnumerable<MalfunctionDTO>> GetRangeAsync(uint offset, uint amount)
         {
-            return (await _unitOfWork.MalfunctionRepository.GetRangeAsync(offset, amount)).AsQueryable().ProjectTo<MalfunctionDTO>();
+            return (await _unitOfWork.MalfunctionRepository.GetRangeAsync(offset, amount))
+                .AsQueryable().ProjectTo<MalfunctionDTO>();
         }
 
         public async Task<IEnumerable<MalfunctionDTO>> SearchAsync(string search)

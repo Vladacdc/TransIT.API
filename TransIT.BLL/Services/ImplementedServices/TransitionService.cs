@@ -12,7 +12,7 @@ using TransIT.DAL.UnitOfWork;
 
 namespace TransIT.BLL.Services.ImplementedServices
 {
-    public class TransitionService :ITransitionService
+    public class TransitionService : ITransitionService
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -31,7 +31,8 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<IEnumerable<TransitionDTO>> GetRangeAsync(uint offset, uint amount)
         {
-            return (await _unitOfWork.TransitionRepository.GetRangeAsync(offset, amount)).AsQueryable().ProjectTo<TransitionDTO>();
+            return (await _unitOfWork.TransitionRepository.GetRangeAsync(offset, amount))
+                .AsQueryable().ProjectTo<TransitionDTO>();
         }
 
         public async Task<IEnumerable<TransitionDTO>> SearchAsync(string search)

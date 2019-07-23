@@ -31,7 +31,7 @@ namespace TransIT.BLL.Services.ImplementedServices
         /// <param name="unitOfWork">Unit of work pattern</param>
 
 
-        public DocumentService(IUnitOfWork unitOfWork,IMapper mapper)
+        public DocumentService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -47,14 +47,18 @@ namespace TransIT.BLL.Services.ImplementedServices
             }
             return documentDTOs;
         }
+
         public async Task<DocumentDTO> GetAsync(int id)
         {
             return _mapper.Map<DocumentDTO>(await _unitOfWork.DocumentRepository.GetByIdAsync(id));
         }
+
         public async Task<IEnumerable<DocumentDTO>> GetRangeAsync(uint offset, uint amount)
         {
-            return (await _unitOfWork.DocumentRepository.GetRangeAsync(offset, amount)).AsQueryable().ProjectTo<DocumentDTO>();
+            return (await _unitOfWork.DocumentRepository.GetRangeAsync(offset, amount))
+                .AsQueryable().ProjectTo<DocumentDTO>();
         }
+
         public async Task<IEnumerable<DocumentDTO>> SearchAsync(string search)
         {
             var documents = await _unitOfWork.DocumentRepository.SearchExpressionAsync(
@@ -65,6 +69,7 @@ namespace TransIT.BLL.Services.ImplementedServices
 
             return documents.ProjectTo<DocumentDTO>();
         }
+
         public async Task<DocumentDTO> CreateAsync(DocumentDTO dto)
         {
             var model = _mapper.Map<Document>(dto);
@@ -72,6 +77,7 @@ namespace TransIT.BLL.Services.ImplementedServices
             await _unitOfWork.SaveAsync();
             return await GetAsync(model.Id);
         }
+
         public async Task<DocumentDTO> UpdateAsync(DocumentDTO dto)
         {
             var model = _mapper.Map<Document>(dto);
@@ -79,6 +85,7 @@ namespace TransIT.BLL.Services.ImplementedServices
             await _unitOfWork.SaveAsync();
             return dto;
         }
+
         public async Task DeleteAsync(int id)
         {
             var documents = await _unitOfWork.DocumentRepository.GetByIdAsync(id);
@@ -88,5 +95,3 @@ namespace TransIT.BLL.Services.ImplementedServices
         }
     }
 }
-
-

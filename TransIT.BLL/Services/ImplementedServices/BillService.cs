@@ -15,13 +15,13 @@ namespace TransIT.BLL.Services.ImplementedServices
     /// Bill CRUD service
     /// </summary>
     /// <see cref="IBillService"/>
-    public class BillService :IBillService
+    public class BillService : IBillService
     {
         private readonly IUnitOfWork _unitOfWork;
 
         private readonly IMapper _mapper;
 
-        public BillService(IUnitOfWork unitOfWork,IMapper mapper)
+        public BillService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;

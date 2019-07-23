@@ -25,7 +25,7 @@ namespace TransIT.BLL.Services.ImplementedServices
         /// Ctor
         /// </summary>
         /// <param name="unitOfWork">Unit of work pattern</param>
-        public MalfunctionGroupService(IUnitOfWork unitOfWork,IMapper mapper)
+        public MalfunctionGroupService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -38,7 +38,8 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<IEnumerable<MalfunctionGroupDTO>> GetRangeAsync(uint offset, uint amount)
         {
-            return (await _unitOfWork.MalfunctionGroupRepository.GetRangeAsync(offset, amount)).AsQueryable().ProjectTo<MalfunctionGroupDTO>();
+            return (await _unitOfWork.MalfunctionGroupRepository.GetRangeAsync(offset, amount))
+                .AsQueryable().ProjectTo<MalfunctionGroupDTO>();
         }
 
         public async Task<IEnumerable<MalfunctionGroupDTO>> SearchAsync(string search)
@@ -73,6 +74,5 @@ namespace TransIT.BLL.Services.ImplementedServices
             _unitOfWork.MalfunctionGroupRepository.Remove(id);
             await _unitOfWork.SaveAsync();
         }
-
     }
 }

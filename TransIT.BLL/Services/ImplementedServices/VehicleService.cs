@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +7,6 @@ using System.Threading.Tasks;
 using TransIT.BLL.DTOs;
 using TransIT.BLL.Services.Interfaces;
 using TransIT.DAL.Models.Entities;
-using TransIT.DAL.Repositories.InterfacesRepositories;
 using TransIT.DAL.UnitOfWork;
 
 namespace TransIT.BLL.Services.ImplementedServices
@@ -40,7 +38,8 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<IEnumerable<VehicleDTO>> GetRangeAsync(uint offset, uint amount)
         {
-            return (await _unitOfWork.VehicleRepository.GetRangeAsync(offset, amount)).AsQueryable().ProjectTo<VehicleDTO>();
+            return (await _unitOfWork.VehicleRepository.GetRangeAsync(offset, amount))
+                .AsQueryable().ProjectTo<VehicleDTO>();
         }
 
         public async Task<IEnumerable<VehicleDTO>> SearchAsync(string search)
@@ -75,6 +74,5 @@ namespace TransIT.BLL.Services.ImplementedServices
             _unitOfWork.VehicleRepository.Remove(id);
             await _unitOfWork.SaveAsync();
         }
-
     }
 }

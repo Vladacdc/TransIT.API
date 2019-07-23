@@ -25,7 +25,7 @@ namespace TransIT.BLL.Services.ImplementedServices
         /// Ctor
         /// </summary>
         /// <param name="unitOfWork">Unit of work pattern</param>
-        public MalfunctionSubgroupService(IUnitOfWork unitOfWork,IMapper mapper)
+        public MalfunctionSubgroupService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -38,7 +38,8 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<IEnumerable<MalfunctionSubgroupDTO>> GetRangeAsync(uint offset, uint amount)
         {
-            return (await _unitOfWork.MalfunctionSubgroupRepository.GetRangeAsync(offset, amount)).AsQueryable().ProjectTo<MalfunctionSubgroupDTO>();
+            return (await _unitOfWork.MalfunctionSubgroupRepository.GetRangeAsync(offset, amount))
+                .AsQueryable().ProjectTo<MalfunctionSubgroupDTO>();
         }
 
         public async Task<IEnumerable<MalfunctionSubgroupDTO>> SearchAsync(string search)
@@ -48,6 +49,7 @@ namespace TransIT.BLL.Services.ImplementedServices
                     .Split(new[] { ' ', ',', '.' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => x.Trim().ToUpperInvariant())
                 );
+
             return countries.ProjectTo<MalfunctionSubgroupDTO>();
         }
 

@@ -30,7 +30,7 @@ namespace TransIT.BLL.Services.ImplementedServices
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-                
+
 
         public async Task<VehicleTypeDTO> GetAsync(int id)
         {
@@ -39,7 +39,8 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<IEnumerable<VehicleTypeDTO>> GetRangeAsync(uint offset, uint amount)
         {
-            return (await _unitOfWork.VehicleTypeRepository.GetRangeAsync(offset, amount)).AsQueryable().ProjectTo<VehicleTypeDTO>();
+            return (await _unitOfWork.VehicleTypeRepository.GetRangeAsync(offset, amount))
+                .AsQueryable().ProjectTo<VehicleTypeDTO>();
         }
 
         public async Task<IEnumerable<VehicleTypeDTO>> SearchAsync(string search)
@@ -76,4 +77,3 @@ namespace TransIT.BLL.Services.ImplementedServices
         }
     }
 }
-

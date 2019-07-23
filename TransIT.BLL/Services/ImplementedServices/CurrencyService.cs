@@ -15,7 +15,7 @@ namespace TransIT.BLL.Services.ImplementedServices
     /// Currency CRUD service
     /// </summary>
     /// <see cref="ICurrencyService"/>
-    public class CurrencyService :ICurrencyService
+    public class CurrencyService : ICurrencyService
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -26,7 +26,7 @@ namespace TransIT.BLL.Services.ImplementedServices
         /// </summary>
         /// <param name="unitOfWork">Unit of work pattern</param>
 
-        public CurrencyService(IUnitOfWork unitOfWork,IMapper mapper)
+        public CurrencyService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -39,7 +39,8 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<IEnumerable<CurrencyDTO>> GetRangeAsync(uint offset, uint amount)
         {
-            return (await _unitOfWork.CurrencyRepository.GetRangeAsync(offset, amount)).AsQueryable().ProjectTo<CurrencyDTO>();
+            return (await _unitOfWork.CurrencyRepository.GetRangeAsync(offset, amount))
+                .AsQueryable().ProjectTo<CurrencyDTO>();
         }
         public async Task<IEnumerable<CurrencyDTO>> SearchAsync(string search)
         {

@@ -25,19 +25,23 @@ namespace TransIT.BLL.Services.ImplementedServices
         /// Ctor
         /// </summary>
         /// <param name="unitOfWork">Unit of work pattern</param>
-        public PostService(IUnitOfWork unitOfWork,IMapper mapper)
+        public PostService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
+
         public async Task<PostDTO> GetAsync(int id)
         {
             return _mapper.Map<PostDTO>(await _unitOfWork.PostRepository.GetByIdAsync(id));
         }
+
         public async Task<IEnumerable<PostDTO>> GetRangeAsync(uint offset, uint amount)
         {
-            return (await _unitOfWork.PostRepository.GetRangeAsync(offset, amount)).AsQueryable().ProjectTo<PostDTO>();
+            return (await _unitOfWork.PostRepository.GetRangeAsync(offset, amount))
+                .AsQueryable().ProjectTo<PostDTO>();
         }
+
         public async Task<IEnumerable<PostDTO>> SearchAsync(string search)
         {
             var postsDTO = await _unitOfWork.PostRepository.SearchExpressionAsync(
@@ -48,6 +52,7 @@ namespace TransIT.BLL.Services.ImplementedServices
 
             return postsDTO.ProjectTo<PostDTO>();
         }
+
         public async Task<PostDTO> CreateAsync(PostDTO dto)
         {
             var model = _mapper.Map<Post>(dto);
@@ -55,6 +60,7 @@ namespace TransIT.BLL.Services.ImplementedServices
             await _unitOfWork.SaveAsync();
             return await GetAsync(model.Id);
         }
+
         public async Task<PostDTO> UpdateAsync(PostDTO dto)
         {
             var model = _mapper.Map<Post>(dto);
@@ -62,12 +68,11 @@ namespace TransIT.BLL.Services.ImplementedServices
             await _unitOfWork.SaveAsync();
             return dto;
         }
+
         public async Task DeleteAsync(int id)
         {
             _unitOfWork.PostRepository.Remove(id);
             await _unitOfWork.SaveAsync();
         }
-
-
     }
 }

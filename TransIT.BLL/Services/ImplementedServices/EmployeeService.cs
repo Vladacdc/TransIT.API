@@ -25,7 +25,7 @@ namespace TransIT.BLL.Services.ImplementedServices
         /// Ctor
         /// </summary>
         /// <param name="unitOfWork">Unit of work pattern</param>
-        public EmployeeService(IUnitOfWork unitOfWork,IMapper mapper)
+        public EmployeeService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -38,7 +38,8 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<IEnumerable<EmployeeDTO>> GetRangeAsync(uint offset, uint amount)
         {
-            return (await _unitOfWork.EmployeeRepository.GetRangeAsync(offset, amount)).AsQueryable().ProjectTo<EmployeeDTO>();
+            return (await _unitOfWork.EmployeeRepository.GetRangeAsync(offset, amount))
+                .AsQueryable().ProjectTo<EmployeeDTO>();
         }
 
         public async Task<IEnumerable<EmployeeDTO>> SearchAsync(string search)

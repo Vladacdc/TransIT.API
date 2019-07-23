@@ -68,13 +68,12 @@ namespace TransIT.API.Controllers
            if(contentType!=  "application/pdf") return Content("format is not pdf");
 
             document.Path = _storageLogger.Create(document.File);
-            var entity = _mapper.Map<Document>(document);
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-            entity.ModId = userId;
-            entity.CreateId = userId;
+            document.Mod.Id = userId;
+            document.Create.Id = userId;
 
-            var createdEntity = await _documentService.CreateAsync(entity);
+            var createdEntity = await _documentService.CreateAsync(document);
 
             return createdEntity != null
                 ? CreatedAtAction(nameof(Create), _mapper.Map<DocumentDTO>(createdEntity))

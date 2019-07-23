@@ -17,7 +17,7 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         private readonly IMapper _mapper;
 
-        public LocationService(IUnitOfWork unitOfWork,IMapper mapper)
+        public LocationService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -30,7 +30,8 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<IEnumerable<LocationDTO>> GetRangeAsync(uint offset, uint amount)
         {
-            return (await _unitOfWork.LocationRepository.GetRangeAsync(offset, amount)).AsQueryable().ProjectTo<LocationDTO>();
+            return (await _unitOfWork.LocationRepository.GetRangeAsync(offset, amount))
+                .AsQueryable().ProjectTo<LocationDTO>();
         }
 
         public async Task<IEnumerable<LocationDTO>> SearchAsync(string search)

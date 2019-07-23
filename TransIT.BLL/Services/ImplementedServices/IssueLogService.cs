@@ -39,7 +39,8 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<IEnumerable<IssueLogDTO>> GetRangeAsync(uint offset, uint amount)
         {
-            return (await _unitOfWork.IssueLogRepository.GetRangeAsync(offset, amount)).AsQueryable().ProjectTo<IssueLogDTO>();
+            return (await _unitOfWork.IssueLogRepository.GetRangeAsync(offset, amount))
+                .AsQueryable().ProjectTo<IssueLogDTO>();
         }
 
         public async Task<IEnumerable<IssueLogDTO>> GetRangeByIssueIdAsync(int issueId)
@@ -49,6 +50,7 @@ namespace TransIT.BLL.Services.ImplementedServices
             {
                 issueLogDTOs.Add(_mapper.Map<IssueLogDTO>(i));
             }
+
             return issueLogDTOs;
         }
 

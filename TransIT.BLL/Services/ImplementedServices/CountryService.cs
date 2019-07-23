@@ -39,7 +39,8 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<IEnumerable<CountryDTO>> GetRangeAsync(uint offset, uint amount)
         {
-            return (await _unitOfWork.CountryRepository.GetRangeAsync(offset, amount)).AsQueryable().ProjectTo<CountryDTO>();
+            return (await _unitOfWork.CountryRepository.GetRangeAsync(offset, amount))
+                .AsQueryable().ProjectTo<CountryDTO>();
         }
 
         public async Task<IEnumerable<CountryDTO>> SearchAsync(string search)
