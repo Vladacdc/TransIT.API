@@ -22,7 +22,7 @@ namespace TransIT.API.Extensions
     {
         public static void ConfigureDbContext(
             this IServiceCollection services,
-            IConfiguration Configuration, 
+            IConfiguration Configuration,
             IHostingEnvironment Environment)
         {
             Action<DbContextOptionsBuilder> configureConnection = options =>
@@ -53,6 +53,11 @@ namespace TransIT.API.Extensions
             services.Configure<IdentityOptions>(options =>
             {
                 options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireDigit = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequiredLength = 6;
+                options.Password.RequiredUniqueChars = 1;
             });
         }
 

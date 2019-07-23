@@ -55,12 +55,12 @@ namespace TransIT.BLL.Services.ImplementedServices
                     var role = (await _userManager.GetRolesAsync(user)).SingleOrDefault();
                     var token = _jwtFactory.GenerateToken(user.Id, user.UserName, role);
 
-                    await _unitOfWork.TokenRepository.AddAsync(new Token
-                    {
-                        RefreshToken = token.RefreshToken,
-                        CreatedById = user.Id,
-                        Create = user
-                    });
+                    //await _unitOfWork.TokenRepository.AddAsync(new Token
+                    //{
+                    //    RefreshToken = token.RefreshToken,
+                    //    CreatedById = user.Id,
+                    //    Create = user
+                    //});
                     await _unitOfWork.SaveAsync();
                     return token;
                 }
