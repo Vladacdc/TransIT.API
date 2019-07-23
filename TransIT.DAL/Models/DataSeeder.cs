@@ -62,27 +62,40 @@ namespace TransIT.DAL.Models
             var context = services.GetRequiredService<TransITDBContext>();
 
             #region States
+            var @new = new State { Name = "NEW", TransName = "Нова", IsFixed = true };
+            var executing = new State { Name = "EXECUTING", TransName = "В роботі", IsFixed = true };
+            var rejected = new State { Name = "REJECTED", TransName = "Відхилено", IsFixed = true };
+            var done = new State { Name = "DONE", TransName = "Готово", IsFixed = true };
+            var verified = new State { Name = "VERIFIED", TransName = "Верифіковано", IsFixed = false };
+            var todo = new State { Name = "TODO", TransName = "До виконання", IsFixed = false };
+            var confirmed = new State { Name = "CONFIRMED", TransName = "Підтверджено", IsFixed = false };
+            var unconfirmed = new State { Name = "UNCONFIRMED", TransName = "Не підтверджено", IsFixed = false };
+
             if (!context.State.Any())
             {
-                context.State.AddRange(
-                    new State { Name = "NEW", TransName = "Нова", IsFixed = true },
-                    new State { Name = "VERIFIED", TransName = "Верифіковано", IsFixed = false },
-                    new State { Name = "REJECTED", TransName = "Відхилено", IsFixed = true },
-                    new State { Name = "TODO", TransName = "До виконання", IsFixed = false },
-                    new State { Name = "EXECUTING", TransName = "В роботі", IsFixed = true },
-                    new State { Name = "DONE", TransName = "Готово", IsFixed = true },
-                    new State { Name = "CONFIRMED", TransName = "Підтверджено", IsFixed = false },
-                    new State { Name = "UNCONFIRMED", TransName = "Не підтверджено", IsFixed = false });
+                context.State.AddRange(@new, executing, rejected, done, 
+                    verified, todo, confirmed, unconfirmed);
             }
             #endregion
 
             #region ActionTypes
-            var cancel = new ActionType() { Name = "Скасувати", IsFixed = true };
+            var setExecuting = new ActionType() { Name = "Виконувати", IsFixed = true };
+            var reject = new ActionType() { Name = "Скасувати", IsFixed = true };
             var finish = new ActionType() { Name = "Завершити", IsFixed = true };
-            var todo = new ActionType() { Name = "До виконання", IsFixed = true };
             if (!context.ActionType.Any())
             {
-                context.ActionType.AddRange(cancel, finish, todo);
+                context.ActionType.AddRange(reject, finish, setExecuting);
+            }
+            #endregion
+
+            #region Transitions
+            var tsetExecuting = new Transition { FromState = @new, ToState = executing, ActionType = setExecuting, IsFixed = true };
+            var treject1 = new Transition { FromState = @new, ToState = rejected, ActionType = reject, IsFixed = true };
+            var treject2 = new Transition { FromState = executing, ToState = rejected, ActionType = reject, IsFixed = true };
+            var tfinish = new Transition { FromState = executing, ToState = done, ActionType = finish, IsFixed = true };  
+            if (!context.Transition.Any())
+            {
+                context.Transition.AddRange(tsetExecuting, treject1, treject2, tfinish);
             }
             #endregion
 

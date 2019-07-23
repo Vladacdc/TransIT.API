@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using TransIT.BLL.DTOs;
 using TransIT.DAL.Models.Entities;
-using Microsoft.AspNetCore.Identity;
 using TransIT.BLL.Services.ImplementedServices;
 
 namespace TransIT.BLL.Mappings
