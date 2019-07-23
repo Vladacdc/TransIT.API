@@ -60,6 +60,8 @@ namespace TransIT.DAL.Models
             IServiceProvider services)
         {
             var context = services.GetRequiredService<TransITDBContext>();
+
+            #region States
             if (!context.State.Any())
             {
                 context.State.AddRange(
@@ -72,14 +74,18 @@ namespace TransIT.DAL.Models
                     new State { Name = "CONFIRMED", TransName = "Підтверджено", IsFixed = false },
                     new State { Name = "UNCONFIRMED", TransName = "Не підтверджено", IsFixed = false });
             }
+            #endregion
 
-            var cancel = new ActionType() { Name = "Скасувати" };
-            var finish = new ActionType() { Name = "Завершити" };
-            var todo = new ActionType() { Name = "До виконання" };
+            #region ActionTypes
+            var cancel = new ActionType() { Name = "Скасувати", IsFixed = true };
+            var finish = new ActionType() { Name = "Завершити", IsFixed = true };
+            var todo = new ActionType() { Name = "До виконання", IsFixed = true };
             if (!context.ActionType.Any())
             {
                 context.ActionType.AddRange(cancel, finish, todo);
             }
+            #endregion
+
             context.SaveChanges();
         }
 
