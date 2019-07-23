@@ -26,8 +26,7 @@ namespace TransIT.DAL.Models
             builder.Property(e => e.FullName)
                 .IsRequired()
                 .HasColumnName("FULL_NAME")
-                .HasMaxLength(50)
-                .IsUnicode(false);
+                .HasMaxLength(50);
 
             builder.Property(e => e.ModDate)
                 .HasColumnName("MOD_DATE")
@@ -39,8 +38,7 @@ namespace TransIT.DAL.Models
             builder.Property(e => e.ShortName)
                 .IsRequired()
                 .HasColumnName("SHORT_NAME")
-                .HasMaxLength(5)
-                .IsUnicode(false);
+                .HasMaxLength(5);
 
             builder.HasOne(d => d.Create)
                 .WithMany(p => p.CurrencyCreate)

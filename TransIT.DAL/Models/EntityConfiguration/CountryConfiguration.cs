@@ -33,8 +33,7 @@ namespace TransIT.DAL.Models
             builder.Property(e => e.Name)
                 .IsRequired()
                 .HasColumnName("NAME")
-                .HasMaxLength(50)
-                .IsUnicode(false);
+                .HasMaxLength(50);
 
             builder.HasOne(d => d.Create)
                 .WithMany(p => p.CountryCreate)
