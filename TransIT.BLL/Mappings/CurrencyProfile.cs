@@ -10,7 +10,7 @@ namespace TransIT.BLL.Mappings
         {
             CreateMap<CurrencyDTO, Currency>()
                 .ForMember(m => m.Supplier, opt => opt.Ignore())
-                .ForMember(m => m.ModifiedById, opt => opt.Ignore())
+                .ForMember(m => m.UpdatedById, opt => opt.Ignore())
                 .ForMember(m => m.CreatedById, opt => opt.Ignore());
             CreateMap<Currency, CurrencyDTO>();
         }

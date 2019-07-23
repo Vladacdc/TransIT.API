@@ -41,7 +41,7 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
             .Include(z => z.IssueLog)
             .ThenInclude(x => x.Issue.AssignedTo)
             .Include(a => a.Mod)
-            .OrderByDescending(u => u.ModDate)
-            .ThenByDescending(x => x.CreateDate);
+            .OrderByDescending(u => u.UpdatedDate)
+            .ThenByDescending(x => x.CreatedDate);
     }
 }

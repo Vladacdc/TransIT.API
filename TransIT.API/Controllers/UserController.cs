@@ -49,7 +49,7 @@ namespace TransIT.API.Controllers
         {
             var user = await _userService.GetAsync(id);
             var adminId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            user.ModifiedById = adminId;
+            user.UpdatedById = adminId;
             return await _userService.UpdatePasswordAsync(user, changePassword.Password) != null 
                 ? NoContent()
                 : (IActionResult) BadRequest();
@@ -86,7 +86,7 @@ namespace TransIT.API.Controllers
             var user = _mapper.Map<User>(obj);
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            user.ModifiedById = userId;
+            user.UpdatedById = userId;
             user.CreatedById = userId;
 
             var result = await _userManager.CreateAsync(user, obj.Password);

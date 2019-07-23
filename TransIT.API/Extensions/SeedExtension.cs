@@ -21,7 +21,7 @@ namespace TransIT.API.Extensions
             app.SeedEssentialAsync(services, configuration).Wait();
             if (env.IsDevelopment())
             {
-            app.SeedAdditionalAsync(services, configuration).Wait();
+                app.SeedAdditionalAsync(services, configuration).Wait();
             }
         }
     }

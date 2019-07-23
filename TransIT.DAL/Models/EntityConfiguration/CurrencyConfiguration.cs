@@ -16,7 +16,7 @@ namespace TransIT.DAL.Models
 
             builder.Property(e => e.Id).HasColumnName("ID");
 
-            builder.Property(e => e.CreateDate)
+            builder.Property(e => e.CreatedDate)
                 .HasColumnName("CREATE_DATE")
                 .HasColumnType("datetime")
                 .HasDefaultValueSql("(getdate())");
@@ -28,12 +28,12 @@ namespace TransIT.DAL.Models
                 .HasColumnName("FULL_NAME")
                 .HasMaxLength(50);
 
-            builder.Property(e => e.ModDate)
+            builder.Property(e => e.UpdatedDate)
                 .HasColumnName("MOD_DATE")
                 .HasColumnType("datetime")
                 .HasDefaultValueSql("(getdate())");
 
-            builder.Property(e => e.ModifiedById).HasColumnName("MOD_ID");
+            builder.Property(e => e.UpdatedById).HasColumnName("MOD_ID");
 
             builder.Property(e => e.ShortName)
                 .IsRequired()
@@ -47,7 +47,7 @@ namespace TransIT.DAL.Models
 
             builder.HasOne(d => d.Mod)
                 .WithMany(p => p.CurrencyMod)
-                .HasForeignKey(d => d.ModifiedById)
+                .HasForeignKey(d => d.UpdatedById)
                 .HasConstraintName("FK_MOD_CURRENCY_USER");
         }
     }
