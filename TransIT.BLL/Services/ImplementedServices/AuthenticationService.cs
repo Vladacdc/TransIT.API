@@ -8,7 +8,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Identity;
 using TransIT.BLL.Helpers.Abstractions;
-using TransIT.BLL.Security.Hashers;
 using TransIT.BLL.Services.Interfaces;
 using TransIT.BLL.DTOs;
 using TransIT.DAL.Models.Entities;
@@ -26,7 +25,6 @@ namespace TransIT.BLL.Services.ImplementedServices
         private readonly RoleManager<Role> _roleManager;
         private readonly ILogger<AuthenticationService> _logger;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IPasswordHasher _hasher;
         private readonly IJwtFactory _jwtFactory;
         
         public AuthenticationService(
@@ -35,15 +33,13 @@ namespace TransIT.BLL.Services.ImplementedServices
             RoleManager<Role> roleManager,
             ILogger<AuthenticationService> logger,
             IJwtFactory jwtFactory,
-            IUnitOfWork unitOfWork, 
-            IPasswordHasher hasher)
+            IUnitOfWork unitOfWork)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _roleManager = roleManager;
             _logger = logger;
             _unitOfWork = unitOfWork;
-            _hasher = hasher;
             _jwtFactory = jwtFactory;
         }
         
@@ -51,14 +47,13 @@ namespace TransIT.BLL.Services.ImplementedServices
         {
             try
             {
+
                 var user = (await _userManager.FindByNameAsync(credentials.Login));
 
                 if (user != null && (bool)user.IsActive && (await _userManager.CheckPasswordAsync(user, credentials.Password)))
                 {
                     var role = (await _userManager.GetRolesAsync(user)).SingleOrDefault();
                     var token = _jwtFactory.GenerateToken(user.Id, user.UserName, role);
-
-                    if (token == null) return null;
 
                     await _unitOfWork.TokenRepository.AddAsync(new Token
                     {
@@ -95,6 +90,7 @@ namespace TransIT.BLL.Services.ImplementedServices
                     Create = user
                 });
                 await _unitOfWork.SaveAsync();
+
                 return null;
             }
             catch (Exception e) 

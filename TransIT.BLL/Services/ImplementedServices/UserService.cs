@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using TransIT.API.Extensions;
-using TransIT.BLL.Security.Hashers;
 using TransIT.BLL.Services.Interfaces;
 using TransIT.DAL.Models.Entities;
 using TransIT.DAL.Repositories.InterfacesRepositories;
@@ -21,15 +20,9 @@ namespace TransIT.BLL.Services.ImplementedServices
 
     public class UserService : CrudService<string, User>, IUserService
     {
-        /// <summary>
-        /// Manages password hashing
-        /// </summary>
-        protected IPasswordHasher _hasher;
 
         private static RoleManager<Role> _roleManager;
         private static UserManager<User> _userManager;
-
-        protected IRoleRepository _roleRepository;
 
         /// <summary>
         /// Ctor
@@ -42,23 +35,18 @@ namespace TransIT.BLL.Services.ImplementedServices
             IUnitOfWork unitOfWork,
             ILogger<CrudService<string, User>> logger,
             IUserRepository repository,
-            IRoleRepository roleRepository,
-            IPasswordHasher hasher,
             RoleManager<Role> roleManager,
             UserManager<User> userManager) : base(unitOfWork, logger, repository)
             
         {
-            _hasher = hasher;
             _roleManager = roleManager;
             _userManager = userManager;
-            _roleRepository = roleRepository;
         }
 
         /// <summary>
         /// Creates user if login and password not empty and does not exist in DB
         /// hashes password and set zero to id
         /// </summary>
-        /// <see cref="IPasswordHasher.HashPassword(string)"/>
         /// <param name="user">User model</param>
         /// <returns>Is successful</returns>
         //public override async Task<User> CreateAsync(User user)
@@ -67,19 +55,13 @@ namespace TransIT.BLL.Services.ImplementedServices
         //    return await base.CreateAsync(user);
         //}
 
-        public Task<IEnumerable<User>> GetAssignees(uint offset, uint amount)
-        {
-            throw new NotImplementedException();
-        }
-
         public override async Task<User> UpdateAsync(User model)
         {
             try
             {
                 //var res = _repository.UpdateWithIgnoreProperty(model, u => u.Password);
-                await _unitOfWork.SaveAsync();
-                throw new NotImplementedException();
-                //return res;
+                await _unitOfWork.SaveAsync(); 
+                return new User();
             }
             catch (DbUpdateException e)
             {
@@ -122,11 +104,12 @@ namespace TransIT.BLL.Services.ImplementedServices
             return role;
         }
 
-        //public virtual async Task<IEnumerable<User>> GetAssignees(uint offset, uint amount) =>
-        //    (await _repository.GetAllAsync())
-        //    .AsQueryable()
-        //    .Where(x => x.Role.Name == ROLE.WORKER)
-        //    .Skip((int)offset)
-        //    .Take((int)amount);
+
+        public virtual async Task<IEnumerable<User>> GetAssignees(uint offset, uint amount) =>
+            (await _repository.GetAllAsync())
+            .AsQueryable()
+            //.Where(x => x.Role.Name == ROLE.WORKER)
+            .Skip((int)offset)
+            .Take((int)amount);
     }
 }

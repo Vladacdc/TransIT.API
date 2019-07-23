@@ -1,19 +1,61 @@
+using System;
 using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
 using TransIT.BLL.Services;
 using TransIT.BLL.Services.ImplementedServices;
 using TransIT.BLL.Services.Interfaces;
+using TransIT.DAL.Models;
 using TransIT.DAL.Models.Entities;
 using TransIT.BLL.Mappings;
 using TransIT.DAL.Repositories;
 using TransIT.DAL.Repositories.ImplementedRepositories;
 using TransIT.DAL.Repositories.InterfacesRepositories;
 using TransIT.DAL.UnitOfWork;
+using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Hosting;
 
 namespace TransIT.API.Extensions
 {
     public static class ServiceExtension
     {
+        public static void ConfigureDbContext(
+            this IServiceCollection services,
+            IConfiguration Configuration, 
+            IHostingEnvironment Environment)
+        {
+            Action<DbContextOptionsBuilder> configureConnection = options =>
+            {
+                if (Environment.IsDevelopment())
+                {
+                    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+                }
+                if (Environment.IsProduction())
+                {
+                    options.UseSqlServer(Configuration.GetConnectionString("AzureConnection"));
+                }
+            };
+
+            services.AddDbContext<DbContext, TransITDBContext>(configureConnection);
+            services.AddDbContext<TransITDBContext>(configureConnection);
+        }
+
+        public static void ConfigureIdentity(this IServiceCollection services,
+            IConfiguration Configuration,
+            IHostingEnvironment Environment)
+        {
+            services.AddIdentity<User, Role>()
+                .AddEntityFrameworkStores<TransITDBContext>()
+                .AddRoleManager<RoleManager<Role>>()
+                .AddUserManager<UserManager<User>>();
+
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.Password.RequireNonAlphanumeric = false;
+            });
+        }
+
         public static void ConfigureAutoMapper(this IServiceCollection services)
         {
             services.AddSingleton(new MapperConfiguration(c =>
@@ -157,6 +199,8 @@ namespace TransIT.API.Extensions
             services.AddScoped<IPostRepository, PostRepository>();
             services.AddScoped<ITransitionRepository, TransitionRepository>();
             services.AddScoped<ILocationRepository, LocationRepository>();
+            services.AddScoped<UserManager<User>>();
+            services.AddScoped<RoleManager<Role>>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
