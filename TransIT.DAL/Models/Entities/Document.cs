@@ -4,7 +4,7 @@ using TransIT.DAL.Models.Entities.Abstractions;
 
 namespace TransIT.DAL.Models.Entities
 {
-    public partial class Document : IAuditableEntity
+    public partial class Document : IAuditableEntity, IEntityId<int>
     {
         public Document()
         {

@@ -10,14 +10,14 @@ using TransIT.DAL.Models.Entities;
 namespace TransIT.API.Controllers
 {
     [Authorize(Roles = "ADMIN,ENGINEER,REGISTER,ANALYST")]
-    public class SupplierController : DataController<Supplier, SupplierDTO>
+    public class SupplierController : DataController<int, Supplier, SupplierDTO>
     {
         private readonly ISupplierService _supplierService;
         
         public SupplierController(
             IMapper mapper, 
             ISupplierService supplierService,
-            IFilterService<Supplier> odService
+            IFilterService<int, Supplier> odService
             ) : base(mapper, supplierService, odService)
         {
             _supplierService = supplierService;

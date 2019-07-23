@@ -7,7 +7,7 @@ using TransIT.DAL.Repositories.InterfacesRepositories;
 
 namespace TransIT.DAL.Repositories.ImplementedRepositories
 {
-    public class RoleRepository : BaseRepository<Role>, IRoleRepository
+    public class RoleRepository : BaseRepository<string, Role>, IRoleRepository
     {
         public RoleRepository(DbContext context)
                : base(context)

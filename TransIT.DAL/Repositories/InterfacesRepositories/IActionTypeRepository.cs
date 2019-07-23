@@ -2,7 +2,7 @@
 
 namespace TransIT.DAL.Repositories.InterfacesRepositories
 {
-    public interface IActionTypeRepository: IBaseRepository<ActionType>
+    public interface IActionTypeRepository: IBaseRepository<int ,ActionType>
     {
     }
 }

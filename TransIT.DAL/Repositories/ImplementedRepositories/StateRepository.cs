@@ -7,7 +7,7 @@ using TransIT.DAL.Repositories.InterfacesRepositories;
 
 namespace TransIT.DAL.Repositories.ImplementedRepositories
 {
-    public class StateRepository : BaseRepository<State>, IStateRepository
+    public class StateRepository : BaseRepository<int, State>, IStateRepository
     {
         public StateRepository(DbContext context)
                : base(context)

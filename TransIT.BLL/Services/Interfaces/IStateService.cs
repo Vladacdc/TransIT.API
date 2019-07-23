@@ -6,7 +6,7 @@ namespace TransIT.BLL.Services.Interfaces
     /// <summary>
     /// Action type model CRUD
     /// </summary>
-    public interface IStateService : ICrudService<State>
+    public interface IStateService : ICrudService<int, State>
     {
         /// <summary>
         /// Gets state by name

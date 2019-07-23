@@ -8,7 +8,8 @@ namespace TransIT.BLL.Mappings
     {
         public RoleProfile()
         {
-            CreateMap<Role, RoleDTO>();
+            CreateMap<Role, RoleDTO>()
+                .ForMember(t=>t.Name, opt=>opt.MapFrom(t=>t.Name));
             CreateMap<RoleDTO, Role>()
                 .ForMember(t => t.ModifiedById, opt => opt.Ignore())
                 .ForMember(t => t.CreatedById, opt => opt.Ignore())

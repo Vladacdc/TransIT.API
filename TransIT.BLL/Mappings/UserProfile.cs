@@ -1,6 +1,13 @@
+using System.Linq;
+using System.Linq.Expressions;
+using System.Net.Mime;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using TransIT.BLL.DTOs;
 using TransIT.DAL.Models.Entities;
+using Microsoft.AspNetCore.Identity;
+using TransIT.BLL.Services.ImplementedServices;
 
 namespace TransIT.BLL.Mappings
 {
@@ -8,6 +15,7 @@ namespace TransIT.BLL.Mappings
     {
         public UserProfile()
         {
+
             CreateMap<UserDTO, User>()                
                 .ForMember(u => u.ModifiedById, opt => opt.Ignore())
                 .ForMember(u => u.CreatedById, opt => opt.Ignore())
@@ -47,7 +55,9 @@ namespace TransIT.BLL.Mappings
                 .ForMember(u => u.InverseCreate, opt => opt.Ignore())
                 .ForMember(u => u.SupplierCreate, opt => opt.Ignore());
             CreateMap<User, UserDTO>()
-                .ForMember(u => u.Password, opt => opt.Ignore());
+                .ForMember(u => u.Password, opt => opt.Ignore())
+                .ForMember(u => u.Role, opt => opt.MapFrom(x => UserService.GetRoleAsync(x).Result));
         }
+
     }
 }

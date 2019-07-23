@@ -10,7 +10,7 @@ namespace TransIT.BLL.Services.ImplementedServices
     /// Country CRUD service
     /// </summary>
     /// <see cref="ICountryService"/>
-    public class CountryService : CrudService<Country>, ICountryService
+    public class CountryService : CrudService<int, Country>, ICountryService
     {
         /// <summary>
         /// Ctor
@@ -21,7 +21,7 @@ namespace TransIT.BLL.Services.ImplementedServices
         /// <see cref="CrudService{TEntity}"/>
         public CountryService(
             IUnitOfWork unitOfWork,
-            ILogger<CrudService<Country>> logger,
+            ILogger<CrudService<int, Country>> logger,
             ICountryRepository repository) : base(unitOfWork, logger, repository) { }
     }
 }

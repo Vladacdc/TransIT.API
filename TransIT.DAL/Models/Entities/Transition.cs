@@ -5,7 +5,7 @@ using TransIT.DAL.Models.Entities.Abstractions;
 
 namespace TransIT.DAL.Models.Entities
 {
-    public partial class Transition : IAuditableEntity
+    public partial class Transition : IAuditableEntity, IEntityId<int>
     {
         public int Id { get; set; }
         public int FromStateId { get; set; }

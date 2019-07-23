@@ -13,7 +13,7 @@ using TransIT.DAL.Models.Entities;
 namespace TransIT.API.Controllers
 {
     [Authorize(Roles = "ADMIN,ENGINEER,REGISTER,ANALYST")]
-    public class IssueLogController : DataController<IssueLog, IssueLogDTO>
+    public class IssueLogController : DataController<int, IssueLog, IssueLogDTO>
     {
         private readonly IIssueLogService _issueLogService;
         private const string IssueLogByIssueUrl = "~/api/v1/" + nameof(Issue) + "/{issueId}/" + nameof(IssueLog); 
@@ -22,7 +22,7 @@ namespace TransIT.API.Controllers
         public IssueLogController(
             IMapper mapper,
             IIssueLogService issueLogService,
-            IFilterService<IssueLog> odService
+            IFilterService<int, IssueLog> odService
             ) : base(mapper, issueLogService, odService)
         {
             _issueLogService = issueLogService;

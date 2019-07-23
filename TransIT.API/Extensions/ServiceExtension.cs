@@ -66,48 +66,48 @@ namespace TransIT.API.Extensions
             services.AddScoped<ILocationService, LocationService>();
 
 
-            services.AddScoped<ICrudService<User>, UserService>();
-            services.AddScoped<ICrudService<ActionType>, ActionTypeService>();
-            services.AddScoped<ICrudService<Vehicle>, VehicleService>();
-            services.AddScoped<ICrudService<VehicleType>, VehicleTypeService>();
-            services.AddScoped<ICrudService<Malfunction>, MalfunctionService>();
-            services.AddScoped<ICrudService<MalfunctionGroup>, MalfunctionGroupService>();
-            services.AddScoped<ICrudService<MalfunctionSubgroup>, MalfunctionSubgroupService>();
-            services.AddScoped<ICrudService<Bill>, BillService>();
-            services.AddScoped<ICrudService<Document>, DocumentService>();
-            services.AddScoped<ICrudService<Issue>, IssueService>();
-            services.AddScoped<ICrudService<IssueLog>, IssueLogService>();
-            services.AddScoped<ICrudService<Supplier>, SupplierService>();
-            services.AddScoped<ICrudService<Role>, RoleService>();
-            services.AddScoped<ICrudService<State>, StateService>();
-            services.AddScoped<ICrudService<Currency>, CurrencyService>();
-            services.AddScoped<ICrudService<Country>, CountryService>();
-            services.AddScoped<ICrudService<Employee>, EmployeeService>();
-            services.AddScoped<ICrudService<Post>, PostService>();
-            services.AddScoped<ICrudService<Transition>, TransitionService>();
-            services.AddScoped<ICrudService<Location>, LocationService>();
+            services.AddScoped<ICrudService<string, User>, UserService>();
+            services.AddScoped<ICrudService<int, ActionType>, ActionTypeService>();
+            services.AddScoped<ICrudService<int, Vehicle>, VehicleService>();
+            services.AddScoped<ICrudService<int, VehicleType>, VehicleTypeService>();
+            services.AddScoped<ICrudService<int, Malfunction>, MalfunctionService>();
+            services.AddScoped<ICrudService<int, MalfunctionGroup>, MalfunctionGroupService>();
+            services.AddScoped<ICrudService<int, MalfunctionSubgroup>, MalfunctionSubgroupService>();
+            services.AddScoped<ICrudService<int, Bill>, BillService>();
+            services.AddScoped<ICrudService<int, Document>, DocumentService>();
+            services.AddScoped<ICrudService<int, Issue>, IssueService>();
+            services.AddScoped<ICrudService<int, IssueLog>, IssueLogService>();
+            services.AddScoped<ICrudService<int, Supplier>, SupplierService>();
+            services.AddScoped<ICrudService<string, Role>, RoleService>();
+            services.AddScoped<ICrudService<int, State>, StateService>();
+            services.AddScoped<ICrudService<int, Currency>, CurrencyService>();
+            services.AddScoped<ICrudService<int, Country>, CountryService>();
+            services.AddScoped<ICrudService<int, Employee>, EmployeeService>();
+            services.AddScoped<ICrudService<int, Post>, PostService>();
+            services.AddScoped<ICrudService<int, Transition>, TransitionService>();
+            services.AddScoped<ICrudService<int, Location>, LocationService>();
 
 
-            services.AddScoped<IFilterService<User>, FilterService<User>>();
-            services.AddScoped<IFilterService<ActionType>, FilterService<ActionType>>();
-            services.AddScoped<IFilterService<Vehicle>, FilterService<Vehicle>>();
-            services.AddScoped<IFilterService<VehicleType>, FilterService<VehicleType>>();
-            services.AddScoped<IFilterService<Malfunction>, FilterService<Malfunction>>();
-            services.AddScoped<IFilterService<MalfunctionGroup>, FilterService<MalfunctionGroup>>();
-            services.AddScoped<IFilterService<MalfunctionSubgroup>, FilterService<MalfunctionSubgroup>>();
-            services.AddScoped<IFilterService<Bill>, FilterService<Bill>>();
-            services.AddScoped<IFilterService<Document>, FilterService<Document>>();
-            services.AddScoped<IFilterService<Issue>, FilterService<Issue>>();
-            services.AddScoped<IFilterService<IssueLog>, FilterService<IssueLog>>();
-            services.AddScoped<IFilterService<Supplier>, FilterService<Supplier>>();
-            services.AddScoped<IFilterService<Role>, FilterService<Role>>();
-            services.AddScoped<IFilterService<State>, FilterService<State>>();
-            services.AddScoped<IFilterService<Currency>, FilterService<Currency>>();
-            services.AddScoped<IFilterService<Country>, FilterService<Country>>();
-            services.AddScoped<IFilterService<Employee>, FilterService<Employee>>();
-            services.AddScoped<IFilterService<Post>, FilterService<Post>>();
-            services.AddScoped<IFilterService<Transition>, FilterService<Transition>>();
-            services.AddScoped<IFilterService<Location>, FilterService<Location>>();
+            services.AddScoped<IFilterService<string, User>, FilterService<string, User>>();
+            services.AddScoped<IFilterService<int, ActionType>, FilterService<int, ActionType>>();
+            services.AddScoped<IFilterService<int, Vehicle>, FilterService<int, Vehicle>>();
+            services.AddScoped<IFilterService<int, VehicleType>, FilterService<int, VehicleType>>();
+            services.AddScoped<IFilterService<int, Malfunction>, FilterService<int, Malfunction>>();
+            services.AddScoped<IFilterService<int, MalfunctionGroup>, FilterService<int, MalfunctionGroup>>();
+            services.AddScoped<IFilterService<int, MalfunctionSubgroup>, FilterService<int, MalfunctionSubgroup>>();
+            services.AddScoped<IFilterService<int, Bill>, FilterService<int, Bill>>();
+            services.AddScoped<IFilterService<int, Document>, FilterService<int, Document>>();
+            services.AddScoped<IFilterService<int, Issue>, FilterService<int, Issue>>();
+            services.AddScoped<IFilterService<int, IssueLog>, FilterService<int, IssueLog>>();
+            services.AddScoped<IFilterService<int, Supplier>, FilterService<int, Supplier>>();
+            services.AddScoped<IFilterService<string, Role>, FilterService<string, Role>>();
+            services.AddScoped<IFilterService<int, State>, FilterService<int, State>>();
+            services.AddScoped<IFilterService<int, Currency>, FilterService<int, Currency>>();
+            services.AddScoped<IFilterService<int, Country>, FilterService<int, Country>>();
+            services.AddScoped<IFilterService<int, Employee>, FilterService<int, Employee>>();
+            services.AddScoped<IFilterService<int, Post>, FilterService<int, Post>>();
+            services.AddScoped<IFilterService<int, Transition>, FilterService<int, Transition>>();
+            services.AddScoped<IFilterService<int, Location>, FilterService<int, Location>>();
 
         }
 

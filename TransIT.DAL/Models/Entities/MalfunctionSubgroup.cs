@@ -4,7 +4,7 @@ using TransIT.DAL.Models.Entities.Abstractions;
 
 namespace TransIT.DAL.Models.Entities
 {
-    public partial class MalfunctionSubgroup : IAuditableEntity
+    public partial class MalfunctionSubgroup : IAuditableEntity, IEntityId<int>
     {
         public int Id { get; set; }
         public string Name { get; set; }

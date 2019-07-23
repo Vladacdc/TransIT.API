@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TransIT.API.Extensions;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TransIT.API.EndpointFilters.OnActionExecuting;
 using TransIT.API.EndpointFilters.OnException;
@@ -33,7 +34,18 @@ namespace TransIT.API
             });
 
             services.AddIdentity<User, Role>()
-                .AddEntityFrameworkStores<TransITDBContext>();
+                .AddEntityFrameworkStores<DbContext>();
+
+            services.Configure<IdentityOptions>(options =>
+            {
+                // Default Password settings.
+                options.Password.RequireDigit = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequiredLength = 6;
+                options.Password.RequiredUniqueChars = 1;
+            });
 
             services.AddSingleton<IPasswordHasher, PasswordHasher>();
 
@@ -72,7 +84,7 @@ namespace TransIT.API
             //{
             //    app.UseHttpsRedirection();
             //}
-
+            
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseCors("CorsPolicy");

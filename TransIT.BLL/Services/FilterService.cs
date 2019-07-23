@@ -10,11 +10,11 @@ using TransIT.DAL.Repositories;
 
 namespace TransIT.BLL.Services
 {
-    public class FilterService<TEntity> : IFilterService<TEntity>
+    public class FilterService<TId, TEntity> : IFilterService<TId, TEntity>
         where TEntity : class, IAuditableEntity, new()
     {        
         protected readonly IQueryRepository<TEntity> _queryRepository;
-        protected readonly ICrudService<TEntity> _crudService;
+        protected readonly ICrudService<TId, TEntity> _crudService;
 
         public ulong TotalRecordsAmount() =>
             (ulong)_queryRepository
@@ -29,7 +29,7 @@ namespace TransIT.BLL.Services
         
         public FilterService(
             IQueryRepository<TEntity> queryRepository,
-            ICrudService<TEntity> crudService)
+            ICrudService<TId, TEntity> crudService)
         {
             _queryRepository = queryRepository;
             _crudService = crudService;

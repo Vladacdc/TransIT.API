@@ -11,14 +11,14 @@ using TransIT.DAL.Models.Entities;
 namespace TransIT.API.Controllers
 {
     [Authorize(Roles = "ADMIN,ENGINEER,REGISTER")]
-    public class VehicleController : DataController<Vehicle, VehicleDTO>
+    public class VehicleController : DataController<int, Vehicle, VehicleDTO>
     {
         private readonly IVehicleService _vehicleService;
 
         public VehicleController(
             IMapper mapper, 
             IVehicleService vehicleService,
-            IFilterService<Vehicle> odService
+            IFilterService<int, Vehicle> odService
             ) : base(mapper, vehicleService, odService)
         {
             _vehicleService = vehicleService;

@@ -2,7 +2,7 @@
 
 namespace TransIT.DAL.Repositories.InterfacesRepositories
 {
-    public interface IMalfunctionRepository : IBaseRepository<Malfunction>
+    public interface IMalfunctionRepository : IBaseRepository<int, Malfunction>
     {
     }
 }

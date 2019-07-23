@@ -37,7 +37,7 @@ namespace TransIT.DAL.Models
         {
             optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=TransITDB;Trusted_Connection=True;MultipleActiveResultSets=true");
         }
-    
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -50,6 +50,9 @@ namespace TransIT.DAL.Models
             #endregion
 
             #region Configuration
+
+            modelBuilder.Entity<Token>().ToTable("Token");
+
             modelBuilder.Entity<ActionType>(entity =>
             {
                 entity.ToTable("ACTION_TYPE");

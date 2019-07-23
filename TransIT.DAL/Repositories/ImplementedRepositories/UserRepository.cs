@@ -7,7 +7,7 @@ using TransIT.DAL.Repositories.InterfacesRepositories;
 
 namespace TransIT.DAL.Repositories.ImplementedRepositories
 {
-    public class UserRepository : BaseRepository<User>, IUserRepository
+    public class UserRepository : BaseRepository<string, User>, IUserRepository
     {
         public UserRepository(DbContext context)
             : base(context)

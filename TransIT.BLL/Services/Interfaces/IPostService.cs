@@ -5,7 +5,7 @@ namespace TransIT.BLL.Services.Interfaces
     /// <summary>
     /// Post model CRUD
     /// </summary>
-    public interface IPostService : ICrudService<Post>
+    public interface IPostService : ICrudService<int, Post>
     {
     }
 }

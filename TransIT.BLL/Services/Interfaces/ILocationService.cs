@@ -2,7 +2,7 @@
 
 namespace TransIT.BLL.Services.Interfaces
 {
-    public interface ILocationService : ICrudService<Location>
+    public interface ILocationService : ICrudService<int, Location>
     {
 
     }

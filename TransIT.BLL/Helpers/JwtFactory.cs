@@ -44,7 +44,8 @@ namespace TransIT.BLL.Helpers
             return (principal, jwtSecurityToken);
         }
 
-        private string GenerateAccessToken(int userId, string login, string role) =>
+
+        private string GenerateAccessToken(string userId, string login, string role) =>
             new JwtSecurityTokenHandler()
                 .WriteToken(new JwtSecurityToken(
                     issuer: _jwtOptions.Issuer,
@@ -55,7 +56,7 @@ namespace TransIT.BLL.Helpers
                     signingCredentials: _jwtOptions.SigningCredentials
                 ));
         
-        private string GenerateRefreshToken(int userId, string login, string role) =>
+        private string GenerateRefreshToken(string userId, string login, string role) =>
             new JwtSecurityTokenHandler()
                 .WriteToken(new JwtSecurityToken(
                     issuer: _jwtOptions.Issuer,
@@ -66,14 +67,14 @@ namespace TransIT.BLL.Helpers
                     signingCredentials: _jwtOptions.SigningCredentials
             ));
         
-        public TokenDTO GenerateToken(int userId, string login, string role) =>
+        public TokenDTO GenerateToken(string userId, string login, string role) =>
             new TokenDTO
             {
                 AccessToken = GenerateAccessToken(userId, login, role),
                 RefreshToken = GenerateRefreshToken(userId, login, role)
             };
 
-        private Claim[] GenerateClaims(int userId, string login, string role) =>
+        private Claim[] GenerateClaims(string userId, string login, string role) =>
             new[]
             {
                 new Claim(nameof(login), login),

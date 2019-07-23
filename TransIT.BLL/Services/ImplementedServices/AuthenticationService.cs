@@ -1,6 +1,8 @@
 using System;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Net;
+using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
@@ -33,13 +35,15 @@ namespace TransIT.BLL.Services.ImplementedServices
             RoleManager<Role> roleManager,
             ILogger<AuthenticationService> logger,
             IJwtFactory jwtFactory,
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork, 
+            IPasswordHasher hasher)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _roleManager = roleManager;
             _logger = logger;
-            _unitOfWork = unitOfWork; 
+            _unitOfWork = unitOfWork;
+            _hasher = hasher;
             _jwtFactory = jwtFactory;
         }
         
@@ -47,21 +51,19 @@ namespace TransIT.BLL.Services.ImplementedServices
         {
             try
             {
-                var user = (await _unitOfWork.UserRepository
-                    .GetAllAsync(u => u.UserName == credentials.Login))
-                    .SingleOrDefault();
+                var user = (await _userManager.FindByNameAsync(credentials.Login));
 
-                if (user != null && (bool)user.IsActive && _hasher.CheckMatch(credentials.Password, user.Password))
+                if (user != null && (bool)user.IsActive && (await _userManager.CheckPasswordAsync(user, credentials.Password)))
                 {
-                    var role = await _unitOfWork.RoleRepository.GetByIdAsync((int)user.RoleId);
-                    var token = _jwtFactory.GenerateToken(user.Id, user.Login, role?.Name);
+                    var role = (await _userManager.GetRolesAsync(user)).SingleOrDefault();
+                    var token = _jwtFactory.GenerateToken(user.Id, user.UserName, role);
 
                     if (token == null) return null;
 
                     await _unitOfWork.TokenRepository.AddAsync(new Token
                     {
                         RefreshToken = token.RefreshToken,
-                        CreateId = user.Id,
+                        CreatedById = user.Id,
                         Create = user
                     });
                     await _unitOfWork.SaveAsync();
@@ -81,16 +83,15 @@ namespace TransIT.BLL.Services.ImplementedServices
             try
             {
                 var user = await _unitOfWork.UserRepository.GetByIdAsync(
-                    int.Parse(
                         _jwtFactory.GetPrincipalFromExpiredToken(token.AccessToken).jwt.Subject
-                        )
-                    );
-                var newToken = _jwtFactory.GenerateToken(user.Id, user.Login, user.Role.Name);
+                        );
+                var role = (await _userManager.GetRolesAsync(user)).SingleOrDefault();
+                var newToken = _jwtFactory.GenerateToken(user.Id, user.UserName, role);
 
                 await _unitOfWork.TokenRepository.AddAsync(new Token
                 {
                     RefreshToken = newToken.RefreshToken,
-                    CreateId = user.Id,
+                    CreatedById = user.Id,
                     Create = user
                 });
                 await _unitOfWork.SaveAsync();

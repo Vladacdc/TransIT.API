@@ -7,7 +7,7 @@ using TransIT.DAL.Repositories.InterfacesRepositories;
 
 namespace TransIT.DAL.Repositories.ImplementedRepositories
 {
-    public class CountryRepository : BaseRepository<Country>, ICountryRepository
+    public class CountryRepository : BaseRepository<int, Country>, ICountryRepository
     {
         public CountryRepository(DbContext context)
             : base(context)

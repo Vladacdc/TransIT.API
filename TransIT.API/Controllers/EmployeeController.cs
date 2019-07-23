@@ -10,14 +10,14 @@ using TransIT.DAL.Models.Entities;
 namespace TransIT.API.Controllers
 {
     [Authorize(Roles = "ADMIN,ENGINEER")]
-    public class EmployeeController : DataController<Employee, EmployeeDTO>
+    public class EmployeeController : DataController<int, Employee, EmployeeDTO>
     {
         private readonly IEmployeeService _employeeService;
         
         public EmployeeController(
             IMapper mapper, 
             IEmployeeService employeeService,
-            IFilterService<Employee> odService
+            IFilterService<int, Employee> odService
             ) : base(mapper, employeeService, odService)
         {
             _employeeService = employeeService;

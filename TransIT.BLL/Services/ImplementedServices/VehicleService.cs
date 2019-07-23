@@ -9,7 +9,7 @@ namespace TransIT.BLL.Services.ImplementedServices
     /// <summary>
     /// Service for Vehicle
     /// </summary>
-    public class VehicleService : CrudService<Vehicle>, IVehicleService
+    public class VehicleService : CrudService<int, Vehicle>, IVehicleService
     {
         /// <summary>
         /// ctor
@@ -18,7 +18,7 @@ namespace TransIT.BLL.Services.ImplementedServices
         /// <param name="logger"></param>
         /// <param name="repository"></param>
         public VehicleService(IUnitOfWork unitOfWork,
-            ILogger<CrudService<Vehicle>> logger,
+            ILogger<CrudService<int, Vehicle>> logger,
             IVehicleRepository repository) : base(unitOfWork, logger, repository) { }
     }
 }

@@ -10,13 +10,13 @@ using Microsoft.AspNetCore.Mvc;
 namespace TransIT.API.Controllers
 {
     [Authorize(Roles = "ADMIN,ENGINEER,ANALYST")]
-    public class TransitionController : DataController<Transition, TransitionDTO>
+    public class TransitionController : DataController<int, Transition, TransitionDTO>
     {
         private readonly ITransitionService _transitionService;
         public TransitionController(
             IMapper mapper,
             ITransitionService transitionService,
-            IFilterService<Transition> odService
+            IFilterService<int, Transition> odService
             ) : base(mapper, transitionService, odService)
         {
             _transitionService = transitionService;

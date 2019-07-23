@@ -3,7 +3,7 @@ using TransIT.DAL.Models.Entities.Abstractions;
 
 namespace TransIT.DAL.Models.Entities
 {
-    public partial class Bill : IAuditableEntity
+    public partial class Bill : IAuditableEntity, IEntityId<int>
     {
         public int Id { get; set; }
         public decimal? Sum { get; set; }

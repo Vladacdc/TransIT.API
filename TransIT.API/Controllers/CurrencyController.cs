@@ -10,14 +10,14 @@ using TransIT.DAL.Models.Entities;
 namespace TransIT.API.Controllers
 {
     [Authorize(Roles = "ADMIN,ENGINEER,REGISTER,ANALYST")]
-    public class CurrencyController : DataController<Currency, CurrencyDTO>
+    public class CurrencyController : DataController<int, Currency, CurrencyDTO>
     {
         private readonly ICurrencyService _currencyService;
 
         public CurrencyController(
             IMapper mapper,
             ICurrencyService currencyService,
-            IFilterService<Currency> odService
+            IFilterService<int, Currency> odService
             ) : base(mapper, currencyService, odService)
         {
             _currencyService = currencyService;

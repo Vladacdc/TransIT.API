@@ -9,7 +9,7 @@ using TransIT.DAL.Repositories.InterfacesRepositories;
 
 namespace TransIT.DAL.Repositories.ImplementedRepositories
 {
-    public class TransitionRepository:BaseRepository<Transition>, ITransitionRepository
+    public class TransitionRepository:BaseRepository<int, Transition>, ITransitionRepository
     {
         public TransitionRepository(DbContext context)
                : base(context)
