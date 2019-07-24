@@ -110,6 +110,9 @@ namespace TransIT.BLL.Services.ImplementedServices
         public async Task<IssueDTO> UpdateAsync(IssueDTO dto, int userId)
         {
             var model = _mapper.Map<Issue>(dto);
+
+            model.ModId = userId;
+
             dto = _mapper.Map<IssueDTO>(_unitOfWork.IssueRepository.UpdateWithIgnoreProperty(model, x => x.StateId));
             await _unitOfWork.SaveAsync();
             return dto;
