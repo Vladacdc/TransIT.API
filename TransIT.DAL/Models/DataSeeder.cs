@@ -118,6 +118,22 @@ namespace TransIT.DAL.Models
         {
             var context = services.GetRequiredService<TransITDBContext>();
 
+            if (context.Location.Any()
+                || context.VehicleType.Any()
+                || context.Vehicle.Any()
+                || context.Post.Any()
+                || context.Employee.Any()
+                || context.Country.Any()
+                || context.Currency.Any()
+                || context.Supplier.Any()
+                || context.Malfunction.Any()
+                || context.MalfunctionGroup.Any()
+                || context.MalfunctionSubgroup.Any()
+                || context.Issue.Any())
+            {
+                return;
+            }
+
             #region Locations
             var LKP1 = new Location()
             {
@@ -134,10 +150,8 @@ namespace TransIT.DAL.Models
                 Name = "ЛК АТП-1",
                 Description = "м. Львів вул. Авіаційна 1"
             };
-            if (!context.Location.Any())
-            {
-                context.Location.AddRange(LKP1, LKP2, LK);
-            }
+
+            context.Location.AddRange(LKP1, LKP2, LK);
             #endregion
 
             #region VechileTypes
@@ -145,17 +159,15 @@ namespace TransIT.DAL.Models
             var E191 = new VehicleType() { Name = "Електробус Е191" };
             var T3L = new VehicleType() { Name = "Трамвай Т3L" };
             var T191 = new VehicleType() { Name = "Тролейбус Т191" };
-            if (!context.VehicleType.Any())
-            {
-                context.VehicleType.AddRange(A185, E191, T3L, T191);
-            }
+
+            context.VehicleType.AddRange(A185, E191, T3L, T191);
             #endregion
 
             #region Vehicles
-            var vehicle1 = new Vehicle()
+            var electron = new Vehicle()
             {
                 VehicleType = A185,
-                Brand = "Electron",
+                Brand = "Електрон",
                 Vincode = "WR0DA76963U153381",
                 InventoryId = "12314",
                 RegNum = "AC4131CC",
@@ -164,10 +176,10 @@ namespace TransIT.DAL.Models
                 WarrantyEndDate = new DateTime(2019, 12, 10),
                 CommissioningDate = new DateTime(2017, 12, 10)
             };
-            var vehicle2 = new Vehicle()
+            var electron2 = new Vehicle()
             {
                 VehicleType = E191,
-                Brand = "Богдан",
+                Brand = "Електрон",
                 Vincode = "WP0CA36863U153382",
                 InventoryId = "124",
                 RegNum = "LV1234VL",
@@ -175,20 +187,16 @@ namespace TransIT.DAL.Models
                 WarrantyEndDate = new DateTime(2019, 05, 09),
                 CommissioningDate = new DateTime(2017, 05, 22)
             };
-            if (!context.Vehicle.Any())
-            {
-                context.Vehicle.AddRange(vehicle1, vehicle2);
-            }
+
+            context.Vehicle.AddRange(electron, electron2);
             #endregion
 
             #region Posts
             var engineer = new Post { Name = "Провідний інженер" };
             var boss = new Post { Name = "Начальник дільниці" };
             var locksmith = new Post { Name = "Слюсар механоскладальних робіт" };
-            if (!context.Post.Any())
-            {
-                context.Post.AddRange(engineer, boss, locksmith);
-            }
+
+            context.Post.AddRange(engineer, boss, locksmith);
             #endregion
 
             #region Employees
@@ -219,10 +227,8 @@ namespace TransIT.DAL.Models
                 BoardNumber = 2,
                 Post = engineer
             };
-            if (!context.Employee.Any())
-            {
-                context.Employee.AddRange(Ihora, Yura, Sania);
-            }
+
+            context.Employee.AddRange(Ihora, Yura, Sania);
             #endregion
 
             #region Countries
@@ -231,10 +237,8 @@ namespace TransIT.DAL.Models
             var Russia = new Country() { Name = "Росія" };
             var Polland = new Country() { Name = "Польща" };
             var German = new Country() { Name = "Німеччина" };
-            if (!context.Country.Any())
-            {
-                context.AddRange(Ukraine, Turkey, Russia, Polland, German);
-            }
+
+            context.Country.AddRange(Ukraine, Turkey, Russia, Polland, German);
             #endregion
 
             #region Currencies
@@ -244,10 +248,7 @@ namespace TransIT.DAL.Models
             var GBR = new Currency { ShortName = "GBR", FullName = "Great British Pound" };
             var EUR = new Currency { ShortName = "EUR", FullName = "Євро" };
 
-            if (!context.Country.Any())
-            {
-                context.AddRange(USD, UAH, RUB, GBR, EUR);
-            }
+            context.Currency.AddRange(USD, UAH, RUB, GBR, EUR);
             #endregion
 
             #region Supplier
@@ -276,11 +277,7 @@ namespace TransIT.DAL.Models
                 Edrpou = "04909"
             };
 
-
-            if (!context.Supplier.Any())
-            {
-                context.AddRange(Yunona, Tekhnos, Elephant);
-            }
+            context.Supplier.AddRange(Yunona, Tekhnos, Elephant);
             #endregion
 
             #region MalfunctionsWithGroups
@@ -353,24 +350,80 @@ namespace TransIT.DAL.Models
                 MalfunctionSubgroup = dieselEngine
             };
 
-            if (!context.MalfunctionGroup.Any())
-            {
-                context.MalfunctionGroup.AddRange(body,engine);
-            }
+            context.MalfunctionGroup.AddRange(body, engine);
 
-            if (!context.MalfunctionSubgroup.Any())
-            {
-                context.AddRange(windows, handrails, gasEngine,dieselEngine);
-            }
+            context.MalfunctionSubgroup.AddRange(windows, handrails, gasEngine, dieselEngine);
 
-            if (!context.Malfunction.Any())
+            context.Malfunction.AddRange(
+                brokenWindow, waterLeak,
+                missingHandrail, brokenHandrail,
+                tooMuchGas, noGas,
+                brokenPump);
+            #endregion
+
+            #region Issues
+            var userController = services.GetRequiredService<UserManager<User>>();
+            var findRegister = userController.FindByNameAsync("testRegister");
+            findRegister.Wait();
+            var register = findRegister.Result;
+            var imissingHandrail = new Issue()
             {
-                context.AddRange(
-                    brokenWindow,waterLeak,
-                    missingHandrail, brokenHandrail,
-                    tooMuchGas, noGas, 
-                    brokenPump);
-            }
+                Malfunction = missingHandrail,
+                Vehicle = electron2,
+                Date = DateTime.Now.Subtract(
+                    new TimeSpan(days: 1,hours: 0, minutes: 0, seconds: 0)),
+                Warranty = 0,
+                Summary = "ппц шо робити",
+                Priority = 1,
+                Create = register,
+                Number = 1,
+            };
+            var ibrokenHandrail = new Issue()
+            {
+                Malfunction = brokenHandrail,
+                Vehicle = electron2,
+                Date = DateTime.Now,
+                Warranty = 0,
+                Summary = "ппц, спочатку пропали поручні, а тепер їх зламали, шо робити?",
+                Priority = 2,
+                Create = register,
+                Number = 2,
+            };
+            var iwaterLeak = new Issue()
+            {
+                Malfunction = waterLeak,
+                Vehicle = electron,
+                Date = DateTime.Now,
+                Warranty = 1,
+                Summary = "Третє вікно праворуч протікає під час дощу",
+                Priority = 0,
+                Create = register,
+                Number = 3
+            };
+
+            var ibrokenWindows = new Issue()
+            {
+                Malfunction = brokenWindow,
+                Vehicle = electron,
+                Date = DateTime.Now,
+                Warranty = 0,
+                Summary = "розбили два вікна в салоні з лівого боку",
+                Priority = 2,
+                Number = 4,
+            };
+            var inoGas = new Issue()
+            {
+                Malfunction = noGas,
+                Vehicle = electron,
+                Date = DateTime.Now,
+                Warranty = 1,
+                Summary = "Автобус не заводиться, видно, що перебитий бензонасос",
+                Priority = 2,
+                Number = 5
+            };
+
+            context.Issue.AddRange(imissingHandrail, ibrokenHandrail, iwaterLeak,
+                ibrokenWindows, inoGas);
             #endregion
 
             context.SaveChanges();
