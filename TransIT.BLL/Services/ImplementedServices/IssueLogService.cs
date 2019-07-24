@@ -51,13 +51,18 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<IEnumerable<IssueLogDTO>> SearchAsync(string search)
         {
-            var IssueLogs = await _unitOfWork.IssueLogRepository.SearchExpressionAsync(
+            var issueLogs = await _unitOfWork.IssueLogRepository.SearchExpressionAsync(
                 search
                     .Split(new[] {' ', ',', '.'}, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => x.Trim().ToUpperInvariant())
             );
 
-            return IssueLogs.ProjectTo<IssueLogDTO>();
+            return issueLogs.ProjectTo<IssueLogDTO>();
+        }
+
+        public async Task<IssueLogDTO> CreateAsync(IssueLogDTO dto, int userId)
+        {
+            return await CreateAsync(dto);
         }
 
         public async Task<IssueLogDTO> UpdateAsync(IssueLogDTO dto)
@@ -65,6 +70,11 @@ namespace TransIT.BLL.Services.ImplementedServices
             var newDto = _mapper.Map<IssueLogDTO>(_unitOfWork.IssueLogRepository.Update(_mapper.Map<IssueLog>(dto)));
             await _unitOfWork.SaveAsync();
             return newDto;
+        }
+
+        public async Task<IssueLogDTO> UpdateAsync(IssueLogDTO dto, int userId)
+        {
+            return await UpdateAsync(dto);
         }
 
         public async Task<IssueLogDTO> CreateAsync(IssueLogDTO issueLogDTO)
