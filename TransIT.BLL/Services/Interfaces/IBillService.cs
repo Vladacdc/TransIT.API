@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using TransIT.BLL.DTOs;
 
 namespace TransIT.BLL.Services.Interfaces
@@ -7,5 +8,8 @@ namespace TransIT.BLL.Services.Interfaces
     /// </summary>
     public interface IBillService : ICrudService<BillDTO>
     {
+        Task<BillDTO> CreateAsync(int userId, BillDTO model);
+
+        Task<BillDTO> UpdateAsync(int userId, BillDTO model);
     }
 }
