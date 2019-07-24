@@ -64,7 +64,7 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<ActionTypeDTO> UpdateAsync(ActionTypeDTO value)
         {
-            ActionType model = await _unitOfWork.ActionTypeRepository.GetByIdAsync(value.Id);
+            ActionType model = _mapper.Map<ActionType>(value);
 
             if (model.IsFixed)
             {
