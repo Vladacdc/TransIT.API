@@ -61,9 +61,33 @@ namespace TransIT.BLL.Services.ImplementedServices
             return await GetAsync(model.Id);
         }
 
+        public async Task<MalfunctionSubgroupDTO> CreateAsync(MalfunctionSubgroupDTO dto, int userId)
+        {
+            var model = _mapper.Map<MalfunctionSubgroup>(dto);
+
+            model.CreateId = userId;
+            model.ModId = userId;
+
+            await _unitOfWork.MalfunctionSubgroupRepository.AddAsync(model);
+            await _unitOfWork.SaveAsync();
+            return await GetAsync(model.Id);
+        }
+
         public async Task<MalfunctionSubgroupDTO> UpdateAsync(MalfunctionSubgroupDTO dto)
         {
             var model = _mapper.Map<MalfunctionSubgroup>(dto);
+            _unitOfWork.MalfunctionSubgroupRepository.Update(model);
+            await _unitOfWork.SaveAsync();
+            return dto;
+        }
+
+        public async Task<MalfunctionSubgroupDTO> UpdateAsync(MalfunctionSubgroupDTO dto, int userId)
+        {
+            var model = _mapper.Map<MalfunctionSubgroup>(dto);
+
+            model.CreateId = userId;
+            model.ModId = userId;
+
             _unitOfWork.MalfunctionSubgroupRepository.Update(model);
             await _unitOfWork.SaveAsync();
             return dto;

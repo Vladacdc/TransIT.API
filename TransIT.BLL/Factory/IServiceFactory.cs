@@ -1,5 +1,4 @@
-﻿using TransIT.BLL.Services;
-using TransIT.BLL.Services.Interfaces;
+﻿using TransIT.BLL.Services.Interfaces;
 
 namespace TransIT.BLL.Factory
 {

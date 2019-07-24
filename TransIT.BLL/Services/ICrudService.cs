@@ -31,12 +31,16 @@ namespace TransIT.BLL.Services
         /// <returns>Created entity</returns>
         Task<TEntityDTO> CreateAsync(TEntityDTO dto);
 
+        Task<TEntityDTO> CreateAsync(TEntityDTO dto, int userId);
+
         /// <summary>
         /// Updates entity
         /// </summary>
         /// <param name="value">Entity model to update</param>
         /// <returns>Updated entity</returns>
         Task<TEntityDTO> UpdateAsync(TEntityDTO dto);
+
+        Task<TEntityDTO> UpdateAsync(TEntityDTO dto, int userId);
 
         /// <summary>
         /// Removes entity with this id
