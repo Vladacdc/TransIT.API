@@ -74,6 +74,18 @@ namespace TransIT.BLL.Services.ImplementedServices
             return await GetAsync(model.Id);
         }
 
+        public async Task<StateDTO> CreateAsync(int userId, StateDTO dto)
+        {
+            State model = _mapper.Map<State>(dto);
+
+            model.CreateId = userId;
+            model.ModId = userId;
+
+            await _unitOfWork.StateRepository.AddAsync(model);
+            await _unitOfWork.SaveAsync();
+            return await GetAsync(model.Id);
+        }
+
         public async Task<StateDTO> UpdateAsync(StateDTO stateDTO)
         {
             var newModel = _mapper.Map<State>(await GetAsync((int)stateDTO.Id));
@@ -91,6 +103,26 @@ namespace TransIT.BLL.Services.ImplementedServices
             _unitOfWork.StateRepository.Update(newModel);
             await _unitOfWork.SaveAsync();
             return await GetAsync(newModel.Id);
+        }
+
+        public async Task<StateDTO> UpdateAsync(int userId, StateDTO stateDto)
+        {
+            State model = _mapper.Map<State>(stateDto);
+
+            if (model.IsFixed)
+            {
+                throw new ConstraintException("Current state can not be edited");
+            }
+            if (stateDto.IsFixed)
+            {
+                throw new ArgumentException("Incorrect model");
+            }
+
+            model.ModId = userId;
+
+            _unitOfWork.StateRepository.Update(model);
+            await _unitOfWork.SaveAsync();
+            return stateDto;
         }
 
         public async Task DeleteAsync(int id)

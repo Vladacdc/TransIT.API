@@ -54,20 +54,42 @@ namespace TransIT.BLL.Services.ImplementedServices
             return vehicleTypes.ProjectTo<VehicleTypeDTO>();
         }
 
-        public async Task<VehicleTypeDTO> CreateAsync(VehicleTypeDTO value)
+        public async Task<VehicleTypeDTO> CreateAsync(VehicleTypeDTO vehicleTypeDto)
         {
-            VehicleType model = _mapper.Map<VehicleType>(value);
+            VehicleType model = _mapper.Map<VehicleType>(vehicleTypeDto);
             await _unitOfWork.VehicleTypeRepository.AddAsync(model);
             await _unitOfWork.SaveAsync();
             return await GetAsync(model.Id);
         }
 
-        public async Task<VehicleTypeDTO> UpdateAsync(VehicleTypeDTO value)
+        public async Task<VehicleTypeDTO> CreateAsync(int userId, VehicleTypeDTO vehicleTypeDto)
         {
-            VehicleType model = _mapper.Map<VehicleType>(value);
+            VehicleType model = _mapper.Map<VehicleType>(vehicleTypeDto);
+
+            model.CreateId = userId;
+            model.ModId = userId;
+
+            await _unitOfWork.VehicleTypeRepository.AddAsync(model);
+            await _unitOfWork.SaveAsync();
+            return await GetAsync(model.Id);
+        }
+
+        public async Task<VehicleTypeDTO> UpdateAsync(VehicleTypeDTO vehicleTypeDto)
+        {
+            VehicleType model = _mapper.Map<VehicleType>(vehicleTypeDto);
             _unitOfWork.VehicleTypeRepository.Update(model);
             await _unitOfWork.SaveAsync();
-            return value;
+            return vehicleTypeDto;
+        }
+
+        public async Task<VehicleTypeDTO> UpdateAsync(int userId, VehicleTypeDTO vehicleTypeDto)
+        {
+            VehicleType model = _mapper.Map<VehicleType>(vehicleTypeDto);
+            model.ModId = userId;
+
+            _unitOfWork.VehicleTypeRepository.Update(model);
+            await _unitOfWork.SaveAsync();
+            return vehicleTypeDto;
         }
 
         public async Task DeleteAsync(int id)

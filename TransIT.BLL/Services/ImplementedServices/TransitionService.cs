@@ -54,12 +54,44 @@ namespace TransIT.BLL.Services.ImplementedServices
             return await GetAsync(model.Id);
         }
 
+        public async Task<TransitionDTO> CreateAsync(int userId, TransitionDTO dto)
+        {
+            Transition model = _mapper.Map<Transition>(dto);
+
+            model.CreateId = userId;
+            model.ModId = userId;
+
+            await _unitOfWork.TransitionRepository.AddAsync(model);
+            await _unitOfWork.SaveAsync();
+            return await GetAsync(model.Id);
+        }
+
         public async Task<TransitionDTO> UpdateAsync(TransitionDTO dto)
         {
             var model = _mapper.Map<Transition>(dto);
             _unitOfWork.TransitionRepository.Update(model);
             await _unitOfWork.SaveAsync();
             return dto;
+        }
+
+        public async Task<TransitionDTO> UpdateAsync(int userId, TransitionDTO stateDto)
+        {
+            Transition model = _mapper.Map<Transition>(stateDto);
+
+            if (model.IsFixed)
+            {
+                throw new ConstraintException("Current state can not be edited");
+            }
+            if (stateDto.IsFixed)
+            {
+                throw new ArgumentException("Incorrect model");
+            }
+
+            model.ModId = userId;
+
+            _unitOfWork.TransitionRepository.Update(model);
+            await _unitOfWork.SaveAsync();
+            return stateDto;
         }
 
         public async Task DeleteAsync(int id)

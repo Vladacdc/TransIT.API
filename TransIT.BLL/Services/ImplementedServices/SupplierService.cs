@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -61,12 +62,35 @@ namespace TransIT.BLL.Services.ImplementedServices
             return await GetAsync(model.Id);
         }
 
+        public async Task<SupplierDTO> CreateAsync(int userId,SupplierDTO dto)
+        {
+            Supplier model = _mapper.Map<Supplier>(dto);
+
+            model.CreateId = userId;
+            model.ModId = userId;
+
+            await _unitOfWork.SupplierRepository.AddAsync(model);
+            await _unitOfWork.SaveAsync();
+            return await GetAsync(model.Id);
+        }
+
         public async Task<SupplierDTO> UpdateAsync(SupplierDTO dto)
         {
             var model = _mapper.Map<Supplier>(dto);
             _unitOfWork.SupplierRepository.Update(model);
             await _unitOfWork.SaveAsync();
             return dto;
+        }
+
+        public async Task<SupplierDTO> UpdateAsync(int userId, SupplierDTO stateDto)
+        {
+            Supplier model = _mapper.Map<Supplier>(stateDto);
+
+            model.ModId = userId;
+
+            _unitOfWork.SupplierRepository.Update(model);
+            await _unitOfWork.SaveAsync();
+            return stateDto;
         }
 
         public async Task DeleteAsync(int id)
