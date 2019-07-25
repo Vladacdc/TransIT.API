@@ -62,9 +62,32 @@ namespace TransIT.BLL.Services.ImplementedServices
             return await GetAsync(model.Id);
         }
 
+        public async Task<EmployeeDTO> CreateAsync(int userId, EmployeeDTO dto)
+        {
+            var model = _mapper.Map<Employee>(dto);
+
+            model.CreateId = userId;
+            model.ModId = userId;
+
+            await _unitOfWork.EmployeeRepository.AddAsync(model);
+            await _unitOfWork.SaveAsync();
+            return await GetAsync(model.Id);
+        }
+
         public async Task<EmployeeDTO> UpdateAsync(EmployeeDTO dto)
         {
             var model = _mapper.Map<Employee>(dto);
+            _unitOfWork.EmployeeRepository.Update(model);
+            await _unitOfWork.SaveAsync();
+            return dto;
+        }
+
+        public async Task<EmployeeDTO> UpdateAsync(int userId, EmployeeDTO dto)
+        {
+            var model = _mapper.Map<Employee>(dto);
+
+            model.ModId = userId;
+
             _unitOfWork.EmployeeRepository.Update(model);
             await _unitOfWork.SaveAsync();
             return dto;
