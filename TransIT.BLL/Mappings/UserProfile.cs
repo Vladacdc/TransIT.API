@@ -14,6 +14,12 @@ namespace TransIT.BLL.Mappings
     {
         public UserProfile()
         {
+            CreateMap<User, User>()
+                .ForMember(u => u.SecurityStamp, opt => opt.Ignore())
+                .ForMember(u => u.ConcurrencyStamp, opt => opt.Ignore())
+                .ForMember(u => u.PasswordHash, opt => opt.Ignore())
+                .ForMember(u => u.AccessFailedCount, opt => opt.Ignore())
+                .ForMember(u => u.EmailConfirmed, opt => opt.Ignore());
 
             CreateMap<UserDTO, User>()                
                 .ForMember(u => u.UpdatedById, opt => opt.Ignore())
@@ -49,8 +55,7 @@ namespace TransIT.BLL.Mappings
                 .ForMember(u => u.InverseCreate, opt => opt.Ignore())
                 .ForMember(u => u.SupplierCreate, opt => opt.Ignore());
             CreateMap<User, UserDTO>()
-                .ForMember(u => u.Password, opt => opt.Ignore())
-                .ForMember(u => u.Role, opt => opt.MapFrom(x => UserService.GetRoleAsync(x).Result));
+                .ForMember(u => u.Password, opt => opt.Ignore());
         }
 
     }

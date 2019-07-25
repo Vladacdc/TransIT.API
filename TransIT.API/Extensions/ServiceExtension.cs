@@ -15,6 +15,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Hosting;
+using TransIT.DAL.Models.DependencyInjection;
+using TransIT.API.DependencyInjection;
 
 namespace TransIT.API.Extensions
 {
@@ -25,6 +27,7 @@ namespace TransIT.API.Extensions
             IConfiguration Configuration,
             IHostingEnvironment Environment)
         {
+            services.AddScoped<IUser, CurrentUser>();
             Action<DbContextOptionsBuilder> configureConnection = options =>
             {
                 if (Environment.IsDevelopment())
@@ -66,7 +69,6 @@ namespace TransIT.API.Extensions
             {
                 c.AddProfile(new RoleProfile());
                 c.AddProfile(new UserProfile());
-                c.AddProfile(new TokenProfile());
                 c.AddProfile(new VehicleTypeProfile());
                 c.AddProfile(new VehicleProfile());
                 c.AddProfile(new RoleProfile());
@@ -112,7 +114,6 @@ namespace TransIT.API.Extensions
             services.AddScoped<ILocationService, LocationService>();
 
 
-            services.AddScoped<ICrudService<string, User>, UserService>();
             services.AddScoped<ICrudService<int, ActionType>, ActionTypeService>();
             services.AddScoped<ICrudService<int, Vehicle>, VehicleService>();
             services.AddScoped<ICrudService<int, VehicleType>, VehicleTypeService>();
@@ -170,7 +171,6 @@ namespace TransIT.API.Extensions
             services.AddScoped<IQueryRepository<Role>, RoleRepository>();
             services.AddScoped<IQueryRepository<State>, StateRepository>();
             services.AddScoped<IQueryRepository<Supplier>, SupplierRepository>();
-            services.AddScoped<IQueryRepository<Token>, TokenRepository>();
             services.AddScoped<IQueryRepository<User>, UserRepository>();
             services.AddScoped<IQueryRepository<Vehicle>, VehicleRepository>();
             services.AddScoped<IQueryRepository<VehicleType>, VehicleTypeRepository>();
@@ -193,7 +193,6 @@ namespace TransIT.API.Extensions
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IStateRepository, StateRepository>();
             services.AddScoped<ISupplierRepository, SupplierRepository>();
-            services.AddScoped<ITokenRepository, TokenRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IVehicleRepository, VehicleRepository>();
             services.AddScoped<IVehicleTypeRepository, VehicleTypeRepository>();

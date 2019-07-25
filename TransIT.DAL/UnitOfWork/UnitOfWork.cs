@@ -27,7 +27,6 @@ namespace TransIT.DAL.UnitOfWork
         public  ISupplierRepository SupplierRepository { get; }
         public  IVehicleRepository VehicleRepository { get; }
         public  IVehicleTypeRepository VehicleTypeRepository { get; }
-        public  ITokenRepository TokenRepository { get; }
         public  IEmployeeRepository EmployeeRepository { get; }
         public  IPostRepository PostRepository { get; }
         public  ITransitionRepository TransitionRepository { get; set; }
@@ -35,7 +34,7 @@ namespace TransIT.DAL.UnitOfWork
         public RoleManager<Role> RoleManager { get; set; }
         public UserManager<User> UserManager { get; set; }
 
-        public UnitOfWork(TransITDBContext context, IActionTypeRepository actionTypeRepository, ICountryRepository countryRepository, ICurrencyRepository currencyRepository, IBillRepository billRepository, IDocumentRepository documentRepository, IIssueRepository issueRepository, IIssueLogRepository issueLogRepository, IMalfunctionRepository malfunctionRepository, IMalfunctionGroupRepository malfunctionGroupRepository, IMalfunctionSubgroupRepository malfunctionSubgroupRepository, IRoleRepository roleRepository, IUserRepository userRepository, IStateRepository stateRepository, ISupplierRepository supplierRepository, IVehicleRepository vehicleRepository, IVehicleTypeRepository vehicleTypeRepository, ITokenRepository tokenRepository, IEmployeeRepository employeeRepository, IPostRepository postRepository, ITransitionRepository transitionRepository, ILocationRepository locationRepository,
+        public UnitOfWork(TransITDBContext context, IActionTypeRepository actionTypeRepository, ICountryRepository countryRepository, ICurrencyRepository currencyRepository, IBillRepository billRepository, IDocumentRepository documentRepository, IIssueRepository issueRepository, IIssueLogRepository issueLogRepository, IMalfunctionRepository malfunctionRepository, IMalfunctionGroupRepository malfunctionGroupRepository, IMalfunctionSubgroupRepository malfunctionSubgroupRepository, IRoleRepository roleRepository, IUserRepository userRepository, IStateRepository stateRepository, ISupplierRepository supplierRepository, IVehicleRepository vehicleRepository, IVehicleTypeRepository vehicleTypeRepository, IEmployeeRepository employeeRepository, IPostRepository postRepository, ITransitionRepository transitionRepository, ILocationRepository locationRepository,
             RoleManager<Role> roleManager,
             UserManager<User> userManager)
         {
@@ -56,7 +55,6 @@ namespace TransIT.DAL.UnitOfWork
             SupplierRepository = supplierRepository;
             VehicleRepository = vehicleRepository;
             VehicleTypeRepository = vehicleTypeRepository;
-            TokenRepository = tokenRepository;
             EmployeeRepository = employeeRepository;
             PostRepository = postRepository;
             TransitionRepository = transitionRepository;

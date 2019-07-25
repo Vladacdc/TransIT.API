@@ -41,12 +41,12 @@ namespace TransIT.DAL.Models
             builder.HasOne(d => d.CreatedBy)
                 .WithMany(p => p.InverseCreate)
                 .HasForeignKey(d => d.CreatedById)
-                .HasConstraintName("FK_CREATE_USER_ROLE");
+                .HasConstraintName("FK_CREATE_USER");
 
             builder.HasOne(d => d.ModifiedBy)
                 .WithMany(p => p.InverseMod)
                 .HasForeignKey(d => d.UpdatedById)
-                .HasConstraintName("FK_MOD_USER_ROLE");
+                .HasConstraintName("FK_MOD_USER");
         }
     }
 }
