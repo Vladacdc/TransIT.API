@@ -1,46 +1,105 @@
-﻿using System.Threading.Tasks;
-using AutoMapper;
+﻿using System.Security.Claims;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TransIT.BLL.Services;
 using TransIT.BLL.DTOs;
-using TransIT.DAL.Models.Entities;
+using TransIT.BLL.Services.ImplementedServices;
 
 namespace TransIT.API.Controllers
 {
     [Authorize(Roles = "ADMIN,ANALYST,ENGINEER")]
-    public class VehicleTypeController : DataController<VehicleType, VehicleTypeDTO>
+    public class VehicleTypeController : Controller
     {
-        private readonly IVehicleTypeService _vehicleTypeService;
+        private readonly VehicleTypeService _vehicleTypeService;
 
-        public VehicleTypeController(
-            IMapper mapper, 
-            IVehicleTypeService vehicleTypeService,
-            IFilterService<VehicleType> odService
-            ) : base(mapper, vehicleTypeService, odService)
+        public VehicleTypeController(VehicleTypeService vehicleTypeService)
         {
             _vehicleTypeService = vehicleTypeService;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Get([FromQuery] uint offset = 0, uint amount = 1000)
+        {
+            var result = await _vehicleTypeService.GetRangeAsync(offset, amount);
+            if (result != null)
+            {
+                return Json(result);
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(int id)
+        {
+            var result = await _vehicleTypeService.GetAsync(id);
+            if (result != null)
+            {
+                return Json(result);
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet("/search")]
+        public async Task<IActionResult> Get([FromQuery] string search)
+        {
+            var result = await _vehicleTypeService.SearchAsync(search);
+            if (result != null)
+            {
+                return Json(result);
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
         [HttpPost]
         [Authorize(Roles = "ADMIN")]
-        public override Task<IActionResult> Create([FromBody] VehicleTypeDTO obj)
+        public async Task<IActionResult> Create([FromBody] VehicleTypeDTO vehicleTypeDto)
         {
-            return base.Create(obj);
+            int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var createdDto = await _vehicleTypeService.CreateAsync(userId, vehicleTypeDto);
+            if (createdDto != null)
+            {
+                return CreatedAtAction(nameof(Create), createdDto);
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
 
         [HttpPut("{id}")]
         [Authorize(Roles = "ADMIN")]
-        public override Task<IActionResult> Update(int id, [FromBody] VehicleTypeDTO obj)
+        public async Task<IActionResult> Update(int id, [FromBody] VehicleTypeDTO vehicleTypeDto)
         {
-            return base.Update(id, obj);
+            int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            vehicleTypeDto.Id = id;
+
+            var result = await _vehicleTypeService.UpdateAsync(userId, vehicleTypeDto);
+
+            if (result != null)
+            {
+                return NoContent();
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
 
         [HttpDelete("{id}")]
         [Authorize(Roles = "ADMIN")]
-        public override Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            return base.Delete(id);
+            await _vehicleTypeService.DeleteAsync(id);
+            return NoContent();
         }
     }
 }
