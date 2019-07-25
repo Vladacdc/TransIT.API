@@ -4,12 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using TransIT.DAL.Models.Entities;
 using TransIT.DAL.Repositories.InterfacesRepositories;
+using TransIT.DAL.Models;
 
 namespace TransIT.DAL.Repositories.ImplementedRepositories
 {
     public class ActionTypeRepository : BaseRepository<int, ActionType>, IActionTypeRepository
     {
-        public ActionTypeRepository(DbContext context)
+        public ActionTypeRepository(TransITDBContext context)
                : base(context)
         {
         }

@@ -6,12 +6,13 @@ using System.Text;
 using System.Threading.Tasks;
 using TransIT.DAL.Models.Entities;
 using TransIT.DAL.Repositories.InterfacesRepositories;
+using TransIT.DAL.Models;
 
 namespace TransIT.DAL.Repositories.ImplementedRepositories
 {
     public class LocationRepository : BaseRepository<int, Location>, ILocationRepository
     {
-        public LocationRepository(DbContext context)
+        public LocationRepository(TransITDBContext context)
             : base(context)
         {
         }

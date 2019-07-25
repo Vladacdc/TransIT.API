@@ -5,16 +5,17 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using TransIT.DAL.Models.Entities.Abstractions;
+using TransIT.DAL.Models;
 
 namespace TransIT.DAL.Repositories
 {
     public abstract class BaseRepository<TId, TEntity> : IBaseRepository<TId, TEntity>, IQueryRepository<TEntity>
         where TEntity : class, IAuditableEntity, IEntityId<TId>
     {
-        private readonly DbContext _context;
+        private readonly TransITDBContext _context;
         protected DbSet<TEntity> _entities;
 
-        public BaseRepository(DbContext context)
+        public BaseRepository(TransITDBContext context)
         {
             _context = context;
         }

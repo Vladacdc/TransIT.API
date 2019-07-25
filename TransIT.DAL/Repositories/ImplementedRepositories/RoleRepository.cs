@@ -4,12 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using TransIT.DAL.Models.Entities;
 using TransIT.DAL.Repositories.InterfacesRepositories;
+using TransIT.DAL.Models;
 
 namespace TransIT.DAL.Repositories.ImplementedRepositories
 {
     public class RoleRepository : BaseRepository<string, Role>, IRoleRepository
     {
-        public RoleRepository(DbContext context)
+        public RoleRepository(TransITDBContext context)
                : base(context)
         {
         }

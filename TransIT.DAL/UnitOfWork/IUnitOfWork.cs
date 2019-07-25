@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using TransIT.DAL.Repositories.InterfacesRepositories;
+using Microsoft.AspNetCore.Identity;
+using TransIT.DAL.Models.Entities;
 
 namespace TransIT.DAL.UnitOfWork
 {
@@ -27,7 +29,8 @@ namespace TransIT.DAL.UnitOfWork
         IPostRepository PostRepository { get; }
         ITransitionRepository TransitionRepository { get; set; }
         ILocationRepository LocationRepository { get; set; }
-
+        RoleManager<Role> RoleManager { get; set; }
+        UserManager<User> UserManager { get; set; }
         Task<int> SaveAsync();
     }
 }

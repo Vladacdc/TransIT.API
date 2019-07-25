@@ -4,12 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using TransIT.DAL.Models.Entities;
 using TransIT.DAL.Repositories.InterfacesRepositories;
+using TransIT.DAL.Models;
 
 namespace TransIT.DAL.Repositories.ImplementedRepositories
 {
     public class TokenRepository : BaseRepository<int, Token>, ITokenRepository
     {
-        public TokenRepository(DbContext context)
+        public TokenRepository(TransITDBContext context)
                : base(context)
         {
         }

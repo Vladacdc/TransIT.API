@@ -4,12 +4,13 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using TransIT.DAL.Models.Entities;
 using TransIT.DAL.Repositories.InterfacesRepositories;
+using TransIT.DAL.Models;
 
 namespace TransIT.DAL.Repositories.ImplementedRepositories
 {
     public class CountryRepository : BaseRepository<int, Country>, ICountryRepository
     {
-        public CountryRepository(DbContext context)
+        public CountryRepository(TransITDBContext context)
             : base(context)
         {
         }
