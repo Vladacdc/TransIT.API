@@ -12,7 +12,6 @@ using TransIT.API.EndpointFilters.OnException;
 using TransIT.DAL.Models;
 using TransIT.API.Hubs;
 using TransIT.DAL.Models.Entities;
-using Microsoft.AspNetCore.Identity;
 using System;
 
 namespace TransIT.API

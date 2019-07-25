@@ -90,7 +90,7 @@ namespace TransIT.API.Controllers
 
         private async Task<IEnumerable<IssueDTO>> GetForCustomer(uint offset, uint amount)
         {
-            string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            string userId = GetUserId();
             var res = await _issueService.GetRegisteredIssuesAsync(offset, amount, userId);
             return res != null
                 ? _mapper.Map<IEnumerable<IssueDTO>>(res)

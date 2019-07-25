@@ -8,7 +8,7 @@ namespace TransIT.DAL.Models
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.Property(e => e.CreateDate)
+            builder.Property(e => e.CreatedDate)
                 .HasColumnName("CREATE_DATE")
                 .HasColumnType("datetime")
                 .HasDefaultValueSql("(getdate())");
@@ -31,22 +31,22 @@ namespace TransIT.DAL.Models
                 .HasColumnName("MIDDLE_NAME")
                 .HasMaxLength(50);
 
-            builder.Property(e => e.ModDate)
+            builder.Property(e => e.UpdatedDate)
                 .HasColumnName("MOD_DATE")
                 .HasColumnType("datetime")
                 .HasDefaultValueSql("(getdate())");
 
-            builder.Property(e => e.ModifiedById).HasColumnName("MOD_ID");
+            builder.Property(e => e.UpdatedById).HasColumnName("MOD_ID");
 
             builder.HasOne(d => d.CreatedBy)
                 .WithMany(p => p.InverseCreate)
                 .HasForeignKey(d => d.CreatedById)
-                .HasConstraintName("FK_CREATE_USER_ROLE");
+                .HasConstraintName("FK_CREATE_USER");
 
             builder.HasOne(d => d.ModifiedBy)
                 .WithMany(p => p.InverseMod)
-                .HasForeignKey(d => d.ModifiedById)
-                .HasConstraintName("FK_MOD_USER_ROLE");
+                .HasForeignKey(d => d.UpdatedById)
+                .HasConstraintName("FK_MOD_USER");
         }
     }
 }

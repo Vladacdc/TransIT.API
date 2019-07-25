@@ -4,12 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using TransIT.DAL.Models.Entities;
 using TransIT.DAL.Repositories.InterfacesRepositories;
+using TransIT.DAL.Models;
 
 namespace TransIT.DAL.Repositories.ImplementedRepositories
 {
     public class ActionTypeRepository : BaseRepository<ActionType>, IActionTypeRepository
     {
-        public ActionTypeRepository(DbContext context)
+        public ActionTypeRepository(TransITDBContext context)
                : base(context)
         {
         }
@@ -22,6 +23,6 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
 
         protected override IQueryable<ActionType> ComplexEntities => Entities.
            Include(t => t.Create).
-           Include(w => w.Mod).OrderByDescending(u => u.ModDate).ThenByDescending(x => x.CreateDate);
+           Include(w => w.Mod).OrderByDescending(u => u.UpdatedDate).ThenByDescending(x => x.CreatedDate);
     }
 }

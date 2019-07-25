@@ -13,10 +13,10 @@ namespace TransIT.DAL.Models.Entities
 
         public int Id { get; set; }
         public string Name { get; set; }
-        public DateTime? CreateDate { get; set; }
-        public DateTime? ModDate { get; set; }
+        public DateTime? CreatedDate { get; set; }
+        public DateTime? UpdatedDate { get; set; }
         public string CreatedById { get; set; }
-        public string ModifiedById { get; set; }
+        public string UpdatedById { get; set; }
         public string FullName { get; set; }
         public int? CountryId { get; set; }
         public int? CurrencyId { get; set; }

@@ -1,17 +1,37 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-namespace TransIT.DAL.Models
+﻿namespace TransIT.DAL.Models
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
     using Entities;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.ChangeTracking;
+    using Microsoft.EntityFrameworkCore;
+    using TransIT.DAL.Models.Entities.Abstractions;
+    using TransIT.DAL.Models.DependencyInjection;
 
     public partial class TransITDBContext : IdentityDbContext<User>
     {
-        public TransITDBContext() { }
+        private readonly IUser _user;
 
-        public TransITDBContext(DbContextOptions<TransITDBContext> options)
-            : base(options) { }
+        public TransITDBContext()
+        {
+
+        }
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="TransITDBContext"/> class.
+        /// </summary>
+        /// <param name="options">An options.</param>
+        /// <param name="user">A current user, who is using a <see cref="DbContext"/> at the moment.</param>
+        public TransITDBContext(DbContextOptions<TransITDBContext> options, IUser user)
+            : base(options)
+        {
+            this._user = user;
+        }
 
         public virtual DbSet<ActionType> ActionType { get; set; }
         public virtual DbSet<Bill> Bill { get; set; }
@@ -32,9 +52,32 @@ namespace TransIT.DAL.Models
         public virtual DbSet<Vehicle> Vehicle { get; set; }
         public virtual DbSet<VehicleType> VehicleType { get; set; }
 
+        public async override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            IEnumerable<EntityEntry> unsavedItems = this.ChangeTracker.Entries()
+                .Where(entity => entity.Entity is IAuditableEntity &&
+                                 (entity.State == EntityState.Added ||
+                                  entity.State == EntityState.Modified));
+
+            foreach (EntityEntry item in unsavedItems)
+            {
+                IAuditableEntity entity = (IAuditableEntity)item.Entity;
+                DateTime now = DateTime.Now;
+                if (item.State == EntityState.Added)
+                {
+                    entity.CreatedById = this._user.CurrentUserId;
+                }
+                entity.UpdatedById = this._user.CurrentUserId;
+                entity.UpdatedDate = now;
+            }
+
+            int records = await base.SaveChangesAsync(cancellationToken);
+            return records;
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=TransITDB;Trusted_Connection=True;MultipleActiveResultSets=true");
+            optionsBuilder.EnableSensitiveDataLogging();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

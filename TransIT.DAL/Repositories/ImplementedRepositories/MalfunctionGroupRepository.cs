@@ -4,12 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using TransIT.DAL.Models.Entities;
 using TransIT.DAL.Repositories.InterfacesRepositories;
+using TransIT.DAL.Models;
 
 namespace TransIT.DAL.Repositories.ImplementedRepositories
 {
     public class MalfunctionGroupRepository : BaseRepository<MalfunctionGroup>, IMalfunctionGroupRepository
     {
-        public MalfunctionGroupRepository(DbContext context)
+        public MalfunctionGroupRepository(TransITDBContext context)
                : base(context)
         {
         }
@@ -22,6 +23,6 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
 
         protected override IQueryable<MalfunctionGroup> ComplexEntities => Entities.
                    Include(t => t.Create).
-                   Include(z => z.Mod).OrderByDescending(u => u.ModDate).ThenByDescending(x => x.CreateDate);          
+                   Include(z => z.Mod).OrderByDescending(u => u.UpdatedDate).ThenByDescending(x => x.CreatedDate);          
     }
 }

@@ -16,25 +16,24 @@ namespace TransIT.DAL.Models
 
             builder.Property(e => e.Id).HasColumnName("ID");
 
-            builder.Property(e => e.CreateDate)
+            builder.Property(e => e.CreatedDate)
                 .HasColumnName("CREATE_DATE")
                 .HasColumnType("datetime")
                 .HasDefaultValueSql("(getdate())");
 
             builder.Property(e => e.CreatedById).HasColumnName("CREATE_ID");
 
-            builder.Property(e => e.ModDate)
+            builder.Property(e => e.UpdatedDate)
                 .HasColumnName("MOD_DATE")
                 .HasColumnType("datetime")
                 .HasDefaultValueSql("(getdate())");
 
-            builder.Property(e => e.ModifiedById).HasColumnName("MOD_ID");
+            builder.Property(e => e.UpdatedById).HasColumnName("MOD_ID");
 
             builder.Property(e => e.Name)
                 .IsRequired()
                 .HasColumnName("NAME")
-                .HasMaxLength(50)
-                .IsUnicode(false);
+                .HasMaxLength(50);
 
             builder.HasOne(d => d.Create)
                 .WithMany(p => p.CountryCreate)
@@ -43,7 +42,7 @@ namespace TransIT.DAL.Models
 
             builder.HasOne(d => d.Mod)
                 .WithMany(p => p.CountryMod)
-                .HasForeignKey(d => d.ModifiedById)
+                .HasForeignKey(d => d.UpdatedById)
                 .HasConstraintName("FK_MOD_COUNTRY_USER");
         }
     }

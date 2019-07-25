@@ -70,7 +70,7 @@ namespace TransIT.BLL.Services.ImplementedServices
         {
             try
             {
-                var user = await _unitOfWork.UserRepository.GetByIdAsync(
+                var user = await _unitOfWork.UserManager.FindByIdAsync(
                         _jwtFactory.GetPrincipalFromExpiredToken(token.AccessToken).jwt.Subject
                         );
                 var role = (await _userManager.GetRolesAsync(user)).SingleOrDefault();

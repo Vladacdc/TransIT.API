@@ -4,12 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using TransIT.DAL.Models.Entities;
 using TransIT.DAL.Repositories.InterfacesRepositories;
+using TransIT.DAL.Models;
 
 namespace TransIT.DAL.Repositories.ImplementedRepositories
 {
     public class EmployeeRepository : BaseRepository<Employee>, IEmployeeRepository
     {
-        public EmployeeRepository(DbContext context)
+        public EmployeeRepository(TransITDBContext context)
                : base(context)
         {
         }
@@ -26,7 +27,7 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
         
         protected override IQueryable<Employee> ComplexEntities => Entities
             .Include(e => e.Create)
-            .Include(e => e.Mod).OrderByDescending(u => u.ModDate).ThenByDescending(x => x.CreateDate)
+            .Include(e => e.Mod).OrderByDescending(u => u.UpdatedDate).ThenByDescending(x => x.CreatedDate)
             .Include(e => e.Post);
     }
 }

@@ -15,15 +15,15 @@ namespace TransIT.API.Controllers
     [EnableCors("CorsPolicy")]
     [Produces("application/json")]
     [Route("api/v1/[controller]")]
-    public abstract class FilterController<TId, TEntity, TEntityDTO> : Controller
+    public abstract class FilterController<TEntity, TEntityDTO> : Controller
         where TEntity : class, IAuditableEntity, new()
         where TEntityDTO : class
     {
         protected const string DataTableTemplateUri = "~/api/v1/datatable/[controller]";
-        protected readonly IFilterService<TId, TEntity> _filterService;
+        protected readonly IFilterService<TEntity> _filterService;
         protected readonly IMapper _mapper;
 
-        public FilterController(IFilterService<TId, TEntity> filterService, IMapper mapper)
+        public FilterController(IFilterService<TEntity> filterService, IMapper mapper)
         {
             _filterService = filterService;
             _mapper = mapper;

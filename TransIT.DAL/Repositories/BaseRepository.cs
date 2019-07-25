@@ -21,7 +21,7 @@ namespace TransIT.DAL.Repositories
             _context = context;
         }
 
-        public virtual Task<TEntity> GetByIdAsync(int id)
+        public virtual Task<TEntity> GetByIdAsync(params object[] id)
         {
             //throw new NotImplementedException();
             return ComplexEntities.SingleOrDefaultAsync(t => t.Id.Equals(id));

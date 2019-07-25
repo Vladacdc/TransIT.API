@@ -6,12 +6,13 @@ using System.Text;
 using System.Threading.Tasks;
 using TransIT.DAL.Models.Entities;
 using TransIT.DAL.Repositories.InterfacesRepositories;
+using TransIT.DAL.Models;
 
 namespace TransIT.DAL.Repositories.ImplementedRepositories
 {
     public class LocationRepository : BaseRepository<Location>, ILocationRepository
     {
-        public LocationRepository(DbContext context)
+        public LocationRepository(TransITDBContext context)
             : base(context)
         {
         }
@@ -25,6 +26,6 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
 
         protected override IQueryable<Location> ComplexEntities => Entities.
             Include(a => a.Create).
-            Include(b => b.Mod).OrderByDescending(u => u.ModDate).ThenByDescending(x => x.CreateDate);
+            Include(b => b.Mod).OrderByDescending(u => u.UpdatedDate).ThenByDescending(x => x.CreatedDate);
     }
 }

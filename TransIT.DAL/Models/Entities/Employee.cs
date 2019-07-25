@@ -17,10 +17,10 @@ namespace TransIT.DAL.Models.Entities
         public string LastName { get; set; }
         public string ShortName { get; set; }
         public int PostId { get; set; }
-        public DateTime? CreateDate { get; set; }
-        public DateTime? ModDate { get; set; }
+        public DateTime? CreatedDate { get; set; }
+        public DateTime? UpdatedDate { get; set; }
         public string CreatedById { get; set; }
-        public string ModifiedById { get; set; }
+        public string UpdatedById { get; set; }
         public int BoardNumber { get; set; }
 
         public virtual User Create { get; set; }

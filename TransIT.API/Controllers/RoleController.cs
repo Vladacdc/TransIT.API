@@ -10,14 +10,14 @@ using TransIT.DAL.Models.Entities;
 namespace TransIT.API.Controllers
 {
     [Authorize(Roles = "ADMIN")]
-    public class RoleController : DataController<string, Role, RoleDTO>
+    public class RoleController : DataController<Role, RoleDTO>
     {
         private readonly IRoleService _roleService;
         
         public RoleController(
             IMapper mapper, 
             IRoleService roleService,
-            IFilterService<string, Role> odService
+            IFilterService<Role> odService
             ) : base(mapper, roleService, odService)
         {
             _roleService = roleService;

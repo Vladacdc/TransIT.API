@@ -3,9 +3,11 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TransIT.API.EndpointFilters.OnException;
 using TransIT.BLL.Services;
+using TransIT.DAL.Models.Entities;
 using TransIT.DAL.Models.Entities.Abstractions;
 
 namespace TransIT.API.Controllers
@@ -14,16 +16,27 @@ namespace TransIT.API.Controllers
     [EnableCors("CorsPolicy")]
     [Produces("application/json")]
     [Route("api/v1/[controller]")]
-    public abstract class DataController<TId, TEntity, TEntityDTO> : FilterController<TId, TEntity, TEntityDTO>
+    public abstract class DataController<TEntity, TEntityDTO> : FilterController<TEntity, TEntityDTO>
         where TEntity : class, IAuditableEntity, new()
         where TEntityDTO : class
     {
-        private readonly ICrudService<TId, TEntity> _dataService;
-        
+        private readonly ICrudService<TEntity> _dataService;
+        private readonly UserManager<User> _userManager;
+
         public DataController(
             IMapper mapper,
-            ICrudService<TId, TEntity> dataService,
-            IFilterService<TId, TEntity> filterService) : base(filterService, mapper)
+            ICrudService<TEntity> dataService,
+            IFilterService<TEntity> filterService, 
+            UserManager<User> userManager) : base(filterService, mapper)
+        {
+            _dataService = dataService;
+            _userManager = userManager;
+        }
+
+        public DataController(
+            IMapper mapper,
+            ICrudService<TEntity> dataService,
+            IFilterService<TEntity> filterService) : base(filterService, mapper)
         {
             _dataService = dataService;
         }
@@ -38,7 +51,7 @@ namespace TransIT.API.Controllers
         }
 
         [HttpGet("{id}")]
-        public virtual async Task<IActionResult> Get(TId id)
+        public virtual async Task<IActionResult> Get(int id)
         {
             var result = await _dataService.GetAsync(id);
             return result != null
@@ -59,7 +72,7 @@ namespace TransIT.API.Controllers
         public virtual async Task<IActionResult> Create([FromBody] TEntityDTO obj)
         {
             var entity = _mapper.Map<TEntity>(obj);
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var userId = GetUserId();
 
             entity.ModifiedById = userId;
             entity.CreatedById = userId;
@@ -72,10 +85,10 @@ namespace TransIT.API.Controllers
 
         [UpdateExceptionFilter]
         [HttpPut("{id}")]
-        public virtual async Task<IActionResult> Update(TId id, [FromBody] TEntityDTO obj)
+        public virtual async Task<IActionResult> Update(int id, [FromBody] TEntityDTO obj)
         {
             var entity = _mapper.Map<TEntity>(obj);
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var userId = GetUserId();
 
             //entity.Id = id; 
             entity.ModifiedById = userId;
@@ -88,12 +101,12 @@ namespace TransIT.API.Controllers
 
         [DeleteExceptionFilter]
         [HttpDelete("{id}")]
-        public virtual async Task<IActionResult> Delete(TId id)
+        public virtual async Task<IActionResult> Delete(int id)
         {
             await _dataService.DeleteAsync(id);
             return NoContent();
         }
 
-        protected string GetUserId() => User.FindFirst(ClaimTypes.NameIdentifier).Value;
+        protected string GetUserId() => _userManager.GetUserId(HttpContext.User);
     }
 }

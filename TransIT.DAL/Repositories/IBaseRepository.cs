@@ -7,7 +7,7 @@ namespace TransIT.DAL.Repositories
 {
     public interface IBaseRepository<TEntity> : IQueryRepository<TEntity> where TEntity : class
     {
-        Task<TEntity> GetByIdAsync(int id);
+        Task<TEntity> GetByIdAsync(params object[] id);
         Task<TEntity> FindAsync(Expression<Func<TEntity, bool>> predicate);
         Task<IEnumerable<TEntity>> GetAllAsync();
         Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate);

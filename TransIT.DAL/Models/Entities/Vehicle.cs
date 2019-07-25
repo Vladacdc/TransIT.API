@@ -18,10 +18,10 @@ namespace TransIT.DAL.Models.Entities
         public string RegNum { get; set; }
         public string Brand { get; set; }
         public string Model { get; set; }
-        public DateTime? CreateDate { get; set; }
-        public DateTime? ModDate { get; set; }
+        public DateTime? CreatedDate { get; set; }
+        public DateTime? UpdatedDate { get; set; }
         public string CreatedById { get; set; }
-        public string ModifiedById { get; set; }
+        public string UpdatedById { get; set; }
         public DateTime? WarrantyEndDate { get; set; }
         public DateTime? CommissioningDate { get; set; }
         public int? LocationId { get; set; }

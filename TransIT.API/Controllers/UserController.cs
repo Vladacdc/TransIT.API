@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -13,7 +14,7 @@ using TransIT.DAL.Models.Entities;
 namespace TransIT.API.Controllers
 {
     [Authorize(Roles = "ADMIN,ENGINEER")]
-    public class UserController : DataController<string, User, UserDTO>
+    public class UserController : DataController<User, UserDTO>
     {
         private readonly IUserService _userService;
 
@@ -25,7 +26,7 @@ namespace TransIT.API.Controllers
         public UserController(
             IMapper mapper, 
             IUserService userService,
-            IFilterService<string, User> odService,
+            IFilterService<User> odService,
             UserManager<User> userManager,
             RoleManager<Role> roleManager
             ) : base(mapper, userService, odService)
@@ -39,6 +40,7 @@ namespace TransIT.API.Controllers
         [Authorize(Roles = "ADMIN")]
         public override Task<IActionResult> Update(string id, [FromBody] UserDTO obj)
         {
+            _userManager.
             obj.Password = null;
             return base.Update(id, obj);
         }
@@ -47,8 +49,8 @@ namespace TransIT.API.Controllers
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> ChangePassword(string id, [FromBody] ChangePasswordDTO changePassword)
         {
-            var user = await _userService.GetAsync(id);
-            var adminId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var user = await _userManager.FindByIdAsync(id);
+            var adminId = GetUserId();
             user.ModifiedById = adminId;
             return await _userService.UpdatePasswordAsync(user, changePassword.Password) != null 
                 ? NoContent()
@@ -84,21 +86,28 @@ namespace TransIT.API.Controllers
         public override async Task<IActionResult> Create([FromBody] UserDTO obj)
         {
             var user = _mapper.Map<User>(obj);
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value; //edit
+            var userId = GetUserId();
 
             user.ModifiedById = userId;
             user.CreatedById = userId;
 
-            var result = await _userManager.CreateAsync(user, obj.Password);
+            var userCreatedResult = await _userManager.CreateAsync(user, obj.Password);
 
-            if (result.Succeeded)
+            if (userCreatedResult.Succeeded)
             {
-                await _userManager.AddToRoleAsync(user, obj.Role.Name);
-                return CreatedAtAction(nameof(Create), _mapper.Map<UserDTO>(user));
+                var roleCreatedResult = await _userManager.AddToRoleAsync(user, obj.Role.Name);
+                if (roleCreatedResult.Succeeded)
+                {
+                    return CreatedAtAction(nameof(Create), _mapper.Map<UserDTO>(user));
+                }
+                else
+                {
+                    return StatusCode(500);
+                }
             }
             else
             {
-                return (IActionResult)BadRequest();
+                return StatusCode(500);
             }
         }
 

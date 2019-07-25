@@ -4,12 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using TransIT.DAL.Models.Entities;
 using TransIT.DAL.Repositories.InterfacesRepositories;
+using TransIT.DAL.Models;
 
 namespace TransIT.DAL.Repositories.ImplementedRepositories
 {
     public class BillRepository : BaseRepository<Bill>, IBillRepository
     {
-        public BillRepository(DbContext context)
+        public BillRepository(TransITDBContext context)
                : base(context)
         {
         }
@@ -24,6 +25,6 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
            Include(t => t.Create).
            Include(a => a.Document).
            Include(c => c.Issue).
-           Include(v => v.Mod).OrderByDescending(u => u.ModDate).ThenByDescending(x => x.CreateDate);
+           Include(v => v.Mod).OrderByDescending(u => u.UpdatedDate).ThenByDescending(x => x.CreatedDate);
     }
 }

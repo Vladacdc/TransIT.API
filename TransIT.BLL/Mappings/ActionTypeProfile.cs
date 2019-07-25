@@ -9,12 +9,12 @@ namespace TransIT.BLL.Mappings
         public ActionTypeProfile()
         {
             CreateMap<ActionTypeDTO, ActionType>()
-                .ForMember(a => a.ModifiedById, opt => opt.Ignore())
+                .ForMember(a => a.UpdatedById, opt => opt.Ignore())
                 .ForMember(a => a.CreatedById, opt => opt.Ignore())
                 .ForMember(a => a.Mod, opt => opt.Ignore())
                 .ForMember(a => a.Create, opt => opt.Ignore())
-                .ForMember(a => a.ModDate, opt => opt.Ignore())
-                .ForMember(a => a.CreateDate, opt => opt.Ignore())
+                .ForMember(a => a.UpdatedDate, opt => opt.Ignore())
+                .ForMember(a => a.CreatedDate, opt => opt.Ignore())
                 .ForMember(a => a.IssueLog, opt => opt.Ignore());
             CreateMap<ActionType, ActionTypeDTO>();
         }

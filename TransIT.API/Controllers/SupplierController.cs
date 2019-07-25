@@ -10,7 +10,7 @@ using TransIT.DAL.Models.Entities;
 namespace TransIT.API.Controllers
 {
     [Authorize(Roles = "ADMIN,ENGINEER,REGISTER,ANALYST")]
-    public class SupplierController : DataController<int, Supplier, SupplierDTO>
+    public class SupplierController : DataController<Supplier, SupplierDTO>
     {
         private readonly ISupplierService _supplierService;
         

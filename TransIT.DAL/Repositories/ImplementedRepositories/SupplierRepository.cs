@@ -4,12 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using TransIT.DAL.Models.Entities;
 using TransIT.DAL.Repositories.InterfacesRepositories;
+using TransIT.DAL.Models;
 
 namespace TransIT.DAL.Repositories.ImplementedRepositories
 {
     public class SupplierRepository : BaseRepository<Supplier>, ISupplierRepository
     {
-        public SupplierRepository(DbContext context)
+        public SupplierRepository(TransITDBContext context)
                : base(context)
         {
         }
@@ -29,7 +30,7 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
                    .Include(z => z.Mod)
                    .Include(c => c.Currency)
                    .Include(c => c.Country)
-                   .OrderByDescending(u => u.ModDate)
-                   .ThenByDescending(x => x.CreateDate);
+                   .OrderByDescending(u => u.UpdatedDate)
+                   .ThenByDescending(x => x.CreatedDate);
     }
 }

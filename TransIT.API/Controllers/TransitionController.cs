@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace TransIT.API.Controllers
 {
     [Authorize(Roles = "ADMIN,ENGINEER,ANALYST")]
-    public class TransitionController : DataController<int, Transition, TransitionDTO>
+    public class TransitionController : DataController<Transition, TransitionDTO>
     {
         private readonly ITransitionService _transitionService;
         public TransitionController(
