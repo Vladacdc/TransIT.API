@@ -63,9 +63,33 @@ namespace TransIT.BLL.Services.ImplementedServices
             return await GetAsync(model.Id);
         }
 
+        public async Task<CountryDTO> CreateAsync(int userId, CountryDTO dto)
+        {
+            var model = _mapper.Map<Country>(dto);
+
+            model.CreateId = userId;
+            model.ModId = userId;
+
+            await _unitOfWork.CountryRepository.AddAsync(model);
+            await _unitOfWork.SaveAsync();
+            return await GetAsync(model.Id);
+        }
+
+
         public async Task<CountryDTO> UpdateAsync(CountryDTO dto)
         {
             var model = _mapper.Map<Country>(dto);
+            _unitOfWork.CountryRepository.Update(model);
+            await _unitOfWork.SaveAsync();
+            return dto;
+        }
+
+        public async Task<CountryDTO> UpdateAsync(int userId, CountryDTO dto)
+        {
+            var model = _mapper.Map<Country>(dto);
+
+            model.ModId = userId;
+
             _unitOfWork.CountryRepository.Update(model);
             await _unitOfWork.SaveAsync();
             return dto;
