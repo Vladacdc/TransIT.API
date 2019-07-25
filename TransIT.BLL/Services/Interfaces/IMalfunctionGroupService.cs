@@ -5,7 +5,7 @@ namespace TransIT.BLL.Services.Interfaces
     /// <summary>
     /// Malfunction group model CRUD
     /// </summary>
-    public interface IMalfunctionGroupService : ICrudService<int, MalfunctionGroup>
+    public interface IMalfunctionGroupService : ICrudService<MalfunctionGroup>
     {
     }
 }

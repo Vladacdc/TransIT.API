@@ -8,14 +8,14 @@ using TransIT.DAL.Models.Entities;
 namespace TransIT.API.Controllers
 {
     [Authorize(Roles = "ENGINEER,REGISTER,ANALYST")]
-    public class BillController : DataController<int, Bill, BillDTO>
+    public class BillController : DataController<Bill, BillDTO>
     {
         private readonly IBillService _billService;
         
         public BillController(
         IMapper mapper, 
         IBillService billService,
-        IFilterService<int, Bill> odService
+        IFilterService<Bill> odService
         ) : base(mapper, billService, odService)
         {
             _billService = billService;

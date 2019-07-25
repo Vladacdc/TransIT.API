@@ -17,7 +17,7 @@ namespace TransIT.API.Controllers
         public SupplierController(
             IMapper mapper, 
             ISupplierService supplierService,
-            IFilterService<int, Supplier> odService
+            IFilterService<Supplier> odService
             ) : base(mapper, supplierService, odService)
         {
             _supplierService = supplierService;

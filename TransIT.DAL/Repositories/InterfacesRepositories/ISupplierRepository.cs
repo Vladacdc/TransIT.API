@@ -2,7 +2,7 @@
 
 namespace TransIT.DAL.Repositories.InterfacesRepositories
 {
-    public interface ISupplierRepository : IBaseRepository<int, Supplier>
+    public interface ISupplierRepository : IBaseRepository<Supplier>
     {
     }
 }

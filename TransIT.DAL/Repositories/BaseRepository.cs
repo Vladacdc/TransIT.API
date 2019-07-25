@@ -4,12 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using TransIT.DAL.Models.Entities;
 using TransIT.DAL.Models.Entities.Abstractions;
 
 namespace TransIT.DAL.Repositories
 {
-    public abstract class BaseRepository<TId, TEntity> : IBaseRepository<TId, TEntity>, IQueryRepository<TEntity>
-        where TEntity : class, IAuditableEntity, IEntityId<TId>
+    public abstract class BaseRepository<TEntity> : IBaseRepository<TEntity>, IQueryRepository<TEntity>
+        where TEntity : class, IAuditableEntity, IBaseEntity
     {
         private readonly DbContext _context;
         protected DbSet<TEntity> _entities;
@@ -19,7 +21,7 @@ namespace TransIT.DAL.Repositories
             _context = context;
         }
 
-        public virtual Task<TEntity> GetByIdAsync(TId id)
+        public virtual Task<TEntity> GetByIdAsync(int id)
         {
             //throw new NotImplementedException();
             return ComplexEntities.SingleOrDefaultAsync(t => t.Id.Equals(id));

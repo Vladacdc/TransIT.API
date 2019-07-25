@@ -10,13 +10,13 @@ using TransIT.DAL.Models.Entities;
 namespace TransIT.API.Controllers
 {
     [Authorize(Roles = "ADMIN,ENGINEER,ANALYST")]
-    public class LocationController : DataController<int, Location, LocationDTO>
+    public class LocationController : DataController<Location, LocationDTO>
     {
         private readonly ILocationService _locationService;
         public LocationController(
             IMapper mapper,
             ILocationService locationService,
-            IFilterService<int, Location> odService
+            IFilterService<Location> odService
             ) : base(mapper, locationService, odService)
         {
             _locationService = locationService;

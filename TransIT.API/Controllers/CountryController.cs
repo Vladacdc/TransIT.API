@@ -10,14 +10,14 @@ using TransIT.DAL.Models.Entities;
 namespace TransIT.API.Controllers
 {
     [Authorize(Roles = "ADMIN,ENGINEER,REGISTER,ANALYST")]
-    public class CountryController : DataController<int, Country, CountryDTO>
+    public class CountryController : DataController<Country, CountryDTO>
     {
         private readonly ICountryService _countryService;
 
         public CountryController(
             IMapper mapper,
             ICountryService countryService,
-            IFilterService<int, Country> odService
+            IFilterService<Country> odService
             ) : base(mapper, countryService, odService)
         {
             _countryService = countryService;

@@ -2,7 +2,7 @@
 
 namespace TransIT.DAL.Repositories.InterfacesRepositories
 {
-    public interface IStateRepository : IBaseRepository<int, State>
+    public interface IStateRepository : IBaseRepository<State>
     {
     }
 }

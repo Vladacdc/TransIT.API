@@ -10,7 +10,7 @@ namespace TransIT.BLL.Services.ImplementedServices
     /// Currency CRUD service
     /// </summary>
     /// <see cref="ICurrencyService"/>
-    public class CurrencyService : CrudService<int, Currency>, ICurrencyService
+    public class CurrencyService : CrudService<Currency>, ICurrencyService
     {
         /// <summary>
         /// Ctor
@@ -21,7 +21,7 @@ namespace TransIT.BLL.Services.ImplementedServices
         /// <see cref="CrudService{TEntity}"/>
         public CurrencyService(
             IUnitOfWork unitOfWork,
-            ILogger<CrudService<int, Currency>> logger,
+            ILogger<CrudService<Currency>> logger,
             ICurrencyRepository repository) : base(unitOfWork, logger, repository) { }
     }
 }

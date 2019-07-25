@@ -7,7 +7,7 @@ namespace TransIT.BLL.Services.Interfaces
     /// <summary>
     /// Issue type model CRUD
     /// </summary>
-    public interface IIssueService : ICrudService<int, Issue>
+    public interface IIssueService : ICrudService<Issue>
     {
         /// <summary>
         /// Gets issues specific for current customer

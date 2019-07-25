@@ -5,7 +5,7 @@ namespace TransIT.BLL.Services.Interfaces
     /// <summary>
     /// Supplier type model CRUD
     /// </summary>
-    public interface ISupplierService : ICrudService<int, Supplier>
+    public interface ISupplierService : ICrudService<Supplier>
     {
     }
 }

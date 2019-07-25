@@ -7,7 +7,7 @@ using TransIT.DAL.Repositories.InterfacesRepositories;
 
 namespace TransIT.DAL.Repositories.ImplementedRepositories
 {
-    public class PostRepository : BaseRepository<int, Post>, IPostRepository
+    public class PostRepository : BaseRepository<Post>, IPostRepository
     {
         public PostRepository(DbContext context)
                : base(context)

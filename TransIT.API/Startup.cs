@@ -84,7 +84,8 @@ namespace TransIT.API
                 routes.MapHub<IssueHub>("/issuehub");
             });
 
-            app.Seed(serviceProvider,Configuration,Environment);
+            app.Seed(serviceProvider, Configuration, Environment);
+
         }
     }
 }

@@ -84,7 +84,7 @@ namespace TransIT.API.Controllers
         public override async Task<IActionResult> Create([FromBody] UserDTO obj)
         {
             var user = _mapper.Map<User>(obj);
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value; //edit
 
             user.ModifiedById = userId;
             user.CreatedById = userId;

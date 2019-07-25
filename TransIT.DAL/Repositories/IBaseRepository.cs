@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace TransIT.DAL.Repositories
 {
-    public interface IBaseRepository<TId,TEntity> : IQueryRepository<TEntity> where TEntity : class
+    public interface IBaseRepository<TEntity> : IQueryRepository<TEntity> where TEntity : class
     {
-        Task<TEntity> GetByIdAsync(TId id);
+        Task<TEntity> GetByIdAsync(int id);
         Task<TEntity> FindAsync(Expression<Func<TEntity, bool>> predicate);
         Task<IEnumerable<TEntity>> GetAllAsync();
         Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate);

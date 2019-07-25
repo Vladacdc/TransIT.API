@@ -6,11 +6,11 @@ using TransIT.DAL.UnitOfWork;
 
 namespace TransIT.BLL.Services.ImplementedServices
 {
-    public class LocationService : CrudService<int, Location>, ILocationService
+    public class LocationService : CrudService<Location>, ILocationService
     {
         public LocationService(
             IUnitOfWork unitOfWork,
-            ILogger<CrudService<int, Location>> logger,
+            ILogger<CrudService<Location>> logger,
             ILocationRepository repository) : base(unitOfWork, logger, repository) { }
     }
 }

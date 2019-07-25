@@ -18,7 +18,7 @@ namespace TransIT.BLL.Services.ImplementedServices
     /// </summary>
     /// <see cref="IUserService"/>
 
-    public class UserService : CrudService<string, User>, IUserService
+    public class UserService : CrudService<User>, IUserService
     {
 
         private static RoleManager<Role> _roleManager;
@@ -33,10 +33,9 @@ namespace TransIT.BLL.Services.ImplementedServices
         /// <see cref="CrudService{TEntity}"/>
         public UserService(
             IUnitOfWork unitOfWork,
-            ILogger<CrudService<string, User>> logger,
-            IUserRepository repository,
+            ILogger<CrudService<User>> logger,
             RoleManager<Role> roleManager,
-            UserManager<User> userManager) : base(unitOfWork, logger, repository)
+            UserManager<User> userManager) : base(unitOfWork, logger)
             
         {
             _roleManager = roleManager;

@@ -19,7 +19,7 @@ namespace TransIT.BLL.Services.ImplementedServices
     /// Issue CRUD service
     /// </summary>
     /// <see cref="IIssueService"/>
-    public class IssueService : CrudService<int, Issue>, IIssueService
+    public class IssueService : CrudService<Issue>, IIssueService
     {
         private IVehicleRepository _vehicleRepository;
 
@@ -32,7 +32,7 @@ namespace TransIT.BLL.Services.ImplementedServices
         /// <see cref="CrudService{TEntity}"/>
         public IssueService(
             IUnitOfWork unitOfWork,
-            ILogger<CrudService<int, Issue>> logger,
+            ILogger<CrudService<Issue>> logger,
             IIssueRepository repository,
             IVehicleRepository vehicleRepository) : base(unitOfWork, logger, repository)
         {

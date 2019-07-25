@@ -18,7 +18,7 @@ namespace TransIT.BLL.Services.ImplementedServices
     /// Document CRUD service
     /// </summary>
     /// <see cref="IDocumentService"/>
-    public class DocumentService : CrudService<int, Document>, IDocumentService
+    public class DocumentService : CrudService<Document>, IDocumentService
     {
         /// <summary>
         /// Ctor
@@ -31,7 +31,7 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public DocumentService(
             IUnitOfWork unitOfWork,
-            ILogger<CrudService<int, Document>> logger,
+            ILogger<CrudService<Document>> logger,
             IDocumentRepository repository) : base(unitOfWork, logger, repository) {
             _storageLogger = LoggerProviderFactory.GetFileStorageLogger();
         }

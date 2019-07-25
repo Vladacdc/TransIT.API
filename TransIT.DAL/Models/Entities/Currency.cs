@@ -4,7 +4,7 @@ using TransIT.DAL.Models.Entities.Abstractions;
 
 namespace TransIT.DAL.Models.Entities
 {
-    public partial class Currency : IAuditableEntity, IEntityId<int>
+    public partial class Currency : IAuditableEntity, IBaseEntity
     {
         public Currency()
         {

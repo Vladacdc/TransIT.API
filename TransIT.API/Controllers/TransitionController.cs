@@ -16,7 +16,7 @@ namespace TransIT.API.Controllers
         public TransitionController(
             IMapper mapper,
             ITransitionService transitionService,
-            IFilterService<int, Transition> odService
+            IFilterService<Transition> odService
             ) : base(mapper, transitionService, odService)
         {
             _transitionService = transitionService;

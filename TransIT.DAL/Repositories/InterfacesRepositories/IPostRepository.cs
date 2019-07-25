@@ -2,7 +2,7 @@
 
 namespace TransIT.DAL.Repositories.InterfacesRepositories
 {
-    public interface IPostRepository : IBaseRepository<int, Post>
+    public interface IPostRepository : IBaseRepository<Post>
     {
     }
 }

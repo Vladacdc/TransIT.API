@@ -1,8 +1,8 @@
-using TransIT.DAL.Models.Entities;
+//using TransIT.DAL.Models.Entities;
 
-namespace TransIT.DAL.Repositories.InterfacesRepositories
-{
-    public interface IUserRepository : IBaseRepository<string, User>
-    {
-    }
-}
+//namespace TransIT.DAL.Repositories.InterfacesRepositories
+//{
+//    public interface IUserRepository : IBaseRepository<User>
+//    {
+//    }
+//}

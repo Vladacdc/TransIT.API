@@ -2,7 +2,7 @@
 
 namespace TransIT.DAL.Repositories.InterfacesRepositories
 {
-    public interface ICurrencyRepository : IBaseRepository<int, Currency>
+    public interface ICurrencyRepository : IBaseRepository<Currency>
     {
     }
 }

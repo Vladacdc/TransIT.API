@@ -4,8 +4,8 @@ using System.Text;
 
 namespace TransIT.DAL.Models.Entities.Abstractions
 {
-    public interface IEntityId<TId>
+    public interface IBaseEntity
     {
-        TId Id { get; set; }
+        int Id { get; set; }
     }
 }

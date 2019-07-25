@@ -7,7 +7,7 @@ namespace TransIT.BLL.Services.Interfaces
     /// <summary>
     /// Document type model CRUD
     /// </summary>
-    public interface IDocumentService : ICrudService<int, Document>
+    public interface IDocumentService : ICrudService<Document>
     {
         Task<IEnumerable<Document>> GetRangeByIssueLogIdAsync(int issueLogId);
     }

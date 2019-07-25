@@ -9,7 +9,7 @@ using TransIT.DAL.Repositories.InterfacesRepositories;
 
 namespace TransIT.DAL.Repositories.ImplementedRepositories
 {
-    public class LocationRepository : BaseRepository<int, Location>, ILocationRepository
+    public class LocationRepository : BaseRepository<Location>, ILocationRepository
     {
         public LocationRepository(DbContext context)
             : base(context)

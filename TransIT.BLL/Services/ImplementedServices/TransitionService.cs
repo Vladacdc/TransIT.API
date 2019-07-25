@@ -11,11 +11,11 @@ using TransIT.DAL.UnitOfWork;
 
 namespace TransIT.BLL.Services.ImplementedServices
 {
-    public class TransitionService : CrudService<int, Transition>, ITransitionService
+    public class TransitionService : CrudService<Transition>, ITransitionService
     {
         public TransitionService(
             IUnitOfWork unitOfWork,
-            ILogger<CrudService<int, Transition>> logger,
+            ILogger<CrudService<Transition>> logger,
             ITransitionRepository repository) : base(unitOfWork, logger, repository) { }
 
         public async override Task DeleteAsync(int id)

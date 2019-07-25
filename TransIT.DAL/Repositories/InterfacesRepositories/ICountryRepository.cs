@@ -2,7 +2,7 @@
 
 namespace TransIT.DAL.Repositories.InterfacesRepositories
 {
-    public interface ICountryRepository : IBaseRepository<int, Country>
+    public interface ICountryRepository : IBaseRepository<Country>
     {
     }
 }

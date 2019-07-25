@@ -2,7 +2,7 @@
 
 namespace TransIT.DAL.Repositories.InterfacesRepositories
 {
-    public interface IIssueRepository : IBaseRepository<int, Issue>
+    public interface IIssueRepository : IBaseRepository<Issue>
     {
     }
 }

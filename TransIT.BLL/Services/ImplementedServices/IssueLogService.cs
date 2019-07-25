@@ -15,7 +15,7 @@ namespace TransIT.BLL.Services.ImplementedServices
     /// IssueLog CRUD service
     /// </summary>
     /// <see cref="IIssueLogService"/>
-    public class IssueLogService : CrudService<int, IssueLog>, IIssueLogService
+    public class IssueLogService : CrudService<IssueLog>, IIssueLogService
     {
         private IIssueRepository _issueRepository;
         private ITransitionRepository _transitionRepository;
@@ -29,7 +29,7 @@ namespace TransIT.BLL.Services.ImplementedServices
         /// <see cref="CrudService{TEntity}"/>
         public IssueLogService(
             IUnitOfWork unitOfWork,
-            ILogger<CrudService<int, IssueLog>> logger,
+            ILogger<CrudService<IssueLog>> logger,
             IIssueRepository issueRepository,
             IIssueLogRepository repository,
             ITransitionRepository transitionRepository

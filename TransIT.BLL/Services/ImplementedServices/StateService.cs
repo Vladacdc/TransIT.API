@@ -16,7 +16,7 @@ namespace TransIT.BLL.Services.ImplementedServices
     /// State Group CRUD service
     /// </summary>
     /// <see cref="IStateService"/>
-    public class StateService : CrudService<int, State>, IStateService
+    public class StateService : CrudService<State>, IStateService
     {
         /// <summary>
         /// Ctor
@@ -27,7 +27,7 @@ namespace TransIT.BLL.Services.ImplementedServices
         /// <see cref="CrudService{TEntity}"/>
         public StateService(
             IUnitOfWork unitOfWork,
-            ILogger<CrudService<int, State>> logger,
+            ILogger<CrudService<State>> logger,
             IStateRepository repository) : base(unitOfWork, logger, repository) { }
 
         /// <summary>

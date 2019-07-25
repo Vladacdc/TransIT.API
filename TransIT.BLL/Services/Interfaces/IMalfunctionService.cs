@@ -8,7 +8,7 @@ namespace TransIT.BLL.Services.Interfaces
     /// <summary>
     /// Malfunction model CRUD
     /// </summary>
-    public interface IMalfunctionService : ICrudService<int, Malfunction>
+    public interface IMalfunctionService : ICrudService<Malfunction>
     {
 
     }
