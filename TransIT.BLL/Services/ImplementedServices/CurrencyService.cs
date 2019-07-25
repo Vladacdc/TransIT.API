@@ -25,7 +25,6 @@ namespace TransIT.BLL.Services.ImplementedServices
         /// Ctor
         /// </summary>
         /// <param name="unitOfWork">Unit of work pattern</param>
-
         public CurrencyService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
@@ -42,6 +41,7 @@ namespace TransIT.BLL.Services.ImplementedServices
             return (await _unitOfWork.CurrencyRepository.GetRangeAsync(offset, amount))
                 .AsQueryable().ProjectTo<CurrencyDTO>();
         }
+
         public async Task<IEnumerable<CurrencyDTO>> SearchAsync(string search)
         {
             var currencies = await _unitOfWork.CurrencyRepository.SearchExpressionAsync(
@@ -52,6 +52,7 @@ namespace TransIT.BLL.Services.ImplementedServices
 
             return currencies.ProjectTo<CurrencyDTO>();
         }
+
         public async Task<CurrencyDTO> CreateAsync(CurrencyDTO dto)
         {
             var model = _mapper.Map<Currency>(dto);
@@ -59,6 +60,19 @@ namespace TransIT.BLL.Services.ImplementedServices
             await _unitOfWork.SaveAsync();
             return await GetAsync(model.Id);
         }
+
+        public async Task<CurrencyDTO> CreateAsync(int userId, CurrencyDTO dto)
+        {
+            var model = _mapper.Map<Currency>(dto);
+
+            model.CreateId = userId;
+            model.ModId = userId;
+
+            await _unitOfWork.CurrencyRepository.AddAsync(model);
+            await _unitOfWork.SaveAsync();
+            return await GetAsync(model.Id);
+        }
+
         public async Task<CurrencyDTO> UpdateAsync(CurrencyDTO dto)
         {
             var model = _mapper.Map<Currency>(dto);
@@ -66,6 +80,18 @@ namespace TransIT.BLL.Services.ImplementedServices
             await _unitOfWork.SaveAsync();
             return dto;
         }
+
+        public async Task<CurrencyDTO> UpdateAsync(int userId, CurrencyDTO dto)
+        {
+            var model = _mapper.Map<Currency>(dto);
+
+            model.ModId = userId;
+
+            _unitOfWork.CurrencyRepository.Update(model);
+            await _unitOfWork.SaveAsync();
+            return dto;
+        }
+
         public async Task DeleteAsync(int id)
         {
             _unitOfWork.CurrencyRepository.Remove(id);

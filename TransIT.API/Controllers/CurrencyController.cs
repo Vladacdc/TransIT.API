@@ -6,42 +6,107 @@ using TransIT.BLL.Services;
 using TransIT.BLL.Services.Interfaces;
 using TransIT.BLL.DTOs;
 using TransIT.DAL.Models.Entities;
+using System.Security.Claims;
 
 namespace TransIT.API.Controllers
 {
     [Authorize(Roles = "ADMIN,ENGINEER,REGISTER,ANALYST")]
-    public class CurrencyController : DataController<Currency, CurrencyDTO>
+    public class CurrencyController : Controller
     {
         private readonly ICurrencyService _currencyService;
 
-        public CurrencyController(
-            IMapper mapper,
-            ICurrencyService currencyService,
-            IFilterService<Currency> odService
-            ) : base(mapper, currencyService, odService)
+        public CurrencyController(ICurrencyService currencyService)
         {
             _currencyService = currencyService;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Get([FromQuery] uint offset = 0, uint amount = 1000)
+        {
+            var result = await _currencyService.GetRangeAsync(offset, amount);
+            if (result != null)
+            {
+                return Json(result);
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(int id)
+        {
+            var result = await _currencyService.GetAsync(id);
+            if (result != null)
+            {
+                return Json(result);
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet("/search")]
+        public async Task<IActionResult> Get([FromQuery] string search)
+        {
+            var result = await _currencyService.SearchAsync(search);
+            if (result != null)
+            {
+                return Json(result);
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+
         [HttpPost]
         [Authorize(Roles = "ADMIN")]
-        public override Task<IActionResult> Create([FromBody] CurrencyDTO obj)
+        public async Task<IActionResult> Create([FromBody] CurrencyDTO currencyDTO)
         {
-            return base.Create(obj);
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            var createdDTO = await _currencyService.CreateAsync(userId, currencyDTO);
+
+            if (createdDTO != null)
+            {
+                return CreatedAtAction(nameof(Create), createdDTO);
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
 
         [HttpPut("{id}")]
         [Authorize(Roles = "ADMIN")]
-        public override Task<IActionResult> Update(int id, [FromBody] CurrencyDTO obj)
+        public async Task<IActionResult> Update(int id, [FromBody] CurrencyDTO currencyDTO)
         {
-            return base.Update(id, obj);
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            currencyDTO.Id = id;
+
+            var result = await _currencyService.UpdateAsync(userId, currencyDTO);
+
+            if (result != null)
+            {
+                return NoContent();
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
 
         [HttpDelete("{id}")]
         [Authorize(Roles = "ADMIN")]
-        public override Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            return base.Delete(id);
+            await _currencyService.DeleteAsync(id);
+            return NoContent();
         }
     }
 }
