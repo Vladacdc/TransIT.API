@@ -62,15 +62,21 @@ namespace TransIT.BLL.Services.ImplementedServices
             return issues.ProjectTo<IssueDTO>();
         }
 
-        public async Task<IssueDTO> CreateAsync(IssueDTO issueDTO)
+        public async Task<IssueDTO> CreateAsync(IssueDTO dto, int? userId = null)
         {
-            VehicleDTO vehicle = _mapper.Map<VehicleDTO>(await _unitOfWork.VehicleRepository.GetByIdAsync(issueDTO.Vehicle.Id));
+            var vehicle = _mapper.Map<VehicleDTO>(await _unitOfWork.VehicleRepository.GetByIdAsync(dto.Vehicle.Id));
             if (IsWarrantyCase(vehicle))
             {
-                issueDTO.Warranty = Warranties.WARRANTY_CASE;
+                dto.Warranty = Warranties.WARRANTY_CASE;
             }
 
-            var model = _mapper.Map<Issue>(issueDTO);
+            var model = _mapper.Map<Issue>(dto);
+            if (userId.HasValue)
+            {
+                model.CreateId = userId;
+                model.ModId = userId;
+            }
+
             await _unitOfWork.IssueRepository.AddAsync(model);
             await _unitOfWork.SaveAsync();
             return await GetAsync(model.Id);
@@ -81,12 +87,17 @@ namespace TransIT.BLL.Services.ImplementedServices
             return DateTime.Now.CompareTo(vehicle?.WarrantyEndDate) < 0;
         }
 
-        public async Task<IssueDTO> UpdateAsync(IssueDTO issueDTO)
+        public async Task<IssueDTO> UpdateAsync(IssueDTO dto, int? userId = null)
         {
-            Issue model = _mapper.Map<Issue>(issueDTO);
-            issueDTO = _mapper.Map<IssueDTO>(_unitOfWork.IssueRepository.UpdateWithIgnoreProperty(model, x => x.StateId));
+            var model = _mapper.Map<Issue>(dto);
+            if(userId.HasValue)
+            {
+                model.ModId = userId;
+            }
+
+            dto = _mapper.Map<IssueDTO>(_unitOfWork.IssueRepository.UpdateWithIgnoreProperty(model, x => x.StateId));
             await _unitOfWork.SaveAsync();
-            return issueDTO;
+            return dto;
         }
 
         public async Task DeleteByUserAsync(int issueId, int userId)
