@@ -14,6 +14,7 @@ using TransIT.API.Hubs;
 using TransIT.BLL.Mappings;
 using TransIT.DAL.Models.Entities;
 using System;
+using TransIT.BLL.Factory;
 
 namespace TransIT.API
 {
@@ -41,6 +42,8 @@ namespace TransIT.API
             services.ConfigureCors();
             services.ConfigureModelRepositories();
             services.ConfigureDataAccessServices();
+
+            services.AddScoped<IServiceFactory, ServiceFactory>();
 
             services.ConfigureSwagger();
 

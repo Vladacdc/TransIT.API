@@ -34,11 +34,11 @@ namespace TransIT.API.Extensions
             {
                 if (Environment.IsDevelopment())
                 {
-                    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+                    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("TransIT.API"));
                 }
                 if (Environment.IsProduction())
                 {
-                    options.UseSqlServer(Configuration.GetConnectionString("AzureConnection"));
+                    options.UseSqlServer(Configuration.GetConnectionString("AzureConnection"), b => b.MigrationsAssembly("TransIT.API"));
                 }
             }
 
@@ -93,7 +93,7 @@ namespace TransIT.API.Extensions
 
         public static void ConfigureDataAccessServices(this IServiceCollection services)
         {
-            //services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IUserService, UserService>();
             services.AddScoped<IActionTypeService, ActionTypeService>();
             services.AddScoped<IVehicleService, VehicleService>();
             services.AddScoped<IVehicleTypeService, VehicleTypeService>();
