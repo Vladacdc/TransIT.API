@@ -15,6 +15,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Hosting;
+using TransIT.DAL.Models.DependencyInjection;
+using TransIT.API.DependencyInjection;
 
 namespace TransIT.API.Extensions
 {
@@ -37,6 +39,7 @@ namespace TransIT.API.Extensions
                 }
             };
 
+            services.AddScoped<IUser, CurrentUser>();
             services.AddDbContext<TransITDBContext>(configureConnection);
         }
 
