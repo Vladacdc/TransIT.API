@@ -3,12 +3,13 @@ using System.Threading.Tasks;
 using TransIT.DAL.Repositories.InterfacesRepositories;
 using Microsoft.AspNetCore.Identity;
 using TransIT.DAL.Models.Entities;
+using TransIT.DAL.Models;
 
 namespace TransIT.DAL.UnitOfWork
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly DbContext _context;
+        private readonly TransITDBContext _context;
 
         public  IActionTypeRepository ActionTypeRepository { get; }
         public  ICountryRepository CountryRepository { get; }
@@ -31,7 +32,7 @@ namespace TransIT.DAL.UnitOfWork
         public RoleManager<Role> RoleManager { get; set; }
         public UserManager<User> UserManager { get; set; }
 
-        public UnitOfWork(DbContext context, IActionTypeRepository actionTypeRepository, ICountryRepository countryRepository, ICurrencyRepository currencyRepository, IBillRepository billRepository, IDocumentRepository documentRepository, IIssueRepository issueRepository, IIssueLogRepository issueLogRepository, IMalfunctionRepository malfunctionRepository, IMalfunctionGroupRepository malfunctionGroupRepository, IMalfunctionSubgroupRepository malfunctionSubgroupRepository, IStateRepository stateRepository, ISupplierRepository supplierRepository, IVehicleRepository vehicleRepository, IVehicleTypeRepository vehicleTypeRepository, IEmployeeRepository employeeRepository, IPostRepository postRepository, ITransitionRepository transitionRepository, ILocationRepository locationRepository,
+        public UnitOfWork(TransITDBContext context, IActionTypeRepository actionTypeRepository, ICountryRepository countryRepository, ICurrencyRepository currencyRepository, IBillRepository billRepository, IDocumentRepository documentRepository, IIssueRepository issueRepository, IIssueLogRepository issueLogRepository, IMalfunctionRepository malfunctionRepository, IMalfunctionGroupRepository malfunctionGroupRepository, IMalfunctionSubgroupRepository malfunctionSubgroupRepository, IStateRepository stateRepository, ISupplierRepository supplierRepository, IVehicleRepository vehicleRepository, IVehicleTypeRepository vehicleTypeRepository, IEmployeeRepository employeeRepository, IPostRepository postRepository, ITransitionRepository transitionRepository, ILocationRepository locationRepository,
             RoleManager<Role> roleManager,
             UserManager<User> userManager)
         {

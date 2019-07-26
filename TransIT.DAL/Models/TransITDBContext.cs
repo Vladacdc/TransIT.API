@@ -17,7 +17,11 @@
     {
         private readonly IUser _user;
 
-        public TransITDBContext()
+        /// <summary>
+        /// Initializes a new instance of <see cref="TransITDBContext"/> class without <see cref="IUser"/>.
+        /// </summary>
+        /// <param name="options"></param>
+        public TransITDBContext(DbContextOptions<TransITDBContext> options) : this(options, null)
         {
 
         }
@@ -26,7 +30,7 @@
         /// Initializes a new instance of <see cref="TransITDBContext"/> class.
         /// </summary>
         /// <param name="options">An options.</param>
-        /// <param name="user">A current user, who is using a <see cref="DbContext"/> at the moment.</param>
+        /// <param name="user">A current user, who is using a <see cref="TransITDBContext"/> at the moment.</param>
         public TransITDBContext(DbContextOptions<TransITDBContext> options, IUser user)
             : base(options)
         {

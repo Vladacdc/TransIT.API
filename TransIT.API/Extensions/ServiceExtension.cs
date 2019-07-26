@@ -37,7 +37,6 @@ namespace TransIT.API.Extensions
                 }
             };
 
-            services.AddDbContext<DbContext, TransITDBContext>(configureConnection);
             services.AddDbContext<TransITDBContext>(configureConnection);
         }
 
