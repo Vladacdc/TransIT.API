@@ -20,24 +20,15 @@ namespace TransIT.BLL.Services.ImplementedServices
     /// </summary>
     public class AuthenticationService : IAuthenticationService
     {
-        private readonly SignInManager<User> _signInManager;
-        private readonly UserManager<User> _userManager;
-        private readonly RoleManager<Role> _roleManager;
         private readonly ILogger<AuthenticationService> _logger;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IJwtFactory _jwtFactory;
         
         public AuthenticationService(
-            SignInManager<User> signInManager,
-            UserManager<User> userManager,
-            RoleManager<Role> roleManager,
             ILogger<AuthenticationService> logger,
             IJwtFactory jwtFactory,
             IUnitOfWork unitOfWork)
         {
-            _signInManager = signInManager;
-            _userManager = userManager;
-            _roleManager = roleManager;
             _logger = logger;
             _unitOfWork = unitOfWork;
             _jwtFactory = jwtFactory;
@@ -47,11 +38,11 @@ namespace TransIT.BLL.Services.ImplementedServices
         {
             try
             {
-                var user = (await _userManager.FindByNameAsync(credentials.Login));
+                var user = (await _unitOfWork.UserManager.FindByNameAsync(credentials.Login));
 
-                if (user != null && (bool)user.IsActive && (await _userManager.CheckPasswordAsync(user, credentials.Password)))
+                if (user != null && (bool)user.IsActive && (await _unitOfWork.UserManager.CheckPasswordAsync(user, credentials.Password)))
                 {
-                    var role = (await _userManager.GetRolesAsync(user)).SingleOrDefault();
+                    var role = (await _unitOfWork.UserManager.GetRolesAsync(user)).SingleOrDefault();
                     var token = _jwtFactory.GenerateToken(user.Id, user.UserName, role); 
                     return token;
                 }
@@ -71,7 +62,7 @@ namespace TransIT.BLL.Services.ImplementedServices
                 var user = await _unitOfWork.UserManager.FindByIdAsync(
                         _jwtFactory.GetPrincipalFromExpiredToken(token.AccessToken).jwt.Subject
                         );
-                var role = (await _userManager.GetRolesAsync(user)).SingleOrDefault();
+                var role = (await _unitOfWork.UserManager.GetRolesAsync(user)).SingleOrDefault();
                 var newToken = _jwtFactory.GenerateToken(user.Id, user.UserName, role);
 
                 return newToken;

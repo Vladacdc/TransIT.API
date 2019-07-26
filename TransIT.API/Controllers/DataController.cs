@@ -21,17 +21,6 @@ namespace TransIT.API.Controllers
         where TEntityDTO : class
     {
         private readonly ICrudService<TEntity> _dataService;
-        private readonly UserManager<User> _userManager;
-
-        public DataController(
-            IMapper mapper,
-            ICrudService<TEntity> dataService,
-            IFilterService<TEntity> filterService, 
-            UserManager<User> userManager) : base(filterService, mapper)
-        {
-            _dataService = dataService;
-            _userManager = userManager;
-        }
 
         public DataController(
             IMapper mapper,
