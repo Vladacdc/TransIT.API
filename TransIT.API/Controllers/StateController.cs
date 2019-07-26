@@ -2,17 +2,17 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TransIT.BLL.Services.ImplementedServices;
 using TransIT.BLL.DTOs;
+using TransIT.BLL.Services.Interfaces;
 
 namespace TransIT.API.Controllers
 {
     [Authorize(Roles = "ADMIN,WORKER,ENGINEER,REGISTER,ANALYST")]
     public class StateController : Controller
     {
-        private readonly StateService _stateService;
+        private readonly IStateService _stateService;
         
-        public StateController(StateService stateService)
+        public StateController(IStateService stateService)
         {
             _stateService = stateService;
         }
@@ -64,7 +64,7 @@ namespace TransIT.API.Controllers
         public async Task<IActionResult> Create([FromBody] StateDTO stateDto)
         {
             int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var createdDto = await _stateService.CreateAsync(userId,stateDto);
+            var createdDto = await _stateService.CreateAsync(stateDto, userId);
             if (createdDto != null)
             {
                 return CreatedAtAction(nameof(Create), createdDto);
@@ -82,7 +82,7 @@ namespace TransIT.API.Controllers
             int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             stateDto.Id = id;
 
-            var result = await _stateService.UpdateAsync(userId, stateDto);
+            var result = await _stateService.UpdateAsync(stateDto, userId);
 
             if (result != null)
             {

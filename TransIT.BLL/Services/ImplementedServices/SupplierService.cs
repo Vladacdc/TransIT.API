@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -54,43 +53,29 @@ namespace TransIT.BLL.Services.ImplementedServices
             return suppliers.ProjectTo<SupplierDTO>();
         }
 
-        public async Task<SupplierDTO> CreateAsync(SupplierDTO dto)
+        public async Task<SupplierDTO> CreateAsync(SupplierDTO supplierDto,int? userId=null)
         {
-            var model = _mapper.Map<Supplier>(dto);
+            var model = _mapper.Map<Supplier>(supplierDto);
+            if (userId != null)
+            {
+                model.CreateId = userId;
+                model.ModId = userId;
+            }
             await _unitOfWork.SupplierRepository.AddAsync(model);
             await _unitOfWork.SaveAsync();
             return await GetAsync(model.Id);
         }
 
-        public async Task<SupplierDTO> CreateAsync(int userId,SupplierDTO dto)
+        public async Task<SupplierDTO> UpdateAsync(SupplierDTO supplierDto,int? userId=null)
         {
-            Supplier model = _mapper.Map<Supplier>(dto);
-
-            model.CreateId = userId;
-            model.ModId = userId;
-
-            await _unitOfWork.SupplierRepository.AddAsync(model);
-            await _unitOfWork.SaveAsync();
-            return await GetAsync(model.Id);
-        }
-
-        public async Task<SupplierDTO> UpdateAsync(SupplierDTO dto)
-        {
-            var model = _mapper.Map<Supplier>(dto);
+            var model = _mapper.Map<Supplier>(supplierDto);
+            if (userId != null)
+            {
+                model.ModId = userId;
+            }
             _unitOfWork.SupplierRepository.Update(model);
             await _unitOfWork.SaveAsync();
-            return dto;
-        }
-
-        public async Task<SupplierDTO> UpdateAsync(int userId, SupplierDTO stateDto)
-        {
-            Supplier model = _mapper.Map<Supplier>(stateDto);
-
-            model.ModId = userId;
-
-            _unitOfWork.SupplierRepository.Update(model);
-            await _unitOfWork.SaveAsync();
-            return stateDto;
+            return supplierDto;
         }
 
         public async Task DeleteAsync(int id)

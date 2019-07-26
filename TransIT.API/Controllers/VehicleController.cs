@@ -3,17 +3,16 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TransIT.BLL.DTOs;
-using TransIT.BLL.Services.ImplementedServices;
-
+using TransIT.BLL.Services.Interfaces;
 
 namespace TransIT.API.Controllers
 {
     [Authorize(Roles = "ADMIN,ENGINEER,REGISTER")]
     public class VehicleController : Controller
     {
-        private readonly VehicleService _vehicleService;
+        private readonly IVehicleService _vehicleService;
 
-        public VehicleController(VehicleService vehicleService)
+        public VehicleController(IVehicleService vehicleService)
         {
             _vehicleService = vehicleService;
         }
@@ -65,7 +64,7 @@ namespace TransIT.API.Controllers
         public async Task<IActionResult> Create([FromBody] VehicleDTO vehicleDto)
         {
             int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var createdDto = await _vehicleService.CreateAsync(userId, vehicleDto);
+            var createdDto = await _vehicleService.CreateAsync(vehicleDto, userId);
             if (createdDto != null)
             {
                 return CreatedAtAction(nameof(Create), createdDto);
@@ -83,7 +82,7 @@ namespace TransIT.API.Controllers
             int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             vehicleDto.Id = id;
 
-            var result = await _vehicleService.UpdateAsync(userId, vehicleDto);
+            var result = await _vehicleService.UpdateAsync(vehicleDto,userId);
 
             if (result != null)
             {

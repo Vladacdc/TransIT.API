@@ -2,17 +2,17 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TransIT.BLL.Services.ImplementedServices;
 using TransIT.BLL.DTOs;
+using TransIT.BLL.Services.Interfaces;
 
 namespace TransIT.API.Controllers
 {
     [Authorize(Roles = "ADMIN,ENGINEER,REGISTER,ANALYST")]
     public class SupplierController : Controller
     {
-        private readonly SupplierService _supplierService;
+        private readonly ISupplierService _supplierService;
         
-        public SupplierController(SupplierService supplierService)
+        public SupplierController(ISupplierService supplierService)
         {
             _supplierService = supplierService;
         }
@@ -64,7 +64,7 @@ namespace TransIT.API.Controllers
         public async Task<IActionResult> Create([FromBody] SupplierDTO supplierDto)
         {
             int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var createdDto = await _supplierService.CreateAsync(userId, supplierDto);
+            var createdDto = await _supplierService.CreateAsync(supplierDto, userId);
             if (createdDto != null)
             {
                 return CreatedAtAction(nameof(Create), createdDto);
@@ -82,7 +82,7 @@ namespace TransIT.API.Controllers
             int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             supplierDto.Id = id;
 
-            var result = await _supplierService.UpdateAsync(userId, supplierDto);
+            var result = await _supplierService.UpdateAsync(supplierDto, userId);
 
             if (result != null)
             {

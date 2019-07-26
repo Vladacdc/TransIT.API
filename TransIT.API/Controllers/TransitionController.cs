@@ -3,15 +3,15 @@ using System.Threading.Tasks;
 using TransIT.BLL.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TransIT.BLL.Services.ImplementedServices;
+using TransIT.BLL.Services.Interfaces;
 
 namespace TransIT.API.Controllers
 {
     [Authorize(Roles = "ADMIN,ENGINEER,ANALYST")]
     public class TransitionController : Controller
     {
-        private readonly TransitionService _transitionService;
-        public TransitionController(TransitionService transitionService)
+        private readonly ITransitionService _transitionService;
+        public TransitionController(ITransitionService transitionService)
         {
             _transitionService = transitionService;
         }
@@ -63,7 +63,7 @@ namespace TransIT.API.Controllers
         public async Task<IActionResult> Create([FromBody] TransitionDTO transitionDto)
         {
             int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var createdDto = await _transitionService.CreateAsync(userId, transitionDto);
+            var createdDto = await _transitionService.CreateAsync(transitionDto, userId);
             if (createdDto != null)
             {
                 return CreatedAtAction(nameof(Create), createdDto);
@@ -81,7 +81,7 @@ namespace TransIT.API.Controllers
             int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             transitionDto.Id = id;
 
-            var result = await _transitionService.UpdateAsync(userId, transitionDto);
+            var result = await _transitionService.UpdateAsync(transitionDto, userId);
 
             if (result != null)
             {

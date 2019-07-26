@@ -66,30 +66,23 @@ namespace TransIT.BLL.Services.ImplementedServices
             return states.ProjectTo<StateDTO>();
         }
 
-        public async Task<StateDTO> CreateAsync(StateDTO dto)
+        public async Task<StateDTO> CreateAsync(StateDTO dto,int? userId=null)
         {
             var model = _mapper.Map<State>(dto);
+            if (userId != null)
+            {
+                model.CreateId = userId;
+                model.ModId = userId;
+            }
             await _unitOfWork.StateRepository.AddAsync(model);
             await _unitOfWork.SaveAsync();
             return await GetAsync(model.Id);
         }
 
-        public async Task<StateDTO> CreateAsync(int userId, StateDTO dto)
+        public async Task<StateDTO> UpdateAsync(StateDTO stateDTO, int? userId = null)
         {
-            State model = _mapper.Map<State>(dto);
-
-            model.CreateId = userId;
-            model.ModId = userId;
-
-            await _unitOfWork.StateRepository.AddAsync(model);
-            await _unitOfWork.SaveAsync();
-            return await GetAsync(model.Id);
-        }
-
-        public async Task<StateDTO> UpdateAsync(StateDTO stateDTO)
-        {
-            var newModel = _mapper.Map<State>(await GetAsync((int)stateDTO.Id));
-            if (newModel.IsFixed)
+            var model = _mapper.Map<State>(await GetAsync((int)stateDTO.Id));
+            if (model.IsFixed)
             {
                 throw new ConstraintException("Current state can not be edited");
             }
@@ -97,32 +90,12 @@ namespace TransIT.BLL.Services.ImplementedServices
             {
                 throw new ArgumentException("Incorrect model");
             }
-
-            newModel.TransName = stateDTO.TransName;
-
-            _unitOfWork.StateRepository.Update(newModel);
-            await _unitOfWork.SaveAsync();
-            return await GetAsync(newModel.Id);
-        }
-
-        public async Task<StateDTO> UpdateAsync(int userId, StateDTO stateDto)
-        {
-            State model = _mapper.Map<State>(stateDto);
-
-            if (model.IsFixed)
-            {
-                throw new ConstraintException("Current state can not be edited");
-            }
-            if (stateDto.IsFixed)
-            {
-                throw new ArgumentException("Incorrect model");
-            }
-
             model.ModId = userId;
+            model.TransName = stateDTO.TransName;
 
             _unitOfWork.StateRepository.Update(model);
             await _unitOfWork.SaveAsync();
-            return stateDto;
+            return await GetAsync(model.Id);
         }
 
         public async Task DeleteAsync(int id)
