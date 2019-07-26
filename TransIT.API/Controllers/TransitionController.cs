@@ -63,7 +63,7 @@ namespace TransIT.API.Controllers
         public async Task<IActionResult> Create([FromBody] TransitionDTO transitionDto)
         {
             int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var createdDto = await _transitionService.CreateAsync(transitionDto, userId);
+            var createdDto = await _transitionService.CreateAsync(transitionDto);
             if (createdDto != null)
             {
                 return CreatedAtAction(nameof(Create), createdDto);
@@ -81,7 +81,7 @@ namespace TransIT.API.Controllers
             int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             transitionDto.Id = id;
 
-            var result = await _transitionService.UpdateAsync(transitionDto, userId);
+            var result = await _transitionService.UpdateAsync(transitionDto);
 
             if (result != null)
             {

@@ -44,9 +44,9 @@ namespace TransIT.BLL.Services.ImplementedServices
         }
 
         /// <see cref="IIssueService"/>
-        public async Task<IEnumerable<IssueDTO>> GetRegisteredIssuesAsync(uint offset, uint amount, int userId)
+        public async Task<IEnumerable<IssueDTO>> GetRegisteredIssuesAsync(uint offset, uint amount, string userId)
         {
-            return (await _unitOfWork.IssueRepository.GetAllAsync(i => i.CreateId == userId))
+            return (await _unitOfWork.IssueRepository.GetAllAsync(i => i.CreatedById == userId))
                 .AsQueryable().ProjectTo<IssueDTO>()
                 .Skip((int)offset).Take((int)amount);
         }
@@ -62,7 +62,7 @@ namespace TransIT.BLL.Services.ImplementedServices
             return issues.ProjectTo<IssueDTO>();
         }
 
-        public async Task<IssueDTO> CreateAsync(IssueDTO dto, int? userId = null)
+        public async Task<IssueDTO> CreateAsync(IssueDTO dto)
         {
             var vehicle = _mapper.Map<VehicleDTO>(await _unitOfWork.VehicleRepository.GetByIdAsync(dto.Vehicle.Id));
             if (IsWarrantyCase(vehicle))
@@ -71,11 +71,6 @@ namespace TransIT.BLL.Services.ImplementedServices
             }
 
             var model = _mapper.Map<Issue>(dto);
-            if (userId.HasValue)
-            {
-                model.CreateId = userId;
-                model.ModId = userId;
-            }
 
             await _unitOfWork.IssueRepository.AddAsync(model);
             await _unitOfWork.SaveAsync();
@@ -87,23 +82,19 @@ namespace TransIT.BLL.Services.ImplementedServices
             return DateTime.Now.CompareTo(vehicle?.WarrantyEndDate) < 0;
         }
 
-        public async Task<IssueDTO> UpdateAsync(IssueDTO dto, int? userId = null)
+        public async Task<IssueDTO> UpdateAsync(IssueDTO dto)
         {
             var model = _mapper.Map<Issue>(dto);
-            if(userId.HasValue)
-            {
-                model.ModId = userId;
-            }
 
             dto = _mapper.Map<IssueDTO>(_unitOfWork.IssueRepository.UpdateWithIgnoreProperty(model, x => x.StateId));
             await _unitOfWork.SaveAsync();
             return dto;
         }
 
-        public async Task DeleteByUserAsync(int issueId, int userId)
+        public async Task DeleteByUserAsync(int issueId, string userId)
         {
             var issueToDelete = await GetAsync(issueId);
-            if (issueToDelete?.CreateId != userId)
+            if (issueToDelete?.CreatedById != userId)
             {
                 throw new UnauthorizedAccessException("Current user doesn't have access to delete this issue");
             }

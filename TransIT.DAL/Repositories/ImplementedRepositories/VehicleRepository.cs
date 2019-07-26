@@ -4,12 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using TransIT.DAL.Models.Entities;
 using TransIT.DAL.Repositories.InterfacesRepositories;
+using TransIT.DAL.Models;
 
 namespace TransIT.DAL.Repositories.ImplementedRepositories
 {
     public class VehicleRepository : BaseRepository<Vehicle>, IVehicleRepository
     {
-        public VehicleRepository(DbContext context)
+        public VehicleRepository(TransITDBContext context)
             : base(context)
         {
         }
@@ -29,6 +30,6 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
                     Include(u => u.VehicleType).
                     Include(u => u.Location).
                     Include(a => a.Create).
-                    Include(b => b.Mod).OrderByDescending(u => u.ModDate).ThenByDescending(x => x.CreateDate);
+                    Include(b => b.Mod).OrderByDescending(u => u.UpdatedDate).ThenByDescending(x => x.CreatedDate);
     }
 }

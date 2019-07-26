@@ -89,11 +89,9 @@ namespace TransIT.API.Controllers
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Update(int id, [FromBody] IssueLogDTO obj)
         {
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-
             obj.Id = id;
 
-            var result = await _serviceFactory.IssueLogService.UpdateAsync(obj, userId);
+            var result = await _serviceFactory.IssueLogService.UpdateAsync(obj);
             return result != null
                 ? NoContent()
                 : (IActionResult) BadRequest();

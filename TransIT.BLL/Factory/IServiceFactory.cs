@@ -30,8 +30,6 @@ namespace TransIT.BLL.Factory
 
         IPostService PostService { get; }
 
-        IRoleService RoleService { get; }
-
         IStateService StateService { get; }
 
         ISupplierService SupplierService { get; }

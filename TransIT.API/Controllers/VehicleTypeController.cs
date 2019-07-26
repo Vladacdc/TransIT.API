@@ -63,8 +63,7 @@ namespace TransIT.API.Controllers
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Create([FromBody] VehicleTypeDTO vehicleTypeDto)
         {
-            int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var createdDto = await _vehicleTypeService.CreateAsync(vehicleTypeDto, userId);
+            var createdDto = await _vehicleTypeService.CreateAsync(vehicleTypeDto);
             if (createdDto != null)
             {
                 return CreatedAtAction(nameof(Create), createdDto);
@@ -79,10 +78,9 @@ namespace TransIT.API.Controllers
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Update(int id, [FromBody] VehicleTypeDTO vehicleTypeDto)
         {
-            int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             vehicleTypeDto.Id = id;
 
-            var result = await _vehicleTypeService.UpdateAsync(vehicleTypeDto, userId);
+            var result = await _vehicleTypeService.UpdateAsync(vehicleTypeDto);
 
             if (result != null)
             {

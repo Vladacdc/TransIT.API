@@ -1,11 +1,13 @@
 using System;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Net;
+using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Identity;
 using TransIT.BLL.Helpers.Abstractions;
-using TransIT.BLL.Security.Hashers;
 using TransIT.BLL.Services.Interfaces;
 using TransIT.BLL.DTOs;
 using TransIT.DAL.Models.Entities;
@@ -20,18 +22,15 @@ namespace TransIT.BLL.Services.ImplementedServices
     {
         private readonly ILogger<AuthenticationService> _logger;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IPasswordHasher _hasher;
         private readonly IJwtFactory _jwtFactory;
 
         public AuthenticationService(
             ILogger<AuthenticationService> logger,
-            IPasswordHasher hasher,
             IJwtFactory jwtFactory,
             IUnitOfWork unitOfWork)
         {
             _logger = logger;
             _unitOfWork = unitOfWork;
-            _hasher = hasher;
             _jwtFactory = jwtFactory;
         }
 
@@ -39,24 +38,12 @@ namespace TransIT.BLL.Services.ImplementedServices
         {
             try
             {
-                var user = (await _unitOfWork.UserRepository
-                    .GetAllAsync(u => u.Login == credentials.Login))
-                    .SingleOrDefault();
+                var user = (await _unitOfWork.UserManager.FindByNameAsync(credentials.Login));
 
-                if (user != null && (bool)user.IsActive && _hasher.CheckMatch(credentials.Password, user.Password))
+                if (user != null && (bool)user.IsActive && (await _unitOfWork.UserManager.CheckPasswordAsync(user, credentials.Password)))
                 {
-                    var role = await _unitOfWork.RoleRepository.GetByIdAsync((int)user.RoleId);
-                    var token = _jwtFactory.GenerateToken(user.Id, user.Login, role?.Name);
-
-                    if (token == null) return null;
-
-                    await _unitOfWork.TokenRepository.AddAsync(new Token
-                    {
-                        RefreshToken = token.RefreshToken,
-                        CreateId = user.Id,
-                        Create = user
-                    });
-                    await _unitOfWork.SaveAsync();
+                    var role = (await _unitOfWork.UserManager.GetRolesAsync(user)).SingleOrDefault();
+                    var token = _jwtFactory.GenerateToken(user.Id, user.UserName, role); 
                     return token;
                 }
                 return null;
@@ -72,20 +59,12 @@ namespace TransIT.BLL.Services.ImplementedServices
         {
             try
             {
-                var user = await _unitOfWork.UserRepository.GetByIdAsync(
-                    int.Parse(
+                var user = await _unitOfWork.UserManager.FindByIdAsync(
                         _jwtFactory.GetPrincipalFromExpiredToken(token.AccessToken).jwt.Subject
-                        )
-                    );
-                var newToken = _jwtFactory.GenerateToken(user.Id, user.Login, user.Role.Name);
+                        );
+                var role = (await _unitOfWork.UserManager.GetRolesAsync(user)).SingleOrDefault();
+                var newToken = _jwtFactory.GenerateToken(user.Id, user.UserName, role);
 
-                await _unitOfWork.TokenRepository.AddAsync(new Token
-                {
-                    RefreshToken = newToken.RefreshToken,
-                    CreateId = user.Id,
-                    Create = user
-                });
-                await _unitOfWork.SaveAsync();
                 return newToken;
             }
             catch (Exception e)

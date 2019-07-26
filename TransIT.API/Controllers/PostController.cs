@@ -57,8 +57,7 @@ namespace TransIT.API.Controllers
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Create([FromBody] PostDTO obj)
         {
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var createdEntity = await _serviceFactory.PostService.CreateAsync(obj, userId);
+            var createdEntity = await _serviceFactory.PostService.CreateAsync(obj);
             return createdEntity != null
                 ? CreatedAtAction(nameof(Create), createdEntity)
                 : (IActionResult) BadRequest();
@@ -68,11 +67,9 @@ namespace TransIT.API.Controllers
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Update(int id, [FromBody] PostDTO obj)
         {
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-
             obj.Id = id;
 
-            var result = await _serviceFactory.PostService.UpdateAsync(obj, userId);
+            var result = await _serviceFactory.PostService.UpdateAsync(obj);
             return result != null
                 ? NoContent()
                 : (IActionResult) BadRequest();

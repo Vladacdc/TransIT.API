@@ -1,12 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using TransIT.DAL.Repositories.InterfacesRepositories;
+using Microsoft.AspNetCore.Identity;
+using TransIT.DAL.Models.Entities;
+using TransIT.DAL.Models;
 
 namespace TransIT.DAL.UnitOfWork
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly DbContext _context;
+        private readonly TransITDBContext _context;
 
         public  IActionTypeRepository ActionTypeRepository { get; }
         public  ICountryRepository CountryRepository { get; }
@@ -18,40 +21,39 @@ namespace TransIT.DAL.UnitOfWork
         public  IMalfunctionRepository MalfunctionRepository { get; }
         public  IMalfunctionGroupRepository MalfunctionGroupRepository { get; }
         public  IMalfunctionSubgroupRepository MalfunctionSubgroupRepository { get; }
-        public  IRoleRepository RoleRepository { get; }
-        public  IUserRepository UserRepository { get; }
         public  IStateRepository StateRepository { get; }
         public  ISupplierRepository SupplierRepository { get; }
         public  IVehicleRepository VehicleRepository { get; }
         public  IVehicleTypeRepository VehicleTypeRepository { get; }
-        public  ITokenRepository TokenRepository { get; }
         public  IEmployeeRepository EmployeeRepository { get; }
         public  IPostRepository PostRepository { get; }
-        public  ITransitionRepository TransitionRepository { get; }
-        public  ILocationRepository LocationRepository { get; }
+        public  ITransitionRepository TransitionRepository { get; set; }
+        public  ILocationRepository LocationRepository { get; set; }
+        public RoleManager<Role> RoleManager { get; set; }
+        public UserManager<User> UserManager { get; set; }
 
-        public UnitOfWork(DbContext context,
+        public UnitOfWork(
+            TransITDBContext context,
             IActionTypeRepository actionTypeRepository,
             ICountryRepository countryRepository,
-            ICurrencyRepository currencyRepository,
-            IBillRepository billRepository,
+            ICurrencyRepository currencyRepository, 
+            IBillRepository billRepository, 
             IDocumentRepository documentRepository,
             IIssueRepository issueRepository,
             IIssueLogRepository issueLogRepository,
             IMalfunctionRepository malfunctionRepository,
             IMalfunctionGroupRepository malfunctionGroupRepository,
             IMalfunctionSubgroupRepository malfunctionSubgroupRepository,
-            IRoleRepository roleRepository,
-            IUserRepository userRepository,
             IStateRepository stateRepository,
             ISupplierRepository supplierRepository,
             IVehicleRepository vehicleRepository,
             IVehicleTypeRepository vehicleTypeRepository,
-            ITokenRepository tokenRepository,
             IEmployeeRepository employeeRepository,
             IPostRepository postRepository,
             ITransitionRepository transitionRepository,
-            ILocationRepository locationRepository)
+            ILocationRepository locationRepository,
+            RoleManager<Role> roleManager,
+            UserManager<User> userManager)
         {
             _context = context;
             ActionTypeRepository = actionTypeRepository;
@@ -64,17 +66,16 @@ namespace TransIT.DAL.UnitOfWork
             MalfunctionRepository = malfunctionRepository;
             MalfunctionGroupRepository = malfunctionGroupRepository;
             MalfunctionSubgroupRepository = malfunctionSubgroupRepository;
-            RoleRepository = roleRepository;
-            UserRepository = userRepository;
             StateRepository = stateRepository;
             SupplierRepository = supplierRepository;
             VehicleRepository = vehicleRepository;
             VehicleTypeRepository = vehicleTypeRepository;
-            TokenRepository = tokenRepository;
             EmployeeRepository = employeeRepository;
             PostRepository = postRepository;
             TransitionRepository = transitionRepository;
             LocationRepository = locationRepository;
+            RoleManager = roleManager;
+            UserManager = userManager;
         }
 
         public Task<int> SaveAsync()

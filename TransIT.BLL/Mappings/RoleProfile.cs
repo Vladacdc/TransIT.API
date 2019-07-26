@@ -8,15 +8,17 @@ namespace TransIT.BLL.Mappings
     {
         public RoleProfile()
         {
-            CreateMap<Role, RoleDTO>();
+            CreateMap<Role, Role>()
+                 .ForMember(t => t.ConcurrencyStamp, opt => opt.Ignore());
+            CreateMap<Role, RoleDTO>()
+                .ForMember(t => t.Name, opt => opt.MapFrom(t => t.Name));
             CreateMap<RoleDTO, Role>()
-                .ForMember(t => t.ModId, opt => opt.Ignore())
-                .ForMember(t => t.CreateId, opt => opt.Ignore())
+                .ForMember(t => t.UpdatedById, opt => opt.Ignore())
+                .ForMember(t => t.CreatedById, opt => opt.Ignore())
                 .ForMember(t => t.Mod, opt => opt.Ignore())
                 .ForMember(t => t.Create, opt => opt.Ignore())
-                .ForMember(t => t.ModDate, opt => opt.Ignore())
-                .ForMember(t => t.CreateDate, opt => opt.Ignore())
-                .ForMember(t => t.User, opt => opt.Ignore());
+                .ForMember(t => t.UpdatedDate, opt => opt.Ignore())
+                .ForMember(t => t.CreatedDate, opt => opt.Ignore());
         }
     }
 }

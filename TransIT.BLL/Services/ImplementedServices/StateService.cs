@@ -66,20 +66,15 @@ namespace TransIT.BLL.Services.ImplementedServices
             return states.ProjectTo<StateDTO>();
         }
 
-        public async Task<StateDTO> CreateAsync(StateDTO dto,int? userId=null)
+        public async Task<StateDTO> CreateAsync(StateDTO dto)
         {
             var model = _mapper.Map<State>(dto);
-            if (userId != null)
-            {
-                model.CreateId = userId;
-                model.ModId = userId;
-            }
             await _unitOfWork.StateRepository.AddAsync(model);
             await _unitOfWork.SaveAsync();
             return await GetAsync(model.Id);
         }
 
-        public async Task<StateDTO> UpdateAsync(StateDTO stateDTO, int? userId = null)
+        public async Task<StateDTO> UpdateAsync(StateDTO stateDTO)
         {
             var model = _mapper.Map<State>(await GetAsync((int)stateDTO.Id));
             if (model.IsFixed)
@@ -89,8 +84,7 @@ namespace TransIT.BLL.Services.ImplementedServices
             if (stateDTO.IsFixed)
             {
                 throw new ArgumentException("Incorrect model");
-            }
-            model.ModId = userId;
+            };
             model.TransName = stateDTO.TransName;
 
             _unitOfWork.StateRepository.Update(model);

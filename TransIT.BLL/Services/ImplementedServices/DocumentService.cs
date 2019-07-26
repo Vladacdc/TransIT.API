@@ -85,7 +85,7 @@ namespace TransIT.BLL.Services.ImplementedServices
             return result;
         }
 
-        public async Task<DocumentDTO> CreateAsync(DocumentDTO dto, int? userId=null)
+        public async Task<DocumentDTO> CreateAsync(DocumentDTO dto)
         {
             var provider = new FileExtensionContentTypeProvider();
 
@@ -94,11 +94,6 @@ namespace TransIT.BLL.Services.ImplementedServices
             dto.ContentType = contentType;
             dto.Path = _storageLogger.Create(dto.File);
 
-            if (userId.HasValue)
-            {
-                dto.Mod.Id = (int)userId;
-                dto.Create.Id = (int)userId;
-            }
 
             var model = _mapper.Map<Document>(dto);
 
@@ -107,14 +102,9 @@ namespace TransIT.BLL.Services.ImplementedServices
             return await GetAsync(model.Id);
         }
 
-        public async Task<DocumentDTO> UpdateAsync(DocumentDTO dto, int? userId = null)
+        public async Task<DocumentDTO> UpdateAsync(DocumentDTO dto)
         {
             var model = _mapper.Map<Document>(dto);
-
-            if (userId.HasValue)
-            {
-                model.ModId = userId;
-            }
 
             _unitOfWork.DocumentRepository.Update(model);
             await _unitOfWork.SaveAsync();

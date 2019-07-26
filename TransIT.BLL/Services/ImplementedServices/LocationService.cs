@@ -45,28 +45,17 @@ namespace TransIT.BLL.Services.ImplementedServices
             return locations.ProjectTo<LocationDTO>();
         }
 
-        public async Task<LocationDTO> CreateAsync(LocationDTO dto, int? userId = null)
+        public async Task<LocationDTO> CreateAsync(LocationDTO dto)
         {
             var model = _mapper.Map<Location>(dto);
-            if (userId.HasValue)
-            {
-                model.CreateId = userId;
-                model.ModId = userId;
-            }
-
             await _unitOfWork.LocationRepository.AddAsync(model);
             await _unitOfWork.SaveAsync();
             return await GetAsync(model.Id);
         }
 
-        public async Task<LocationDTO> UpdateAsync(LocationDTO dto, int? userId = null)
+        public async Task<LocationDTO> UpdateAsync(LocationDTO dto)
         {
             var model = _mapper.Map<Location>(dto);
-            if(userId.HasValue)
-            {
-                model.ModId = userId;
-            }
-
             _unitOfWork.LocationRepository.Update(model);
             await _unitOfWork.SaveAsync();
             return dto;

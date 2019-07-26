@@ -54,22 +54,16 @@ namespace TransIT.BLL.Services.ImplementedServices
             return actionTypes.ProjectTo<ActionTypeDTO>();
         }
         
-        public async Task<ActionTypeDTO> CreateAsync(ActionTypeDTO dto, int? userId = null)
+        public async Task<ActionTypeDTO> CreateAsync(ActionTypeDTO dto)
         {
             ActionType model = _mapper.Map<ActionType>(dto);
-
-            if (userId.HasValue)
-            {
-                model.CreateId = userId;
-                model.ModId = userId;
-            }
 
             await _unitOfWork.ActionTypeRepository.AddAsync(model);
             await _unitOfWork.SaveAsync();
             return dto;
         }
 
-        public async Task<ActionTypeDTO> UpdateAsync(ActionTypeDTO dto, int? userId = null)
+        public async Task<ActionTypeDTO> UpdateAsync(ActionTypeDTO dto)
         {
             ActionType model = _mapper.Map<ActionType>(dto);
 
@@ -80,11 +74,6 @@ namespace TransIT.BLL.Services.ImplementedServices
             if (dto.IsFixed)
             {
                 throw new ArgumentException("Incorrect model");
-            }
-
-            if (userId.HasValue)
-            {
-                model.ModId = userId;
             }
 
             _unitOfWork.ActionTypeRepository.Update(model);

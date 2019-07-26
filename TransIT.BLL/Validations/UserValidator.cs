@@ -7,7 +7,7 @@ namespace TransIT.BLL.Validations
     {
         public UserValidator()
         {
-            RuleFor(u => u.Login)
+            RuleFor(u => u.UserName)
                 .Length(6, 50)
                 .NotNull()
                 .NotEmpty()

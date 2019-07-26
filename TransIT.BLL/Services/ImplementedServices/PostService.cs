@@ -53,28 +53,17 @@ namespace TransIT.BLL.Services.ImplementedServices
             return postsDTO.ProjectTo<PostDTO>();
         }
 
-        public async Task<PostDTO> CreateAsync(PostDTO dto, int? userId = null)
+        public async Task<PostDTO> CreateAsync(PostDTO dto)
         {
             var model = _mapper.Map<Post>(dto);
-            if(userId.HasValue)
-            {
-                model.CreateId = userId;
-                model.ModId = userId;
-            }
-            
             await _unitOfWork.PostRepository.AddAsync(model);
             await _unitOfWork.SaveAsync();
             return await GetAsync(model.Id);
         }
 
-        public async Task<PostDTO> UpdateAsync(PostDTO dto, int? userId = null)
+        public async Task<PostDTO> UpdateAsync(PostDTO dto)
         {
             var model = _mapper.Map<Post>(dto);
-            if(userId.HasValue)
-            {
-                model.ModId = userId;
-            }
-
             _unitOfWork.PostRepository.Update(model);
             await _unitOfWork.SaveAsync();
             return dto;

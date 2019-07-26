@@ -46,20 +46,15 @@ namespace TransIT.BLL.Services.ImplementedServices
             return transitions.ProjectTo<TransitionDTO>();
         }
 
-        public async Task<TransitionDTO> CreateAsync(TransitionDTO dto, int? userId = null)
+        public async Task<TransitionDTO> CreateAsync(TransitionDTO dto)
         {
             var model = _mapper.Map<Transition>(dto);
-            if (userId != null)
-            {
-                model.CreateId = userId;
-                model.ModId = userId;
-            }
             await _unitOfWork.TransitionRepository.AddAsync(model);
             await _unitOfWork.SaveAsync();
             return await GetAsync(model.Id);
         }
 
-        public async Task<TransitionDTO> UpdateAsync(TransitionDTO dto, int? userId = null)
+        public async Task<TransitionDTO> UpdateAsync(TransitionDTO dto)
         {
             var model = _mapper.Map<Transition>(dto);
             if (model.IsFixed)
@@ -71,10 +66,6 @@ namespace TransIT.BLL.Services.ImplementedServices
                 throw new ArgumentException("Incorrect model");
             }
 
-            if (userId != null)
-            {
-                model.ModId = userId;
-            }
             _unitOfWork.TransitionRepository.Update(model);
             await _unitOfWork.SaveAsync();
             return dto;

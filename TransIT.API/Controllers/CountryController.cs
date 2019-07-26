@@ -64,9 +64,7 @@ namespace TransIT.API.Controllers
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Create([FromBody] CountryDTO countryDTO)
         {
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-
-            var createdDTO = await _countryService.CreateAsync(countryDTO, userId);
+            var createdDTO = await _countryService.CreateAsync(countryDTO);
 
             if (createdDTO != null)
             {
@@ -82,11 +80,9 @@ namespace TransIT.API.Controllers
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Update(int id, [FromBody] CountryDTO countryDTO)
         {
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-
             countryDTO.Id = id;
 
-            var result = await _countryService.UpdateAsync(countryDTO, userId);
+            var result = await _countryService.UpdateAsync(countryDTO);
 
             if (result != null)
             {

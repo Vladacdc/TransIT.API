@@ -49,9 +49,7 @@ namespace TransIT.API.Controllers
                 return Content("file not selected");
             }
 
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-
-            var createdEntity = await _documentService.CreateAsync(documentDTO, userId);
+            var createdEntity = await _documentService.CreateAsync(documentDTO);
 
             if (documentDTO.ContentType != "application/pdf")
             {

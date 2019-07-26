@@ -4,7 +4,7 @@ using TransIT.DAL.Models.Entities.Abstractions;
 
 namespace TransIT.DAL.Models.Entities
 {
-    public partial class Employee : IEntity
+    public partial class Employee : IAuditableEntity, IBaseEntity
     {
         public Employee()
         {
@@ -17,10 +17,10 @@ namespace TransIT.DAL.Models.Entities
         public string LastName { get; set; }
         public string ShortName { get; set; }
         public int PostId { get; set; }
-        public DateTime? CreateDate { get; set; }
-        public DateTime? ModDate { get; set; }
-        public int? CreateId { get; set; }
-        public int? ModId { get; set; }
+        public DateTime? CreatedDate { get; set; }
+        public DateTime? UpdatedDate { get; set; }
+        public string CreatedById { get; set; }
+        public string UpdatedById { get; set; }
         public int BoardNumber { get; set; }
 
         public virtual User Create { get; set; }

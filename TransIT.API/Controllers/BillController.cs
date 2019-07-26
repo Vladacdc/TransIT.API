@@ -62,9 +62,7 @@ namespace TransIT.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] BillDTO billDTO)
         {
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-
-            var createdDTO = await _billService.CreateAsync(billDTO, userId);
+            var createdDTO = await _billService.CreateAsync(billDTO);
 
             if (createdDTO != null)
             {
@@ -79,11 +77,9 @@ namespace TransIT.API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] BillDTO billDTO)
         {
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-
             billDTO.Id = id;
 
-            var result = await _billService.UpdateAsync(billDTO, userId);
+            var result = await _billService.UpdateAsync(billDTO);
 
             if (result != null)
             {

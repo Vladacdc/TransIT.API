@@ -1,27 +1,75 @@
+
+
 using AutoMapper;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using TransIT.API.DependencyInjection;
+using TransIT.BLL.DTOs;
+using TransIT.BLL.Mappings;
 using TransIT.BLL.Services;
 using TransIT.BLL.Services.ImplementedServices;
 using TransIT.BLL.Services.Interfaces;
+using TransIT.DAL.Models;
+using TransIT.DAL.Models.DependencyInjection;
 using TransIT.DAL.Models.Entities;
-using TransIT.BLL.Mappings;
 using TransIT.DAL.Repositories;
 using TransIT.DAL.Repositories.ImplementedRepositories;
 using TransIT.DAL.Repositories.InterfacesRepositories;
 using TransIT.DAL.UnitOfWork;
-using TransIT.BLL.DTOs;
 
 namespace TransIT.API.Extensions
 {
     public static class ServiceExtension
     {
+        public static void ConfigureDbContext(
+            this IServiceCollection services,
+            IConfiguration Configuration,
+            IHostingEnvironment Environment)
+        {
+            void configureConnection(DbContextOptionsBuilder options)
+            {
+                if (Environment.IsDevelopment())
+                {
+                    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+                }
+                if (Environment.IsProduction())
+                {
+                    options.UseSqlServer(Configuration.GetConnectionString("AzureConnection"));
+                }
+            }
+
+            services.AddScoped<IUser, CurrentUser>();
+            services.AddDbContext<TransITDBContext>(configureConnection);
+        }
+
+        public static void ConfigureIdentity(this IServiceCollection services)
+        {
+            services.AddIdentity<User, Role>()
+                .AddEntityFrameworkStores<TransITDBContext>()
+                .AddRoleManager<RoleManager<Role>>()
+                .AddUserManager<UserManager<User>>();
+
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireDigit = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequiredLength = 6;
+                options.Password.RequiredUniqueChars = 1;
+            });
+        }
+
         public static void ConfigureAutoMapper(this IServiceCollection services)
         {
             services.AddSingleton(new MapperConfiguration(c =>
             {
                 c.AddProfile(new RoleProfile());
                 c.AddProfile(new UserProfile());
-                c.AddProfile(new TokenProfile());
                 c.AddProfile(new VehicleTypeProfile());
                 c.AddProfile(new VehicleProfile());
                 c.AddProfile(new RoleProfile());
@@ -57,7 +105,6 @@ namespace TransIT.API.Extensions
             services.AddScoped<IIssueService, IssueService>();
             services.AddScoped<IIssueLogService, IssueLogService>();
             services.AddScoped<ISupplierService, SupplierService>();
-            //services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IStateService, StateService>();
             services.AddScoped<ICurrencyService, CurrencyService>();
             services.AddScoped<ICountryService, CountryService>();
@@ -67,7 +114,6 @@ namespace TransIT.API.Extensions
             services.AddScoped<ILocationService, LocationService>();
 
 
-            //services.AddScoped<ICrudService<UserDTO>, UserService>();
             services.AddScoped<ICrudService<ActionTypeDTO>, ActionTypeService>();
             services.AddScoped<ICrudService<VehicleDTO>, VehicleService>();
             services.AddScoped<ICrudService<VehicleTypeDTO>, VehicleTypeService>();
@@ -79,7 +125,6 @@ namespace TransIT.API.Extensions
             services.AddScoped<ICrudService<IssueDTO>, IssueService>();
             services.AddScoped<ICrudService<IssueLogDTO>, IssueLogService>();
             services.AddScoped<ICrudService<SupplierDTO>, SupplierService>();
-            //services.AddScoped<ICrudService<Role>, RoleService>();
             services.AddScoped<ICrudService<StateDTO>, StateService>();
             services.AddScoped<ICrudService<CurrencyDTO>, CurrencyService>();
             services.AddScoped<ICrudService<CountryDTO>, CountryService>();
@@ -90,7 +135,6 @@ namespace TransIT.API.Extensions
 
 
             // Need to rewrite Filter services to DTOs
-            services.AddScoped<IFilterService<User>, FilterService<User>>();
             services.AddScoped<IFilterService<ActionType>, FilterService<ActionType>>();
             services.AddScoped<IFilterService<Vehicle>, FilterService<Vehicle>>();
             services.AddScoped<IFilterService<VehicleType>, FilterService<VehicleType>>();
@@ -102,7 +146,6 @@ namespace TransIT.API.Extensions
             services.AddScoped<IFilterService<Issue>, FilterService<Issue>>();
             services.AddScoped<IFilterService<IssueLog>, FilterService<IssueLog>>();
             services.AddScoped<IFilterService<Supplier>, FilterService<Supplier>>();
-            services.AddScoped<IFilterService<Role>, FilterService<Role>>();
             services.AddScoped<IFilterService<State>, FilterService<State>>();
             services.AddScoped<IFilterService<Currency>, FilterService<Currency>>();
             services.AddScoped<IFilterService<Country>, FilterService<Country>>();
@@ -123,11 +166,8 @@ namespace TransIT.API.Extensions
             services.AddScoped<IQueryRepository<Malfunction>, MalfunctionRepository>();
             services.AddScoped<IQueryRepository<MalfunctionGroup>, MalfunctionGroupRepository>();
             services.AddScoped<IQueryRepository<MalfunctionSubgroup>, MalfunctionSubgroupRepository>();
-            services.AddScoped<IQueryRepository<Role>, RoleRepository>();
             services.AddScoped<IQueryRepository<State>, StateRepository>();
             services.AddScoped<IQueryRepository<Supplier>, SupplierRepository>();
-            services.AddScoped<IQueryRepository<Token>, TokenRepository>();
-            services.AddScoped<IQueryRepository<User>, UserRepository>();
             services.AddScoped<IQueryRepository<Vehicle>, VehicleRepository>();
             services.AddScoped<IQueryRepository<VehicleType>, VehicleTypeRepository>();
             services.AddScoped<IQueryRepository<Currency>, CurrencyRepository>();
@@ -146,11 +186,8 @@ namespace TransIT.API.Extensions
             services.AddScoped<IMalfunctionRepository, MalfunctionRepository>();
             services.AddScoped<IMalfunctionGroupRepository, MalfunctionGroupRepository>();
             services.AddScoped<IMalfunctionSubgroupRepository, MalfunctionSubgroupRepository>();
-            services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IStateRepository, StateRepository>();
             services.AddScoped<ISupplierRepository, SupplierRepository>();
-            services.AddScoped<ITokenRepository, TokenRepository>();
-            services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IVehicleRepository, VehicleRepository>();
             services.AddScoped<IVehicleTypeRepository, VehicleTypeRepository>();
             services.AddScoped<ICurrencyRepository, CurrencyRepository>();
@@ -159,6 +196,8 @@ namespace TransIT.API.Extensions
             services.AddScoped<IPostRepository, PostRepository>();
             services.AddScoped<ITransitionRepository, TransitionRepository>();
             services.AddScoped<ILocationRepository, LocationRepository>();
+            services.AddScoped<UserManager<User>>();
+            services.AddScoped<RoleManager<Role>>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
         }

@@ -53,28 +53,18 @@ namespace TransIT.BLL.Services.ImplementedServices
             return malfunctionGroupsDTO.ProjectTo<MalfunctionGroupDTO>();
         }
 
-        public async Task<MalfunctionGroupDTO> CreateAsync(MalfunctionGroupDTO dto, int? userId = null)
+        public async Task<MalfunctionGroupDTO> CreateAsync(MalfunctionGroupDTO dto)
         {
             var model = _mapper.Map<MalfunctionGroup>(dto);
-            if(userId.HasValue)
-            {
-                model.CreateId = userId;
-                model.ModId = userId;
-            }
             
             await _unitOfWork.MalfunctionGroupRepository.AddAsync(model);
             await _unitOfWork.SaveAsync();
             return await GetAsync(model.Id);
         }
 
-        public async Task<MalfunctionGroupDTO> UpdateAsync(MalfunctionGroupDTO dto, int? userId = null)
+        public async Task<MalfunctionGroupDTO> UpdateAsync(MalfunctionGroupDTO dto)
         {
             var model = _mapper.Map<MalfunctionGroup>(dto);
-            if(userId.HasValue)
-            {
-                model.CreateId = userId;
-                model.ModId = userId;
-            }
             
             _unitOfWork.MalfunctionGroupRepository.Update(model);
             await _unitOfWork.SaveAsync();

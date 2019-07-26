@@ -15,7 +15,7 @@ namespace TransIT.BLL.DTOs
         public DateTime? CreateDate { get; set; }
         public DateTime? ModDate { get; set; }
         public DateTime? Date { get; set; }
-        public int? CreateId { get; set; }
+        public string CreatedById { get; set; }
         public int? Number { get; set; }
         public int Priority { get; set; }
     }

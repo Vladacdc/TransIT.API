@@ -22,6 +22,6 @@ namespace TransIT.BLL.Helpers.Abstractions
         /// <param name="login">Login of user in token</param>
         /// <param name="role">Role of user in token</param>
         /// <returns>Entity token</returns>
-        TokenDTO GenerateToken(int userId, string login, string role);
+        TokenDTO GenerateToken(string userId, string login, string role);
     }
 }

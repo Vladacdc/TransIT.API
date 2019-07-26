@@ -5,35 +5,35 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TransIT.API.Extensions;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TransIT.API.EndpointFilters.OnActionExecuting;
 using TransIT.API.EndpointFilters.OnException;
-using TransIT.BLL.Security.Hashers;
 using TransIT.DAL.Models;
 using TransIT.API.Hubs;
-using AutoMapper;
 using TransIT.BLL.Mappings;
+using TransIT.DAL.Models.Entities;
+using System;
 
 namespace TransIT.API
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IHostingEnvironment environment)
         {
             Configuration = configuration;
+            Environment = environment;
         }
 
         public IConfiguration Configuration { get; }
 
+        public IHostingEnvironment Environment { get; }
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<DbContext, TransITDBContext>(options =>
-            {
-                options.UseSqlServer(Configuration.GetConnectionString("AzureConnection"));
-            });
-
-            services.AddSingleton<IPasswordHasher, PasswordHasher>();
+            services.ConfigureDbContext(Configuration, Environment);
+            services.ConfigureIdentity();
 
             services.AddSignalR();
             services.ConfigureAutoMapper();
@@ -55,9 +55,9 @@ namespace TransIT.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IServiceProvider serviceProvider)
         {
-            if (env.IsDevelopment())
+            if (Environment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
@@ -65,11 +65,7 @@ namespace TransIT.API
             {
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
-            }
-            //if (!env.IsDevelopment())
-            //{
-            //    app.UseHttpsRedirection();
-            //}
+            } 
 
             app.UseHttpsRedirection();
             app.UseAuthentication();
@@ -87,6 +83,9 @@ namespace TransIT.API
             {
                 routes.MapHub<IssueHub>("/issuehub");
             });
+
+            app.Seed(serviceProvider, Configuration, Environment);
+
         }
     }
 }

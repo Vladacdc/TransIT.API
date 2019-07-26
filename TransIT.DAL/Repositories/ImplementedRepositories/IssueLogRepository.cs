@@ -4,12 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using TransIT.DAL.Models.Entities;
 using TransIT.DAL.Repositories.InterfacesRepositories;
+using TransIT.DAL.Models;
 
 namespace TransIT.DAL.Repositories.ImplementedRepositories
 {
     public class IssueLogRepository : BaseRepository<IssueLog>, IIssueLogRepository
     {
-        public IssueLogRepository(DbContext context)
+        public IssueLogRepository(TransITDBContext context)
             : base(context)
         {
         }
@@ -41,7 +42,7 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
             .Include(d => d.OldState)
             .Include(e => e.Supplier)
             .Include(x => x.Document)
-            .OrderByDescending(u => u.ModDate)
-            .ThenByDescending(x => x.CreateDate);
+            .OrderByDescending(u => u.UpdatedDate)
+            .ThenByDescending(x => x.CreatedDate);
     }
 }

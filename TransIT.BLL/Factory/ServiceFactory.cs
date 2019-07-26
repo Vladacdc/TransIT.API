@@ -31,8 +31,6 @@ namespace TransIT.BLL.Factory
 
         public IPostService PostService { get; }
 
-        public IRoleService RoleService { get; }
-
         public IStateService StateService { get; }
 
         public ISupplierService SupplierService { get; }
@@ -58,7 +56,6 @@ namespace TransIT.BLL.Factory
             IMalfunctionService malfunctionService,
             IMalfunctionSubgroupService malfunctionSubgroupService,
             IPostService postService,
-            IRoleService roleService,
             IStateService stateService,
             ISupplierService supplierService,
             ITransitionService transitionService,
@@ -79,7 +76,6 @@ namespace TransIT.BLL.Factory
             MalfunctionService = malfunctionService;
             MalfunctionSubgroupService = malfunctionSubgroupService;
             PostService = postService;
-            RoleService = roleService;
             StateService = stateService;
             SupplierService = supplierService;
             TransitionService = transitionService;
