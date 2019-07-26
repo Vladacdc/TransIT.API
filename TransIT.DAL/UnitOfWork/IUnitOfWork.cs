@@ -22,7 +22,6 @@ namespace TransIT.DAL.UnitOfWork
         ISupplierRepository SupplierRepository { get; }
         IVehicleRepository VehicleRepository { get; }
         IVehicleTypeRepository VehicleTypeRepository { get; }
-        ITokenRepository TokenRepository { get; }
         IEmployeeRepository EmployeeRepository { get; }
         IPostRepository PostRepository { get; }
         ITransitionRepository TransitionRepository { get; set; }

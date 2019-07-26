@@ -47,14 +47,12 @@ namespace TransIT.BLL.Services.ImplementedServices
         {
             try
             {
-
                 var user = (await _userManager.FindByNameAsync(credentials.Login));
 
                 if (user != null && (bool)user.IsActive && (await _userManager.CheckPasswordAsync(user, credentials.Password)))
                 {
                     var role = (await _userManager.GetRolesAsync(user)).SingleOrDefault();
-                    var token = _jwtFactory.GenerateToken(user.Id, user.UserName, role);
-                    await _unitOfWork.SaveAsync();
+                    var token = _jwtFactory.GenerateToken(user.Id, user.UserName, role); 
                     return token;
                 }
                 return null;
@@ -76,15 +74,7 @@ namespace TransIT.BLL.Services.ImplementedServices
                 var role = (await _userManager.GetRolesAsync(user)).SingleOrDefault();
                 var newToken = _jwtFactory.GenerateToken(user.Id, user.UserName, role);
 
-                await _unitOfWork.TokenRepository.AddAsync(new Token
-                {
-                    RefreshToken = newToken.RefreshToken,
-                    CreatedById = user.Id,
-                    Create = user
-                });
-                await _unitOfWork.SaveAsync();
-
-                return null;
+                return newToken;
             }
             catch (Exception e) 
                 when (e is SecurityTokenException || e is DbUpdateException)

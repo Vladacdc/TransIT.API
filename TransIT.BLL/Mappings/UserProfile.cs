@@ -50,7 +50,7 @@ namespace TransIT.BLL.Mappings
                 .ForMember(u => u.SupplierCreate, opt => opt.Ignore());
             CreateMap<User, UserDTO>()
                 .ForMember(u => u.Password, opt => opt.Ignore())
-                .ForMember(u => u.Role, opt => opt.MapFrom(x => UserService.GetRoleAsync(x).Result));
+                .ForMember(u => u.Role, opt => opt.Ignore());
         }
 
     }

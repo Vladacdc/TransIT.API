@@ -70,8 +70,7 @@ namespace TransIT.API.Controllers
             var entity = _mapper.Map<Document>(document);
             var userId = GetUserId();
 
-            entity.ModifiedById = userId;
-            entity.CreatedById = userId;
+             
 
             var createdEntity = await _documentService.CreateAsync(entity);
 

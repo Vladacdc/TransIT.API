@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using TransIT.BLL.DTOs;
 using TransIT.DAL.Models.Entities;
 
 namespace TransIT.BLL.Services.Interfaces
@@ -7,9 +8,15 @@ namespace TransIT.BLL.Services.Interfaces
     /// <summary>
     /// User model CRUD
     /// </summary>
-    public interface IUserService : ICrudService<User>
+    public interface IUserService
     {
-        Task<User> UpdatePasswordAsync(User user, string newPassword);
-        Task<IEnumerable<User>> GetAssignees(uint offset, uint amount);
+        Task<UserDTO> UpdatePasswordAsync(UserDTO user, string oldPassword, string newPassword);
+        Task<IEnumerable<UserDTO>> GetAssignees(uint offset, uint amount);
+        Task<UserDTO> GetAsync(string id);
+        Task<IEnumerable<UserDTO>> GetRangeAsync(uint offset, uint amount);
+        Task<UserDTO> CreateAsync(UserDTO value);
+        Task<UserDTO> UpdateAsync(UserDTO value);
+        Task DeleteAsync(string id);
+        Task<IEnumerable<UserDTO>> SearchAsync(string search);
     }
 }

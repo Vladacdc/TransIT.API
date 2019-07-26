@@ -50,7 +50,6 @@ namespace TransIT.DAL.UnitOfWork
             SupplierRepository = supplierRepository;
             VehicleRepository = vehicleRepository;
             VehicleTypeRepository = vehicleTypeRepository;
-            TokenRepository = tokenRepository;
             EmployeeRepository = employeeRepository;
             PostRepository = postRepository;
             TransitionRepository = transitionRepository;
