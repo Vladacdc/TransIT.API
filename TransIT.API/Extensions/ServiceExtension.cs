@@ -67,7 +67,6 @@ namespace TransIT.API.Extensions
             {
                 c.AddProfile(new RoleProfile());
                 c.AddProfile(new UserProfile());
-                c.AddProfile(new TokenProfile());
                 c.AddProfile(new VehicleTypeProfile());
                 c.AddProfile(new VehicleProfile());
                 c.AddProfile(new RoleProfile());
@@ -103,7 +102,6 @@ namespace TransIT.API.Extensions
             services.AddScoped<IIssueService, IssueService>();
             services.AddScoped<IIssueLogService, IssueLogService>();
             services.AddScoped<ISupplierService, SupplierService>();
-            services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IStateService, StateService>();
             services.AddScoped<ICurrencyService, CurrencyService>();
             services.AddScoped<ICountryService, CountryService>();
@@ -113,7 +111,6 @@ namespace TransIT.API.Extensions
             services.AddScoped<ILocationService, LocationService>();
 
 
-            services.AddScoped<ICrudService<User>, UserService>();
             services.AddScoped<ICrudService<ActionType>, ActionTypeService>();
             services.AddScoped<ICrudService<Vehicle>, VehicleService>();
             services.AddScoped<ICrudService<VehicleType>, VehicleTypeService>();
@@ -125,7 +122,6 @@ namespace TransIT.API.Extensions
             services.AddScoped<ICrudService<Issue>, IssueService>();
             services.AddScoped<ICrudService<IssueLog>, IssueLogService>();
             services.AddScoped<ICrudService<Supplier>, SupplierService>();
-            services.AddScoped<ICrudService<Role>, RoleService>();
             services.AddScoped<ICrudService<State>, StateService>();
             services.AddScoped<ICrudService<Currency>, CurrencyService>();
             services.AddScoped<ICrudService<Country>, CountryService>();
@@ -168,11 +164,8 @@ namespace TransIT.API.Extensions
             services.AddScoped<IQueryRepository<Malfunction>, MalfunctionRepository>();
             services.AddScoped<IQueryRepository<MalfunctionGroup>, MalfunctionGroupRepository>();
             services.AddScoped<IQueryRepository<MalfunctionSubgroup>, MalfunctionSubgroupRepository>();
-            //services.AddScoped<IQueryRepository<Role>, RoleRepository>();
             services.AddScoped<IQueryRepository<State>, StateRepository>();
             services.AddScoped<IQueryRepository<Supplier>, SupplierRepository>();
-            services.AddScoped<IQueryRepository<Token>, TokenRepository>();
-            //services.AddScoped<IQueryRepository<User>, UserRepository>();
             services.AddScoped<IQueryRepository<Vehicle>, VehicleRepository>();
             services.AddScoped<IQueryRepository<VehicleType>, VehicleTypeRepository>();
             services.AddScoped<IQueryRepository<Currency>, CurrencyRepository>();
@@ -193,7 +186,6 @@ namespace TransIT.API.Extensions
             services.AddScoped<IMalfunctionSubgroupRepository, MalfunctionSubgroupRepository>();
             services.AddScoped<IStateRepository, StateRepository>();
             services.AddScoped<ISupplierRepository, SupplierRepository>();
-            services.AddScoped<ITokenRepository, TokenRepository>();
             services.AddScoped<IVehicleRepository, VehicleRepository>();
             services.AddScoped<IVehicleTypeRepository, VehicleTypeRepository>();
             services.AddScoped<ICurrencyRepository, CurrencyRepository>();

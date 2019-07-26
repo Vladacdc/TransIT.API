@@ -54,21 +54,24 @@
 
         public async override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            IEnumerable<EntityEntry> unsavedItems = this.ChangeTracker.Entries()
-                .Where(entity => entity.Entity is IAuditableEntity &&
-                                 (entity.State == EntityState.Added ||
-                                  entity.State == EntityState.Modified));
-
-            foreach (EntityEntry item in unsavedItems)
+            if (_user != null)
             {
-                IAuditableEntity entity = (IAuditableEntity)item.Entity;
-                DateTime now = DateTime.Now;
-                if (item.State == EntityState.Added)
+                IEnumerable<EntityEntry> unsavedItems = this.ChangeTracker.Entries()
+                        .Where(entity => entity.Entity is IAuditableEntity &&
+                                         (entity.State == EntityState.Added ||
+                                          entity.State == EntityState.Modified));
+
+                foreach (EntityEntry item in unsavedItems)
                 {
-                    entity.CreatedById = this._user.CurrentUserId;
-                }
-                entity.UpdatedById = this._user.CurrentUserId;
-                entity.UpdatedDate = now;
+                    IAuditableEntity entity = (IAuditableEntity)item.Entity;
+                    DateTime now = DateTime.Now;
+                    if (item.State == EntityState.Added)
+                    {
+                        entity.CreatedById = this._user.CurrentUserId;
+                    }
+                    entity.UpdatedById = this._user.CurrentUserId;
+                    entity.UpdatedDate = now;
+                } 
             }
 
             int records = await base.SaveChangesAsync(cancellationToken);
