@@ -55,7 +55,7 @@ namespace TransIT.DAL.UnitOfWork
             TransitionRepository = transitionRepository;
             LocationRepository = locationRepository;
             RoleManager = roleManager;
-            UserManager = UserManager;
+            UserManager = userManager;
         }
 
         public Task<int> SaveAsync()

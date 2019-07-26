@@ -68,9 +68,6 @@ namespace TransIT.API.Controllers
 
             document.Path = _storageLogger.Create(document.File);
             var entity = _mapper.Map<Document>(document);
-            var userId = GetUserId();
-
-             
 
             var createdEntity = await _documentService.CreateAsync(entity);
 

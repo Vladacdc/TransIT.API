@@ -36,16 +36,17 @@ namespace TransIT.API.Controllers
         [HttpPost(DataTableTemplateUri)]
         public override async Task<IActionResult> Filter(DataTableRequestDTO model)
         {
-            var isCustomer = User.FindFirst(ROLE.ROLE_SCHEMA)?.Value == ROLE.REGISTER;
-            var userId = GetUserId();
+            //var isCustomer = User.FindFirst(ROLE.ROLE_SCHEMA)?.Value == ROLE.REGISTER;
+            //var userId = GetUserId();
 
-            return Json(
-                ComposeDataTableResponseDTO(
-                    await GetQueryiedForSpecificUser(model, userId, isCustomer),
-                    model,
-                    GetTotalRecordsForSpecificUser(userId, isCustomer)
-                    )
-                );
+            //return Json(
+            //    ComposeDataTableResponseDTO(
+            //        await GetQueryiedForSpecificUser(model, userId, isCustomer),
+            //        model,
+            //        GetTotalRecordsForSpecificUser(userId, isCustomer)
+            //        )
+            //    );
+            return null;
         }
         
         private async Task<IEnumerable<IssueDTO>> GetQueryiedForSpecificUser(
@@ -90,11 +91,12 @@ namespace TransIT.API.Controllers
 
         private async Task<IEnumerable<IssueDTO>> GetForCustomer(uint offset, uint amount)
         {
-            string userId = GetUserId();
-            var res = await _issueService.GetRegisteredIssuesAsync(offset, amount, userId);
-            return res != null
-                ? _mapper.Map<IEnumerable<IssueDTO>>(res)
-                : null;
+            //string userId = GetUserId();
+            //var res = await _issueService.GetRegisteredIssuesAsync(offset, amount, userId);
+            //return res != null
+            //    ? _mapper.Map<IEnumerable<IssueDTO>>(res)
+            //    : null;
+            return null;
         }
 
         private async Task<IEnumerable<IssueDTO>> GetIssues(uint offset, uint amount)

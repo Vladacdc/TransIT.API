@@ -61,9 +61,6 @@ namespace TransIT.API.Controllers
         public virtual async Task<IActionResult> Create([FromBody] TEntityDTO obj)
         {
             var entity = _mapper.Map<TEntity>(obj);
-            var userId = GetUserId();
-
-            
 
             var createdEntity = await _dataService.CreateAsync(entity);
             return createdEntity != null
@@ -76,8 +73,6 @@ namespace TransIT.API.Controllers
         public virtual async Task<IActionResult> Update(int id, [FromBody] TEntityDTO obj)
         {
             var entity = _mapper.Map<TEntity>(obj);
-            var userId = GetUserId();
-             
 
             var result = await _dataService.UpdateAsync(entity);
             return result != null
@@ -93,6 +88,5 @@ namespace TransIT.API.Controllers
             return NoContent();
         }
 
-        protected string GetUserId() => _userManager.GetUserId(HttpContext.User);
     }
 }
