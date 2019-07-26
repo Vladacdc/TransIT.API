@@ -11,6 +11,8 @@ using TransIT.API.EndpointFilters.OnException;
 using TransIT.BLL.Security.Hashers;
 using TransIT.DAL.Models;
 using TransIT.API.Hubs;
+using AutoMapper;
+using TransIT.BLL.Mappings;
 
 namespace TransIT.API
 {

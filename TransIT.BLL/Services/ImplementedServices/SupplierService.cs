@@ -1,7 +1,12 @@
-using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using TransIT.BLL.DTOs;
 using TransIT.BLL.Services.Interfaces;
 using TransIT.DAL.Models.Entities;
-using TransIT.DAL.Repositories.InterfacesRepositories;
 using TransIT.DAL.UnitOfWork;
 
 namespace TransIT.BLL.Services.ImplementedServices
@@ -10,18 +15,73 @@ namespace TransIT.BLL.Services.ImplementedServices
     /// Supplier CRUD service
     /// </summary>
     /// <see cref="ISupplierService"/>
-    public class SupplierService : CrudService<Supplier>, ISupplierService
+    public class SupplierService : ISupplierService
     {
+        private readonly IUnitOfWork _unitOfWork;
+
+        private readonly IMapper _mapper;
+
         /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="unitOfWork">Unit of work pattern</param>
-        /// <param name="logger">Log on error</param>
-        /// <param name="repository">CRUD operations on entity</param>
-        /// <see cref="CrudService{TEntity}"/>
-        public SupplierService(
-            IUnitOfWork unitOfWork,
-            ILogger<CrudService<Supplier>> logger,
-            ISupplierRepository repository) : base(unitOfWork, logger, repository) { }
+        public SupplierService(IUnitOfWork unitOfWork, IMapper mapper)
+        {
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
+        }
+
+        public async Task<SupplierDTO> GetAsync(int id)
+        {
+            return _mapper.Map<SupplierDTO>(await _unitOfWork.SupplierRepository.GetByIdAsync(id));
+        }
+
+        public async Task<IEnumerable<SupplierDTO>> GetRangeAsync(uint offset, uint amount)
+        {
+            return (await _unitOfWork.SupplierRepository.GetRangeAsync(offset, amount))
+                .AsQueryable().ProjectTo<SupplierDTO>();
+        }
+
+        public async Task<IEnumerable<SupplierDTO>> SearchAsync(string search)
+        {
+            var suppliers = await _unitOfWork.SupplierRepository.SearchExpressionAsync(
+                search
+                    .Split(new[] { ' ', ',', '.' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(x => x.Trim().ToUpperInvariant())
+                );
+
+            return suppliers.ProjectTo<SupplierDTO>();
+        }
+
+        public async Task<SupplierDTO> CreateAsync(SupplierDTO supplierDto,int? userId=null)
+        {
+            var model = _mapper.Map<Supplier>(supplierDto);
+            if (userId != null)
+            {
+                model.CreateId = userId;
+                model.ModId = userId;
+            }
+            await _unitOfWork.SupplierRepository.AddAsync(model);
+            await _unitOfWork.SaveAsync();
+            return await GetAsync(model.Id);
+        }
+
+        public async Task<SupplierDTO> UpdateAsync(SupplierDTO supplierDto,int? userId=null)
+        {
+            var model = _mapper.Map<Supplier>(supplierDto);
+            if (userId != null)
+            {
+                model.ModId = userId;
+            }
+            _unitOfWork.SupplierRepository.Update(model);
+            await _unitOfWork.SaveAsync();
+            return supplierDto;
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            _unitOfWork.SupplierRepository.Remove(id);
+            await _unitOfWork.SaveAsync();
+        }
     }
 }

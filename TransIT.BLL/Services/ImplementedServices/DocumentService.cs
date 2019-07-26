@@ -1,15 +1,16 @@
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Microsoft.AspNetCore.StaticFiles;
+using TransIT.BLL.DTOs;
 using TransIT.BLL.Helpers.FileStorageLogger;
 using TransIT.BLL.Helpers.FileStorageLogger.FileStorageInterface;
 using TransIT.BLL.Services.Interfaces;
 using TransIT.DAL.Models.Entities;
-using TransIT.DAL.Repositories.InterfacesRepositories;
 using TransIT.DAL.UnitOfWork;
 
 namespace TransIT.BLL.Services.ImplementedServices
@@ -18,54 +19,114 @@ namespace TransIT.BLL.Services.ImplementedServices
     /// Document CRUD service
     /// </summary>
     /// <see cref="IDocumentService"/>
-    public class DocumentService : CrudService<Document>, IDocumentService
+    public class DocumentService : IDocumentService
     {
+        private readonly IFileStorageLogger _storageLogger;
+
+        private readonly IUnitOfWork _unitOfWork;
+
+        private readonly IMapper _mapper;
+
         /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="unitOfWork">Unit of work pattern</param>
-        /// <param name="logger">Log on error</param>
-        /// <param name="repository">CRUD operations on entity</param>
-        /// <see cref="CrudService{TEntity}"/>
-        private readonly IFileStorageLogger _storageLogger;
-
-        public DocumentService(
-            IUnitOfWork unitOfWork,
-            ILogger<CrudService<Document>> logger,
-            IDocumentRepository repository) : base(unitOfWork, logger, repository) {
+        /// <param name="mapper">Mapper</param>
+        public DocumentService(IUnitOfWork unitOfWork, IMapper mapper)
+        {
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
             _storageLogger = LoggerProviderFactory.GetFileStorageLogger();
         }
 
-        public Task<IEnumerable<Document>> GetRangeByIssueLogIdAsync(int issueLogId) =>
-            _repository.GetAllAsync(i => i.IssueLogId == issueLogId);
-
-        public override async Task DeleteAsync(int id)
+        public async Task<IEnumerable<DocumentDTO>> GetRangeByIssueLogIdAsync(int issueLogId)
         {
-            try
-            {
-                var result = await _repository.GetByIdAsync(id);
-                await Task.Run(() => _storageLogger.Delete(result.Path));
-                _repository.Remove(result);
-                await _unitOfWork.SaveAsync();
-            }
-            catch (DbUpdateException e)
-            {
-                var sqlExc = e.GetBaseException() as SqlException;
-                if (sqlExc?.Number == 547)
-                {
-                    _logger.LogDebug(sqlExc, $"Number of sql exception: {sqlExc.Number.ToString()}");
-                    throw new ConstraintException("There are constrained entities, delete them firstly.", sqlExc);
-                }
-                _logger.LogError(e, nameof(DeleteAsync), e.Entries);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, nameof(DeleteAsync));
-                throw;
-            }
+            return (await _unitOfWork.DocumentRepository.GetAllAsync(i => i.IssueLogId == issueLogId)).AsQueryable()
+                .ProjectTo<DocumentDTO>();
         }
 
+        public async Task<DocumentDTO> GetAsync(int id)
+        {
+            return _mapper.Map<DocumentDTO>(await _unitOfWork.DocumentRepository.GetByIdAsync(id));
+        }
+
+        public async Task<IEnumerable<DocumentDTO>> GetRangeAsync(uint offset, uint amount)
+        {
+            return (await _unitOfWork.DocumentRepository.GetRangeAsync(offset, amount))
+                .AsQueryable().ProjectTo<DocumentDTO>();
+        }
+
+        public async Task<IEnumerable<DocumentDTO>> SearchAsync(string search)
+        {
+            var documents = await _unitOfWork.DocumentRepository.SearchExpressionAsync(
+                search
+                    .Split(new[] { ' ', ',', '.' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(x => x.Trim().ToUpperInvariant())
+                );
+
+            return documents.ProjectTo<DocumentDTO>();
+        }
+
+        public async Task<DocumentDTO> GetDocumentWithData(int documentId)
+        {
+            var result = await GetAsync(documentId);
+
+            result.Data = _storageLogger.Download(result.Path);
+
+            var provider = new FileExtensionContentTypeProvider();
+            
+            if (!provider.TryGetContentType(Path.GetFileName(result.Path), out string contentType))
+            {
+                contentType = "application/octet-stream";
+            }
+
+            result.ContentType = contentType;
+
+            return result;
+        }
+
+        public async Task<DocumentDTO> CreateAsync(DocumentDTO dto, int? userId=null)
+        {
+            var provider = new FileExtensionContentTypeProvider();
+
+            _ = provider.TryGetContentType(Path.GetFileName(dto.File.FileName), out string contentType);
+
+            dto.ContentType = contentType;
+            dto.Path = _storageLogger.Create(dto.File);
+
+            if (userId.HasValue)
+            {
+                dto.Mod.Id = (int)userId;
+                dto.Create.Id = (int)userId;
+            }
+
+            var model = _mapper.Map<Document>(dto);
+
+            await _unitOfWork.DocumentRepository.AddAsync(model);
+            await _unitOfWork.SaveAsync();
+            return await GetAsync(model.Id);
+        }
+
+        public async Task<DocumentDTO> UpdateAsync(DocumentDTO dto, int? userId = null)
+        {
+            var model = _mapper.Map<Document>(dto);
+
+            if (userId.HasValue)
+            {
+                model.ModId = userId;
+            }
+
+            _unitOfWork.DocumentRepository.Update(model);
+            await _unitOfWork.SaveAsync();
+            return dto;
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var documents = await _unitOfWork.DocumentRepository.GetByIdAsync(id);
+            await Task.Run(() => _storageLogger.Delete(documents.Path));
+            _unitOfWork.DocumentRepository.Remove(documents);
+            await _unitOfWork.SaveAsync();
+        }
     }
 }
-
-

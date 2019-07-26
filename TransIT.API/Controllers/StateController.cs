@@ -1,47 +1,105 @@
+using System.Security.Claims;
 using System.Threading.Tasks;
-using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TransIT.BLL.Services;
-using TransIT.BLL.Services.Interfaces;
 using TransIT.BLL.DTOs;
-using TransIT.DAL.Models.Entities;
+using TransIT.BLL.Services.Interfaces;
 
 namespace TransIT.API.Controllers
 {
     [Authorize(Roles = "ADMIN,WORKER,ENGINEER,REGISTER,ANALYST")]
-    public class StateController : DataController<State, StateDTO>
+    public class StateController : Controller
     {
         private readonly IStateService _stateService;
         
-        public StateController(
-            IMapper mapper,
-            IStateService stateService,
-            IFilterService<State> odService
-            ) : base(mapper, stateService, odService)
+        public StateController(IStateService stateService)
         {
             _stateService = stateService;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Get([FromQuery] uint offset = 0, uint amount = 1000)
+        {
+            var result = await _stateService.GetRangeAsync(offset, amount);
+            if (result != null)
+            {
+                return Json(result);
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(int id)
+        {
+            var result = await _stateService.GetAsync(id);
+            if (result != null)
+            {
+                return Json(result);
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet("/search")]
+        public async Task<IActionResult> Get([FromQuery] string search)
+        {
+            var result = await _stateService.SearchAsync(search);
+            if (result != null)
+            {
+                return Json(result);
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
         [HttpPost]
         [Authorize(Roles = "ADMIN")]
-        public override Task<IActionResult> Create([FromBody] StateDTO obj)
+        public async Task<IActionResult> Create([FromBody] StateDTO stateDto)
         {
-            return base.Create(obj);
+            int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var createdDto = await _stateService.CreateAsync(stateDto, userId);
+            if (createdDto != null)
+            {
+                return CreatedAtAction(nameof(Create), createdDto);
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
-        
+
         [HttpPut("{id}")]
         [Authorize(Roles = "ADMIN")]
-        public override Task<IActionResult> Update(int id, [FromBody] StateDTO obj)
+        public async Task<IActionResult> Update(int id, [FromBody] StateDTO stateDto)
         {
-            return base.Update(id, obj);
+            int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            stateDto.Id = id;
+
+            var result = await _stateService.UpdateAsync(stateDto, userId);
+
+            if (result != null)
+            {
+                return NoContent();
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
 
         [HttpDelete("{id}")]
         [Authorize(Roles = "ADMIN")]
-        public override Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            return base.Delete(id);
+            await _stateService.DeleteAsync(id);
+            return NoContent();
         }
     }
 }

@@ -1,13 +1,13 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using TransIT.BLL.DTOs;
 using TransIT.BLL.Services.Interfaces;
 using TransIT.DAL.Models.Entities;
-using TransIT.DAL.Repositories.InterfacesRepositories;
 using TransIT.DAL.UnitOfWork;
 
 namespace TransIT.BLL.Services.ImplementedServices
@@ -16,19 +16,21 @@ namespace TransIT.BLL.Services.ImplementedServices
     /// State Group CRUD service
     /// </summary>
     /// <see cref="IStateService"/>
-    public class StateService : CrudService<State>, IStateService
+    public class StateService : IStateService
     {
+        private readonly IUnitOfWork _unitOfWork;
+
+        private readonly IMapper _mapper;
+
         /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="unitOfWork">Unit of work pattern</param>
-        /// <param name="logger">Log on error</param>
-        /// <param name="repository">CRUD operations on entity</param>
-        /// <see cref="CrudService{TEntity}"/>
-        public StateService(
-            IUnitOfWork unitOfWork,
-            ILogger<CrudService<State>> logger,
-            IStateRepository repository) : base(unitOfWork, logger, repository) { }
+        public StateService(IUnitOfWork unitOfWork, IMapper mapper)
+        {
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
+        }
 
         /// <summary>
         /// Returns state by name
@@ -36,72 +38,76 @@ namespace TransIT.BLL.Services.ImplementedServices
         /// <param name="name">State's name</param>
         /// <returns>State</returns>
         /// <see cref="IStateService"/>
-        public async Task<State> GetStateByNameAsync(string name)
+        public async Task<StateDTO> GetStateByNameAsync(string name)
         {
-            var states = await _repository.GetAllAsync(s => s.Name == name);
-            return states.SingleOrDefault();
+            return _mapper.Map<StateDTO>((await _unitOfWork.StateRepository.GetAllAsync(s => s.Name == name))
+                .SingleOrDefault());
         }
 
-        public async override Task<State> UpdateAsync(State model)
+        public async Task<StateDTO> GetAsync(int id)
         {
-            try
-            {
-                var newModel = await GetAsync(model.Id);
-                if (newModel.IsFixed)
-                {
-                    throw new ConstraintException("Current state can not be edited");
-                }
-                if(model.IsFixed)
-                {
-                    throw new ArgumentException("Incorrect model");
-                }
-
-                newModel.TransName = model.TransName;
-
-                _repository.Update(newModel);
-                await _unitOfWork.SaveAsync();
-                return newModel;
-            }
-            catch (DbUpdateException e)
-            {
-                _logger.LogError(e, nameof(UpdateAsync), e.Entries);
-                return null;
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, nameof(UpdateAsync));
-                throw;
-            }
+            return _mapper.Map<StateDTO>(await _unitOfWork.StateRepository.GetByIdAsync(id));
         }
 
-        public async override Task DeleteAsync(int id)
+        public async Task<IEnumerable<StateDTO>> GetRangeAsync(uint offset, uint amount)
         {
-            try
-            {
-                var model = await GetAsync(id);
-                if (model.IsFixed)
-                {
-                    throw new ConstraintException("Current state can not be deleted");   
-                }
+            return (await _unitOfWork.StateRepository.GetRangeAsync(offset, amount))
+                .AsQueryable().ProjectTo<StateDTO>();
+        }
 
-                _repository.Remove(model);
-                await _unitOfWork.SaveAsync();
-            }
-            catch (DbUpdateException e)
+        public async Task<IEnumerable<StateDTO>> SearchAsync(string search)
+        {
+            var states = await _unitOfWork.StateRepository.SearchExpressionAsync(
+                search
+                    .Split(new[] { ' ', ',', '.' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(x => x.Trim().ToUpperInvariant())
+                );
+
+            return states.ProjectTo<StateDTO>();
+        }
+
+        public async Task<StateDTO> CreateAsync(StateDTO dto,int? userId=null)
+        {
+            var model = _mapper.Map<State>(dto);
+            if (userId != null)
             {
-                var sqlExc = e.GetBaseException() as SqlException;
-                if (sqlExc?.Number == 547)
-                {
-                    _logger.LogDebug(sqlExc, $"Number of sql exception: {sqlExc.Number.ToString()}");
-                    throw new ConstraintException("There are constrained entities, delete them firstly.", sqlExc);
-                }
-                _logger.LogError(e, nameof(DeleteAsync), e.Entries);
+                model.CreateId = userId;
+                model.ModId = userId;
             }
-            catch (Exception e)
+            await _unitOfWork.StateRepository.AddAsync(model);
+            await _unitOfWork.SaveAsync();
+            return await GetAsync(model.Id);
+        }
+
+        public async Task<StateDTO> UpdateAsync(StateDTO stateDTO, int? userId = null)
+        {
+            var model = _mapper.Map<State>(await GetAsync((int)stateDTO.Id));
+            if (model.IsFixed)
             {
-                _logger.LogError(e, nameof(DeleteAsync));
-                throw;
+                throw new ConstraintException("Current state can not be edited");
             }
+            if (stateDTO.IsFixed)
+            {
+                throw new ArgumentException("Incorrect model");
+            }
+            model.ModId = userId;
+            model.TransName = stateDTO.TransName;
+
+            _unitOfWork.StateRepository.Update(model);
+            await _unitOfWork.SaveAsync();
+            return await GetAsync(model.Id);
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var model = await GetAsync(id);
+            if (model.IsFixed)
+            {
+                throw new ConstraintException("Current state can not be deleted");
+            }
+
+            _unitOfWork.StateRepository.Remove(model.Id);
+            await _unitOfWork.SaveAsync();
         }
     }
 }

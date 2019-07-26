@@ -1,11 +1,12 @@
-using TransIT.DAL.Models.Entities;
+using System.Threading.Tasks;
+using TransIT.BLL.DTOs;
 
 namespace TransIT.BLL.Services.Interfaces
 {
     /// <summary>
     /// Employee model CRUD
     /// </summary>
-    public interface IEmployeeService : ICrudService<Employee>
+    public interface IEmployeeService : ICrudService<EmployeeDTO>
     {
     }
 }

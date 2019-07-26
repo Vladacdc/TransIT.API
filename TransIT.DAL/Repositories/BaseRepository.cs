@@ -24,11 +24,6 @@ namespace TransIT.DAL.Repositories
             return ComplexEntities.SingleOrDefaultAsync(t => t.Id == id);
         }
 
-        public virtual Task<TEntity> FindAsync(Expression<Func<TEntity, bool>> predicate)
-        {
-            return ComplexEntities.SingleOrDefaultAsync(predicate);
-        }
-
         public virtual Task<IEnumerable<TEntity>> GetAllAsync()
         {
             return Task.FromResult<IEnumerable<TEntity>>(ComplexEntities);
@@ -44,19 +39,30 @@ namespace TransIT.DAL.Repositories
             return (await Entities.AddAsync(entity)).Entity;
         }
 
+        public virtual TEntity Remove(params object[] keys)
+        {
+            var model = Entities.Find(keys);
+            if (model != null)
+            {
+                model = Entities.Remove(model).Entity;
+            }
+
+            return model;
+        }
+
         public virtual TEntity Remove(TEntity entity)
         {
-            return  Entities.Remove(entity).Entity;
+            return Entities.Remove(entity).Entity;
         }
 
         public virtual TEntity Update(TEntity entity)
         {
-            return  Entities.Update(entity).Entity;
+            return Entities.Update(entity).Entity;
         }
 
         public virtual Task<IEnumerable<TEntity>> GetRangeAsync(uint index, uint amount)
         {
-           return Task.FromResult<IEnumerable<TEntity>>(ComplexEntities.Skip((int)index).Take((int)amount));
+            return Task.FromResult<IEnumerable<TEntity>>(ComplexEntities.Skip((int)index).Take((int)amount));
         }
 
         public virtual TEntity UpdateWithIgnoreProperty<TProperty>(
@@ -66,13 +72,28 @@ namespace TransIT.DAL.Repositories
             _context.Entry(entity).Property(ignorePropertyExpression).IsModified = false;
             return entity;
         }
-        
-        protected virtual DbSet<TEntity> Entities => _entities ?? (_entities = _context.Set<TEntity>());
 
-        protected virtual IQueryable<TEntity> ComplexEntities => Entities;
+        protected virtual DbSet<TEntity> Entities
+        {
+            get
+            {
+                return _entities ?? (_entities = _context.Set<TEntity>());
+            }
+        }
 
-        public IQueryable<TEntity> GetQueryable() => ComplexEntities;
+        protected virtual IQueryable<TEntity> ComplexEntities
+        {
+            get
+            {
+                return Entities;
+            }
+        }
         
         public abstract Task<IQueryable<TEntity>> SearchExpressionAsync(IEnumerable<string> strs);
+
+        public IQueryable<TEntity> GetQueryable()
+        {
+            return ComplexEntities;
+        }
     }
 }

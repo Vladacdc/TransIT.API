@@ -18,8 +18,8 @@ namespace TransIT.BLL.Tests.Services
     {
         protected Mock<IUnitOfWork> _unitOfWork;
         protected Mock<IBaseRepository<TEntity>> _repository;
-        protected Mock<ILogger<CrudService<TEntity>>> _logger;
-        protected CrudService<TEntity> _crudService;
+        protected Mock<ILogger<ICrudService<TEntity>>> _logger;
+        protected ICrudService<TEntity> _crudService;
         protected List<TEntity> _context;
         protected int _idCounter;
         public CrudServiceTest()
@@ -234,7 +234,7 @@ namespace TransIT.BLL.Tests.Services
 
         protected void InitializeLogger()
         {
-            _logger = new Mock<ILogger<CrudService<TEntity>>>();
+            _logger = new Mock<ILogger<ICrudService<TEntity>>>();
         }
 
         protected abstract void InitializeService();

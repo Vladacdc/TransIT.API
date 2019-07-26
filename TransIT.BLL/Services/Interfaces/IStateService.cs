@@ -1,18 +1,18 @@
 using System.Threading.Tasks;
-using TransIT.DAL.Models.Entities;
+using TransIT.BLL.DTOs;
 
 namespace TransIT.BLL.Services.Interfaces
 {
     /// <summary>
     /// Action type model CRUD
     /// </summary>
-    public interface IStateService : ICrudService<State>
+    public interface IStateService : ICrudService<StateDTO>
     {
         /// <summary>
         /// Gets state by name
         /// </summary>
         /// <param name="name">State's name</param>
         /// <returns>State</returns>
-        Task<State> GetStateByNameAsync(string name);
+        Task<StateDTO> GetStateByNameAsync(string name);
     }
 }

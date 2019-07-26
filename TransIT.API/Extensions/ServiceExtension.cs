@@ -9,6 +9,7 @@ using TransIT.DAL.Repositories;
 using TransIT.DAL.Repositories.ImplementedRepositories;
 using TransIT.DAL.Repositories.InterfacesRepositories;
 using TransIT.DAL.UnitOfWork;
+using TransIT.BLL.DTOs;
 
 namespace TransIT.API.Extensions
 {
@@ -44,7 +45,7 @@ namespace TransIT.API.Extensions
 
         public static void ConfigureDataAccessServices(this IServiceCollection services)
         {
-            services.AddScoped<IUserService, UserService>();
+            //services.AddScoped<IUserService, UserService>();
             services.AddScoped<IActionTypeService, ActionTypeService>();
             services.AddScoped<IVehicleService, VehicleService>();
             services.AddScoped<IVehicleTypeService, VehicleTypeService>();
@@ -56,7 +57,7 @@ namespace TransIT.API.Extensions
             services.AddScoped<IIssueService, IssueService>();
             services.AddScoped<IIssueLogService, IssueLogService>();
             services.AddScoped<ISupplierService, SupplierService>();
-            services.AddScoped<IRoleService, RoleService>();
+            //services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IStateService, StateService>();
             services.AddScoped<ICurrencyService, CurrencyService>();
             services.AddScoped<ICountryService, CountryService>();
@@ -66,28 +67,29 @@ namespace TransIT.API.Extensions
             services.AddScoped<ILocationService, LocationService>();
 
 
-            services.AddScoped<ICrudService<User>, UserService>();
-            services.AddScoped<ICrudService<ActionType>, ActionTypeService>();
-            services.AddScoped<ICrudService<Vehicle>, VehicleService>();
-            services.AddScoped<ICrudService<VehicleType>, VehicleTypeService>();
-            services.AddScoped<ICrudService<Malfunction>, MalfunctionService>();
-            services.AddScoped<ICrudService<MalfunctionGroup>, MalfunctionGroupService>();
-            services.AddScoped<ICrudService<MalfunctionSubgroup>, MalfunctionSubgroupService>();
-            services.AddScoped<ICrudService<Bill>, BillService>();
-            services.AddScoped<ICrudService<Document>, DocumentService>();
-            services.AddScoped<ICrudService<Issue>, IssueService>();
-            services.AddScoped<ICrudService<IssueLog>, IssueLogService>();
-            services.AddScoped<ICrudService<Supplier>, SupplierService>();
-            services.AddScoped<ICrudService<Role>, RoleService>();
-            services.AddScoped<ICrudService<State>, StateService>();
-            services.AddScoped<ICrudService<Currency>, CurrencyService>();
-            services.AddScoped<ICrudService<Country>, CountryService>();
-            services.AddScoped<ICrudService<Employee>, EmployeeService>();
-            services.AddScoped<ICrudService<Post>, PostService>();
-            services.AddScoped<ICrudService<Transition>, TransitionService>();
-            services.AddScoped<ICrudService<Location>, LocationService>();
+            //services.AddScoped<ICrudService<UserDTO>, UserService>();
+            services.AddScoped<ICrudService<ActionTypeDTO>, ActionTypeService>();
+            services.AddScoped<ICrudService<VehicleDTO>, VehicleService>();
+            services.AddScoped<ICrudService<VehicleTypeDTO>, VehicleTypeService>();
+            services.AddScoped<ICrudService<MalfunctionDTO>, MalfunctionService>();
+            services.AddScoped<ICrudService<MalfunctionGroupDTO>, MalfunctionGroupService>();
+            services.AddScoped<ICrudService<MalfunctionSubgroupDTO>, MalfunctionSubgroupService>();
+            services.AddScoped<ICrudService<BillDTO>, BillService>();
+            services.AddScoped<ICrudService<DocumentDTO>, DocumentService>();
+            services.AddScoped<ICrudService<IssueDTO>, IssueService>();
+            services.AddScoped<ICrudService<IssueLogDTO>, IssueLogService>();
+            services.AddScoped<ICrudService<SupplierDTO>, SupplierService>();
+            //services.AddScoped<ICrudService<Role>, RoleService>();
+            services.AddScoped<ICrudService<StateDTO>, StateService>();
+            services.AddScoped<ICrudService<CurrencyDTO>, CurrencyService>();
+            services.AddScoped<ICrudService<CountryDTO>, CountryService>();
+            services.AddScoped<ICrudService<EmployeeDTO>, EmployeeService>();
+            services.AddScoped<ICrudService<PostDTO>, PostService>();
+            services.AddScoped<ICrudService<TransitionDTO>, TransitionService>();
+            services.AddScoped<ICrudService<LocationDTO>, LocationService>();
 
 
+            // Need to rewrite Filter services to DTOs
             services.AddScoped<IFilterService<User>, FilterService<User>>();
             services.AddScoped<IFilterService<ActionType>, FilterService<ActionType>>();
             services.AddScoped<IFilterService<Vehicle>, FilterService<Vehicle>>();

@@ -1,7 +1,12 @@
-using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using TransIT.BLL.DTOs;
 using TransIT.BLL.Services.Interfaces;
 using TransIT.DAL.Models.Entities;
-using TransIT.DAL.Repositories.InterfacesRepositories;
 using TransIT.DAL.UnitOfWork;
 
 namespace TransIT.BLL.Services.ImplementedServices
@@ -10,18 +15,75 @@ namespace TransIT.BLL.Services.ImplementedServices
     /// Post CRUD service
     /// </summary>
     /// <see cref="IPostService"/>
-    public class PostService : CrudService<Post>, IPostService
+    public class PostService : IPostService
     {
+        private readonly IUnitOfWork _unitOfWork;
+
+        private readonly IMapper _mapper;
+
         /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="unitOfWork">Unit of work pattern</param>
-        /// <param name="logger">Log on error</param>
-        /// <param name="repository">CRUD operations on entity</param>
-        /// <see cref="CrudService{TEntity}"/>
-        public PostService(
-            IUnitOfWork unitOfWork,
-            ILogger<CrudService<Post>> logger,
-            IPostRepository repository) : base(unitOfWork, logger, repository) { }
+        public PostService(IUnitOfWork unitOfWork, IMapper mapper)
+        {
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
+        }
+
+        public async Task<PostDTO> GetAsync(int id)
+        {
+            return _mapper.Map<PostDTO>(await _unitOfWork.PostRepository.GetByIdAsync(id));
+        }
+
+        public async Task<IEnumerable<PostDTO>> GetRangeAsync(uint offset, uint amount)
+        {
+            return (await _unitOfWork.PostRepository.GetRangeAsync(offset, amount))
+                .AsQueryable().ProjectTo<PostDTO>();
+        }
+
+        public async Task<IEnumerable<PostDTO>> SearchAsync(string search)
+        {
+            var postsDTO = await _unitOfWork.PostRepository.SearchExpressionAsync(
+                search
+                    .Split(new[] { ' ', ',', '.' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(x => x.Trim().ToUpperInvariant())
+                );
+
+            return postsDTO.ProjectTo<PostDTO>();
+        }
+
+        public async Task<PostDTO> CreateAsync(PostDTO dto, int? userId = null)
+        {
+            var model = _mapper.Map<Post>(dto);
+            if(userId.HasValue)
+            {
+                model.CreateId = userId;
+                model.ModId = userId;
+            }
+            
+            await _unitOfWork.PostRepository.AddAsync(model);
+            await _unitOfWork.SaveAsync();
+            return await GetAsync(model.Id);
+        }
+
+        public async Task<PostDTO> UpdateAsync(PostDTO dto, int? userId = null)
+        {
+            var model = _mapper.Map<Post>(dto);
+            if(userId.HasValue)
+            {
+                model.ModId = userId;
+            }
+
+            _unitOfWork.PostRepository.Update(model);
+            await _unitOfWork.SaveAsync();
+            return dto;
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            _unitOfWork.PostRepository.Remove(id);
+            await _unitOfWork.SaveAsync();
+        }
     }
 }

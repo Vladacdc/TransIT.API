@@ -22,7 +22,7 @@ namespace TransIT.BLL.Services.ImplementedServices
         private readonly IUnitOfWork _unitOfWork;
         private readonly IPasswordHasher _hasher;
         private readonly IJwtFactory _jwtFactory;
-        
+
         public AuthenticationService(
             ILogger<AuthenticationService> logger,
             IPasswordHasher hasher,
@@ -34,7 +34,7 @@ namespace TransIT.BLL.Services.ImplementedServices
             _hasher = hasher;
             _jwtFactory = jwtFactory;
         }
-        
+
         public async Task<TokenDTO> SignInAsync(LoginDTO credentials)
         {
             try
@@ -45,9 +45,9 @@ namespace TransIT.BLL.Services.ImplementedServices
 
                 if (user != null && (bool)user.IsActive && _hasher.CheckMatch(credentials.Password, user.Password))
                 {
-                    var role = await _unitOfWork.RoleRepository.GetByIdAsync((int) user.RoleId);
+                    var role = await _unitOfWork.RoleRepository.GetByIdAsync((int)user.RoleId);
                     var token = _jwtFactory.GenerateToken(user.Id, user.Login, role?.Name);
-                    
+
                     if (token == null) return null;
 
                     await _unitOfWork.TokenRepository.AddAsync(new Token
@@ -78,7 +78,7 @@ namespace TransIT.BLL.Services.ImplementedServices
                         )
                     );
                 var newToken = _jwtFactory.GenerateToken(user.Id, user.Login, user.Role.Name);
-                
+
                 await _unitOfWork.TokenRepository.AddAsync(new Token
                 {
                     RefreshToken = newToken.RefreshToken,
@@ -88,7 +88,7 @@ namespace TransIT.BLL.Services.ImplementedServices
                 await _unitOfWork.SaveAsync();
                 return newToken;
             }
-            catch (Exception e) 
+            catch (Exception e)
                 when (e is SecurityTokenException || e is DbUpdateException)
             {
                 _logger.LogError(e, nameof(TokenAsync));

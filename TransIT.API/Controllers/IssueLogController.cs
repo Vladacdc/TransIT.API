@@ -1,42 +1,112 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TransIT.API.EndpointFilters.OnException;
 using TransIT.BLL.Services;
-using TransIT.BLL.Services.Interfaces;
 using TransIT.BLL.DTOs;
+using TransIT.BLL.Factory;
 using TransIT.DAL.Models.Entities;
 
 namespace TransIT.API.Controllers
 {
     [Authorize(Roles = "ADMIN,ENGINEER,REGISTER,ANALYST")]
-    public class IssueLogController : DataController<IssueLog, IssueLogDTO>
+    public class IssueLogController : Controller
     {
-        private readonly IIssueLogService _issueLogService;
-        private const string IssueLogByIssueUrl = "~/api/v1/" + nameof(Issue) + "/{issueId}/" + nameof(IssueLog); 
-        private const string DataTableTemplateIssueLogByIssueUrl = "~/api/v1/datatable/" + nameof(Issue) + "/{issueId}/" + nameof(IssueLog); 
+        private readonly IServiceFactory _serviceFactory;
+
+        private readonly IFilterService<IssueLogDTO> _filterService;
+
+        private const string IssueLogByIssueUrl = "~/api/v1/" + nameof(Issue) + "/{issueId}/" + nameof(IssueLog);
+
+        private const string DataTableTemplateIssueLogByIssueUrl =
+            "~/api/v1/datatable/" + nameof(Issue) + "/{issueId}/" + nameof(IssueLog);
 
         public IssueLogController(
-            IMapper mapper,
-            IIssueLogService issueLogService,
-            IFilterService<IssueLog> odService
-            ) : base(mapper, issueLogService, odService)
+            IServiceFactory serviceFactory,
+            IFilterService<IssueLogDTO> filterService)
         {
-            _issueLogService = issueLogService;
+            _serviceFactory = serviceFactory;
+            _filterService = filterService;
         }
 
         [HttpGet(IssueLogByIssueUrl)]
         public virtual async Task<IActionResult> GetByIssue(int issueId)
         {
-            var result = await _issueLogService.GetRangeByIssueIdAsync(issueId);
+            var result = await _serviceFactory.IssueLogService.GetRangeByIssueIdAsync(issueId);
             return result != null
-                ? Json(_mapper.Map<IEnumerable<IssueLogDTO>>(result))
+                ? Json(result)
                 : (IActionResult) BadRequest();
         }
-        
+
+        private async Task<IEnumerable<IssueLogDTO>> GetMappedEntitiesByIssueId(int issueId, DataTableRequestDTO model)
+        {
+            return await _filterService.GetQueriedWithWhereAsync(
+                model,
+                x => x.Issue.Id == issueId
+            );
+        }
+
+        [HttpGet]
+        public virtual async Task<IActionResult> Get([FromQuery] uint offset = 0, uint amount = 1000)
+        {
+            var result = await _serviceFactory.IssueLogService.GetRangeAsync(offset, amount);
+            return result != null
+                ? Json(result)
+                : (IActionResult) BadRequest();
+        }
+
+        [HttpGet("{id}")]
+        public virtual async Task<IActionResult> Get(int id)
+        {
+            var result = await _serviceFactory.IssueLogService.GetAsync(id);
+            return result != null
+                ? Json(result)
+                : (IActionResult) BadRequest();
+        }
+
+        [HttpGet("/search")]
+        public virtual async Task<IActionResult> Get([FromQuery] string search)
+        {
+            var result = await _serviceFactory.IssueLogService.SearchAsync(search);
+            return result != null
+                ? Json(result)
+                : (IActionResult) BadRequest();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] IssueLogDTO obj)
+        {
+            var result = await _serviceFactory.IssueLogService.CreateAsync(obj);
+            return result != null
+                ? CreatedAtAction(nameof(Create), result)
+                : (IActionResult) BadRequest();
+        }
+
+        [HttpPut("{id}")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> Update(int id, [FromBody] IssueLogDTO obj)
+        {
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            obj.Id = id;
+
+            var result = await _serviceFactory.IssueLogService.UpdateAsync(obj, userId);
+            return result != null
+                ? NoContent()
+                : (IActionResult) BadRequest();
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await _serviceFactory.IssueLogService.DeleteAsync(id);
+            return NoContent();
+        }
+
         [DataTableFilterExceptionFilter]
         [HttpPost(DataTableTemplateIssueLogByIssueUrl)]
         public virtual async Task<IActionResult> Filter(
@@ -47,28 +117,36 @@ namespace TransIT.API.Controllers
                 await GetMappedEntitiesByIssueId(issueId, model),
                 model,
                 _filterService.TotalRecordsAmount()
-                );
+            );
             dtResponse.RecordsFiltered = (ulong) dtResponse.Data.LongLength;
             return Json(dtResponse);
         }
 
-        private async Task<IEnumerable<IssueLogDTO>> GetMappedEntitiesByIssueId(int issueId, DataTableRequestDTO model) =>
-            _mapper.Map<IEnumerable<IssueLogDTO>>(
-                await _filterService.GetQueriedWithWhereAsync(
-                    model, 
-                    x => x.IssueId == issueId
-                    )
-                );
-
-        [HttpPost]
-        public override async Task<IActionResult> Create([FromBody] IssueLogDTO obj)
+        protected async Task<IEnumerable<IssueLogDTO>> GetMappedEntitiesByModel(DataTableRequestDTO model)
         {
-            var entity = _mapper.Map<IssueLog>(obj);
-            entity.CreateId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            entity = await _issueLogService.CreateAsync(entity);
-            return entity != null
-                ? CreatedAtAction(nameof(Create), _mapper.Map<IssueLogDTO>(entity))
-                : (IActionResult) BadRequest();
+            return await _filterService.GetQueriedAsync(model);
+        }
+
+        protected virtual DataTableResponseDTO ComposeDataTableResponseDTO(
+            IEnumerable<IssueLogDTO> res,
+            DataTableRequestDTO model,
+            ulong totalAmount,
+            string errorMessage = "")
+        {
+            return new DataTableResponseDTO
+            {
+                Draw = (ulong) model.Draw,
+                Data = res.ToArray(),
+                RecordsTotal = totalAmount,
+                RecordsFiltered =
+                    model.Filters != null
+                    && model.Filters.Any()
+                    || model.Search != null
+                    && !string.IsNullOrEmpty(model.Search.Value)
+                        ? (ulong) res.Count()
+                        : totalAmount,
+                Error = errorMessage
+            };
         }
     }
 }
