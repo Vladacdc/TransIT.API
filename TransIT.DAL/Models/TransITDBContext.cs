@@ -58,7 +58,7 @@
 
         public async override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            if (_user != null)
+            if (_user != null && _user.CurrentUserId != null)
             {
                 IEnumerable<EntityEntry> unsavedItems = this.ChangeTracker.Entries()
                         .Where(entity => entity.Entity is IAuditableEntity &&

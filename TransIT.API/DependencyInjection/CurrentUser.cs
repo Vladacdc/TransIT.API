@@ -19,7 +19,7 @@ namespace TransIT.API.DependencyInjection
         {
             get
             {
-                return _httpContext.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                return _httpContext?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             }
         }
     }
