@@ -53,17 +53,27 @@ namespace TransIT.BLL.Services.ImplementedServices
             return vehicles.ProjectTo<VehicleDTO>();
         }
 
-        public async Task<VehicleDTO> CreateAsync(VehicleDTO value)
+        public async Task<VehicleDTO> CreateAsync(VehicleDTO value, int? userId=null)
         {
-            Vehicle model = _mapper.Map<Vehicle>(value);
+            var model = _mapper.Map<Vehicle>(value);
+            if (userId != null)
+            {
+                model.CreateId = userId;
+                model.ModId = userId;
+            }
+
             await _unitOfWork.VehicleRepository.AddAsync(model);
             await _unitOfWork.SaveAsync();
             return await GetAsync(model.Id);
         }
 
-        public async Task<VehicleDTO> UpdateAsync(VehicleDTO value)
+        public async Task<VehicleDTO> UpdateAsync(VehicleDTO value, int? userId = null)
         {
-            Vehicle model = _mapper.Map<Vehicle>(value);
+            var model = _mapper.Map<Vehicle>(value);
+            if (userId != null)
+            {
+                model.ModId = userId;
+            }
             _unitOfWork.VehicleRepository.Update(model);
             await _unitOfWork.SaveAsync();
             return value;

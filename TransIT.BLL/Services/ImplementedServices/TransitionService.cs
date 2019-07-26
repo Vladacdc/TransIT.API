@@ -46,17 +46,35 @@ namespace TransIT.BLL.Services.ImplementedServices
             return transitions.ProjectTo<TransitionDTO>();
         }
 
-        public async Task<TransitionDTO> CreateAsync(TransitionDTO dto)
+        public async Task<TransitionDTO> CreateAsync(TransitionDTO dto, int? userId = null)
         {
             var model = _mapper.Map<Transition>(dto);
+            if (userId != null)
+            {
+                model.CreateId = userId;
+                model.ModId = userId;
+            }
             await _unitOfWork.TransitionRepository.AddAsync(model);
             await _unitOfWork.SaveAsync();
             return await GetAsync(model.Id);
         }
 
-        public async Task<TransitionDTO> UpdateAsync(TransitionDTO dto)
+        public async Task<TransitionDTO> UpdateAsync(TransitionDTO dto, int? userId = null)
         {
             var model = _mapper.Map<Transition>(dto);
+            if (model.IsFixed)
+            {
+                throw new ConstraintException("Can not be edited");
+            }
+            if (dto.IsFixed)
+            {
+                throw new ArgumentException("Incorrect model");
+            }
+
+            if (userId != null)
+            {
+                model.ModId = userId;
+            }
             _unitOfWork.TransitionRepository.Update(model);
             await _unitOfWork.SaveAsync();
             return dto;
@@ -67,7 +85,7 @@ namespace TransIT.BLL.Services.ImplementedServices
             var model = await GetAsync(id);
             if (model.IsFixed)
             {
-                throw new ConstraintException("Current state can not be deleted");
+                throw new ConstraintException("Can not be deleted");
             }
 
             _unitOfWork.TransitionRepository.Remove(model);

@@ -53,20 +53,29 @@ namespace TransIT.BLL.Services.ImplementedServices
             return suppliers.ProjectTo<SupplierDTO>();
         }
 
-        public async Task<SupplierDTO> CreateAsync(SupplierDTO dto)
+        public async Task<SupplierDTO> CreateAsync(SupplierDTO supplierDto,int? userId=null)
         {
-            var model = _mapper.Map<Supplier>(dto);
+            var model = _mapper.Map<Supplier>(supplierDto);
+            if (userId != null)
+            {
+                model.CreateId = userId;
+                model.ModId = userId;
+            }
             await _unitOfWork.SupplierRepository.AddAsync(model);
             await _unitOfWork.SaveAsync();
             return await GetAsync(model.Id);
         }
 
-        public async Task<SupplierDTO> UpdateAsync(SupplierDTO dto)
+        public async Task<SupplierDTO> UpdateAsync(SupplierDTO supplierDto,int? userId=null)
         {
-            var model = _mapper.Map<Supplier>(dto);
+            var model = _mapper.Map<Supplier>(supplierDto);
+            if (userId != null)
+            {
+                model.ModId = userId;
+            }
             _unitOfWork.SupplierRepository.Update(model);
             await _unitOfWork.SaveAsync();
-            return dto;
+            return supplierDto;
         }
 
         public async Task DeleteAsync(int id)
