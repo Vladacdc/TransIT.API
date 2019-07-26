@@ -57,6 +57,7 @@ namespace TransIT.DAL.Models.Entities
         public string UpdatedById { get; set; }
         public virtual User CreatedBy { get; set; }
         public virtual User ModifiedBy { get; set; }
+        public ICollection<UserRole> UserRoles { get; set; }
         public virtual ICollection<ActionType> ActionTypeCreate { get; set; }
         public virtual ICollection<ActionType> ActionTypeMod { get; set; }
         public virtual ICollection<Bill> BillCreate { get; set; }

@@ -80,7 +80,7 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<IEnumerable<UserDTO>> GetRangeAsync(uint offset, uint amount)
         {
-            List<User> source = await _unitOfWork.UserManager.Users
+            List<User> source = await _unitOfWork.UserManager.Users.Include(u=>u.UserRoles).ThenInclude(ur=>ur.Role)
                 .Skip((int)offset)
                 .Take((int)amount)
                 .ToListAsync();

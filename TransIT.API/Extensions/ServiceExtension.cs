@@ -48,7 +48,7 @@ namespace TransIT.API.Extensions
 
         public static void ConfigureIdentity(this IServiceCollection services)
         {
-            services.AddIdentity<User, Role>()
+            services.AddIdentity<User, Role>(options => options.Stores.MaxLengthForKeys = 128)
                 .AddEntityFrameworkStores<TransITDBContext>()
                 .AddRoleManager<RoleManager<Role>>()
                 .AddUserManager<UserManager<User>>();

@@ -13,7 +13,9 @@
     using TransIT.DAL.Models.Entities.Abstractions;
     using TransIT.DAL.Models.DependencyInjection;
 
-    public partial class TransITDBContext : IdentityDbContext<User>
+    public partial class TransITDBContext : IdentityDbContext<User, Role, string, IdentityUserClaim<string>,
+        UserRole, IdentityUserLogin<string>,
+        IdentityRoleClaim<string>, IdentityUserToken<string>>
     {
         private readonly IUser _user;
 
@@ -113,6 +115,7 @@
             modelBuilder.ApplyConfiguration(new UserConfiguration());
             modelBuilder.ApplyConfiguration(new VehicleConfiguration());
             modelBuilder.ApplyConfiguration(new VehicleTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new UserRoleConfiguration());
             #endregion
         }
     }

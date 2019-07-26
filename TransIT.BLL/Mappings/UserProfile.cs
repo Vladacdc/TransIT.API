@@ -47,10 +47,11 @@ namespace TransIT.BLL.Mappings
                 .ForMember(u => u.VehicleTypeCreate, opt => opt.Ignore())
                 .ForMember(u => u.ActionTypeCreate, opt => opt.Ignore())
                 .ForMember(u => u.InverseCreate, opt => opt.Ignore())
-                .ForMember(u => u.SupplierCreate, opt => opt.Ignore());
+                .ForMember(u => u.SupplierCreate, opt => opt.Ignore())
+                .ForMember(u => u.UserRoles, opt => opt.Ignore()); ;
             CreateMap<User, UserDTO>()
                 .ForMember(u => u.Password, opt => opt.Ignore())
-                .ForMember(u => u.Role, opt => opt.Ignore());
+                .ForMember(u => u.Role, opt => opt.MapFrom(u=>u.UserRoles.FirstOrDefault().Role));
         }
 
     }

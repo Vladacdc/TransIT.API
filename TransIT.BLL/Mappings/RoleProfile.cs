@@ -18,7 +18,9 @@ namespace TransIT.BLL.Mappings
                 .ForMember(t => t.Mod, opt => opt.Ignore())
                 .ForMember(t => t.Create, opt => opt.Ignore())
                 .ForMember(t => t.UpdatedDate, opt => opt.Ignore())
-                .ForMember(t => t.CreatedDate, opt => opt.Ignore());
+                .ForMember(t => t.CreatedDate, opt => opt.Ignore())
+                .ForMember(t => t.UserRoles, opt => opt.Ignore());
+                
         }
     }
 }

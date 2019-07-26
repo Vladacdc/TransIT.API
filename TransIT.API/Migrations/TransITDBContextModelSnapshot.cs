@@ -19,35 +19,6 @@ namespace TransIT.API.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken();
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired();
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(256);
-
-                    b.Property<string>("NormalizedName")
-                        .HasMaxLength(256);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedName")
-                        .IsUnique()
-                        .HasName("RoleNameIndex")
-                        .HasFilter("[NormalizedName] IS NOT NULL");
-
-                    b.ToTable("AspNetRoles");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityRole");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.Property<int>("Id")
@@ -90,9 +61,11 @@ namespace TransIT.API.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.Property<string>("LoginProvider");
+                    b.Property<string>("LoginProvider")
+                        .HasMaxLength(128);
 
-                    b.Property<string>("ProviderKey");
+                    b.Property<string>("ProviderKey")
+                        .HasMaxLength(128);
 
                     b.Property<string>("ProviderDisplayName");
 
@@ -106,26 +79,15 @@ namespace TransIT.API.Migrations
                     b.ToTable("AspNetUserLogins");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
-                {
-                    b.Property<string>("UserId");
-
-                    b.Property<string>("RoleId");
-
-                    b.HasKey("UserId", "RoleId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("AspNetUserRoles");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
                     b.Property<string>("UserId");
 
-                    b.Property<string>("LoginProvider");
+                    b.Property<string>("LoginProvider")
+                        .HasMaxLength(128);
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .HasMaxLength(128);
 
                     b.Property<string>("Value");
 
@@ -800,6 +762,61 @@ namespace TransIT.API.Migrations
                     b.ToTable("POST");
                 });
 
+            modelBuilder.Entity("TransIT.DAL.Models.Entities.Role", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken();
+
+                    b.Property<string>("CreatedById")
+                        .HasColumnName("CREATE_ID");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("CREATE_DATE")
+                        .HasColumnType("datetime")
+                        .HasDefaultValueSql("(getdate())");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("TransName")
+                        .HasColumnName("TRANS_NAME")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("UpdatedById")
+                        .HasColumnName("MOD_ID");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("MOD_DATE")
+                        .HasColumnType("datetime")
+                        .HasDefaultValueSql("(getdate())");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
+
+                    b.HasIndex("TransName")
+                        .IsUnique()
+                        .HasName("UQ_ROLE_TRANS_NAME")
+                        .HasFilter("[TRANS_NAME] IS NOT NULL");
+
+                    b.HasIndex("UpdatedById");
+
+                    b.ToTable("AspNetRoles");
+                });
+
             modelBuilder.Entity("TransIT.DAL.Models.Entities.State", b =>
                 {
                     b.Property<int>("Id")
@@ -1061,6 +1078,19 @@ namespace TransIT.API.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("TransIT.DAL.Models.Entities.UserRole", b =>
+                {
+                    b.Property<string>("UserId");
+
+                    b.Property<string>("RoleId");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetUserRoles");
+                });
+
             modelBuilder.Entity("TransIT.DAL.Models.Entities.Vehicle", b =>
                 {
                     b.Property<int>("Id")
@@ -1181,47 +1211,9 @@ namespace TransIT.API.Migrations
                     b.ToTable("VEHICLE_TYPE");
                 });
 
-            modelBuilder.Entity("TransIT.DAL.Models.Entities.Role", b =>
-                {
-                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityRole");
-
-                    b.Property<string>("CreatedById")
-                        .HasColumnName("CREATE_ID");
-
-                    b.Property<DateTime?>("CreatedDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("CREATE_DATE")
-                        .HasColumnType("datetime")
-                        .HasDefaultValueSql("(getdate())");
-
-                    b.Property<string>("TransName")
-                        .HasColumnName("TRANS_NAME")
-                        .HasMaxLength(50);
-
-                    b.Property<string>("UpdatedById")
-                        .HasColumnName("MOD_ID");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("MOD_DATE")
-                        .HasColumnType("datetime")
-                        .HasDefaultValueSql("(getdate())");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("TransName")
-                        .IsUnique()
-                        .HasName("UQ_ROLE_TRANS_NAME")
-                        .HasFilter("[TRANS_NAME] IS NOT NULL");
-
-                    b.HasIndex("UpdatedById");
-
-                    b.HasDiscriminator().HasValue("Role");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole")
+                    b.HasOne("TransIT.DAL.Models.Entities.Role")
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -1237,19 +1229,6 @@ namespace TransIT.API.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("TransIT.DAL.Models.Entities.User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole")
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("TransIT.DAL.Models.Entities.User")
                         .WithMany()
                         .HasForeignKey("UserId")
@@ -1507,6 +1486,19 @@ namespace TransIT.API.Migrations
                         .HasConstraintName("FK_MOD_POST_ROLE");
                 });
 
+            modelBuilder.Entity("TransIT.DAL.Models.Entities.Role", b =>
+                {
+                    b.HasOne("TransIT.DAL.Models.Entities.User", "Create")
+                        .WithMany("RoleCreatedByNavigation")
+                        .HasForeignKey("CreatedById")
+                        .HasConstraintName("FK_CREATE_ROLE_USER");
+
+                    b.HasOne("TransIT.DAL.Models.Entities.User", "Mod")
+                        .WithMany("RoleModifiedByNavigation")
+                        .HasForeignKey("UpdatedById")
+                        .HasConstraintName("FK_MOD_ROLE_USER");
+                });
+
             modelBuilder.Entity("TransIT.DAL.Models.Entities.State", b =>
                 {
                     b.HasOne("TransIT.DAL.Models.Entities.User", "Create")
@@ -1582,6 +1574,19 @@ namespace TransIT.API.Migrations
                         .HasConstraintName("FK_MOD_USER");
                 });
 
+            modelBuilder.Entity("TransIT.DAL.Models.Entities.UserRole", b =>
+                {
+                    b.HasOne("TransIT.DAL.Models.Entities.Role", "Role")
+                        .WithMany("UserRoles")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("TransIT.DAL.Models.Entities.User", "User")
+                        .WithMany("UserRoles")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("TransIT.DAL.Models.Entities.Vehicle", b =>
                 {
                     b.HasOne("TransIT.DAL.Models.Entities.User", "Create")
@@ -1616,19 +1621,6 @@ namespace TransIT.API.Migrations
                         .WithMany("VehicleTypeMod")
                         .HasForeignKey("UpdatedById")
                         .HasConstraintName("FK_MOD_VEHICLE_TYPE_ROLE");
-                });
-
-            modelBuilder.Entity("TransIT.DAL.Models.Entities.Role", b =>
-                {
-                    b.HasOne("TransIT.DAL.Models.Entities.User", "Create")
-                        .WithMany("RoleCreatedByNavigation")
-                        .HasForeignKey("CreatedById")
-                        .HasConstraintName("FK_CREATE_ROLE_USER");
-
-                    b.HasOne("TransIT.DAL.Models.Entities.User", "Mod")
-                        .WithMany("RoleModifiedByNavigation")
-                        .HasForeignKey("UpdatedById")
-                        .HasConstraintName("FK_MOD_ROLE_USER");
                 });
 #pragma warning restore 612, 618
         }
