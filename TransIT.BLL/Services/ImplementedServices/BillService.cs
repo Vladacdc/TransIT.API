@@ -48,43 +48,33 @@ namespace TransIT.BLL.Services.ImplementedServices
             return bills.ProjectTo<BillDTO>();
         }
 
-        public async Task<BillDTO> CreateAsync(BillDTO dto)
+        public async Task<BillDTO> CreateAsync(BillDTO dto, int? userId = null)
         {
-            var model = _mapper.Map<Bill>(dto);
-            await _unitOfWork.BillRepository.AddAsync(model);
-            await _unitOfWork.SaveAsync();
-            return await GetAsync(model.Id);
-        }
+            Bill model = _mapper.Map<Bill>(dto);
 
-        public async Task<BillDTO> CreateAsync(int userId, BillDTO value)
-        {
-            Bill model = _mapper.Map<Bill>(value);
-
-            model.CreateId = userId;
-            model.ModId = userId;
+            if (userId.HasValue)
+            {
+                model.CreateId = userId;
+                model.ModId = userId;
+            }
 
             await _unitOfWork.BillRepository.AddAsync(model);
-            await _unitOfWork.SaveAsync();
-            return await GetAsync(model.Id);
-        }
-
-        public async Task<BillDTO> UpdateAsync(BillDTO dto)
-        {
-            var model = _mapper.Map<Bill>(dto);
-            _unitOfWork.BillRepository.Update(model);
             await _unitOfWork.SaveAsync();
             return dto;
         }
 
-        public async Task<BillDTO> UpdateAsync(int userId, BillDTO value)
+        public async Task<BillDTO> UpdateAsync(BillDTO dto, int? userId = null)
         {
-            var model = _mapper.Map<Bill>(value);
+            var model = _mapper.Map<Bill>(dto);
 
-            model.ModId = userId;
+            if (userId.HasValue)
+            {
+                model.ModId = userId;
+            }
 
             _unitOfWork.BillRepository.Update(model);
             await _unitOfWork.SaveAsync();
-            return value;
+            return dto;
         }
 
         public async Task DeleteAsync(int id)

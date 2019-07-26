@@ -53,39 +53,29 @@ namespace TransIT.BLL.Services.ImplementedServices
             return currencies.ProjectTo<CurrencyDTO>();
         }
 
-        public async Task<CurrencyDTO> CreateAsync(CurrencyDTO dto)
-        {
-            var model = _mapper.Map<Currency>(dto);
-            await _unitOfWork.CurrencyRepository.AddAsync(model);
-            await _unitOfWork.SaveAsync();
-            return await GetAsync(model.Id);
-        }
-
-        public async Task<CurrencyDTO> CreateAsync(int userId, CurrencyDTO dto)
+        public async Task<CurrencyDTO> CreateAsync(CurrencyDTO dto, int? userId = null)
         {
             var model = _mapper.Map<Currency>(dto);
 
-            model.CreateId = userId;
-            model.ModId = userId;
+            if (userId.HasValue)
+            {
+                model.CreateId = userId;
+                model.ModId = userId;
+            }
 
             await _unitOfWork.CurrencyRepository.AddAsync(model);
-            await _unitOfWork.SaveAsync();
-            return await GetAsync(model.Id);
-        }
-
-        public async Task<CurrencyDTO> UpdateAsync(CurrencyDTO dto)
-        {
-            var model = _mapper.Map<Currency>(dto);
-            _unitOfWork.CurrencyRepository.Update(model);
             await _unitOfWork.SaveAsync();
             return dto;
         }
 
-        public async Task<CurrencyDTO> UpdateAsync(int userId, CurrencyDTO dto)
+        public async Task<CurrencyDTO> UpdateAsync(CurrencyDTO dto, int? userId = null)
         {
             var model = _mapper.Map<Currency>(dto);
 
-            model.ModId = userId;
+            if (userId.HasValue)
+            {
+                model.ModId = userId;
+            }
 
             _unitOfWork.CurrencyRepository.Update(model);
             await _unitOfWork.SaveAsync();

@@ -53,63 +53,43 @@ namespace TransIT.BLL.Services.ImplementedServices
 
             return actionTypes.ProjectTo<ActionTypeDTO>();
         }
-
-        public async Task<ActionTypeDTO> CreateAsync(ActionTypeDTO value)
+        
+        public async Task<ActionTypeDTO> CreateAsync(ActionTypeDTO dto, int? userId = null)
         {
-            ActionType model = _mapper.Map<ActionType>(value);
-            await _unitOfWork.ActionTypeRepository.AddAsync(model);
-            await _unitOfWork.SaveAsync();
-            return await GetAsync(model.Id);
-        }
+            ActionType model = _mapper.Map<ActionType>(dto);
 
-        public async Task<ActionTypeDTO> CreateAsync(int userId, ActionTypeDTO value)
-        {
-            ActionType model = _mapper.Map<ActionType>(value);
-
-            model.CreateId = userId;
-            model.ModId = userId;
+            if (userId.HasValue)
+            {
+                model.CreateId = userId;
+                model.ModId = userId;
+            }
 
             await _unitOfWork.ActionTypeRepository.AddAsync(model);
             await _unitOfWork.SaveAsync();
-            return await GetAsync(model.Id);
+            return dto;
         }
 
-        public async Task<ActionTypeDTO> UpdateAsync(ActionTypeDTO value)
+        public async Task<ActionTypeDTO> UpdateAsync(ActionTypeDTO dto, int? userId = null)
         {
-            ActionType model = _mapper.Map<ActionType>(value);
+            ActionType model = _mapper.Map<ActionType>(dto);
 
             if (model.IsFixed)
             {
                 throw new ConstraintException("Current state can not be edited");
             }
-            if (value.IsFixed)
+            if (dto.IsFixed)
             {
                 throw new ArgumentException("Incorrect model");
             }
 
-            _unitOfWork.ActionTypeRepository.Update(model);
-            await _unitOfWork.SaveAsync();
-            return value;
-        }
-
-        public async Task<ActionTypeDTO> UpdateAsync(int userId, ActionTypeDTO value)
-        {
-            ActionType model = _mapper.Map<ActionType>(value);
-
-            if (model.IsFixed)
+            if (userId.HasValue)
             {
-                throw new ConstraintException("Current state can not be edited");
+                model.ModId = userId;
             }
-            if (value.IsFixed)
-            {
-                throw new ArgumentException("Incorrect model");
-            }
-
-            model.ModId = userId;
 
             _unitOfWork.ActionTypeRepository.Update(model);
             await _unitOfWork.SaveAsync();
-            return value;
+            return dto;
         }
 
         public async Task DeleteAsync(int id)

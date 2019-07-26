@@ -8,8 +8,5 @@ namespace TransIT.BLL.Services.Interfaces
     /// </summary>
     public interface IBillService : ICrudService<BillDTO>
     {
-        Task<BillDTO> CreateAsync(int userId, BillDTO model);
-
-        Task<BillDTO> UpdateAsync(int userId, BillDTO model);
     }
 }

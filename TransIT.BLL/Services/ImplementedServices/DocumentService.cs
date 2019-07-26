@@ -85,31 +85,37 @@ namespace TransIT.BLL.Services.ImplementedServices
             return result;
         }
 
-        public async Task<DocumentDTO> CreateAsync(DocumentDTO documentDTO, int? userId=null)
+        public async Task<DocumentDTO> CreateAsync(DocumentDTO dto, int? userId=null)
         {
             var provider = new FileExtensionContentTypeProvider();
 
-            _ = provider.TryGetContentType(Path.GetFileName(documentDTO.File.FileName), out string contentType);
+            _ = provider.TryGetContentType(Path.GetFileName(dto.File.FileName), out string contentType);
 
-            documentDTO.ContentType = contentType;
-            documentDTO.Path = _storageLogger.Create(documentDTO.File);
+            dto.ContentType = contentType;
+            dto.Path = _storageLogger.Create(dto.File);
 
-            if (userId != null)
+            if (userId.HasValue)
             {
-                documentDTO.Mod.Id = (int)userId;
-                documentDTO.Create.Id = (int)userId;
+                dto.Mod.Id = (int)userId;
+                dto.Create.Id = (int)userId;
             }
 
-            var model = _mapper.Map<Document>(documentDTO);
+            var model = _mapper.Map<Document>(dto);
 
             await _unitOfWork.DocumentRepository.AddAsync(model);
             await _unitOfWork.SaveAsync();
             return await GetAsync(model.Id);
         }
 
-        public async Task<DocumentDTO> UpdateAsync(DocumentDTO dto)
+        public async Task<DocumentDTO> UpdateAsync(DocumentDTO dto, int? userId = null)
         {
             var model = _mapper.Map<Document>(dto);
+
+            if (userId.HasValue)
+            {
+                model.ModId = userId;
+            }
+
             _unitOfWork.DocumentRepository.Update(model);
             await _unitOfWork.SaveAsync();
             return dto;

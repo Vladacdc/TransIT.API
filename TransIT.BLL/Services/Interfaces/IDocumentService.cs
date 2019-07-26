@@ -13,7 +13,5 @@ namespace TransIT.BLL.Services.Interfaces
         Task<IEnumerable<DocumentDTO>> GetRangeByIssueLogIdAsync(int issueLogId);
 
         Task<DocumentDTO> GetDocumentWithData(int documentId);
-
-        Task<DocumentDTO> CreateAsync(DocumentDTO documentDTO, int? userId);
     }
 }

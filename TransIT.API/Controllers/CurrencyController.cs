@@ -66,7 +66,7 @@ namespace TransIT.API.Controllers
         {
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-            var createdDTO = await _currencyService.CreateAsync(userId, currencyDTO);
+            var createdDTO = await _currencyService.CreateAsync(currencyDTO, userId);
 
             if (createdDTO != null)
             {
@@ -86,7 +86,7 @@ namespace TransIT.API.Controllers
 
             currencyDTO.Id = id;
 
-            var result = await _currencyService.UpdateAsync(userId, currencyDTO);
+            var result = await _currencyService.UpdateAsync(currencyDTO, userId);
 
             if (result != null)
             {

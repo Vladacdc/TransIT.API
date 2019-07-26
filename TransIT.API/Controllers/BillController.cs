@@ -64,7 +64,7 @@ namespace TransIT.API.Controllers
         {
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-            var createdDTO = await _billService.CreateAsync(userId, billDTO);
+            var createdDTO = await _billService.CreateAsync(billDTO, userId);
 
             if (createdDTO != null)
             {
@@ -83,7 +83,7 @@ namespace TransIT.API.Controllers
 
             billDTO.Id = id;
 
-            var result = await _billService.UpdateAsync(userId, billDTO);
+            var result = await _billService.UpdateAsync(billDTO, userId);
 
             if (result != null)
             {

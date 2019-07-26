@@ -65,7 +65,7 @@ namespace TransIT.API.Controllers
         {
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-            var createdDTO = await _actionTypeService.CreateAsync(userId, actionTypeDTO);
+            var createdDTO = await _actionTypeService.CreateAsync(actionTypeDTO, userId);
 
             if (createdDTO != null)
             {
@@ -85,7 +85,7 @@ namespace TransIT.API.Controllers
 
             actionTypeDTO.Id = id;
 
-            var result = await _actionTypeService.UpdateAsync(userId, actionTypeDTO);
+            var result = await _actionTypeService.UpdateAsync(actionTypeDTO, userId);
 
             if (result != null)
             {

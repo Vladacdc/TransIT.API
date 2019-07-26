@@ -66,7 +66,7 @@ namespace TransIT.API.Controllers
         {
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-            var createdDTO = await _countryService.CreateAsync(userId, countryDTO);
+            var createdDTO = await _countryService.CreateAsync(countryDTO, userId);
 
             if (createdDTO != null)
             {
@@ -86,7 +86,7 @@ namespace TransIT.API.Controllers
 
             countryDTO.Id = id;
 
-            var result = await _countryService.UpdateAsync(userId, countryDTO);
+            var result = await _countryService.UpdateAsync(countryDTO, userId);
 
             if (result != null)
             {

@@ -8,8 +8,5 @@ namespace TransIT.BLL.Services.Interfaces
     /// </summary>
     public interface ICurrencyService : ICrudService<CurrencyDTO>
     {
-        Task<CurrencyDTO> CreateAsync(int userId, CurrencyDTO dto);
-
-        Task<CurrencyDTO> UpdateAsync(int userId, CurrencyDTO dto);
     }
 }

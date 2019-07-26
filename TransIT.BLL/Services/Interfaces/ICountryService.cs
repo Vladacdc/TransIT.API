@@ -8,8 +8,5 @@ namespace TransIT.BLL.Services.Interfaces
     /// </summary>
     public interface ICountryService : ICrudService<CountryDTO>
     {
-        Task<CountryDTO> CreateAsync(int userId, CountryDTO dto);
-
-        Task<CountryDTO> UpdateAsync(int userId, CountryDTO dto);
     }
 }
