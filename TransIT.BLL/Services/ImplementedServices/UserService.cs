@@ -46,51 +46,25 @@ namespace TransIT.BLL.Services.ImplementedServices
         /// <summary>
         /// Updates a user in a database.
         /// </summary>
-        /// <param name="model">The user ENTITY.</param>
-        /// <returns>Same user entity.</returns>
+        /// <param name="model">The user DTO.</param>
+        /// <returns>Updated user DTO.</returns>
         public async Task<UserDTO> UpdateAsync(UserDTO model)
         {
-            try
-            {
-                User user = await _unitOfWork.UserManager.FindByIdAsync(model.Id);
-                IList<string> roles = await _unitOfWork.UserManager.GetRolesAsync(user);
-                await _unitOfWork.UserManager.RemoveFromRoleAsync(user, roles.FirstOrDefault());
-                await _unitOfWork.UserManager.AddToRoleAsync(user, model.Role.Name);
-                user = _mapper.Map(model, user);
-                await _unitOfWork.UserManager.UpdateAsync(user);
-                return _mapper.Map<UserDTO>(user);  
-            }
-            catch (DbUpdateException e)
-            {
-                _logger.LogError(e, nameof(UpdateAsync), e.Entries);
-                return null;
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, nameof(UpdateAsync));
-                throw e;
-            }
+            User user = await _unitOfWork.UserManager.FindByIdAsync(model.Id);
+            IList<string> roles = await _unitOfWork.UserManager.GetRolesAsync(user);
+            await _unitOfWork.UserManager.RemoveFromRoleAsync(user, roles.FirstOrDefault());
+            await _unitOfWork.UserManager.AddToRoleAsync(user, model.Role.Name);
+            user = _mapper.Map(model, user);
+            await _unitOfWork.UserManager.UpdateAsync(user);
+            return _mapper.Map<UserDTO>(user);
         }
 
         public virtual async Task<UserDTO> UpdatePasswordAsync(UserDTO user, string oldPassword, string newPassword)
         {
-            try
-            {
-                User entity = _mapper.Map<User>(user);
-                IdentityResult result = await _unitOfWork.UserManager
-                    .ChangePasswordAsync(entity, oldPassword, newPassword);
-                return result.Succeeded ? user : null;
-            }
-            catch (DbUpdateException e)
-            {
-                _logger.LogError(e, nameof(UpdatePasswordAsync), e.Entries);
-                return null;
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, nameof(UpdatePasswordAsync));
-                throw e;
-            }
+            User entity = _mapper.Map<User>(user);
+            IdentityResult result = await _unitOfWork.UserManager
+                .ChangePasswordAsync(entity, oldPassword, newPassword);
+            return result.Succeeded ? user : null;
         }
 
         public virtual async Task<IEnumerable<UserDTO>> GetAssignees(uint offset, uint amount)
