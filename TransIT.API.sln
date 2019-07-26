@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TransIT.API", "TransIT.API\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TransIT.BLL", "TransIT.BLL\TransIT.BLL.csproj", "{3BB6FAF4-8D54-4428-AD1F-923A14D3EEE1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TransIT.Tests", "TransIT.Tests\TransIT.Tests.csproj", "{7370EF8B-FD47-47F1-AA90-42C06276AB78}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{3BB6FAF4-8D54-4428-AD1F-923A14D3EEE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3BB6FAF4-8D54-4428-AD1F-923A14D3EEE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3BB6FAF4-8D54-4428-AD1F-923A14D3EEE1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7370EF8B-FD47-47F1-AA90-42C06276AB78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7370EF8B-FD47-47F1-AA90-42C06276AB78}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7370EF8B-FD47-47F1-AA90-42C06276AB78}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7370EF8B-FD47-47F1-AA90-42C06276AB78}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
