@@ -47,17 +47,31 @@ namespace TransIT.BLL.Services.ImplementedServices
 
             return bills.ProjectTo<BillDTO>();
         }
-        public async Task<BillDTO> CreateAsync(BillDTO dto)
+
+        public async Task<BillDTO> CreateAsync(BillDTO dto, int? userId = null)
         {
-            var model = _mapper.Map<Bill>(dto);
+            Bill model = _mapper.Map<Bill>(dto);
+
+            if (userId.HasValue)
+            {
+                model.CreateId = userId;
+                model.ModId = userId;
+            }
+
             await _unitOfWork.BillRepository.AddAsync(model);
             await _unitOfWork.SaveAsync();
-            return await GetAsync(model.Id);
+            return dto;
         }
 
-        public async Task<BillDTO> UpdateAsync(BillDTO dto)
+        public async Task<BillDTO> UpdateAsync(BillDTO dto, int? userId = null)
         {
             var model = _mapper.Map<Bill>(dto);
+
+            if (userId.HasValue)
+            {
+                model.ModId = userId;
+            }
+
             _unitOfWork.BillRepository.Update(model);
             await _unitOfWork.SaveAsync();
             return dto;
