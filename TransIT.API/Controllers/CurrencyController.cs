@@ -3,10 +3,14 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TransIT.BLL.Services.Interfaces;
 using TransIT.BLL.DTOs;
-using System.Security.Claims;
+using Microsoft.AspNetCore.Cors;
 
 namespace TransIT.API.Controllers
 {
+    [ApiController]
+    [EnableCors("CorsPolicy")]
+    [Produces("application/json")]
+    [Route("api/v1/[controller]/[action]")]
     [Authorize(Roles = "ADMIN,ENGINEER,REGISTER,ANALYST")]
     public class CurrencyController : Controller
     {

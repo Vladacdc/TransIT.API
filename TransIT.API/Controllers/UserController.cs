@@ -12,8 +12,6 @@ using TransIT.API.Extensions;
 using TransIT.BLL.Services;
 using TransIT.BLL.Services.Interfaces;
 using TransIT.BLL.DTOs;
-using TransIT.DAL.Models.DependencyInjection;
-using TransIT.DAL.Models.Entities;
 using Microsoft.AspNetCore.Cors;
 
 namespace TransIT.API.Controllers

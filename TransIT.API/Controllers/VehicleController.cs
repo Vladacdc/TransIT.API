@@ -1,12 +1,16 @@
-﻿using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TransIT.BLL.DTOs;
 using TransIT.BLL.Services.Interfaces;
 
 namespace TransIT.API.Controllers
 {
+    [ApiController]
+    [EnableCors("CorsPolicy")]
+    [Produces("application/json")]
+    [Route("api/v1/[controller]/[action]")]
     [Authorize(Roles = "ADMIN,ENGINEER,REGISTER")]
     public class VehicleController : Controller
     {

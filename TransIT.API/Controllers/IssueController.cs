@@ -11,9 +11,14 @@ using TransIT.API.Hubs;
 using TransIT.BLL.Services;
 using TransIT.BLL.DTOs;
 using TransIT.BLL.Factory;
+using Microsoft.AspNetCore.Cors;
 
 namespace TransIT.API.Controllers
 {
+    [ApiController]
+    [EnableCors("CorsPolicy")]
+    [Produces("application/json")]
+    [Route("api/v1/[controller]/[action]")]
     [Authorize(Roles = "ENGINEER,REGISTER,ANALYST")]
     public class IssueController : Controller
     {
@@ -95,6 +100,7 @@ namespace TransIT.API.Controllers
                 : (IActionResult) BadRequest();
         }
 
+        [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] IssueDTO obj)
         {
             obj.Id = id;

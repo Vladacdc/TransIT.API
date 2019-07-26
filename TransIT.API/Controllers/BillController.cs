@@ -3,10 +3,14 @@ using TransIT.BLL.Services.Interfaces;
 using TransIT.BLL.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using System.Security.Claims;
+using Microsoft.AspNetCore.Cors;
 
 namespace TransIT.API.Controllers
 {
+    [ApiController]
+    [EnableCors("CorsPolicy")]
+    [Produces("application/json")]
+    [Route("api/v1/[controller]")]
     [Authorize(Roles = "ENGINEER,REGISTER,ANALYST")]
     public class BillController : Controller
     {
