@@ -60,24 +60,21 @@ namespace TransIT.BLL.Services.ImplementedServices
             return issueLogs.ProjectTo<IssueLogDTO>();
         }
 
-        public async Task<IssueLogDTO> CreateAsync(IssueLogDTO dto, int userId)
+        public async Task<IssueLogDTO> UpdateAsync(IssueLogDTO dto, int? userId = null)
         {
-            return await CreateAsync(dto);
-        }
+            var model = _mapper.Map<IssueLog>(dto);
 
-        public async Task<IssueLogDTO> UpdateAsync(IssueLogDTO dto)
-        {
-            var newDto = _mapper.Map<IssueLogDTO>(_unitOfWork.IssueLogRepository.Update(_mapper.Map<IssueLog>(dto)));
+            if (userId.HasValue)
+            {
+                model.ModId = userId;
+            }
+
+            var newDto = _mapper.Map<IssueLogDTO>(_unitOfWork.IssueLogRepository.Update(model));
             await _unitOfWork.SaveAsync();
             return newDto;
         }
 
-        public async Task<IssueLogDTO> UpdateAsync(IssueLogDTO dto, int userId)
-        {
-            return await UpdateAsync(dto);
-        }
-
-        public async Task<IssueLogDTO> CreateAsync(IssueLogDTO issueLogDTO)
+        public async Task<IssueLogDTO> CreateAsync(IssueLogDTO issueLogDTO, int? userId = null)
         {
             var oldIssueDTO = issueLogDTO.Issue;
             issueLogDTO.Issue =
@@ -96,6 +93,12 @@ namespace TransIT.BLL.Services.ImplementedServices
                 throw new ConstraintException("Can not move to the state according to transition settings.");
 
             var model = _mapper.Map<IssueLog>(issueLogDTO);
+            if (userId.HasValue)
+            {
+                model.CreateId = userId;
+                model.ModId = userId;
+            }
+            
             await _unitOfWork.IssueLogRepository.AddAsync(model);
             await _unitOfWork.SaveAsync();
             return await GetAsync(model.Id);

@@ -62,7 +62,7 @@ namespace TransIT.BLL.Services.ImplementedServices
             return issues.ProjectTo<IssueDTO>();
         }
 
-        public async Task<IssueDTO> CreateAsync(IssueDTO dto)
+        public async Task<IssueDTO> CreateAsync(IssueDTO dto, int? userId = null)
         {
             var vehicle = _mapper.Map<VehicleDTO>(await _unitOfWork.VehicleRepository.GetByIdAsync(dto.Vehicle.Id));
             if (IsWarrantyCase(vehicle))
@@ -71,25 +71,13 @@ namespace TransIT.BLL.Services.ImplementedServices
             }
 
             var model = _mapper.Map<Issue>(dto);
-            await _unitOfWork.IssueRepository.AddAsync(model);
-            await _unitOfWork.SaveAsync();
-            return await GetAsync(model.Id);
-        }
-
-        public async Task<IssueDTO> CreateAsync(IssueDTO dto, int userId)
-        {
-            var vehicle = _mapper.Map<VehicleDTO>(await _unitOfWork.VehicleRepository.GetByIdAsync(dto.Vehicle.Id));
-            if (IsWarrantyCase(vehicle))
+            if (userId.HasValue)
             {
-                dto.Warranty = Warranties.WARRANTY_CASE;
+                model.CreateId = userId;
+                model.ModId = userId;
             }
 
-            var model = _mapper.Map<Location>(dto);
-
-            model.CreateId = userId;
-            model.ModId = userId;
-
-            await _unitOfWork.LocationRepository.AddAsync(model);
+            await _unitOfWork.IssueRepository.AddAsync(model);
             await _unitOfWork.SaveAsync();
             return await GetAsync(model.Id);
         }
@@ -99,19 +87,13 @@ namespace TransIT.BLL.Services.ImplementedServices
             return DateTime.Now.CompareTo(vehicle?.WarrantyEndDate) < 0;
         }
 
-        public async Task<IssueDTO> UpdateAsync(IssueDTO dto)
+        public async Task<IssueDTO> UpdateAsync(IssueDTO dto, int? userId = null)
         {
             var model = _mapper.Map<Issue>(dto);
-            dto = _mapper.Map<IssueDTO>(_unitOfWork.IssueRepository.UpdateWithIgnoreProperty(model, x => x.StateId));
-            await _unitOfWork.SaveAsync();
-            return dto;
-        }
-
-        public async Task<IssueDTO> UpdateAsync(IssueDTO dto, int userId)
-        {
-            var model = _mapper.Map<Issue>(dto);
-
-            model.ModId = userId;
+            if(userId.HasValue)
+            {
+                model.ModId = userId;
+            }
 
             dto = _mapper.Map<IssueDTO>(_unitOfWork.IssueRepository.UpdateWithIgnoreProperty(model, x => x.StateId));
             await _unitOfWork.SaveAsync();

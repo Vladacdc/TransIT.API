@@ -53,39 +53,27 @@ namespace TransIT.BLL.Services.ImplementedServices
             return postsDTO.ProjectTo<PostDTO>();
         }
 
-        public async Task<PostDTO> CreateAsync(PostDTO dto)
+        public async Task<PostDTO> CreateAsync(PostDTO dto, int? userId = null)
         {
             var model = _mapper.Map<Post>(dto);
+            if(userId.HasValue)
+            {
+                model.CreateId = userId;
+                model.ModId = userId;
+            }
+            
             await _unitOfWork.PostRepository.AddAsync(model);
             await _unitOfWork.SaveAsync();
             return await GetAsync(model.Id);
         }
 
-        public async Task<PostDTO> CreateAsync(PostDTO dto, int userId)
+        public async Task<PostDTO> UpdateAsync(PostDTO dto, int? userId = null)
         {
             var model = _mapper.Map<Post>(dto);
-
-            model.CreateId = userId;
-            model.ModId = userId;
-
-            await _unitOfWork.PostRepository.AddAsync(model);
-            await _unitOfWork.SaveAsync();
-            return await GetAsync(model.Id);
-        }
-
-        public async Task<PostDTO> UpdateAsync(PostDTO dto)
-        {
-            var model = _mapper.Map<Post>(dto);
-            _unitOfWork.PostRepository.Update(model);
-            await _unitOfWork.SaveAsync();
-            return dto;
-        }
-
-        public async Task<PostDTO> UpdateAsync(PostDTO dto, int userId)
-        {
-            var model = _mapper.Map<Post>(dto);
-
-            model.ModId = userId;
+            if(userId.HasValue)
+            {
+                model.ModId = userId;
+            }
 
             _unitOfWork.PostRepository.Update(model);
             await _unitOfWork.SaveAsync();
