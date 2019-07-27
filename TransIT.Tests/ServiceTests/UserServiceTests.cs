@@ -11,6 +11,7 @@ using TransIT.DAL.Repositories.ImplementedRepositories;
 using TransIT.DAL.UnitOfWork;
 using Xunit;
 using TransIT.BLL.Comparers;
+using System.Collections.Generic;
 
 namespace TransIT.Tests
 {
@@ -31,6 +32,73 @@ namespace TransIT.Tests
             UserDTO result = await userService.CreateAsync(new TestUser());
 
             Assert.Equal(new TestUser(), result, new UserComparer());
+        }
+
+        [Fact]
+        public async Task UserService_Should_Get_Range_Users()
+        {
+            IUnitOfWork unitOfWork = _fixture.CreateMockUnitOfWork();
+            UserService userService = new UserService(_fixture.Mapper, unitOfWork);
+            TestUser[] users = new TestUser[] {
+                new TestUser() { Email = "aaaaa@aa.c" },
+                new TestUser() { Email = "Bohdan@fff.d", Role = new RoleDTO() {
+                    Name = "ENGINEER" , TransName = "Інженер"}
+                },
+                new TestUser() { Email = "pbbbc@gmail.com" },
+            };
+            foreach (UserDTO user in users)
+            {
+                await userService.CreateAsync(user);
+            }
+
+            var list = await userService.GetRangeAsync(0, 100);
+
+            Assert.True(list.OrderBy(u => u.Email).SequenceEqual(users, new UserComparer()));
+        }
+
+        [Fact]
+        public async Task UserService_Should_Update_Password()
+        {
+            IUnitOfWork unitOfWork = _fixture.CreateMockUnitOfWork();
+            UserService userService = new UserService(_fixture.Mapper, unitOfWork);
+            UserDTO result = await userService.CreateAsync(
+                new TestUser()
+                {
+                    Password = "AbagfgA122@2"
+                });
+            Assert.NotNull(
+                await userService.UpdatePasswordAsync(result, result.Password, "HelloWorld123@")
+            );
+        }
+
+        [Fact]
+        public async Task UserService_Should_Get_Assignees()
+        {
+            IUnitOfWork unitOfWork = _fixture.CreateMockUnitOfWork();
+            UserService userService = new UserService(_fixture.Mapper, unitOfWork);
+            List<UserDTO> assigned = new List<UserDTO>()
+            {
+                new TestUser() { Email = "Bohdan@fff.d", Role = new RoleDTO() {
+                    Name = "WORKER" , TransName = "Працівник"}
+                },
+                new TestUser() { Email = "DanyloDudokLoh@fff.d", Role = new RoleDTO() {
+                    Name = "WORKER" , TransName = "Працівник"}
+                }
+            };
+            List<UserDTO> users = new List<UserDTO> {
+                new TestUser() { Email = "aaaaa@aa.c" },
+                new TestUser() { Email = "pbbbc@gmail.com" },
+            };
+            users.AddRange(assigned);
+
+            foreach (UserDTO user in users)
+            {
+                await userService.CreateAsync(user);
+            }
+
+            var list = await userService.GetAssignees(0, 100);
+
+            Assert.True(list.OrderBy(u => u.Email).SequenceEqual(assigned, new UserComparer()));
         }
 
         [Fact]
