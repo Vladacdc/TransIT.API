@@ -17,6 +17,21 @@ namespace TransIT.Tests
     /// </summary>
     public class UnitOfWorkFixture : IDisposable
     {
+        private class UserStore : UserStore<User, Role, TransITDBContext, string, IdentityUserClaim<string>,
+            UserRole, IdentityUserLogin<string>, IdentityUserToken<string>, IdentityRoleClaim<string>>
+        {
+            public UserStore(TransITDBContext context, IdentityErrorDescriber describer = null) : base(context, describer)
+            {
+            }
+        }
+
+        private class RoleStore : RoleStore<Role, TransITDBContext, string, UserRole, IdentityRoleClaim<string>>
+        {
+            public RoleStore(TransITDBContext context, IdentityErrorDescriber describer = null) : base(context, describer)
+            {
+            }
+        }
+
         /// <summary>
         /// Automapper configuration
         /// </summary>
@@ -48,16 +63,17 @@ namespace TransIT.Tests
         /// Creates a <see cref="UnitOfWork"/> instance.
         /// </summary>
         /// <returns>A new object each time.</returns>
-        public IUnitOfWork MockUnitOfWork()
+        public IUnitOfWork CreateMockUnitOfWork()
         {
             TransITDBContext transITDBContext = new TransITDBContext(
                 new DbContextOptionsBuilder<TransITDBContext>()
-                    .UseInMemoryDatabase("testdb")
+                    .UseInMemoryDatabase(Guid.NewGuid().ToString())
                     .EnableSensitiveDataLogging()
                     .Options
             );
-            IUserStore<User> userStore = new UserStore<User>(transITDBContext);
-            IRoleStore<Role> roleStore = new RoleStore<Role>(transITDBContext);
+
+            IUserStore<User> userStore = new UserStore(transITDBContext);
+            IRoleStore<Role> roleStore = new RoleStore(transITDBContext);
 
             IUnitOfWork unitOfWork = new UnitOfWork(
                 transITDBContext,

@@ -19,7 +19,6 @@ namespace TransIT.BLL.Services.ImplementedServices
     /// User model CRUD
     /// </summary>
     /// <see cref="IUserService"/>
-
     public class UserService : IUserService
     {
         private readonly IMapper _mapper;
@@ -34,8 +33,7 @@ namespace TransIT.BLL.Services.ImplementedServices
         /// <see cref="CrudService{TEntity}"/>
         public UserService(
             IMapper mapper,
-            IUnitOfWork unitOfWork
-            )
+            IUnitOfWork unitOfWork)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
@@ -50,11 +48,15 @@ namespace TransIT.BLL.Services.ImplementedServices
         {
             User user = await _unitOfWork.UserManager.FindByIdAsync(model.Id);
             IList<string> roles = await _unitOfWork.UserManager.GetRolesAsync(user);
-            await _unitOfWork.UserManager.RemoveFromRoleAsync(user, roles.FirstOrDefault());
+            if (roles.Count > 0)
+            {
+                await _unitOfWork.UserManager.RemoveFromRoleAsync(user, roles.First());
+            }
+
             await _unitOfWork.UserManager.AddToRoleAsync(user, model.Role.Name);
             user = _mapper.Map(model, user);
-            await _unitOfWork.UserManager.UpdateAsync(user);
-            return _mapper.Map<UserDTO>(user);
+            IdentityResult updateResult = await _unitOfWork.UserManager.UpdateAsync(user);
+            return updateResult.Succeeded ? await GetAsync(user) : null;
         }
 
         public virtual async Task<UserDTO> UpdatePasswordAsync(UserDTO user, string oldPassword, string newPassword)
@@ -75,12 +77,15 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<UserDTO> GetAsync(string id)
         {
-            return _mapper.Map<UserDTO>(await _unitOfWork.UserManager.FindByIdAsync(id));
+            User entity = await _unitOfWork.UserManager.FindByIdAsync(id);
+            return entity == null ? null : await GetAsync(entity);
         }
 
         public async Task<IEnumerable<UserDTO>> GetRangeAsync(uint offset, uint amount)
         {
-            List<User> source = await _unitOfWork.UserManager.Users.Include(u=>u.UserRoles).ThenInclude(ur=>ur.Role)
+            List<User> source = await _unitOfWork.UserManager.Users
+                .Include(u => u.UserRoles)
+                .ThenInclude(ur => ur.Role)
                 .Skip((int)offset)
                 .Take((int)amount)
                 .ToListAsync();
@@ -95,7 +100,8 @@ namespace TransIT.BLL.Services.ImplementedServices
             {
                 result = await _unitOfWork.UserManager.AddToRoleAsync(user, value.Role.Name);
             }
-            return result.Succeeded ? _mapper.Map<UserDTO>(user) : null;
+
+            return result.Succeeded ? await GetAsync(user) : null;
         }
 
         public async Task DeleteAsync(string id)
@@ -107,6 +113,19 @@ namespace TransIT.BLL.Services.ImplementedServices
         public Task<IEnumerable<UserDTO>> SearchAsync(string search)
         {
             throw new NotImplementedException();
+        }
+
+        private async Task<UserDTO> GetAsync(User entity)
+        {
+            IList<string> roles = await _unitOfWork.UserManager.GetRolesAsync(entity);
+            UserDTO userDTO = _mapper.Map<UserDTO>(entity);
+            if (roles.Count > 0)
+            {
+                Role roleEntity = await _unitOfWork.RoleManager.FindByNameAsync(roles.First());
+                userDTO.Role = _mapper.Map<RoleDTO>(roleEntity);
+            }
+
+            return userDTO;
         }
     }
 }
