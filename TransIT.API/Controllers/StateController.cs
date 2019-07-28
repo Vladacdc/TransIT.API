@@ -11,7 +11,7 @@ namespace TransIT.API.Controllers
     [ApiController]
     [EnableCors("CorsPolicy")]
     [Produces("application/json")]
-    [Route("api/v1/[controller]/[action]")]
+    [Route("api/v1/[controller]")]
     [Authorize(Roles = "ADMIN,WORKER,ENGINEER,REGISTER,ANALYST")]
     public class StateController : Controller
     {

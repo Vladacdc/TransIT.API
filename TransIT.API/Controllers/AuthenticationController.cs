@@ -11,7 +11,7 @@ namespace TransIT.API.Controllers
     [AllowAnonymous]
     [EnableCors("CorsPolicy")]
     [Produces("application/json")]
-    [Route("api/v1/[controller]/[action]")]
+    [Route("api/v1/[controller]")]
     public class AuthenticationController : Controller
     {
         private readonly IAuthenticationService _authenticationService;
@@ -20,6 +20,7 @@ namespace TransIT.API.Controllers
             _authenticationService = authenticationService;
         
         [HttpPost]
+        [Route("signin")]
         public async Task<IActionResult> SignIn([FromBody] LoginDTO credentials)
         {
             var result = await _authenticationService.SignInAsync(credentials);
@@ -29,6 +30,7 @@ namespace TransIT.API.Controllers
         }
 
         [HttpPost]
+        [Route("refreshtoken")]
         public async Task<IActionResult> RefreshToken([FromBody] TokenDTO token)
         {
             var result = await _authenticationService.TokenAsync(token);
