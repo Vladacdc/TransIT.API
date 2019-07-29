@@ -9,16 +9,14 @@ This repository contains server-side application, client-side is stored [here](h
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 See deployment for notes on how to deploy the project on a live system.
 
-1) Clone repository;
-2) Checkout dev branch;
-3) Open Package Manager Console(ALT+T+N+O);
-4) Choose TransIT.DAL as default project
-<img src ="./images/PackageManagerConsole.jpg"/>
-5) Enter command "add-migration TransITDB";
-6) Choose TransIT profile
-<img src ="./images/TransITProfile.jpg"/>
-7) Start Project (F5);
-8) Do not close created chrome tab with swagger or console application until you want server to stop;
+1 Clone repository;
+2 Checkout dev branch;
+3 Open Package Manager Console(ALT+T+N+O);
+4 Choose TransIT.DAL as default project <img src ="./images/PackageManagerConsole.jpg"/>
+5 Enter command "add-migration TransITDB";
+6 Choose TransIT profile <img src ="./images/TransITProfile.jpg"/>
+7 Start Project (F5);
+8 Do not close created chrome tab with swagger or console application until you want server to stop;
 
 #### Possible Errors and fixing
 <details close>
