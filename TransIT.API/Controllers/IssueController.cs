@@ -36,7 +36,6 @@ namespace TransIT.API.Controllers
             _serviceFactory = serviceFactory;
             _filterService = filterService;
             _issueHub = issueHub;
-            //_mapper = mapper;
         }
 
         private async Task<IEnumerable<IssueDTO>> GetQueryiedForSpecificUser(
