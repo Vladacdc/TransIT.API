@@ -20,7 +20,7 @@ See deployment for notes on how to deploy the project on a live system.
 7) Start Project (F5);
 8) Do not close created chrome tab with swagger or console application until you want server stop;
 
-### Possible Errors and fixing
+#### Possible Errors and fixing
 <details close>
 <summary>Error description</summary>
 fixing
