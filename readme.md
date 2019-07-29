@@ -22,7 +22,7 @@ See deployment for notes on how to deploy the project on a live system.
 
 ## Running the tests
 
-To Run test choose Test->Run->All Tests or use Ctr + R, A Hotkey
+To Run test choose Test->Run->All Tests or use CTRL + R, A Hotkey
 [Screenshot](./images/RunTests.jpg)
 
 ## Development
