@@ -114,7 +114,7 @@ namespace TransIT.BLL.Services.ImplementedServices
         {
             return (ulong)await _unitOfWork.IssueRepository.GetQueryable()
                 .Where(issue => issue.CreatedById == userId)
-                .CountAsync();
+                .LongCountAsync();
         }
 
         public async Task<IEnumerable<IssueDTO>> FilterAsync(string userId)

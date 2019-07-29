@@ -17,11 +17,9 @@ namespace TransIT.API.Controllers
     [Produces("application/json")]
     [Route("api/v1/[controller]")]
     [Authorize(Roles = "ADMIN,ENGINEER,REGISTER,ANALYST")]
-    public class IssueLogController : Controller
+    public class IssueLogController : FilterController<IssueLogDTO>
     {
         private readonly IServiceFactory _serviceFactory;
-
-        private readonly IFilterService<IssueLogDTO> _filterService;
 
         private const string IssueLogByIssueUrl = "~/api/v1/" + nameof(Issue) + "/{issueId}/" + nameof(IssueLog);
 
@@ -30,10 +28,9 @@ namespace TransIT.API.Controllers
 
         public IssueLogController(
             IServiceFactory serviceFactory,
-            IFilterService<IssueLogDTO> filterService)
+            IFilterService<IssueLogDTO> filterService) : base(filterService)
         {
             _serviceFactory = serviceFactory;
-            _filterService = filterService;
         }
 
         [HttpGet(IssueLogByIssueUrl)]
@@ -45,7 +42,7 @@ namespace TransIT.API.Controllers
                 : (IActionResult) BadRequest();
         }
 
-        private async Task<IEnumerable<IssueLogDTO>> GetMappedEntitiesByIssueId(int issueId, DataTableRequestDTO model)
+        private async Task<IEnumerable<IssueLogDTO>> GetMappedEntitiesByIssueId(int issueId)
         {
             return await _serviceFactory.IssueLogService.GetRangeByIssueIdAsync(issueId);
         }
@@ -113,39 +110,12 @@ namespace TransIT.API.Controllers
             DataTableRequestDTO model)
         {
             var dtResponse = ComposeDataTableResponseDTO(
-                await GetMappedEntitiesByIssueId(issueId, model),
+                await GetMappedEntitiesByIssueId(issueId),
                 model,
                 _filterService.TotalRecordsAmount()
             );
             dtResponse.RecordsFiltered = (ulong) dtResponse.Data.LongLength;
             return Json(dtResponse);
-        }
-
-        protected async Task<IEnumerable<IssueLogDTO>> GetMappedEntitiesByModel(DataTableRequestDTO model)
-        {
-            return await _filterService.GetQueriedAsync(model);
-        }
-
-        protected virtual DataTableResponseDTO ComposeDataTableResponseDTO(
-            IEnumerable<IssueLogDTO> res,
-            DataTableRequestDTO model,
-            ulong totalAmount,
-            string errorMessage = "")
-        {
-            return new DataTableResponseDTO
-            {
-                Draw = (ulong) model.Draw,
-                Data = res.ToArray(),
-                RecordsTotal = totalAmount,
-                RecordsFiltered =
-                    model.Filters != null
-                    && model.Filters.Any()
-                    || model.Search != null
-                    && !string.IsNullOrEmpty(model.Search.Value)
-                        ? (ulong) res.Count()
-                        : totalAmount,
-                Error = errorMessage
-            };
         }
     }
 }

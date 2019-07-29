@@ -1,9 +1,9 @@
-using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TransIT.BLL.DTOs;
+using TransIT.BLL.Services;
 using TransIT.BLL.Services.Interfaces;
 
 namespace TransIT.API.Controllers
@@ -13,11 +13,12 @@ namespace TransIT.API.Controllers
     [Produces("application/json")]
     [Route("api/v1/[controller]")]
     [Authorize(Roles = "ADMIN,ENGINEER,REGISTER,ANALYST")]
-    public class SupplierController : Controller
+    public class SupplierController : FilterController<SupplierDTO>
     {
         private readonly ISupplierService _supplierService;
         
-        public SupplierController(ISupplierService supplierService)
+        public SupplierController(ISupplierService supplierService, IFilterService<SupplierDTO> filterService)
+            : base(filterService)
         {
             _supplierService = supplierService;
         }

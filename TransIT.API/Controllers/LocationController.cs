@@ -16,18 +16,15 @@ namespace TransIT.API.Controllers
     [Produces("application/json")]
     [Route("api/v1/[controller]")]
     [Authorize(Roles = "ADMIN,ENGINEER,ANALYST")]
-    public class LocationController : Controller
+    public class LocationController : FilterController<LocationDTO>
     {
         private readonly IServiceFactory _serviceFactory;
 
-        private readonly IFilterService<LocationDTO> _filterService;
-
         public LocationController(
             IServiceFactory serviceFactory,
-            IFilterService<LocationDTO> filterService)
+            IFilterService<LocationDTO> filterService) : base(filterService)
         {
             _serviceFactory = serviceFactory;
-            _filterService = filterService;
         }
 
         [HttpGet]
@@ -85,46 +82,6 @@ namespace TransIT.API.Controllers
         {
             await _serviceFactory.LocationService.DeleteAsync(id);
             return NoContent();
-        }
-
-        [DataTableFilterExceptionFilter]
-        [HttpPost("~/api/v1/datatable/[controller]")]
-        public virtual async Task<IActionResult> Filter(DataTableRequestDTO model)
-        {
-            return Json(
-                ComposeDataTableResponseDTO(
-                    await GetMappedEntitiesByModel(model),
-                    model,
-                    _filterService.TotalRecordsAmount()
-                )
-            );
-        }
-
-        protected async Task<IEnumerable<LocationDTO>> GetMappedEntitiesByModel(DataTableRequestDTO model)
-        {
-            return await _filterService.GetQueriedAsync(model);
-        }
-
-        protected virtual DataTableResponseDTO ComposeDataTableResponseDTO(
-            IEnumerable<LocationDTO> res,
-            DataTableRequestDTO model,
-            ulong totalAmount,
-            string errorMessage = "")
-        {
-            return new DataTableResponseDTO
-            {
-                Draw = (ulong) model.Draw,
-                Data = res.ToArray(),
-                RecordsTotal = totalAmount,
-                RecordsFiltered =
-                    model.Filters != null
-                    && model.Filters.Any()
-                    || model.Search != null
-                    && !string.IsNullOrEmpty(model.Search.Value)
-                        ? (ulong) res.Count()
-                        : totalAmount,
-                Error = errorMessage
-            };
         }
     }
 }

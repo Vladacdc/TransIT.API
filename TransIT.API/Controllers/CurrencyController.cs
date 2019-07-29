@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using TransIT.BLL.Services.Interfaces;
 using TransIT.BLL.DTOs;
 using Microsoft.AspNetCore.Cors;
+using TransIT.BLL.Services;
 
 namespace TransIT.API.Controllers
 {
@@ -12,11 +13,12 @@ namespace TransIT.API.Controllers
     [Produces("application/json")]
     [Route("api/v1/[controller]")]
     [Authorize(Roles = "ADMIN,ENGINEER,REGISTER,ANALYST")]
-    public class CurrencyController : Controller
+    public class CurrencyController : FilterController<CurrencyDTO>
     {
         private readonly ICurrencyService _currencyService;
 
-        public CurrencyController(ICurrencyService currencyService)
+        public CurrencyController(ICurrencyService currencyService, IFilterService<CurrencyDTO> filterService)
+            : base(filterService)
         {
             _currencyService = currencyService;
         }

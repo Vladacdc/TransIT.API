@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TransIT.BLL.DTOs;
+using TransIT.BLL.Services;
 using TransIT.BLL.Services.Interfaces;
 
 namespace TransIT.API.Controllers
@@ -12,11 +13,12 @@ namespace TransIT.API.Controllers
     [Produces("application/json")]
     [Route("api/v1/[controller]")]
     [Authorize(Roles = "ADMIN,ENGINEER,REGISTER")]
-    public class VehicleController : Controller
+    public class VehicleController : FilterController<VehicleDTO>
     {
         private readonly IVehicleService _vehicleService;
 
-        public VehicleController(IVehicleService vehicleService)
+        public VehicleController(IVehicleService vehicleService, IFilterService<VehicleDTO> filterService)
+            : base(filterService)
         {
             _vehicleService = vehicleService;
         }

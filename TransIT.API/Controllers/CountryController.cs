@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using TransIT.BLL.Services.Interfaces;
 using TransIT.BLL.DTOs;
 using Microsoft.AspNetCore.Cors;
+using TransIT.BLL.Services;
 
 namespace TransIT.API.Controllers
 {
@@ -12,11 +13,12 @@ namespace TransIT.API.Controllers
     [Produces("application/json")]
     [Route("api/v1/[controller]")]
     [Authorize(Roles = "ADMIN,ENGINEER,REGISTER,ANALYST")]
-    public class CountryController : Controller
+    public class CountryController : FilterController<CountryDTO>
     {
         private readonly ICountryService _countryService;
 
-        public CountryController(ICountryService countryService)
+        public CountryController(ICountryService countryService, IFilterService<CountryDTO> filterService)
+            : base (filterService) 
         {
             _countryService = countryService;
         }

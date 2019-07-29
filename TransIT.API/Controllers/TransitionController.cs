@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TransIT.BLL.Services.Interfaces;
 using Microsoft.AspNetCore.Cors;
+using TransIT.BLL.Services;
 
 namespace TransIT.API.Controllers
 {
@@ -13,10 +14,11 @@ namespace TransIT.API.Controllers
     [Produces("application/json")]
     [Route("api/v1/[controller]")]
     [Authorize(Roles = "ADMIN,ENGINEER,ANALYST")]
-    public class TransitionController : Controller
+    public class TransitionController : FilterController<TransitionDTO>
     {
         private readonly ITransitionService _transitionService;
-        public TransitionController(ITransitionService transitionService)
+        public TransitionController(ITransitionService transitionService, IFilterService<TransitionDTO> filterService)
+            : base(filterService)
         {
             _transitionService = transitionService;
         }

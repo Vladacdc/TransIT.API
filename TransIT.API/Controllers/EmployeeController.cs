@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using TransIT.BLL.Services.Interfaces;
 using TransIT.BLL.DTOs;
 using Microsoft.AspNetCore.Cors;
+using TransIT.BLL.Services;
 
 namespace TransIT.API.Controllers
 {
@@ -12,11 +13,12 @@ namespace TransIT.API.Controllers
     [Produces("application/json")]
     [Route("api/v1/[controller]")]
     [Authorize(Roles = "ADMIN,ENGINEER")]
-    public class EmployeeController : Controller
+    public class EmployeeController : FilterController<EmployeeDTO>
     {
         private readonly IEmployeeService _employeeService;
         
-        public EmployeeController(IEmployeeService employeeService)
+        public EmployeeController(IEmployeeService employeeService, IFilterService<EmployeeDTO> filterService)
+            : base(filterService)
         {
             _employeeService = employeeService;
         }

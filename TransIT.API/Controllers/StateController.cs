@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TransIT.BLL.DTOs;
+using TransIT.BLL.Services;
 using TransIT.BLL.Services.Interfaces;
 
 namespace TransIT.API.Controllers
@@ -13,11 +14,12 @@ namespace TransIT.API.Controllers
     [Produces("application/json")]
     [Route("api/v1/[controller]")]
     [Authorize(Roles = "ADMIN,WORKER,ENGINEER,REGISTER,ANALYST")]
-    public class StateController : Controller
+    public class StateController : FilterController<StateDTO>
     {
         private readonly IStateService _stateService;
         
-        public StateController(IStateService stateService)
+        public StateController(IStateService stateService, IFilterService<StateDTO> filterService)
+            : base(filterService)
         {
             _stateService = stateService;
         }

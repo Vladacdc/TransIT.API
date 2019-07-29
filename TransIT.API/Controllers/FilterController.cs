@@ -19,12 +19,10 @@ namespace TransIT.API.Controllers
     {
         protected const string DataTableTemplateUri = "~/api/v1/datatable/[controller]";
         protected readonly IFilterService<TEntityDTO> _filterService;
-        protected readonly IMapper _mapper;
 
-        protected FilterController(IFilterService<TEntityDTO> filterService, IMapper mapper)
+        protected FilterController(IFilterService<TEntityDTO> filterService)
         {
             _filterService = filterService;
-            _mapper = mapper;
         }
         
         [DataTableFilterExceptionFilter]
@@ -37,12 +35,12 @@ namespace TransIT.API.Controllers
                     _filterService.TotalRecordsAmount()
                     )
                 );
-        
-        protected async Task<IEnumerable<TEntityDTO>> GetMappedEntitiesByModel(DataTableRequestDTO model) =>
-            _mapper.Map<IEnumerable<TEntityDTO>>(
-                await _filterService.GetQueriedAsync(model)
-                );
 
+        protected async Task<IEnumerable<TEntityDTO>> GetMappedEntitiesByModel(DataTableRequestDTO model)
+        {
+            return await _filterService.GetQueriedAsync(model);
+         
+        }
         protected virtual DataTableResponseDTO ComposeDataTableResponseDTO(
             IEnumerable<TEntityDTO> res,
             DataTableRequestDTO model,

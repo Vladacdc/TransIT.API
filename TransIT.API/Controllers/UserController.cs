@@ -21,11 +21,12 @@ namespace TransIT.API.Controllers
     [Produces("application/json")]
     [Route("api/v1/[controller]")]
     [Authorize(Roles = "ADMIN,ENGINEER")]
-    public class UserController : Controller
+    public class UserController : FilterController<UserDTO>
     { 
         private readonly IUserService _userService;
 
-        public UserController(IUserService userService) 
+        public UserController(IUserService userService, IFilterService<UserDTO> filterService)
+            : base(filterService)
         {
             _userService = userService;
         }

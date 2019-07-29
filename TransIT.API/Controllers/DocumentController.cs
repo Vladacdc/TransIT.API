@@ -5,6 +5,7 @@ using TransIT.BLL.Services.Interfaces;
 using TransIT.BLL.DTOs;
 using TransIT.DAL.Models.Entities;
 using Microsoft.AspNetCore.Cors;
+using TransIT.BLL.Services;
 
 namespace TransIT.API.Controllers
 {
@@ -13,11 +14,12 @@ namespace TransIT.API.Controllers
     [Produces("application/json")]
     [Route("api/v1/[controller]")]
     [Authorize(Roles = "ADMIN,ENGINEER,ANALYST")]
-    public class DocumentController : Controller
+    public class DocumentController : FilterController<DocumentDTO>
     {
         private readonly IDocumentService _documentService;
 
-        public DocumentController(IDocumentService documentService)
+        public DocumentController(IDocumentService documentService, IFilterService<DocumentDTO> filterService)
+            : base(filterService)
         {
             _documentService = documentService;
         }

@@ -4,6 +4,7 @@ using TransIT.BLL.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
+using TransIT.BLL.Services;
 
 namespace TransIT.API.Controllers
 {
@@ -12,11 +13,11 @@ namespace TransIT.API.Controllers
     [Produces("application/json")]
     [Route("api/v1/[controller]")]
     [Authorize(Roles = "ENGINEER,REGISTER,ANALYST")]
-    public class BillController : Controller
+    public class BillController : FilterController<BillDTO>
     {
         private readonly IBillService _billService;
         
-        public BillController(IBillService billService)
+        public BillController(IBillService billService, IFilterService<BillDTO> filterService) : base (filterService)
         {
             _billService = billService;
         }

@@ -133,27 +133,25 @@ namespace TransIT.API.Extensions
             services.AddScoped<ICrudService<TransitionDTO>, TransitionService>();
             services.AddScoped<ICrudService<LocationDTO>, LocationService>();
 
-
-            // Need to rewrite Filter services to DTOs
-            services.AddScoped<IFilterService<ActionType>, FilterService<ActionType>>();
-            services.AddScoped<IFilterService<Vehicle>, FilterService<Vehicle>>();
-            services.AddScoped<IFilterService<VehicleType>, FilterService<VehicleType>>();
-            services.AddScoped<IFilterService<Malfunction>, FilterService<Malfunction>>();
-            services.AddScoped<IFilterService<MalfunctionGroup>, FilterService<MalfunctionGroup>>();
-            services.AddScoped<IFilterService<MalfunctionSubgroup>, FilterService<MalfunctionSubgroup>>();
-            services.AddScoped<IFilterService<Bill>, FilterService<Bill>>();
-            services.AddScoped<IFilterService<Document>, FilterService<Document>>();
-            services.AddScoped<IFilterService<Issue>, FilterService<Issue>>();
-            services.AddScoped<IFilterService<IssueLog>, FilterService<IssueLog>>();
-            services.AddScoped<IFilterService<Supplier>, FilterService<Supplier>>();
-            services.AddScoped<IFilterService<State>, FilterService<State>>();
-            services.AddScoped<IFilterService<Currency>, FilterService<Currency>>();
-            services.AddScoped<IFilterService<Country>, FilterService<Country>>();
-            services.AddScoped<IFilterService<Employee>, FilterService<Employee>>();
-            services.AddScoped<IFilterService<Post>, FilterService<Post>>();
-            services.AddScoped<IFilterService<Transition>, FilterService<Transition>>();
-            services.AddScoped<IFilterService<Location>, FilterService<Location>>();
-
+            services.AddScoped<IFilterService<ActionTypeDTO>, FilterService<ActionTypeDTO>>();
+            services.AddScoped<IFilterService<VehicleDTO>, FilterService<VehicleDTO>>();
+            services.AddScoped<IFilterService<VehicleTypeDTO>, FilterService<VehicleTypeDTO>>();
+            services.AddScoped<IFilterService<MalfunctionDTO>, FilterService<MalfunctionDTO>>();
+            services.AddScoped<IFilterService<MalfunctionGroupDTO>, FilterService<MalfunctionGroupDTO>>();
+            services.AddScoped<IFilterService<MalfunctionSubgroupDTO>, FilterService<MalfunctionSubgroupDTO>>();
+            services.AddScoped<IFilterService<BillDTO>, FilterService<BillDTO>>();
+            services.AddScoped<IFilterService<DocumentDTO>, FilterService<DocumentDTO>>();
+            services.AddScoped<IFilterService<IssueDTO>, FilterService<IssueDTO>>();
+            services.AddScoped<IFilterService<IssueLogDTO>, FilterService<IssueLogDTO>>();
+            services.AddScoped<IFilterService<SupplierDTO>, FilterService<SupplierDTO>>();
+            services.AddScoped<IFilterService<StateDTO>, FilterService<StateDTO>>();
+            services.AddScoped<IFilterService<CurrencyDTO>, FilterService<CurrencyDTO>>();
+            services.AddScoped<IFilterService<CountryDTO>, FilterService<CountryDTO>>();
+            services.AddScoped<IFilterService<EmployeeDTO>, FilterService<EmployeeDTO>>();
+            services.AddScoped<IFilterService<PostDTO>, FilterService<PostDTO>>();
+            services.AddScoped<IFilterService<TransitionDTO>, FilterService<TransitionDTO>>();
+            services.AddScoped<IFilterService<LocationDTO>, FilterService<LocationDTO>>();
+            services.AddScoped<IFilterService<UserDTO>, FilterService<UserDTO>>();
         }
 
         public static void ConfigureModelRepositories(this IServiceCollection services)
@@ -176,7 +174,7 @@ namespace TransIT.API.Extensions
             services.AddScoped<IQueryRepository<Post>, PostRepository>();
             services.AddScoped<IQueryRepository<Transition>, TransitionRepository>();
             services.AddScoped<IQueryRepository<Location>, LocationRepository>();
-
+            services.AddScoped<IQueryRepository<User>, UserQueryRepository>();
 
             services.AddScoped<IActionTypeRepository, ActionTypeRepository>();
             services.AddScoped<IBillRepository, BillRepository>();

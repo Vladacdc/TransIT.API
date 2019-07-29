@@ -20,21 +20,18 @@ namespace TransIT.API.Controllers
     [Produces("application/json")]
     [Route("api/v1/[controller]")]
     [Authorize(Roles = "ENGINEER,REGISTER,ANALYST")]
-    public class IssueController : Controller
+    public class IssueController : FilterController<IssueDTO>
     {
         private readonly IServiceFactory _serviceFactory;
-
-        private readonly IFilterService<IssueDTO> _filterService;
 
         private readonly IHubContext<IssueHub> _issueHub;
 
         public IssueController(
             IServiceFactory serviceFactory,
             IFilterService<IssueDTO> filterService,
-            IHubContext<IssueHub> issueHub)
+            IHubContext<IssueHub> issueHub) : base(filterService)
         {
             _serviceFactory = serviceFactory;
-            _filterService = filterService;
             _issueHub = issueHub;
         }
 
@@ -130,7 +127,7 @@ namespace TransIT.API.Controllers
 
         [DataTableFilterExceptionFilter]
         [HttpPost("~/api/v1/datatable/[controller]")]
-        public async Task<IActionResult> Filter(DataTableRequestDTO model)
+        public override async Task<IActionResult> Filter(DataTableRequestDTO model)
         {
             var isCustomer = User.FindFirst(ROLE.ROLE_SCHEMA)?.Value == ROLE.REGISTER;
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
@@ -142,33 +139,6 @@ namespace TransIT.API.Controllers
                     await GetTotalRecordsForSpecificUser(userId, isCustomer)
                 )
             );
-        }
-
-        protected async Task<IEnumerable<IssueDTO>> GetMappedEntitiesByModel(DataTableRequestDTO model)
-        {
-            return await _filterService.GetQueriedAsync(model);
-        }
-
-        protected virtual DataTableResponseDTO ComposeDataTableResponseDTO(
-            IEnumerable<IssueDTO> res,
-            DataTableRequestDTO model,
-            ulong totalAmount,
-            string errorMessage = "")
-        {
-            return new DataTableResponseDTO
-            {
-                Draw = (ulong)model.Draw,
-                Data = res.ToArray(),
-                RecordsTotal = totalAmount,
-                RecordsFiltered =
-                    model.Filters != null
-                    && model.Filters.Any()
-                    || model.Search != null
-                    && !string.IsNullOrEmpty(model.Search.Value)
-                        ? (ulong)res.Count()
-                        : totalAmount,
-                Error = errorMessage
-            };
         }
     }
 }
