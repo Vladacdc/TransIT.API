@@ -11,6 +11,7 @@ using TransIT.API.DependencyInjection;
 using TransIT.BLL.DTOs;
 using TransIT.BLL.Mappings;
 using TransIT.BLL.Services;
+using TransIT.BLL.Services.FilterServices;
 using TransIT.BLL.Services.ImplementedServices;
 using TransIT.BLL.Services.Interfaces;
 using TransIT.DAL.Models;
@@ -133,7 +134,7 @@ namespace TransIT.API.Extensions
             services.AddScoped<ICrudService<TransitionDTO>, TransitionService>();
             services.AddScoped<ICrudService<LocationDTO>, LocationService>();
 
-            services.AddScoped<IFilterService<ActionTypeDTO>, FilterService<ActionTypeDTO>>();
+            services.AddScoped<IFilterService<ActionTypeDTO>, ActionTypeFilterService>();
             services.AddScoped<IFilterService<VehicleDTO>, VehicleFilterService>();
             services.AddScoped<IFilterService<VehicleTypeDTO>, VehicleTypeFilterService>();
             services.AddScoped<IFilterService<MalfunctionDTO>, MalfunctionFilterService>();
@@ -147,7 +148,7 @@ namespace TransIT.API.Extensions
             services.AddScoped<IFilterService<StateDTO>, StateFilterService>();
             services.AddScoped<IFilterService<CurrencyDTO>, CurrencyFilterService>();
             services.AddScoped<IFilterService<CountryDTO>, CountryFilterService>();
-            services.AddScoped<IFilterService<EmployeeDTO>, EmployeeFilterServiceEmployee>();
+            services.AddScoped<IFilterService<EmployeeDTO>, EmployeeFilterService>();
             services.AddScoped<IFilterService<PostDTO>, PostFilterService>();
             services.AddScoped<IFilterService<TransitionDTO>, TransitionFilterService>();
             services.AddScoped<IFilterService<LocationDTO>, LocationFilterService>();

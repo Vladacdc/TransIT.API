@@ -32,7 +32,7 @@ namespace TransIT.API.Controllers
                 ComposeDataTableResponseDTO(
                     await GetMappedEntitiesByModel(model),
                     model,
-                    _filterService.TotalRecordsAmount()
+                    await _filterService.TotalRecordsAmountAsync()
                     )
                 );
 

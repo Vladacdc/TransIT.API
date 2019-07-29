@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ using TransIT.DAL.Repositories;
 
 namespace TransIT.BLL.Services
 {
-    public class FilterService<TEntity> : IFilterService<TEntity>
+    public class FilterService<TEntity> 
         where TEntity : class, IAuditableEntity, new()
     {        
         protected readonly IQueryRepository<TEntity> _queryRepository;
@@ -20,11 +21,13 @@ namespace TransIT.BLL.Services
         }
 
 
-        public ulong TotalRecordsAmount() =>
-            (ulong)_queryRepository
+        public async Task<ulong> TotalRecordsAmount()
+        {
+            return (ulong) (await _queryRepository
                 .GetQueryable()
-                .LongCount(); 
-              
+                .LongCountAsync());
+        }
+
         public virtual async Task<IEnumerable<TEntity>> GetQueriedAsync(DataTableRequestDTO dataFilter) => 
             await GetQueriedAsync(dataFilter, await DetermineDataSource(dataFilter));
 

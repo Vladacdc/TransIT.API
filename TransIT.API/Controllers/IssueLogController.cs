@@ -112,7 +112,7 @@ namespace TransIT.API.Controllers
             var dtResponse = ComposeDataTableResponseDTO(
                 await GetMappedEntitiesByIssueId(issueId),
                 model,
-                _filterService.TotalRecordsAmount()
+                await _filterService.TotalRecordsAmountAsync()
             );
             dtResponse.RecordsFiltered = (ulong) dtResponse.Data.LongLength;
             return Json(dtResponse);

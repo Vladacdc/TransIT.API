@@ -49,7 +49,7 @@ namespace TransIT.API.Controllers
         {
             return isCustomer
                 ? await _serviceFactory.IssueService.GetTotalRecordsForSpecificUser(userId)
-                : _filterService.TotalRecordsAmount();
+                : await  _filterService.TotalRecordsAmountAsync();
         }
 
         [HttpGet]
