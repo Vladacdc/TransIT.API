@@ -22,6 +22,18 @@ See deployment for notes on how to deploy the project on a live system.
 
 #### Possible Errors and fixing
 <details close>
+<summary>The current .NET SDK does not support targeting .NET Core 2.2. Either target .NET Core 2.1 or lower, or use a version of the .NET SDK that supports .NET Core 2.2.</summary>
+Install [.Net Core 2.2 SDK](https://dotnet.microsoft.com/download/dotnet-core/2.2);
+</details>
+<details close>
+<summary>Error description</summary>
+fixing
+</details>
+<details close>
+<summary>Error description</summary>
+fixing
+</details>
+<details close>
 <summary>Error description</summary>
 fixing
 </details>
