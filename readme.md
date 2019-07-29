@@ -13,11 +13,10 @@ See deployment for notes on how to deploy the project on a live system.
 2) Checkout dev branch;
 3) Open Package Manager Console(ALT+T+N+O);
 4) Choose TransIT.DAL as default project
-<img src ="./images/PackageManagerConsole.jpg">
-[Screenshot](./images/PackageManagerConsole.jpg);
+<img src ="./images/PackageManagerConsole.jpg"\>
 5) Enter command "add-migration TransITDB";
 6) Choose TransIT profile
-[Screenshot](./images/TransITProfile.jpg);
+<img src ="./images/TransITProfile.jpg"\>
 7) Start Project (F5);
 8) Do not close created chrome tab with swagger or console application until you want server to stop;
 
@@ -42,7 +41,7 @@ fixing
 ## Running the tests
 
 To Run the test choose Test->Run->All Tests or use CTRL + R, A Hotkey
-[Screenshot](./images/RunTests.jpg).
+<img src ="./images/RunTests.jpg"\>
 
 ## Development
 
