@@ -47,10 +47,7 @@ namespace TransIT.API.Controllers
 
         private async Task<IEnumerable<IssueLogDTO>> GetMappedEntitiesByIssueId(int issueId, DataTableRequestDTO model)
         {
-            return await _filterService.GetQueriedWithWhereAsync(
-                model,
-                x => x.Issue.Id == issueId
-            );
+            return await _serviceFactory.IssueLogService.GetRangeByIssueIdAsync(issueId);
         }
 
         [HttpGet]

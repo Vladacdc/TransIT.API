@@ -7,14 +7,10 @@ using TransIT.BLL.DTOs;
 
 namespace TransIT.BLL.Services
 {    
-    public interface IFilterService<TEntity> where TEntity : class, new()
+    public interface IFilterService<TDTO> where TDTO : class, new()
     {
         ulong TotalRecordsAmount();
-        ulong TotalRecordsAmount(Expression<Func<TEntity, bool>> expression);
-        Task<IEnumerable<TEntity>> GetQueriedAsync();
-        Task<IEnumerable<TEntity>> GetQueriedAsync(DataTableRequestDTO dataFilter);
-        Task<IEnumerable<TEntity>> GetQueriedWithWhereAsync(
-            DataTableRequestDTO dataFilter,
-            Expression<Func<TEntity, bool>> matchExpression);
+        Task<IEnumerable<TDTO>> GetQueriedAsync();
+        Task<IEnumerable<TDTO>> GetQueriedAsync(DataTableRequestDTO dataFilter);
     }
 }

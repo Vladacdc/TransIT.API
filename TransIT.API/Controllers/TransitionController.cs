@@ -67,7 +67,6 @@ namespace TransIT.API.Controllers
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Create([FromBody] TransitionDTO transitionDto)
         {
-            int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var createdDto = await _transitionService.CreateAsync(transitionDto);
             if (createdDto != null)
             {
@@ -83,7 +82,6 @@ namespace TransIT.API.Controllers
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Update(int id, [FromBody] TransitionDTO transitionDto)
         {
-            int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             transitionDto.Id = id;
 
             var result = await _transitionService.UpdateAsync(transitionDto);
