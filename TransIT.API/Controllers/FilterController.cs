@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using TransIT.API.EndpointFilters.OnException;
 using TransIT.BLL.DTOs;
 using TransIT.BLL.Services;
-using TransIT.DAL.Models.Entities.Abstractions;
 
 namespace TransIT.API.Controllers
 {
@@ -15,15 +14,14 @@ namespace TransIT.API.Controllers
     [EnableCors("CorsPolicy")]
     [Produces("application/json")]
     [Route("api/v1/[controller]")]
-    public abstract class FilterController<TEntity, TEntityDTO> : Controller
-        where TEntity : class, IAuditableEntity, new()
-        where TEntityDTO : class
+    public abstract class FilterController<TEntityDTO> : Controller
+        where TEntityDTO : class, new()
     {
         protected const string DataTableTemplateUri = "~/api/v1/datatable/[controller]";
-        protected readonly IFilterService<TEntity> _filterService;
+        protected readonly IFilterService<TEntityDTO> _filterService;
         protected readonly IMapper _mapper;
 
-        protected FilterController(IFilterService<TEntity> filterService, IMapper mapper)
+        protected FilterController(IFilterService<TEntityDTO> filterService, IMapper mapper)
         {
             _filterService = filterService;
             _mapper = mapper;

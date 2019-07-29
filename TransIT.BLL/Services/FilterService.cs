@@ -11,7 +11,7 @@ using TransIT.DAL.Repositories;
 namespace TransIT.BLL.Services
 {
     public class FilterService<TEntity> : IFilterService<TEntity>
-        where TEntity : class, IAuditableEntity, new()
+        where TEntity : class, new()
     {        
         protected readonly IQueryRepository<TEntity> _queryRepository;
         protected readonly ICrudService<TEntity> _crudService;

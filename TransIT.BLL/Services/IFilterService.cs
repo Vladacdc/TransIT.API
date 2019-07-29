@@ -2,7 +2,6 @@ using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using TransIT.DAL.Models.Entities.Abstractions;
 using TransIT.BLL.DTOs;
 
 namespace TransIT.BLL.Services
