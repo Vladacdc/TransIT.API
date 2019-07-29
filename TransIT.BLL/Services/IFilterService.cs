@@ -6,7 +6,7 @@ namespace TransIT.BLL.Services
 {    
     public interface IFilterService<TEntityDTO> where TEntityDTO : class, new()
     {
-        ulong TotalRecordsAmount();
+        Task<ulong> TotalRecordsAmountAsync();
         Task<IEnumerable<TEntityDTO>> GetQueriedAsync(DataTableRequestDTO dataFilter);
     }
 }
