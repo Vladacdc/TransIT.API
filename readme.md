@@ -20,6 +20,12 @@ See deployment for notes on how to deploy the project on a live system.
 7) Start Project (F5);
 8) Do not close created chrome tab with swagger or console application until you want server stop;
 
+### Possible Errors and fixing
+<details open>
+<summary>Error description</summary>
+fixing
+</details>
+
 ## Running the tests
 
 To Run test choose Test->Run->All Tests or use CTRL + R, A Hotkey
