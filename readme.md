@@ -18,7 +18,7 @@ See deployment for notes on how to deploy the project on a live system.
 6) Choose TransIT profile
 [Screenshot](./images/TransITProfile.jpg);
 7) Start Project (F5);
-8) Do not close created chrome tab with swagger or console application until you want server stop;
+8) Do not close created chrome tab with swagger or console application until you want server to stop;
 
 #### Possible Errors and fixing
 <details close>
@@ -28,13 +28,13 @@ fixing
 
 ## Running the tests
 
-To Run test choose Test->Run->All Tests or use CTRL + R, A Hotkey
-[Screenshot](./images/RunTests.jpg)
+To Run the test choose Test->Run->All Tests or use CTRL + R, A Hotkey
+[Screenshot](./images/RunTests.jpg).
 
 ## Development
 
 Development server is accessible via [https://localhost:8080](https://localhost:8080) or [http://localhost:5000](http://localhost:5000).
-Intial users that are seed after database is created are stored in [TransIT.API/appsettings.json](TransIT.API/appsettings.json);
+Intial users that are seeded after database is created can be found in [TransIT.API/appsettings.json](TransIT.API/appsettings.json);
 
 ## Deployment
 
