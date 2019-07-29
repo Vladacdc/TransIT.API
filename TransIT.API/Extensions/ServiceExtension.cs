@@ -134,24 +134,24 @@ namespace TransIT.API.Extensions
             services.AddScoped<ICrudService<LocationDTO>, LocationService>();
 
             services.AddScoped<IFilterService<ActionTypeDTO>, FilterService<ActionTypeDTO>>();
-            services.AddScoped<IFilterService<VehicleDTO>, FilterService<VehicleDTO>>();
-            services.AddScoped<IFilterService<VehicleTypeDTO>, FilterService<VehicleTypeDTO>>();
-            services.AddScoped<IFilterService<MalfunctionDTO>, FilterService<MalfunctionDTO>>();
-            services.AddScoped<IFilterService<MalfunctionGroupDTO>, FilterService<MalfunctionGroupDTO>>();
-            services.AddScoped<IFilterService<MalfunctionSubgroupDTO>, FilterService<MalfunctionSubgroupDTO>>();
-            services.AddScoped<IFilterService<BillDTO>, FilterService<BillDTO>>();
-            services.AddScoped<IFilterService<DocumentDTO>, FilterService<DocumentDTO>>();
-            services.AddScoped<IFilterService<IssueDTO>, FilterService<IssueDTO>>();
-            services.AddScoped<IFilterService<IssueLogDTO>, FilterService<IssueLogDTO>>();
-            services.AddScoped<IFilterService<SupplierDTO>, FilterService<SupplierDTO>>();
-            services.AddScoped<IFilterService<StateDTO>, FilterService<StateDTO>>();
-            services.AddScoped<IFilterService<CurrencyDTO>, FilterService<CurrencyDTO>>();
-            services.AddScoped<IFilterService<CountryDTO>, FilterService<CountryDTO>>();
-            services.AddScoped<IFilterService<EmployeeDTO>, FilterService<EmployeeDTO>>();
-            services.AddScoped<IFilterService<PostDTO>, FilterService<PostDTO>>();
-            services.AddScoped<IFilterService<TransitionDTO>, FilterService<TransitionDTO>>();
-            services.AddScoped<IFilterService<LocationDTO>, FilterService<LocationDTO>>();
-            services.AddScoped<IFilterService<UserDTO>, FilterService<UserDTO>>();
+            services.AddScoped<IFilterService<VehicleDTO>, VehicleFilterService>();
+            services.AddScoped<IFilterService<VehicleTypeDTO>, VehicleTypeFilterService>();
+            services.AddScoped<IFilterService<MalfunctionDTO>, MalfunctionFilterService>();
+            services.AddScoped<IFilterService<MalfunctionGroupDTO>, MalfunctionGroupFilterService>();
+            services.AddScoped<IFilterService<MalfunctionSubgroupDTO>, MalfunctionSubgroupFilterService>();
+            services.AddScoped<IFilterService<BillDTO>, BillFilterService>();
+            services.AddScoped<IFilterService<DocumentDTO>, DocumentFilterService>();
+            services.AddScoped<IFilterService<IssueDTO>, IssueFilterService>();
+            services.AddScoped<IFilterService<IssueLogDTO>, IssueLogFilterService>();
+            services.AddScoped<IFilterService<SupplierDTO>, SupplierFilterService>();
+            services.AddScoped<IFilterService<StateDTO>, StateFilterService>();
+            services.AddScoped<IFilterService<CurrencyDTO>, CurrencyFilterService>();
+            services.AddScoped<IFilterService<CountryDTO>, CountryFilterService>();
+            services.AddScoped<IFilterService<EmployeeDTO>, EmployeeFilterServiceEmployee>();
+            services.AddScoped<IFilterService<PostDTO>, PostFilterService>();
+            services.AddScoped<IFilterService<TransitionDTO>, TransitionFilterService>();
+            services.AddScoped<IFilterService<LocationDTO>, LocationFilterService>();
+            services.AddScoped<IFilterService<UserDTO>, UserFilterService>();
         }
 
         public static void ConfigureModelRepositories(this IServiceCollection services)

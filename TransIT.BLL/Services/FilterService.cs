@@ -23,7 +23,7 @@ namespace TransIT.BLL.Services
         public ulong TotalRecordsAmount() =>
             (ulong)_queryRepository
                 .GetQueryable()
-                .LongCount();
+                .LongCount(); 
               
         public virtual async Task<IEnumerable<TEntity>> GetQueriedAsync(DataTableRequestDTO dataFilter) => 
             await GetQueriedAsync(dataFilter, await DetermineDataSource(dataFilter));

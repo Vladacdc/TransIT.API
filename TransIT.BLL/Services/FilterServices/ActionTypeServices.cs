@@ -4,7 +4,7 @@ using System.Text;
 
 namespace TransIT.BLL.Services.FilterServices
 {
-    class ActionTypeServices
+    public class ActionTypeFilterServices : FilterServi
     {
     }
 }
