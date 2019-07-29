@@ -13,15 +13,15 @@ See deployment for notes on how to deploy the project on a live system.
 2) Checkout dev branch;
 3) Open Package Manager Console(ALT+T+N+O);
 4) Choose TransIT.DAL as default project
-[Screenshot](./images/PackageManagerConsole.jpg)
+[Screenshot](./images/PackageManagerConsole.jpg);
 5) Enter command "add-migration TransITDB";
 6) Choose TransIT profile
-[Screenshot](./images/TransITProfile.jpg)
+[Screenshot](./images/TransITProfile.jpg);
 7) Start Project (F5);
 8) Do not close created chrome tab with swagger or console application until you want server stop;
 
 ### Possible Errors and fixing
-<details open>
+<details close>
 <summary>Error description</summary>
 fixing
 </details>
