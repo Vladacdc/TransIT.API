@@ -41,7 +41,7 @@ namespace TransIT.API.Controllers
             bool isCustomer)
         {
             return isCustomer
-                    ? await _serviceFactory.IssueService.FilterAsync(userId)
+                    ? await _serviceFactory.IssueService.GetIssuesBySpecificUser(userId)
                     : await _filterService.GetQueriedAsync(model);
         }
 

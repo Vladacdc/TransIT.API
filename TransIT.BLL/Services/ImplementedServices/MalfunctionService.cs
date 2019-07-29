@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 using TransIT.BLL.DTOs;
 using TransIT.BLL.Services.Interfaces;
 using TransIT.DAL.Models.Entities;
@@ -38,19 +39,19 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<IEnumerable<MalfunctionDTO>> GetRangeAsync(uint offset, uint amount)
         {
-            return (await _unitOfWork.MalfunctionRepository.GetRangeAsync(offset, amount))
-                .AsQueryable().ProjectTo<MalfunctionDTO>();
+            var entities = await _unitOfWork.MalfunctionRepository.GetRangeAsync(offset, amount);
+            return _mapper.Map<IEnumerable<MalfunctionDTO>>(entities);
         }
 
         public async Task<IEnumerable<MalfunctionDTO>> SearchAsync(string search)
         {
-            var countries = await _unitOfWork.MalfunctionRepository.SearchExpressionAsync(
+            var malfunctions = await _unitOfWork.MalfunctionRepository.SearchExpressionAsync(
                 search
                     .Split(new[] { ' ', ',', '.' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => x.Trim().ToUpperInvariant())
                 );
 
-            return countries.ProjectTo<MalfunctionDTO>();
+            return _mapper.Map<IEnumerable<MalfunctionDTO>>(await malfunctions.ToListAsync());
         }
 
         public async Task<MalfunctionDTO> CreateAsync(MalfunctionDTO dto)

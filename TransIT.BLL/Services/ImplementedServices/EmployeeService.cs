@@ -1,5 +1,6 @@
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,19 +39,19 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<IEnumerable<EmployeeDTO>> GetRangeAsync(uint offset, uint amount)
         {
-            return (await _unitOfWork.EmployeeRepository.GetRangeAsync(offset, amount))
-                .AsQueryable().ProjectTo<EmployeeDTO>();
+            var entities = await _unitOfWork.EmployeeRepository.GetRangeAsync(offset, amount);
+            return _mapper.Map<IEnumerable<EmployeeDTO>>(entities);
         }
 
         public async Task<IEnumerable<EmployeeDTO>> SearchAsync(string search)
         {
-            var countries = await _unitOfWork.EmployeeRepository.SearchExpressionAsync(
+            var employees = await _unitOfWork.EmployeeRepository.SearchExpressionAsync(
                 search
                     .Split(new[] { ' ', ',', '.' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => x.Trim().ToUpperInvariant())
                 );
 
-            return countries.ProjectTo<EmployeeDTO>();
+            return _mapper.Map<IEnumerable<EmployeeDTO>>(await employees.ToListAsync());
         }
 
         public async Task<EmployeeDTO> CreateAsync(EmployeeDTO dto)

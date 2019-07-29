@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -31,8 +32,8 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<IEnumerable<TransitionDTO>> GetRangeAsync(uint offset, uint amount)
         {
-            return (await _unitOfWork.TransitionRepository.GetRangeAsync(offset, amount))
-                .AsQueryable().ProjectTo<TransitionDTO>();
+            var entities = await _unitOfWork.TransitionRepository.GetRangeAsync(offset, amount);
+            return _mapper.Map<IEnumerable<TransitionDTO>>(entities);
         }
 
         public async Task<IEnumerable<TransitionDTO>> SearchAsync(string search)
@@ -43,7 +44,7 @@ namespace TransIT.BLL.Services.ImplementedServices
                                 .Select(x => x.Trim().ToUpperInvariant())
                             );
 
-            return transitions.ProjectTo<TransitionDTO>();
+            return _mapper.Map<IEnumerable<TransitionDTO>>(await transitions.ToListAsync());
         }
 
         public async Task<TransitionDTO> CreateAsync(TransitionDTO dto)

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 using TransIT.BLL.DTOs;
 using TransIT.BLL.Services.Interfaces;
 using TransIT.DAL.Models.Entities;
@@ -38,8 +39,8 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<IEnumerable<MalfunctionGroupDTO>> GetRangeAsync(uint offset, uint amount)
         {
-            return (await _unitOfWork.MalfunctionGroupRepository.GetRangeAsync(offset, amount))
-                .AsQueryable().ProjectTo<MalfunctionGroupDTO>();
+            var entities = await _unitOfWork.MalfunctionGroupRepository.GetRangeAsync(offset, amount);
+            return _mapper.Map<IEnumerable<MalfunctionGroupDTO>>(entities);
         }
 
         public async Task<IEnumerable<MalfunctionGroupDTO>> SearchAsync(string search)
@@ -50,13 +51,13 @@ namespace TransIT.BLL.Services.ImplementedServices
                     .Select(x => x.Trim().ToUpperInvariant())
                 );
 
-            return malfunctionGroupsDTO.ProjectTo<MalfunctionGroupDTO>();
+            return _mapper.Map<IEnumerable<MalfunctionGroupDTO>>(await malfunctionGroupsDTO.ToListAsync());
         }
 
         public async Task<MalfunctionGroupDTO> CreateAsync(MalfunctionGroupDTO dto)
         {
             var model = _mapper.Map<MalfunctionGroup>(dto);
-            
+
             await _unitOfWork.MalfunctionGroupRepository.AddAsync(model);
             await _unitOfWork.SaveAsync();
             return await GetAsync(model.Id);
@@ -65,7 +66,7 @@ namespace TransIT.BLL.Services.ImplementedServices
         public async Task<MalfunctionGroupDTO> UpdateAsync(MalfunctionGroupDTO dto)
         {
             var model = _mapper.Map<MalfunctionGroup>(dto);
-            
+
             _unitOfWork.MalfunctionGroupRepository.Update(model);
             await _unitOfWork.SaveAsync();
             return dto;

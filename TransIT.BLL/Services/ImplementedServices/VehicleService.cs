@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,8 +39,8 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<IEnumerable<VehicleDTO>> GetRangeAsync(uint offset, uint amount)
         {
-            return (await _unitOfWork.VehicleRepository.GetRangeAsync(offset, amount))
-                .AsQueryable().ProjectTo<VehicleDTO>();
+            var entities = await _unitOfWork.VehicleRepository.GetRangeAsync(offset, amount);
+            return _mapper.Map<IEnumerable<VehicleDTO>>(entities);
         }
 
         public async Task<IEnumerable<VehicleDTO>> SearchAsync(string search)
@@ -50,7 +51,7 @@ namespace TransIT.BLL.Services.ImplementedServices
                 .Select(x => x.Trim().ToUpperInvariant())
             );
 
-            return vehicles.ProjectTo<VehicleDTO>();
+            return _mapper.Map<IEnumerable<VehicleDTO>>(await vehicles.ToListAsync());
         }
 
         public async Task<VehicleDTO> CreateAsync(VehicleDTO value)

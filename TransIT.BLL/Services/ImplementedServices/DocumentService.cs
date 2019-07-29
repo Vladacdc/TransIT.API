@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.EntityFrameworkCore;
 using TransIT.BLL.DTOs;
 using TransIT.BLL.Helpers.FileStorageLogger;
 using TransIT.BLL.Helpers.FileStorageLogger.FileStorageInterface;
@@ -41,8 +42,10 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<IEnumerable<DocumentDTO>> GetRangeByIssueLogIdAsync(int issueLogId)
         {
-            return (await _unitOfWork.DocumentRepository.GetAllAsync(i => i.IssueLogId == issueLogId)).AsQueryable()
-                .ProjectTo<DocumentDTO>();
+            var entities = await _unitOfWork.DocumentRepository.GetQueryable()
+                .Where(i => i.IssueLogId == issueLogId)
+                .ToListAsync();
+            return _mapper.Map<IEnumerable<DocumentDTO>>(entities);
         }
 
         public async Task<DocumentDTO> GetAsync(int id)
@@ -52,8 +55,8 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<IEnumerable<DocumentDTO>> GetRangeAsync(uint offset, uint amount)
         {
-            return (await _unitOfWork.DocumentRepository.GetRangeAsync(offset, amount))
-                .AsQueryable().ProjectTo<DocumentDTO>();
+            var entities = await _unitOfWork.DocumentRepository.GetRangeAsync(offset, amount);
+            return _mapper.Map<IEnumerable<DocumentDTO>>(entities);
         }
 
         public async Task<IEnumerable<DocumentDTO>> SearchAsync(string search)
@@ -64,7 +67,7 @@ namespace TransIT.BLL.Services.ImplementedServices
                     .Select(x => x.Trim().ToUpperInvariant())
                 );
 
-            return documents.ProjectTo<DocumentDTO>();
+            return _mapper.Map<IEnumerable<DocumentDTO>>(await documents.ToListAsync());
         }
 
         public async Task<DocumentDTO> GetDocumentWithData(int documentId)
@@ -74,7 +77,7 @@ namespace TransIT.BLL.Services.ImplementedServices
             result.Data = _storageLogger.Download(result.Path);
 
             var provider = new FileExtensionContentTypeProvider();
-            
+
             if (!provider.TryGetContentType(Path.GetFileName(result.Path), out string contentType))
             {
                 contentType = "application/octet-stream";

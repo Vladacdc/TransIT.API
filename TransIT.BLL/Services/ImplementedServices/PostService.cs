@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 using TransIT.BLL.DTOs;
 using TransIT.BLL.Services.Interfaces;
 using TransIT.DAL.Models.Entities;
@@ -38,19 +39,19 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<IEnumerable<PostDTO>> GetRangeAsync(uint offset, uint amount)
         {
-            return (await _unitOfWork.PostRepository.GetRangeAsync(offset, amount))
-                .AsQueryable().ProjectTo<PostDTO>();
+            var entities = await _unitOfWork.PostRepository.GetRangeAsync(offset, amount);
+            return _mapper.Map<IEnumerable<PostDTO>>(entities);
         }
 
         public async Task<IEnumerable<PostDTO>> SearchAsync(string search)
         {
-            var postsDTO = await _unitOfWork.PostRepository.SearchExpressionAsync(
+            var posts = await _unitOfWork.PostRepository.SearchExpressionAsync(
                 search
                     .Split(new[] { ' ', ',', '.' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => x.Trim().ToUpperInvariant())
                 );
 
-            return postsDTO.ProjectTo<PostDTO>();
+            return _mapper.Map<IEnumerable<PostDTO>>(await posts.ToListAsync());
         }
 
         public async Task<PostDTO> CreateAsync(PostDTO dto)

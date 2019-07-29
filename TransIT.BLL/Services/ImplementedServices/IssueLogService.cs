@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 using TransIT.BLL.DTOs;
 using TransIT.BLL.Services.Interfaces;
 using TransIT.DAL.Models.Entities;
@@ -39,25 +40,25 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<IEnumerable<IssueLogDTO>> GetRangeAsync(uint offset, uint amount)
         {
-            return (await _unitOfWork.IssueLogRepository.GetRangeAsync(offset, amount))
-                .AsQueryable().ProjectTo<IssueLogDTO>();
+            var entities = await _unitOfWork.IssueLogRepository.GetRangeAsync(offset, amount);
+            return _mapper.Map<IEnumerable<IssueLogDTO>>(entities);
         }
 
         public async Task<IEnumerable<IssueLogDTO>> GetRangeByIssueIdAsync(int issueId)
         {
-            return (await _unitOfWork.IssueLogRepository.GetAllAsync(i => i.IssueId == issueId)).AsQueryable()
-                .ProjectTo<IssueLogDTO>();
+            var entities = await _unitOfWork.IssueLogRepository.GetAllAsync(i => i.IssueId == issueId);
+            return _mapper.Map<IEnumerable<IssueLogDTO>>(entities);
         }
 
         public async Task<IEnumerable<IssueLogDTO>> SearchAsync(string search)
         {
             var issueLogs = await _unitOfWork.IssueLogRepository.SearchExpressionAsync(
                 search
-                    .Split(new[] {' ', ',', '.'}, StringSplitOptions.RemoveEmptyEntries)
+                    .Split(new[] { ' ', ',', '.' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => x.Trim().ToUpperInvariant())
             );
 
-            return issueLogs.ProjectTo<IssueLogDTO>();
+            return _mapper.Map<IEnumerable<IssueLogDTO>>(await issueLogs.ToListAsync());
         }
 
         public async Task<IssueLogDTO> UpdateAsync(IssueLogDTO dto)
@@ -73,7 +74,7 @@ namespace TransIT.BLL.Services.ImplementedServices
         {
             var oldIssueDTO = issueLogDTO.Issue;
             issueLogDTO.Issue =
-                _mapper.Map<IssueDTO>(await _unitOfWork.IssueRepository.GetByIdAsync((int) issueLogDTO.Issue.Id));
+                _mapper.Map<IssueDTO>(await _unitOfWork.IssueRepository.GetByIdAsync((int)issueLogDTO.Issue.Id));
             issueLogDTO.OldState.Id = issueLogDTO.Issue.State.Id;
             issueLogDTO.Issue.State.Id = issueLogDTO.NewState.Id;
             issueLogDTO.Issue.Deadline = oldIssueDTO.Deadline;
@@ -88,7 +89,7 @@ namespace TransIT.BLL.Services.ImplementedServices
                 throw new ConstraintException("Can not move to the state according to transition settings.");
 
             var model = _mapper.Map<IssueLog>(issueLogDTO);
-            
+
             await _unitOfWork.IssueLogRepository.AddAsync(model);
             await _unitOfWork.SaveAsync();
             return await GetAsync(model.Id);

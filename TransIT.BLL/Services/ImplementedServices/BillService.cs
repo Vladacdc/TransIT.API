@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 using TransIT.BLL.DTOs;
 using TransIT.BLL.Services.Interfaces;
 using TransIT.DAL.Models.Entities;
@@ -34,7 +35,8 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<IEnumerable<BillDTO>> GetRangeAsync(uint offset, uint amount)
         {
-            return (await _unitOfWork.BillRepository.GetRangeAsync(offset, amount)).AsQueryable().ProjectTo<BillDTO>();
+            var entities = await _unitOfWork.BillRepository.GetRangeAsync(offset, amount);
+            return _mapper.Map<IEnumerable<BillDTO>>(entities);
         }
 
         public async Task<IEnumerable<BillDTO>> SearchAsync(string search)
@@ -45,7 +47,7 @@ namespace TransIT.BLL.Services.ImplementedServices
                     .Select(x => x.Trim().ToUpperInvariant())
                 );
 
-            return bills.ProjectTo<BillDTO>();
+            return _mapper.Map<IEnumerable<BillDTO>>(await bills.ToListAsync());
         }
 
         public async Task<BillDTO> CreateAsync(BillDTO dto)

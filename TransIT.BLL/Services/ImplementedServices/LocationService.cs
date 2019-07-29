@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 using TransIT.BLL.DTOs;
 using TransIT.BLL.Services.Interfaces;
 using TransIT.DAL.Models.Entities;
@@ -30,8 +31,8 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<IEnumerable<LocationDTO>> GetRangeAsync(uint offset, uint amount)
         {
-            return (await _unitOfWork.LocationRepository.GetRangeAsync(offset, amount))
-                .AsQueryable().ProjectTo<LocationDTO>();
+            var entities = await _unitOfWork.LocationRepository.GetRangeAsync(offset, amount);
+            return _mapper.Map<IEnumerable<LocationDTO>>(entities);
         }
 
         public async Task<IEnumerable<LocationDTO>> SearchAsync(string search)
@@ -42,7 +43,7 @@ namespace TransIT.BLL.Services.ImplementedServices
                     .Select(x => x.Trim().ToUpperInvariant())
                 );
 
-            return locations.ProjectTo<LocationDTO>();
+            return _mapper.Map<IEnumerable<LocationDTO>>(await locations.ToListAsync());
         }
 
         public async Task<LocationDTO> CreateAsync(LocationDTO dto)

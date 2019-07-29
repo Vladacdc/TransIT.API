@@ -16,7 +16,7 @@ namespace TransIT.BLL.Services.Interfaces
         /// </summary>
         /// <param name="user">A id of user, which created given issues.</param>
         /// <returns>List of issues, which matched this query.</returns>
-        Task<IEnumerable<IssueDTO>> FilterAsync(string user);
+        Task<IEnumerable<IssueDTO>> GetIssuesBySpecificUser(string user);
 
         /// <summary>
         /// Gets issues specific for current customer

@@ -40,16 +40,19 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<IEnumerable<IssueDTO>> GetRangeAsync(uint offset, uint amount)
         {
-            return (await _unitOfWork.IssueRepository.GetRangeAsync(offset, amount))
-                .AsQueryable().ProjectTo<IssueDTO>();
+            var entities = await _unitOfWork.IssueRepository.GetRangeAsync(offset, amount);
+            return _mapper.Map<IEnumerable<IssueDTO>>(entities);
         }
 
         /// <see cref="IIssueService"/>
         public async Task<IEnumerable<IssueDTO>> GetRegisteredIssuesAsync(uint offset, uint amount, string userId)
         {
-            return (await _unitOfWork.IssueRepository.GetAllAsync(i => i.CreatedById == userId))
-                .AsQueryable().ProjectTo<IssueDTO>()
-                .Skip((int)offset).Take((int)amount);
+            var entities = await _unitOfWork.IssueRepository.GetQueryable()
+                  .Where(i => i.CreatedById == userId)
+                  .Skip((int)offset)
+                  .Take((int)amount)
+                  .ToListAsync();
+            return _mapper.Map<IEnumerable<IssueDTO>>(entities);
         }
 
         public async Task<IEnumerable<IssueDTO>> SearchAsync(string search)
@@ -60,7 +63,7 @@ namespace TransIT.BLL.Services.ImplementedServices
                     .Select(x => x.Trim().ToUpperInvariant())
                 );
 
-            return issues.ProjectTo<IssueDTO>();
+            return _mapper.Map<IEnumerable<IssueDTO>>(await issues.ToListAsync());
         }
 
         public async Task<IssueDTO> CreateAsync(IssueDTO dto)
@@ -117,7 +120,7 @@ namespace TransIT.BLL.Services.ImplementedServices
                 .LongCountAsync();
         }
 
-        public async Task<IEnumerable<IssueDTO>> FilterAsync(string userId)
+        public async Task<IEnumerable<IssueDTO>> GetIssuesBySpecificUser(string userId)
         {
             var entities = await _unitOfWork.IssueRepository.GetQueryable()
                 .Where(issue => issue.CreatedById == userId)
