@@ -44,15 +44,14 @@ namespace TransIT.API.Controllers
             bool isCustomer)
         {
             return isCustomer
-                    ? await _filterService.GetQueriedWithWhereAsync(model, x => x.CreatedById == userId)
-                    : await _filterService.GetQueriedAsync(model)
-                ;
+                    ? await _serviceFactory.IssueService.FilterAsync(userId)
+                    : await _filterService.GetQueriedAsync(model);
         }
 
-        private ulong GetTotalRecordsForSpecificUser(string userId, bool isCustomer)
+        private async Task<ulong> GetTotalRecordsForSpecificUser(string userId, bool isCustomer)
         {
             return isCustomer
-                ? _filterService.TotalRecordsAmount(x => x.CreatedById == userId)
+                ? await _serviceFactory.IssueService.GetTotalRecordsForSpecificUser(userId)
                 : _filterService.TotalRecordsAmount();
         }
 
@@ -77,7 +76,7 @@ namespace TransIT.API.Controllers
             var result = await _serviceFactory.IssueService.GetAsync(id);
             return result != null
                 ? Json(result)
-                : (IActionResult) BadRequest();
+                : (IActionResult)BadRequest();
         }
 
         [HttpGet("/search")]
@@ -86,7 +85,7 @@ namespace TransIT.API.Controllers
             var result = await _serviceFactory.IssueService.SearchAsync(search);
             return result != null
                 ? Json(result)
-                : (IActionResult) BadRequest();
+                : (IActionResult)BadRequest();
         }
 
         [HttpPost]
@@ -96,7 +95,7 @@ namespace TransIT.API.Controllers
             await _issueHub.Clients.Group(ROLE.ENGINEER).SendAsync("ReceiveIssues");
             return createdEntity != null
                 ? CreatedAtAction(nameof(Create), createdEntity)
-                : (IActionResult) BadRequest();
+                : (IActionResult)BadRequest();
         }
 
         [HttpPut("{id}")]
@@ -107,7 +106,7 @@ namespace TransIT.API.Controllers
             var result = await _serviceFactory.IssueService.UpdateAsync(obj);
             return result != null
                 ? NoContent()
-                : (IActionResult) BadRequest();
+                : (IActionResult)BadRequest();
         }
 
         [HttpDelete("{id}")]
@@ -140,7 +139,7 @@ namespace TransIT.API.Controllers
                 ComposeDataTableResponseDTO(
                     await GetQueryiedForSpecificUser(model, userId, isCustomer),
                     model,
-                    GetTotalRecordsForSpecificUser(userId, isCustomer)
+                    await GetTotalRecordsForSpecificUser(userId, isCustomer)
                 )
             );
         }
@@ -158,7 +157,7 @@ namespace TransIT.API.Controllers
         {
             return new DataTableResponseDTO
             {
-                Draw = (ulong) model.Draw,
+                Draw = (ulong)model.Draw,
                 Data = res.ToArray(),
                 RecordsTotal = totalAmount,
                 RecordsFiltered =
@@ -166,7 +165,7 @@ namespace TransIT.API.Controllers
                     && model.Filters.Any()
                     || model.Search != null
                     && !string.IsNullOrEmpty(model.Search.Value)
-                        ? (ulong) res.Count()
+                        ? (ulong)res.Count()
                         : totalAmount,
                 Error = errorMessage
             };

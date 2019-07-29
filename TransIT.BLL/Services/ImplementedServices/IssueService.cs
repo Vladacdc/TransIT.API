@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 using TransIT.BLL.DTOs;
 using TransIT.BLL.Helpers;
 using TransIT.BLL.Services.Interfaces;
@@ -107,6 +108,21 @@ namespace TransIT.BLL.Services.ImplementedServices
         {
             _unitOfWork.IssueRepository.Remove(id);
             await _unitOfWork.SaveAsync();
+        }
+
+        public async Task<ulong> GetTotalRecordsForSpecificUser(string userId)
+        {
+            return (ulong)await _unitOfWork.IssueRepository.GetQueryable()
+                .Where(issue => issue.CreatedById == userId)
+                .CountAsync();
+        }
+
+        public async Task<IEnumerable<IssueDTO>> FilterAsync(string userId)
+        {
+            var entities = await _unitOfWork.IssueRepository.GetQueryable()
+                .Where(issue => issue.CreatedById == userId)
+                .ToListAsync();
+            return _mapper.Map<IEnumerable<IssueDTO>>(entities);
         }
     }
 }
