@@ -9,21 +9,32 @@ This repository contains server-side application, client-side is stored [here](h
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 See deployment for notes on how to deploy the project on a live system.
 
-1) Clone repository
-2) Checkout dev branch
-3) Choose TransIT profile
+1) Clone repository;
+2) Checkout dev branch;
+3) Open Package Manager Console(ALT+T+N+O);
+4) Choose TransIT.DAL as default project
+[Screenshot](./images/PackageManagerConsole.jpg)
+5) Enter command "add-migration TransITDB";
+6) Choose TransIT profile
 [Screenshot](./images/TransITProfile.jpg)
+7) Start Project (F5);
 
 ## Running the tests
 
-Explain how to run the automated tests for this system
+To Run test choose Test->Run->All Tests or use Ctr + R, A Hotkey
+[Screenshot](./images/RunTests.jpg)
 
 ## Deployment
 
-Add additional notes about how to deploy this on a live system
+Choose TransIT.API project and click right mouse button, then choose publish.
 
 ## Built With
 
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
+* [AutoMapper](https://automapper.org/) - to map DTOs and Entities between BLL an DALl
+* [Microsoft.AspNetCore](https://asp.net/) - the highest layer is built on it, Asp provides routing and dependency injection;
+* [FluentValidation](https://fluentvalidation.net/) - for validation of entites values;
+* [Swashbuckle.AspNetCore](https://github.com/domaindrivendev/Swashbuckle.AspNetCore) - Swagger tooling for API's built with ASP.NET Core.
+Generate beautiful API documentation, including a UI to explore and test operations, directly from your routes, controllers and models;
+* [Microsoft.EntityFrameworkCore](https://docs.microsoft.com/en-us/ef/core/) - to work with database;
+In this project was used database first to code first approach;
+* [Microsoft.AspNet.Identity](https://docs.microsoft.com/en-us/aspnet/identity/overview/getting-started/introduction-to-aspnet-identity) - to control users and their roles;
