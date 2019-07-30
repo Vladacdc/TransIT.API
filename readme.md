@@ -21,7 +21,9 @@ What things you need to install the software and how to install them
 
 ### Installing
 
-1) Install Visual Studio IDE with ASP.NET
+1) Install Visual Studio IDE with ASP.NET, be sure to check out ASP.NET and web development
+[Screenshot](./images/PackageManagerConsole.jpg);
+2) Intsall .NetCore 2.2 SDK;
 
 ### Build project
 1) Clone repository;
