@@ -13,11 +13,9 @@ See deployment for notes on how to deploy the project on a live system.
 
 What things you need to install the software and how to install them
 
-```
 [Visual Studio IDE Community 2019](https://visualstudio.microsoft.com/) or similar
 
 [.Net Core 2.2 SDK](https://dotnet.microsoft.com/download/dotnet-core/2.2)
-```
 
 ### Installing
 
@@ -44,12 +42,12 @@ Install <a href="https://dotnet.microsoft.com/download/dotnet-core/2.2">.Net Cor
 </details>
 <details close>
 <summary>System.AggregateException at app.SeedEssentialAsync</summary>
-You didn't create any migration for db, repeat 4th and 5th step of Getting Started
+You didn't create any migration for db, repeat 4th and 5th step of Build project
 </details>
 <details close>
 <summary>System.AggregateException at any part of the program</summary>
 Probably, You made changes to entities that need recreation of database.
-To recreate database delete Migrations folder and database (CTRL+\, CTRL+S [Screenshot](./images/DeleteDB.jpg).)
+To recreate database delete Migrations folder and database (CTRL+\, CTRL+S <a href="./images/DeleteDB.jpg">Screenshot</a>.)
 Also this exception can occur if you violate database restrictions,
 make sure that you understand requirements right and are using UnitOfWork properly.
 </details>
