@@ -11,7 +11,7 @@ See deployment for notes on how to deploy the project on a live system.
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
+What things you need to install to run this project and how to install them
 
 - [Visual Studio IDE Community 2019](https://visualstudio.microsoft.com/) or similar
 - [.Net Core 2.2 SDK](https://dotnet.microsoft.com/download/dotnet-core/2.2)
