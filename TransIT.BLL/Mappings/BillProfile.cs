@@ -18,6 +18,6 @@ namespace TransIT.BLL.Mappings
                 .ForMember(b => b.IssueId, opt => opt.MapFrom(x => x.Issue.Id))
                 .ForMember(b => b.Issue, opt => opt.Ignore());
             CreateMap<Bill, BillDTO>();
-        }        
+        }
     }
 }

@@ -6,12 +6,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TransIT.API.EndpointFilters.OnException;
 using Microsoft.AspNetCore.SignalR;
-using TransIT.API.Extensions;
 using TransIT.API.Hubs;
 using TransIT.BLL.Services;
 using TransIT.BLL.Services.Interfaces;
 using TransIT.BLL.DTOs;
 using TransIT.DAL.Models.Entities;
+using TransIT.API.Extensions;
+
 
 namespace TransIT.API.Controllers
 {
@@ -20,7 +21,7 @@ namespace TransIT.API.Controllers
     {
         private readonly IIssueService _issueService;
         private readonly IHubContext<IssueHub> _issueHub;
-        
+
         public IssueController(
             IMapper mapper,
             IIssueService issueService,
@@ -36,7 +37,7 @@ namespace TransIT.API.Controllers
         [HttpPost(DataTableTemplateUri)]
         public override async Task<IActionResult> Filter(DataTableRequestDTO model)
         {
-            var isCustomer = User.FindFirst(ROLE.ROLE_SCHEMA)?.Value == ROLE.REGISTER;
+            var isCustomer = User.FindFirst(RoleNames.Schema)?.Value == RoleNames.Register;
             var userId = GetUserId();
 
             return Json(
@@ -47,7 +48,7 @@ namespace TransIT.API.Controllers
                     )
                 );
         }
-        
+
         private async Task<IEnumerable<IssueDTO>> GetQueryiedForSpecificUser(
             DataTableRequestDTO model,
             int userId,
@@ -68,12 +69,12 @@ namespace TransIT.API.Controllers
         [HttpGet]
         public override async Task<IActionResult> Get([FromQuery] uint offset = 0, uint amount = 1000)
         {
-            switch (User.FindFirst(ROLE.ROLE_SCHEMA)?.Value)
+            switch (User.FindFirst(RoleNames.Schema)?.Value)
             {
-                case ROLE.REGISTER:
+                case RoleNames.Register:
                     return Json(await GetForCustomer(offset, amount));
-                case ROLE.ENGINEER:                        
-                case ROLE.ANALYST:
+                case RoleNames.Engineer:
+                case RoleNames.Analyst:
                     return Json(await GetIssues(offset, amount));
                 default:
                     return BadRequest();
@@ -84,7 +85,7 @@ namespace TransIT.API.Controllers
         public override async Task<IActionResult> Create([FromBody] IssueDTO obj)
         {
             IActionResult result = await base.Create(obj);
-            await _issueHub.Clients.Group(ROLE.ENGINEER).SendAsync("ReceiveIssues");
+            await _issueHub.Clients.Group(RoleNames.Engineer).SendAsync("ReceiveIssues");
             return result;
         }
 
