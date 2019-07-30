@@ -1,14 +1,13 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TransIT.API.EndpointFilters.OnException;
-using TransIT.BLL.Services;
 using TransIT.BLL.DTOs;
 using TransIT.BLL.Factory;
+using TransIT.BLL.Services;
 using TransIT.DAL.Models.Entities;
-using Microsoft.AspNetCore.Cors;
 
 namespace TransIT.API.Controllers
 {
@@ -28,7 +27,8 @@ namespace TransIT.API.Controllers
 
         public IssueLogController(
             IServiceFactory serviceFactory,
-            IFilterService<IssueLogDTO> filterService) : base(filterService)
+            IFilterService<IssueLogDTO> filterService)
+            : base(filterService)
         {
             _serviceFactory = serviceFactory;
         }
@@ -39,7 +39,7 @@ namespace TransIT.API.Controllers
             var result = await _serviceFactory.IssueLogService.GetRangeByIssueIdAsync(issueId);
             return result != null
                 ? Json(result)
-                : (IActionResult) BadRequest();
+                : (IActionResult)BadRequest();
         }
 
         private async Task<IEnumerable<IssueLogDTO>> GetMappedEntitiesByIssueId(int issueId)
@@ -53,7 +53,7 @@ namespace TransIT.API.Controllers
             var result = await _serviceFactory.IssueLogService.GetRangeAsync(offset, amount);
             return result != null
                 ? Json(result)
-                : (IActionResult) BadRequest();
+                : (IActionResult)BadRequest();
         }
 
         [HttpGet("{id}")]
@@ -62,7 +62,7 @@ namespace TransIT.API.Controllers
             var result = await _serviceFactory.IssueLogService.GetAsync(id);
             return result != null
                 ? Json(result)
-                : (IActionResult) BadRequest();
+                : (IActionResult)BadRequest();
         }
 
         [HttpGet("/search")]
@@ -71,7 +71,7 @@ namespace TransIT.API.Controllers
             var result = await _serviceFactory.IssueLogService.SearchAsync(search);
             return result != null
                 ? Json(result)
-                : (IActionResult) BadRequest();
+                : (IActionResult)BadRequest();
         }
 
         [HttpPost]
@@ -80,7 +80,7 @@ namespace TransIT.API.Controllers
             var result = await _serviceFactory.IssueLogService.CreateAsync(obj);
             return result != null
                 ? CreatedAtAction(nameof(Create), result)
-                : (IActionResult) BadRequest();
+                : (IActionResult)BadRequest();
         }
 
         [HttpPut("{id}")]
@@ -92,7 +92,7 @@ namespace TransIT.API.Controllers
             var result = await _serviceFactory.IssueLogService.UpdateAsync(obj);
             return result != null
                 ? NoContent()
-                : (IActionResult) BadRequest();
+                : (IActionResult)BadRequest();
         }
 
         [HttpDelete("{id}")]
@@ -112,9 +112,8 @@ namespace TransIT.API.Controllers
             var dtResponse = ComposeDataTableResponseDTO(
                 await GetMappedEntitiesByIssueId(issueId),
                 model,
-                await _filterService.TotalRecordsAmountAsync()
-            );
-            dtResponse.RecordsFiltered = (ulong) dtResponse.Data.LongLength;
+                await _filterService.TotalRecordsAmountAsync());
+            dtResponse.RecordsFiltered = (ulong)dtResponse.Data.LongLength;
             return Json(dtResponse);
         }
     }

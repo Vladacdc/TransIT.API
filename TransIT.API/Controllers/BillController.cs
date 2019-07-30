@@ -1,10 +1,10 @@
-using Microsoft.AspNetCore.Authorization;
-using TransIT.BLL.Services.Interfaces;
-using TransIT.BLL.DTOs;
-using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
+using TransIT.BLL.DTOs;
 using TransIT.BLL.Services;
+using TransIT.BLL.Services.Interfaces;
 
 namespace TransIT.API.Controllers
 {
@@ -16,8 +16,9 @@ namespace TransIT.API.Controllers
     public class BillController : FilterController<BillDTO>
     {
         private readonly IBillService _billService;
-        
-        public BillController(IBillService billService, IFilterService<BillDTO> filterService) : base (filterService)
+
+        public BillController(IBillService billService, IFilterService<BillDTO> filterService)
+            : base(filterService)
         {
             _billService = billService;
         }
@@ -30,10 +31,8 @@ namespace TransIT.API.Controllers
             {
                 return Json(result);
             }
-            else
-            {
-                return BadRequest();
-            }
+
+            return BadRequest();
         }
 
         [HttpGet("{id}")]
@@ -44,10 +43,8 @@ namespace TransIT.API.Controllers
             {
                 return Json(result);
             }
-            else
-            {
-                return BadRequest();
-            }
+
+            return BadRequest();
         }
 
         [HttpGet("/search")]
@@ -58,10 +55,8 @@ namespace TransIT.API.Controllers
             {
                 return Json(result);
             }
-            else
-            {
-                return BadRequest();
-            }
+
+            return BadRequest();
         }
 
         [HttpPost]
@@ -73,10 +68,8 @@ namespace TransIT.API.Controllers
             {
                 return CreatedAtAction(nameof(Create), createdDTO);
             }
-            else
-            {
-                return BadRequest();
-            }
+
+            return BadRequest();
         }
 
         [HttpPut("{id}")]
@@ -90,10 +83,8 @@ namespace TransIT.API.Controllers
             {
                 return NoContent();
             }
-            else
-            {
-                return BadRequest();
-            }
+
+            return BadRequest();
         }
 
         [HttpDelete("{id}")]
@@ -102,6 +93,5 @@ namespace TransIT.API.Controllers
             await _billService.DeleteAsync(id);
             return NoContent();
         }
-
     }
 }

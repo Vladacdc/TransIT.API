@@ -1,17 +1,16 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using TransIT.API.EndpointFilters.OnException;
 using Microsoft.AspNetCore.SignalR;
+using TransIT.API.EndpointFilters.OnException;
 using TransIT.API.Extensions;
 using TransIT.API.Hubs;
-using TransIT.BLL.Services;
 using TransIT.BLL.DTOs;
 using TransIT.BLL.Factory;
-using Microsoft.AspNetCore.Cors;
+using TransIT.BLL.Services;
 
 namespace TransIT.API.Controllers
 {
@@ -29,7 +28,8 @@ namespace TransIT.API.Controllers
         public IssueController(
             IServiceFactory serviceFactory,
             IFilterService<IssueDTO> filterService,
-            IHubContext<IssueHub> issueHub) : base(filterService)
+            IHubContext<IssueHub> issueHub)
+            : base(filterService)
         {
             _serviceFactory = serviceFactory;
             _issueHub = issueHub;
@@ -49,7 +49,7 @@ namespace TransIT.API.Controllers
         {
             return isCustomer
                 ? await _serviceFactory.IssueService.GetTotalRecordsForSpecificUser(userId)
-                : await  _filterService.TotalRecordsAmountAsync();
+                : await _filterService.TotalRecordsAmountAsync();
         }
 
         [HttpGet]
@@ -136,9 +136,7 @@ namespace TransIT.API.Controllers
                 ComposeDataTableResponseDTO(
                     await GetQueryiedForSpecificUser(model, userId, isCustomer),
                     model,
-                    await GetTotalRecordsForSpecificUser(userId, isCustomer)
-                )
-            );
+                    await GetTotalRecordsForSpecificUser(userId, isCustomer)));
         }
     }
 }

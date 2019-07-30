@@ -1,13 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using TransIT.API.EndpointFilters.OnException;
-using TransIT.BLL.Services;
 using TransIT.BLL.DTOs;
 using TransIT.BLL.Factory;
-using Microsoft.AspNetCore.Cors;
+using TransIT.BLL.Services;
 
 namespace TransIT.API.Controllers
 {
@@ -22,7 +19,8 @@ namespace TransIT.API.Controllers
 
         public MalfunctionGroupController(
             IServiceFactory serviceFactory,
-            IFilterService<MalfunctionGroupDTO> filterService) : base(filterService)
+            IFilterService<MalfunctionGroupDTO> filterService)
+            : base(filterService)
         {
             _serviceFactory = serviceFactory;
         }

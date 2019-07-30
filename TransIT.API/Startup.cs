@@ -1,19 +1,15 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using TransIT.API.Extensions;
-using FluentValidation.AspNetCore;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using TransIT.API.EndpointFilters.OnActionExecuting;
 using TransIT.API.EndpointFilters.OnException;
-using TransIT.DAL.Models;
+using TransIT.API.Extensions;
 using TransIT.API.Hubs;
-using TransIT.BLL.Mappings;
-using TransIT.DAL.Models.Entities;
-using System;
 using TransIT.BLL.Factory;
 
 namespace TransIT.API
@@ -52,7 +48,7 @@ namespace TransIT.API
                     options.Filters.Add(typeof(ValidateModelStateAttribute));
                     options.Filters.Add(typeof(ApiExceptionFilterAttribute));
                 })
-                .AddJsonOptions(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore)
+                .AddJsonOptions(x => x.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore)
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>());
         }
@@ -68,7 +64,7 @@ namespace TransIT.API
             {
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
-            } 
+            }
 
             app.UseHttpsRedirection();
             app.UseAuthentication();
@@ -79,7 +75,7 @@ namespace TransIT.API
 
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "TransIT API");                
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "TransIT API");
             });
 
             app.UseSignalR(routes =>
@@ -88,7 +84,6 @@ namespace TransIT.API
             });
 
             app.Seed(serviceProvider, Configuration, Environment);
-
         }
     }
 }

@@ -1,18 +1,12 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Security.Claims;
 using System.Threading.Tasks;
-using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TransIT.API.Extensions;
+using TransIT.BLL.DTOs;
 using TransIT.BLL.Services;
 using TransIT.BLL.Services.Interfaces;
-using TransIT.BLL.DTOs;
-using Microsoft.AspNetCore.Cors;
 
 namespace TransIT.API.Controllers
 {
@@ -22,7 +16,7 @@ namespace TransIT.API.Controllers
     [Route("api/v1/[controller]")]
     [Authorize(Roles = "ADMIN,ENGINEER")]
     public class UserController : FilterController<UserDTO>
-    { 
+    {
         private readonly IUserService _userService;
 
         public UserController(IUserService userService, IFilterService<UserDTO> filterService)
@@ -30,7 +24,7 @@ namespace TransIT.API.Controllers
         {
             _userService = userService;
         }
-        
+
         [HttpPut("{id}")]
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Update(string id, [FromBody] UserDTO obj)
@@ -48,12 +42,12 @@ namespace TransIT.API.Controllers
         {
             UserDTO user = await _userService.GetAsync(id);
             var result = await _userService.UpdatePasswordAsync(user, changePassword.OldPassword, changePassword.Password);
-           
-            return result != null 
+
+            return result != null
                 ? NoContent()
-                : (IActionResult) BadRequest();
+                : (IActionResult)BadRequest();
         }
-        
+
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] uint offset = 0, uint amount = 1000)
         {
@@ -69,7 +63,7 @@ namespace TransIT.API.Controllers
                 default:
                     return StatusCode(StatusCodes.Status500InternalServerError);
             }
-        } 
+        }
 
         [HttpPost]
         [Authorize(Roles = "ADMIN")]

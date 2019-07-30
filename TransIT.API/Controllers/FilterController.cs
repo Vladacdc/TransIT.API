@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TransIT.API.EndpointFilters.OnException;
@@ -24,7 +23,7 @@ namespace TransIT.API.Controllers
         {
             _filterService = filterService;
         }
-        
+
         [DataTableFilterExceptionFilter]
         [HttpPost(DataTableTemplateUri)]
         public virtual async Task<IActionResult> Filter(DataTableRequestDTO model) =>
@@ -32,23 +31,21 @@ namespace TransIT.API.Controllers
                 ComposeDataTableResponseDTO(
                     await GetMappedEntitiesByModel(model),
                     model,
-                    await _filterService.TotalRecordsAmountAsync()
-                    )
-                );
+                    await _filterService.TotalRecordsAmountAsync()));
 
         protected async Task<IEnumerable<TEntityDTO>> GetMappedEntitiesByModel(DataTableRequestDTO model)
         {
             return await _filterService.GetQueriedAsync(model);
-         
         }
+
         protected virtual DataTableResponseDTO ComposeDataTableResponseDTO(
             IEnumerable<TEntityDTO> res,
             DataTableRequestDTO model,
-            ulong totalAmount,   
+            ulong totalAmount,
             string errorMessage = "") =>
             new DataTableResponseDTO
             {
-                Draw = (ulong) model.Draw,
+                Draw = (ulong)model.Draw,
                 Data = res.ToArray(),
                 RecordsTotal = totalAmount,
                 RecordsFiltered =
@@ -56,9 +53,9 @@ namespace TransIT.API.Controllers
                     && model.Filters.Any()
                     || model.Search != null
                     && !string.IsNullOrEmpty(model.Search.Value)
-                        ? (ulong) res.Count()
+                        ? (ulong)res.Count()
                         : totalAmount,
-                Error = errorMessage
+                Error = errorMessage,
             };
     }
 }

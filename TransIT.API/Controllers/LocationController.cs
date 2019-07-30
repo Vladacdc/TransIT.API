@@ -1,13 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using TransIT.API.EndpointFilters.OnException;
-using TransIT.BLL.Services;
 using TransIT.BLL.DTOs;
 using TransIT.BLL.Factory;
-using Microsoft.AspNetCore.Cors;
+using TransIT.BLL.Services;
 
 namespace TransIT.API.Controllers
 {
@@ -22,7 +19,8 @@ namespace TransIT.API.Controllers
 
         public LocationController(
             IServiceFactory serviceFactory,
-            IFilterService<LocationDTO> filterService) : base(filterService)
+            IFilterService<LocationDTO> filterService)
+            : base(filterService)
         {
             _serviceFactory = serviceFactory;
         }
@@ -33,7 +31,7 @@ namespace TransIT.API.Controllers
             var result = await _serviceFactory.LocationService.GetRangeAsync(offset, amount);
             return result != null
                 ? Json(result)
-                : (IActionResult) BadRequest();
+                : (IActionResult)BadRequest();
         }
 
         [HttpGet("{id}")]
@@ -42,7 +40,7 @@ namespace TransIT.API.Controllers
             var result = await _serviceFactory.LocationService.GetAsync(id);
             return result != null
                 ? Json(result)
-                : (IActionResult) BadRequest();
+                : (IActionResult)BadRequest();
         }
 
         [HttpGet("/search")]
@@ -51,7 +49,7 @@ namespace TransIT.API.Controllers
             var result = await _serviceFactory.LocationService.SearchAsync(search);
             return result != null
                 ? Json(result)
-                : (IActionResult) BadRequest();
+                : (IActionResult)BadRequest();
         }
 
         [HttpPost]
@@ -61,7 +59,7 @@ namespace TransIT.API.Controllers
             var createdEntity = await _serviceFactory.LocationService.CreateAsync(obj);
             return createdEntity != null
                 ? CreatedAtAction(nameof(Create), createdEntity)
-                : (IActionResult) BadRequest();
+                : (IActionResult)BadRequest();
         }
 
         [HttpPut("{id}")]
@@ -73,7 +71,7 @@ namespace TransIT.API.Controllers
             var result = await _serviceFactory.LocationService.UpdateAsync(obj);
             return result != null
                 ? NoContent()
-                : (IActionResult) BadRequest();
+                : (IActionResult)BadRequest();
         }
 
         [HttpDelete("{id}")]

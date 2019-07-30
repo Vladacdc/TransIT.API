@@ -8,7 +8,7 @@ using TransIT.BLL.Services.Interfaces;
 
 namespace TransIT.API.Controllers
 {
-    [ApiController] 
+    [ApiController]
     [EnableCors("CorsPolicy")]
     [Produces("application/json")]
     [Route("api/v1/[controller]")]
@@ -16,7 +16,7 @@ namespace TransIT.API.Controllers
     public class SupplierController : FilterController<SupplierDTO>
     {
         private readonly ISupplierService _supplierService;
-        
+
         public SupplierController(ISupplierService supplierService, IFilterService<SupplierDTO> filterService)
             : base(filterService)
         {
@@ -31,10 +31,8 @@ namespace TransIT.API.Controllers
             {
                 return Json(result);
             }
-            else
-            {
-                return BadRequest();
-            }
+
+            return BadRequest();
         }
 
         [HttpGet("{id}")]
@@ -45,10 +43,8 @@ namespace TransIT.API.Controllers
             {
                 return Json(result);
             }
-            else
-            {
-                return BadRequest();
-            }
+
+            return BadRequest();
         }
 
         [HttpGet("/search")]
@@ -59,10 +55,8 @@ namespace TransIT.API.Controllers
             {
                 return Json(result);
             }
-            else
-            {
-                return BadRequest();
-            }
+
+            return BadRequest();
         }
 
         [HttpPost]
@@ -74,10 +68,8 @@ namespace TransIT.API.Controllers
             {
                 return CreatedAtAction(nameof(Create), createdDto);
             }
-            else
-            {
-                return BadRequest();
-            }
+
+            return BadRequest();
         }
 
         [HttpPut("{id}")]
@@ -92,10 +84,8 @@ namespace TransIT.API.Controllers
             {
                 return NoContent();
             }
-            else
-            {
-                return BadRequest();
-            }
+
+            return BadRequest();
         }
 
         [HttpDelete("{id}")]
