@@ -32,7 +32,7 @@ What things you need to install to run this project and how to install them
 6) Choose TransIT profile
 [Screenshot](./images/TransITProfile.jpg);
 7) Start Project (F5);
-8) Do not close created chrome tab with swagger or console application until you want server to stop;
+8) Do not close created web browser tab with swagger or console application until you want server to stop;
 
 #### Possible Errors and how to fix them
 <details close>
