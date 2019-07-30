@@ -1,7 +1,7 @@
 # TransITAPI
 [![Build status](https://ci.appveyor.com/api/projects/status/ijoktib4wnjmm9no?svg=true)](https://ci.appveyor.com/project/Vladacdc/transit-api)
 
-This project was built on .NetCore 2.2 using AspNetCore, EntityFrameworkCore, AutoMapper.
+This project was built with .NetCore 2.2 using AspNetCore, EntityFrameworkCore, AutoMapper.
 This repository contains server-side application, client-side is stored [here](https://github.com/Vladacdc/TransIT.Client). 
 
 ## Getting Started
