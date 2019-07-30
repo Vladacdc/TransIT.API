@@ -13,9 +13,8 @@ See deployment for notes on how to deploy the project on a live system.
 
 What things you need to install the software and how to install them
 
-[Visual Studio IDE Community 2019](https://visualstudio.microsoft.com/) or similar
-
-[.Net Core 2.2 SDK](https://dotnet.microsoft.com/download/dotnet-core/2.2)
+-[Visual Studio IDE Community 2019](https://visualstudio.microsoft.com/) or similar
+-[.Net Core 2.2 SDK](https://dotnet.microsoft.com/download/dotnet-core/2.2)
 
 ### Installing
 
@@ -23,7 +22,7 @@ What things you need to install the software and how to install them
 [Screenshot](./images/PackageManagerConsole.jpg);
 2) Intsall .NetCore 2.2 SDK;
 
-### Build project
+### Running API
 1) Clone repository;
 2) Checkout dev branch;
 3) Open Package Manager Console(ALT+T+N+O);
@@ -35,14 +34,14 @@ What things you need to install the software and how to install them
 7) Start Project (F5);
 8) Do not close created chrome tab with swagger or console application until you want server to stop;
 
-#### Possible Errors and fixing
+#### Possible Errors and how to fix them
 <details close>
 <summary>The current .NET SDK does not support targeting .NET Core 2.2. Either target .NET Core 2.1 or lower, or use a version of the .NET SDK that supports .NET Core 2.2.</summary>
 Install <a href="https://dotnet.microsoft.com/download/dotnet-core/2.2">.Net Core 2.2 SDK</a>;
 </details>
 <details close>
 <summary>System.AggregateException at app.SeedEssentialAsync</summary>
-You didn't create any migration for db, repeat 4th and 5th step of Build project
+You didn't create any migration for db, repeat 3-5 steps of Running API
 </details>
 <details close>
 <summary>System.AggregateException at any part of the program</summary>
