@@ -1,9 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using TransIT.DAL.Models;
 using TransIT.DAL.Models.Entities;
 
@@ -16,7 +14,7 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
 
         public UserQueryRepository(TransITDBContext transITDBContext)
         {
-            this._transITDBContext = transITDBContext;
+            _transITDBContext = transITDBContext;
             _users = _transITDBContext.Set<User>()
                 .Include(u => u.UserRoles)
                 .ThenInclude(ur => ur.Role)

@@ -1,6 +1,6 @@
-﻿using TransIT.BLL.DTOs;
+﻿using AutoMapper;
+using TransIT.BLL.DTOs;
 using TransIT.DAL.Models.Entities;
-using AutoMapper;
 
 namespace TransIT.BLL.Mappings
 {

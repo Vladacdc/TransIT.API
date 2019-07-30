@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TransIT.BLL.DTOs
+﻿namespace TransIT.BLL.DTOs
 {
     public class TokenDTO
     {

@@ -1,12 +1,9 @@
-
-
 using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 using TransIT.API.DependencyInjection;
 using TransIT.BLL.DTOs;
 using TransIT.BLL.Mappings;
@@ -37,6 +34,7 @@ namespace TransIT.API.Extensions
                 {
                     options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("TransIT.API"));
                 }
+
                 if (Environment.IsProduction())
                 {
                     options.UseSqlServer(Configuration.GetConnectionString("AzureConnection"), b => b.MigrationsAssembly("TransIT.API"));
@@ -113,7 +111,6 @@ namespace TransIT.API.Extensions
             services.AddScoped<IPostService, PostService>();
             services.AddScoped<ITransitionService, TransitionService>();
             services.AddScoped<ILocationService, LocationService>();
-
 
             services.AddScoped<ICrudService<ActionTypeDTO>, ActionTypeService>();
             services.AddScoped<ICrudService<VehicleDTO>, VehicleService>();

@@ -1,6 +1,6 @@
-﻿using AutoMapper;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using AutoMapper;
 using TransIT.BLL.DTOs;
 using TransIT.DAL.Models.Entities.Abstractions;
 using TransIT.DAL.Repositories;

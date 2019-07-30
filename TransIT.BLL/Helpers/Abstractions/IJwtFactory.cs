@@ -1,6 +1,5 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Threading.Tasks;
 using TransIT.BLL.DTOs;
 
 namespace TransIT.BLL.Helpers.Abstractions

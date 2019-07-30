@@ -1,11 +1,10 @@
-﻿using System.Security.Claims;
-using System.Threading.Tasks;
-using TransIT.BLL.DTOs;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using TransIT.BLL.Services.Interfaces;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
+using TransIT.BLL.DTOs;
 using TransIT.BLL.Services;
+using TransIT.BLL.Services.Interfaces;
 
 namespace TransIT.API.Controllers
 {
@@ -17,6 +16,7 @@ namespace TransIT.API.Controllers
     public class TransitionController : FilterController<TransitionDTO>
     {
         private readonly ITransitionService _transitionService;
+
         public TransitionController(ITransitionService transitionService, IFilterService<TransitionDTO> filterService)
             : base(filterService)
         {
@@ -31,10 +31,8 @@ namespace TransIT.API.Controllers
             {
                 return Json(result);
             }
-            else
-            {
-                return BadRequest();
-            }
+
+            return BadRequest();
         }
 
         [HttpGet("{id}")]
@@ -45,10 +43,8 @@ namespace TransIT.API.Controllers
             {
                 return Json(result);
             }
-            else
-            {
-                return BadRequest();
-            }
+
+            return BadRequest();
         }
 
         [HttpGet("/search")]
@@ -59,10 +55,8 @@ namespace TransIT.API.Controllers
             {
                 return Json(result);
             }
-            else
-            {
-                return BadRequest();
-            }
+
+            return BadRequest();
         }
 
         [HttpPost]
@@ -74,10 +68,8 @@ namespace TransIT.API.Controllers
             {
                 return CreatedAtAction(nameof(Create), createdDto);
             }
-            else
-            {
-                return BadRequest();
-            }
+
+            return BadRequest();
         }
 
         [HttpPut("{id}")]
@@ -92,10 +84,8 @@ namespace TransIT.API.Controllers
             {
                 return NoContent();
             }
-            else
-            {
-                return BadRequest();
-            }
+
+            return BadRequest();
         }
 
         [HttpDelete("{id}")]

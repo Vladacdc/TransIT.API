@@ -1,13 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using TransIT.DAL.Models.Entities;
-using TransIT.DAL.Models.Entities.Abstractions;
+using Microsoft.EntityFrameworkCore;
 using TransIT.DAL.Models;
+using TransIT.DAL.Models.Entities.Abstractions;
 
 namespace TransIT.DAL.Repositories
 {

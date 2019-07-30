@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
 using TransIT.DAL.Models.Entities.Abstractions;
 
 namespace TransIT.DAL.Models.Entities
 {
-    public partial class User : IdentityUser, IAuditableEntity
+    public class User : IdentityUser, IAuditableEntity
     {
         public User()
         {

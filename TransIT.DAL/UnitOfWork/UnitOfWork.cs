@@ -1,9 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
-using TransIT.DAL.Repositories.InterfacesRepositories;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using TransIT.DAL.Models.Entities;
 using TransIT.DAL.Models;
+using TransIT.DAL.Models.Entities;
+using TransIT.DAL.Repositories.InterfacesRepositories;
 
 namespace TransIT.DAL.UnitOfWork
 {

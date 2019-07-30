@@ -1,16 +1,12 @@
 using System;
-using System.Threading.Tasks;
 using System.Linq;
-using System.Net;
-using System.Security.Claims;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Identity;
+using TransIT.BLL.DTOs;
 using TransIT.BLL.Helpers.Abstractions;
 using TransIT.BLL.Services.Interfaces;
-using TransIT.BLL.DTOs;
-using TransIT.DAL.Models.Entities;
 using TransIT.DAL.UnitOfWork;
 
 namespace TransIT.BLL.Services.ImplementedServices

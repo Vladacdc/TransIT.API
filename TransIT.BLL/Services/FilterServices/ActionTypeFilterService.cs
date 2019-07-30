@@ -1,6 +1,4 @@
 ﻿using AutoMapper;
-using System;
-using System.Text;
 using TransIT.BLL.DTOs;
 using TransIT.DAL.Models.Entities;
 using TransIT.DAL.Repositories;

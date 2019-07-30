@@ -3,8 +3,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using TransIT.BLL.Helpers.Abstractions;
 using TransIT.BLL.DTOs;
+using TransIT.BLL.Helpers.Abstractions;
 
 namespace TransIT.BLL.Helpers
 {
@@ -79,7 +79,7 @@ namespace TransIT.BLL.Helpers
             {
                 new Claim(nameof(login), login),
                 new Claim(nameof(role), role),
-                new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
+                new Claim(JwtRegisteredClaimNames.Sub, userId),
                 new Claim(JwtRegisteredClaimNames.Jti, _jwtOptions.JtiGenerator),
                 new Claim(JwtRegisteredClaimNames.Iat, 
                     ToUnixEpochDate(_jwtOptions.IssuedAt).ToString(),

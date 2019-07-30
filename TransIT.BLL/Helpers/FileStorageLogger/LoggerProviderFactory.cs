@@ -12,7 +12,8 @@ namespace TransIT.BLL.Helpers.FileStorageLogger
             {
                 return new AzureFileStorage();
             }
-            else if( LoggerConfig.logger ==Logger.FileSystem)
+
+            if( LoggerConfig.logger ==Logger.FileSystem)
             {
                 return new FileSystemStorage();
             }

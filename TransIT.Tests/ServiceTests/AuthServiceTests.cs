@@ -1,18 +1,6 @@
-﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Extensions;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using TransIT.BLL.Services.ImplementedServices;
-using TransIT.BLL.DTOs;
-using TransIT.DAL.Models;
-using TransIT.DAL.Repositories.ImplementedRepositories;
+﻿using System.Threading.Tasks;
 using TransIT.DAL.UnitOfWork;
 using Xunit;
-using TransIT.BLL.Comparers;
-using System.Collections.Generic;
-using TransIT.BLL.Helpers;
 
 namespace TransIT.Tests
 {
@@ -22,7 +10,7 @@ namespace TransIT.Tests
 
         public AuthServiceTests(UnitOfWorkFixture unitOfWorkFixture)
         {
-            this._fixture = unitOfWorkFixture;
+            _fixture = unitOfWorkFixture;
         }
 
         [Fact]

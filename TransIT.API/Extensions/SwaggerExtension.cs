@@ -18,7 +18,7 @@ namespace TransIT.API.Extensions
                     });
                     var security = new Dictionary<string, IEnumerable<string>>
                     {
-                    {"Bearer", new string[] { } },
+                    { "Bearer", new string[] { } },
                     };
 
                     c.AddSecurityDefinition("Bearer", new ApiKeyScheme

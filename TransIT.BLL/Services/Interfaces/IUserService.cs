@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using TransIT.BLL.DTOs;
-using TransIT.DAL.Models.Entities;
 
 namespace TransIT.BLL.Services.Interfaces
 {

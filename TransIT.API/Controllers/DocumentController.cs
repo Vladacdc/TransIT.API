@@ -1,11 +1,11 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using TransIT.BLL.Services.Interfaces;
-using TransIT.BLL.DTOs;
-using TransIT.DAL.Models.Entities;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
+using TransIT.BLL.DTOs;
 using TransIT.BLL.Services;
+using TransIT.BLL.Services.Interfaces;
+using TransIT.DAL.Models.Entities;
 
 namespace TransIT.API.Controllers
 {
@@ -33,10 +33,8 @@ namespace TransIT.API.Controllers
             {
                 return Json(result);
             }
-            else
-            {
-                return BadRequest();
-            }
+
+            return BadRequest();
         }
 
         [HttpGet("~/api/v1/" + nameof(Document) + "/{id}/file")]
@@ -66,10 +64,8 @@ namespace TransIT.API.Controllers
             {
                 return CreatedAtAction(nameof(Create), createdEntity);
             }
-            else
-            { 
-                return BadRequest();
-            }
+
+            return BadRequest();
         }
 
         [HttpDelete("~/api/v1/" + nameof(Document) + "/{id}")]

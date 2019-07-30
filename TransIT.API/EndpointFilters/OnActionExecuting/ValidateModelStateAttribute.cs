@@ -8,7 +8,9 @@ namespace TransIT.API.EndpointFilters.OnActionExecuting
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             if (!context.ModelState.IsValid)
-                context.Result = new BadRequestObjectResult(context.ModelState); 
+            {
+                context.Result = new BadRequestObjectResult(context.ModelState);
+            }
         }
     }
 }

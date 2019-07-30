@@ -1,11 +1,11 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // https://github.com/aspnet/Identity/blob/e6f3ebf5810c793edc6f3b4ca3438194786b86a2/test/Shared/MockHelpers.cs 
+
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -44,7 +44,7 @@ namespace Microsoft.AspNetCore.Identity.Test
                 {
                     if (formatter == null)
                     {
-                        logStore.Append(state.ToString());
+                        logStore.Append(state);
                     }
                     else
                     {
@@ -54,7 +54,7 @@ namespace Microsoft.AspNetCore.Identity.Test
                 });
             logger.Setup(x => x.BeginScope(It.IsAny<object>())).Callback((object state) =>
             {
-                logStore.Append(state.ToString());
+                logStore.Append(state);
                 logStore.Append(" ");
             });
             logger.Setup(x => x.IsEnabled(LogLevel.Debug)).Returns(true);

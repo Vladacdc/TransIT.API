@@ -1,13 +1,10 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using TransIT.BLL.Services.Interfaces;
-using TransIT.BLL.DTOs;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
+using TransIT.BLL.DTOs;
 using TransIT.BLL.Services;
-using TransIT.API.EndpointFilters.OnException;
-using System.Collections.Generic;
-using System.Linq;
+using TransIT.BLL.Services.Interfaces;
 
 namespace TransIT.API.Controllers
 {
@@ -34,10 +31,8 @@ namespace TransIT.API.Controllers
             {
                 return Json(result);
             }
-            else
-            {
-                return BadRequest();
-            }
+
+            return BadRequest();
         }
 
         [HttpGet("{id}")]
@@ -48,10 +43,8 @@ namespace TransIT.API.Controllers
             {
                 return Json(result);
             }
-            else
-            {
-                return BadRequest();
-            }
+
+            return BadRequest();
         }
 
         [HttpGet("/search")]
@@ -62,10 +55,8 @@ namespace TransIT.API.Controllers
             {
                 return Json(result);
             }
-            else
-            {
-                return BadRequest();
-            }
+
+            return BadRequest();
         }
 
         [HttpPost]
@@ -78,10 +69,8 @@ namespace TransIT.API.Controllers
             {
                 return CreatedAtAction(nameof(Create), createdDTO);
             }
-            else
-            {
-                return BadRequest();
-            }
+
+            return BadRequest();
         }
 
         [HttpPut("{id}")]
@@ -96,10 +85,8 @@ namespace TransIT.API.Controllers
             {
                 return NoContent();
             }
-            else
-            {
-                return BadRequest();
-            }
+
+            return BadRequest();
         }
 
         [HttpDelete("{id}")]

@@ -13,8 +13,7 @@ namespace TransIT.API.Extensions
                     .AllowAnyMethod()
                     .WithOrigins("http://localhost:4200")
                     .WithOrigins("http://transportit.azurewebsites.net")
-                    .WithOrigins("https://transportit.azurewebsites.net")
-                ));
+                    .WithOrigins("https://transportit.azurewebsites.net")));
         }
     }
 }

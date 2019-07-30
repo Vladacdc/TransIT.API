@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using TransIT.BLL.DTOs;
+﻿using TransIT.BLL.DTOs;
 
 namespace TransIT.Tests
 {
@@ -17,7 +14,7 @@ namespace TransIT.Tests
             FirstName = "Ivan";
             MiddleName = "Petro";
             LastName = "Ivanovych";
-            Role = new RoleDTO()
+            Role = new RoleDTO
             {
                 Name = "ADMIN",
                 TransName = "Адмін"

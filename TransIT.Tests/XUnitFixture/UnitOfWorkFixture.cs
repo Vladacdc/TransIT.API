@@ -1,9 +1,9 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.Test;
 using Microsoft.EntityFrameworkCore;
-using System;
 using TransIT.BLL.Mappings;
 using TransIT.DAL.Models;
 using TransIT.DAL.Models.Entities;
@@ -99,11 +99,11 @@ namespace TransIT.Tests
                 MockHelpers.TestUserManager(userStore)
             );
 
-            unitOfWork.RoleManager.CreateAsync(new Role() { Name = "ADMIN", TransName = "Адмін" }).Wait();
-            unitOfWork.RoleManager.CreateAsync(new Role() { Name = "WORKER", TransName = "Працівник" }).Wait();
-            unitOfWork.RoleManager.CreateAsync(new Role() { Name = "ENGINEER", TransName = "Інженер" }).Wait();
-            unitOfWork.RoleManager.CreateAsync(new Role() { Name = "REGISTER", TransName = "Реєстратор" }).Wait();
-            unitOfWork.RoleManager.CreateAsync(new Role() { Name = "ANALYST", TransName = "Аналітик" }).Wait();
+            unitOfWork.RoleManager.CreateAsync(new Role { Name = "ADMIN", TransName = "Адмін" }).Wait();
+            unitOfWork.RoleManager.CreateAsync(new Role { Name = "WORKER", TransName = "Працівник" }).Wait();
+            unitOfWork.RoleManager.CreateAsync(new Role { Name = "ENGINEER", TransName = "Інженер" }).Wait();
+            unitOfWork.RoleManager.CreateAsync(new Role { Name = "REGISTER", TransName = "Реєстратор" }).Wait();
+            unitOfWork.RoleManager.CreateAsync(new Role { Name = "ANALYST", TransName = "Аналітик" }).Wait();
 
             return unitOfWork;
         }

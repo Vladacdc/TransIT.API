@@ -1,19 +1,19 @@
-﻿namespace TransIT.DAL.Models
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Entities;
-    using Microsoft.AspNetCore.Identity;
-    using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.ChangeTracking;
-    using Microsoft.EntityFrameworkCore;
-    using TransIT.DAL.Models.Entities.Abstractions;
-    using TransIT.DAL.Models.DependencyInjection;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using TransIT.DAL.Models.DependencyInjection;
+using TransIT.DAL.Models.Entities;
+using TransIT.DAL.Models.Entities.Abstractions;
 
-    public partial class TransITDBContext : IdentityDbContext<User, Role, string, IdentityUserClaim<string>,
+namespace TransIT.DAL.Models
+{
+    public class TransITDBContext : IdentityDbContext<User, Role, string, IdentityUserClaim<string>,
         UserRole, IdentityUserLogin<string>,
         IdentityRoleClaim<string>, IdentityUserToken<string>>
     {
@@ -36,7 +36,7 @@
         public TransITDBContext(DbContextOptions<TransITDBContext> options, IUser user)
             : base(options)
         {
-            this._user = user;
+            _user = user;
         }
 
         public virtual DbSet<ActionType> ActionType { get; set; }
@@ -62,7 +62,7 @@
         {
             if (_user != null && _user.CurrentUserId != null)
             {
-                IEnumerable<EntityEntry> unsavedItems = this.ChangeTracker.Entries()
+                IEnumerable<EntityEntry> unsavedItems = ChangeTracker.Entries()
                         .Where(entity => entity.Entity is IAuditableEntity &&
                                          (entity.State == EntityState.Added ||
                                           entity.State == EntityState.Modified));
@@ -73,9 +73,9 @@
                     DateTime now = DateTime.Now;
                     if (item.State == EntityState.Added)
                     {
-                        entity.CreatedById = this._user.CurrentUserId;
+                        entity.CreatedById = _user.CurrentUserId;
                     }
-                    entity.UpdatedById = this._user.CurrentUserId;
+                    entity.UpdatedById = _user.CurrentUserId;
                     entity.UpdatedDate = now;
                 } 
             }

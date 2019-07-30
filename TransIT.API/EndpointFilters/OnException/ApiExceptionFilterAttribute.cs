@@ -15,7 +15,11 @@ namespace TransIT.API.EndpointFilters.OnException
 
         public override void OnException(ExceptionContext context)
         {
-            if (_hostingEnvironment.IsDevelopment()) return;
+            if (_hostingEnvironment.IsDevelopment())
+            {
+                return;
+            }
+
             context.Result = new BadRequestObjectResult(context.Exception.Message);
             context.ExceptionHandled = true;
         }

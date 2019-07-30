@@ -49,10 +49,10 @@ namespace TransIT.API.Controllers
                 Data = res.ToArray(),
                 RecordsTotal = totalAmount,
                 RecordsFiltered =
-                    model.Filters != null
-                    && model.Filters.Any()
-                    || model.Search != null
-                    && !string.IsNullOrEmpty(model.Search.Value)
+                    (model.Filters != null
+                    && model.Filters.Any())
+                    || (model.Search != null
+                    && !string.IsNullOrEmpty(model.Search.Value))
                         ? (ulong)res.Count()
                         : totalAmount,
                 Error = errorMessage,

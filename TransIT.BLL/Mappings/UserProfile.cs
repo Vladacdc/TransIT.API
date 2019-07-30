@@ -1,12 +1,7 @@
 using System.Linq;
-using System.Linq.Expressions;
-using System.Net.Mime;
 using AutoMapper;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using TransIT.BLL.DTOs;
 using TransIT.DAL.Models.Entities;
-using TransIT.BLL.Services.ImplementedServices;
 
 namespace TransIT.BLL.Mappings
 {

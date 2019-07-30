@@ -11,7 +11,7 @@ namespace TransIT.BLL.Helpers.FileStorageLogger
         {
             var filePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "//source//" + "TransportITDocuments";
             //  var filePath = Directory.GetCurrentDirectory() + "\\wwwroot\\" + "TransportITDocuments";
-            System.IO.Directory.CreateDirectory(filePath);
+            Directory.CreateDirectory(filePath);
             filePath = Path.Combine(filePath, DateTime.Now.ToString("MM/dd/yyyy/HH/mm/ss") + file.FileName);
 
             using (FileStream fileStream = new FileStream(filePath, FileMode.CreateNew))
@@ -23,11 +23,11 @@ namespace TransIT.BLL.Helpers.FileStorageLogger
 
         public void Delete(string FilePath)
         {
-            var fileInfo = new System.IO.FileInfo(FilePath);
+            var fileInfo = new FileInfo(FilePath);
             fileInfo.Delete();
         }
 
-        public byte[] Download(string FilePath)=> System.IO.File.ReadAllBytes(FilePath);
+        public byte[] Download(string FilePath)=> File.ReadAllBytes(FilePath);
 
     }
 }

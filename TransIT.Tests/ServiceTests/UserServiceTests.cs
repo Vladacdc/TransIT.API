@@ -1,17 +1,12 @@
-﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Extensions;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TransIT.BLL.Services.ImplementedServices;
+using TransIT.BLL.Comparers;
 using TransIT.BLL.DTOs;
-using TransIT.DAL.Models;
-using TransIT.DAL.Repositories.ImplementedRepositories;
+using TransIT.BLL.Services.ImplementedServices;
 using TransIT.DAL.UnitOfWork;
 using Xunit;
-using TransIT.BLL.Comparers;
-using System.Collections.Generic;
 
 namespace TransIT.Tests
 {
@@ -21,7 +16,7 @@ namespace TransIT.Tests
 
         public UserServiceTests(UnitOfWorkFixture unitOfWorkFixture)
         {
-            this._fixture = unitOfWorkFixture;
+            _fixture = unitOfWorkFixture;
         }
 
         [Fact]
@@ -39,12 +34,14 @@ namespace TransIT.Tests
         {
             IUnitOfWork unitOfWork = _fixture.CreateMockUnitOfWork();
             UserService userService = new UserService(_fixture.Mapper, unitOfWork);
-            TestUser[] users = new TestUser[] {
-                new TestUser() { Email = "aaaaa@aa.c" },
-                new TestUser() { Email = "Bohdan@fff.d", Role = new RoleDTO() {
+            TestUser[] users = {
+                new TestUser { Email = "aaaaa@aa.c" },
+                new TestUser
+                { Email = "Bohdan@fff.d", Role = new RoleDTO
+                    {
                     Name = "ENGINEER" , TransName = "Інженер"}
                 },
-                new TestUser() { Email = "pbbbc@gmail.com" },
+                new TestUser { Email = "pbbbc@gmail.com" }
             };
             foreach (UserDTO user in users)
             {
@@ -62,7 +59,7 @@ namespace TransIT.Tests
             IUnitOfWork unitOfWork = _fixture.CreateMockUnitOfWork();
             UserService userService = new UserService(_fixture.Mapper, unitOfWork);
             UserDTO result = await userService.CreateAsync(
-                new TestUser()
+                new TestUser
                 {
                     Password = "AbagfgA122@2"
                 });
@@ -76,18 +73,22 @@ namespace TransIT.Tests
         {
             IUnitOfWork unitOfWork = _fixture.CreateMockUnitOfWork();
             UserService userService = new UserService(_fixture.Mapper, unitOfWork);
-            List<UserDTO> assigned = new List<UserDTO>()
+            List<UserDTO> assigned = new List<UserDTO>
             {
-                new TestUser() { Email = "Bohdan@fff.d", Role = new RoleDTO() {
+                new TestUser
+                { Email = "Bohdan@fff.d", Role = new RoleDTO
+                    {
                     Name = "WORKER" , TransName = "Працівник"}
                 },
-                new TestUser() { Email = "DanyloDudokLoh@fff.d", Role = new RoleDTO() {
+                new TestUser
+                { Email = "DanyloDudokLoh@fff.d", Role = new RoleDTO
+                    {
                     Name = "WORKER" , TransName = "Працівник"}
                 }
             };
             List<UserDTO> users = new List<UserDTO> {
-                new TestUser() { Email = "aaaaa@aa.c" },
-                new TestUser() { Email = "pbbbc@gmail.com" },
+                new TestUser { Email = "aaaaa@aa.c" },
+                new TestUser { Email = "pbbbc@gmail.com" }
             };
             users.AddRange(assigned);
 

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace TransIT.BLL.Helpers.Configuration
+﻿namespace TransIT.BLL.Helpers.Configuration
 {
     enum Logger
     {
