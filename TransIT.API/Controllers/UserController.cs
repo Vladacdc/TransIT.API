@@ -16,16 +16,16 @@ namespace TransIT.API.Controllers
     public class UserController : DataController<User, UserDTO>
     {
         private readonly IUserService _userService;
-        
+
         public UserController(
-            IMapper mapper, 
+            IMapper mapper,
             IUserService userService,
             IFilterService<User> odService
             ) : base(mapper, userService, odService)
         {
             _userService = userService;
         }
-        
+
         [HttpPut("{id}")]
         [Authorize(Roles = "ADMIN")]
         public override Task<IActionResult> Update(int id, [FromBody] UserDTO obj)
@@ -45,15 +45,15 @@ namespace TransIT.API.Controllers
                 ? NoContent()
                 : (IActionResult) BadRequest();
         }
-        
+
         [HttpGet]
         public override async Task<IActionResult> Get([FromQuery] uint offset = 0, uint amount = 1000)
         {
-            switch (User.FindFirst(ROLE.ROLE_SCHEMA)?.Value)
+            switch (User.FindFirst(RoleNames.Schema)?.Value)
             {
-                case ROLE.ADMIN:
+                case RoleNames.Admin:
                     return await base.Get(offset, amount);
-                case ROLE.ENGINEER:
+                case RoleNames.Engineer:
                     var result = await _userService.GetAssignees(offset, amount);
                     return result != null
                         ? Json(_mapper.Map<IEnumerable<UserDTO>>(result))

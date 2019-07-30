@@ -20,7 +20,7 @@ namespace TransIT.BLL.Helpers.FileStorageLogger
         
         private async Task<Uri> CreateAsync(IFormFile file)
         {
-            if (CloudStorageAccount.TryParse(AzureConfig.StorageConnectionString, out storageAccount))
+            if (CloudStorageAccount.TryParse(AzureConfig.ConnectionString, out storageAccount))
             {
                 var client = storageAccount.CreateCloudBlobClient();
                 var container = client.GetContainerReference("transitdocuments");
@@ -44,7 +44,7 @@ namespace TransIT.BLL.Helpers.FileStorageLogger
 
         public async Task DeleteAsync(string path)
         {
-            if (CloudStorageAccount.TryParse(AzureConfig.StorageConnectionString, out storageAccount))
+            if (CloudStorageAccount.TryParse(AzureConfig.ConnectionString, out storageAccount))
             {
                 var client = storageAccount.CreateCloudBlobClient();
                 var container = client.GetContainerReference("transitdocuments");
@@ -58,7 +58,7 @@ namespace TransIT.BLL.Helpers.FileStorageLogger
         public async Task<byte[]> DownloadAsync(string path)
         {
             byte[] result;
-            if (!CloudStorageAccount.TryParse(AzureConfig.StorageConnectionString, out storageAccount)) return null;
+            if (!CloudStorageAccount.TryParse(AzureConfig.ConnectionString, out storageAccount)) return null;
                 var client = storageAccount.CreateCloudBlobClient();
                 var container = client.GetContainerReference("transitdocuments");
             CloudBlockBlob _blockBlob = container.GetBlockBlobReference(Path.GetFileName(path));
