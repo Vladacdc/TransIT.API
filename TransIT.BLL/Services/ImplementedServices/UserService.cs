@@ -25,7 +25,8 @@ namespace TransIT.BLL.Services.ImplementedServices
         private readonly IUnitOfWork _unitOfWork;
 
         /// <summary>
-        /// Ctor
+        /// Initializes a new instance of the <see cref="UserService"/> class.
+        /// Ctor.
         /// </summary>
         /// <param name="unitOfWork">Unit of work pattern</param>
         /// <param name="logger">Log on error</param>
@@ -69,7 +70,7 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public virtual async Task<IEnumerable<UserDTO>> GetAssignees(uint offset, uint amount)
         {
-            IEnumerable<User> workers = (await _unitOfWork.UserManager.GetUsersInRoleAsync(ROLE.WORKER))
+            IEnumerable<User> workers = (await _unitOfWork.UserManager.GetUsersInRoleAsync(RoleNames.Worker))
                 .Skip((int)offset)
                 .Take((int)amount);
             return _mapper.Map<IEnumerable<UserDTO>>(workers);
@@ -124,7 +125,6 @@ namespace TransIT.BLL.Services.ImplementedServices
                 Role roleEntity = await _unitOfWork.RoleManager.FindByNameAsync(roles.First());
                 userDTO.Role = _mapper.Map<RoleDTO>(roleEntity);
             }
-
             return userDTO;
         }
     }
