@@ -58,13 +58,14 @@ namespace TransIT.Tests
         {
             IUnitOfWork unitOfWork = _fixture.CreateMockUnitOfWork();
             UserService userService = new UserService(_fixture.Mapper, unitOfWork);
-            UserDTO result = await userService.CreateAsync(
-                new TestUser
-                {
-                    Password = "AbagfgA122@2"
-                });
+            TestUser value = new TestUser
+            {
+                Email = "shewchenkoandriy@gmail.com",
+                Password = "AbagfgA122@2"
+            };
+            UserDTO result = await userService.CreateAsync(value);
             Assert.NotNull(
-                await userService.UpdatePasswordAsync(result, result.Password, "HelloWorld123@")
+                await userService.UpdatePasswordAsync(result, value.Password, "HelloWorld123@")
             );
         }
 

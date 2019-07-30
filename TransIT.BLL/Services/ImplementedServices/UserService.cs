@@ -57,12 +57,12 @@ namespace TransIT.BLL.Services.ImplementedServices
             await _unitOfWork.UserManager.AddToRoleAsync(user, model.Role.Name);
             user = _mapper.Map(model, user);
             IdentityResult updateResult = await _unitOfWork.UserManager.UpdateAsync(user);
-            return updateResult.Succeeded ? await GetAsync(user) : null;
+            return updateResult.Succeeded ? _mapper.Map<UserDTO>(user) : null;
         }
 
         public virtual async Task<UserDTO> UpdatePasswordAsync(UserDTO user, string oldPassword, string newPassword)
         {
-            User entity = _mapper.Map<User>(user);
+            User entity = await _unitOfWork.UserManager.FindByIdAsync(user.Id);
             IdentityResult result = await _unitOfWork.UserManager
                 .ChangePasswordAsync(entity, oldPassword, newPassword);
             return result.Succeeded ? user : null;
@@ -79,7 +79,7 @@ namespace TransIT.BLL.Services.ImplementedServices
         public async Task<UserDTO> GetAsync(string id)
         {
             User entity = await _unitOfWork.UserManager.FindByIdAsync(id);
-            return entity == null ? null : await GetAsync(entity);
+            return entity == null ? null : _mapper.Map<UserDTO>(entity);
         }
 
         public async Task<IEnumerable<UserDTO>> GetRangeAsync(uint offset, uint amount)
@@ -97,35 +97,21 @@ namespace TransIT.BLL.Services.ImplementedServices
         {
             User user = _mapper.Map<User>(value);
             IdentityResult result = await _unitOfWork.UserManager.CreateAsync(user);
+            if (result.Succeeded && value.Password != null)
+            {
+                result = await _unitOfWork.UserManager.AddPasswordAsync(user, value.Password);
+            }
             if (result.Succeeded)
             {
                 result = await _unitOfWork.UserManager.AddToRoleAsync(user, value.Role.Name);
             }
-
-            return result.Succeeded ? await GetAsync(user) : null;
+            return result.Succeeded ? _mapper.Map<UserDTO>(user) : null;
         }
 
         public async Task DeleteAsync(string id)
         {
             User user = await _unitOfWork.UserManager.FindByIdAsync(id);
             await _unitOfWork.UserManager.DeleteAsync(user);
-        }
-
-        public Task<IEnumerable<UserDTO>> SearchAsync(string search)
-        {
-            throw new NotImplementedException();
-        }
-
-        private async Task<UserDTO> GetAsync(User entity)
-        {
-            IList<string> roles = await _unitOfWork.UserManager.GetRolesAsync(entity);
-            UserDTO userDTO = _mapper.Map<UserDTO>(entity);
-            if (roles.Count > 0)
-            {
-                Role roleEntity = await _unitOfWork.RoleManager.FindByNameAsync(roles.First());
-                userDTO.Role = _mapper.Map<RoleDTO>(roleEntity);
-            }
-            return userDTO;
         }
     }
 }

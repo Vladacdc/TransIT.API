@@ -16,6 +16,5 @@ namespace TransIT.BLL.Services.Interfaces
         Task<UserDTO> CreateAsync(UserDTO value);
         Task<UserDTO> UpdateAsync(UserDTO value);
         Task DeleteAsync(string id);
-        Task<IEnumerable<UserDTO>> SearchAsync(string search);
     }
 }
