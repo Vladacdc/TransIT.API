@@ -20,7 +20,7 @@ What things you need to install to run this project and how to install them
 
 1) Install Visual Studio IDE with ASP.NET, be sure to check out ASP.NET and web development
 [Screenshot](./images/PackageManagerConsole.jpg);
-2) Intsall .NetCore 2.2 SDK;
+2) Install .NetCore 2.2 SDK;
 
 ### Running API
 1) Clone repository;
