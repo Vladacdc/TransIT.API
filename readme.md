@@ -9,10 +9,25 @@ This repository contains server-side application, client-side is stored [here](h
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 See deployment for notes on how to deploy the project on a live system.
 
+### Prerequisites
+
+What things you need to install the software and how to install them
+
+```
+[Visual Studio IDE Community 2019](https://visualstudio.microsoft.com/) or similar
+
+[.Net Core 2.2 SDK](https://dotnet.microsoft.com/download/dotnet-core/2.2)
+```
+
+### Installing
+
+1) Install Visual Studio IDE with ASP.NET
+
+### Build project
 1) Clone repository;
 2) Checkout dev branch;
 3) Open Package Manager Console(ALT+T+N+O);
-4) Choose TransIT.DAL as default project
+4) Choose TransIT.API as default project
 [Screenshot](./images/PackageManagerConsole.jpg);
 5) Enter command "add-migration TransITDB";
 6) Choose TransIT profile
@@ -26,16 +41,15 @@ See deployment for notes on how to deploy the project on a live system.
 Install <a href="https://dotnet.microsoft.com/download/dotnet-core/2.2">.Net Core 2.2 SDK</a>;
 </details>
 <details close>
-<summary>Error description</summary>
-fixing
+<summary>System.AggregateException at app.SeedEssentialAsync</summary>
+You didn't create any migration for db, repeat 4th and 5th step of Getting Started
 </details>
 <details close>
-<summary>Error description</summary>
-fixing
-</details>
-<details close>
-<summary>Error description</summary>
-fixing
+<summary>System.AggregateException at any part of the program</summary>
+Probably, You made changes to entities that need recreation of database.
+To recreate database delete Migrations folder and database (CTRL+\, CTRL+S [Screenshot](./images/DeleteDB.jpg).)
+Also this exception can occur if you violate database restrictions,
+make sure that you understand requirements right and are using UnitOfWork properly.
 </details>
 
 ## Running the tests
