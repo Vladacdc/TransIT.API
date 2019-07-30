@@ -14,7 +14,7 @@ using TransIT.DAL.UnitOfWork;
 namespace TransIT.BLL.Services.ImplementedServices
 {
     /// <summary>
-    /// Issue CRUD service
+    /// Issue CRUD service.
     /// </summary>
     /// <see cref="IIssueService"/>
     public class IssueService : IIssueService
@@ -24,7 +24,8 @@ namespace TransIT.BLL.Services.ImplementedServices
         private readonly IMapper _mapper;
 
         /// <summary>
-        /// Ctor
+        /// Initializes a new instance of the <see cref="IssueService"/> class.
+        /// Ctor.
         /// </summary>
         /// <param name="unitOfWork">Unit of work pattern</param>
         public IssueService(IUnitOfWork unitOfWork, IMapper mapper)
@@ -71,7 +72,7 @@ namespace TransIT.BLL.Services.ImplementedServices
             var vehicle = _mapper.Map<VehicleDTO>(await _unitOfWork.VehicleRepository.GetByIdAsync(dto.Vehicle.Id));
             if (IsWarrantyCase(vehicle))
             {
-                dto.Warranty = Warranties.WARRANTY_CASE;
+                dto.Warranty = true;
             }
 
             var model = _mapper.Map<Issue>(dto);

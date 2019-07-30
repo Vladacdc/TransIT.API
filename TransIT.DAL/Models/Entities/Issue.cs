@@ -14,7 +14,7 @@ namespace TransIT.DAL.Models.Entities
 
         public int Id { get; set; }
         public string Summary { get; set; }
-        public int? Warranty { get; set; }
+        public bool Warranty { get; set; }
         public DateTime? Deadline { get; set; }
         public int? StateId { get; set; }
         public int? AssignedToId { get; set; }

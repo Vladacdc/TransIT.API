@@ -51,11 +51,11 @@ namespace TransIT.API.Controllers
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] uint offset = 0, uint amount = 1000)
         {
-            switch (User.FindFirst(ROLE.ROLE_SCHEMA)?.Value)
+            switch (User.FindFirst(RoleNames.Schema)?.Value)
             {
-                case ROLE.ADMIN:
+                case RoleNames.Admin:
                     return Ok(await _userService.GetRangeAsync(offset, amount));
-                case ROLE.ENGINEER:
+                case RoleNames.Engineer:
                     var result = await _userService.GetAssignees(offset, amount);
                     return result != null
                         ? Ok(result)

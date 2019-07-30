@@ -44,7 +44,7 @@ namespace TransIT.API.Controllers
                     ? await _serviceFactory.IssueService.GetIssuesBySpecificUser(userId)
                     : await _filterService.GetQueriedAsync(model);
         }
-
+        
         private async Task<ulong> GetTotalRecordsForSpecificUser(string userId, bool isCustomer)
         {
             return isCustomer
@@ -55,12 +55,12 @@ namespace TransIT.API.Controllers
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] uint offset = 0, uint amount = 1000)
         {
-            switch (User.FindFirst(ROLE.ROLE_SCHEMA)?.Value)
+            switch (User.FindFirst(RoleNames.Schema)?.Value)
             {
-                case ROLE.REGISTER:
+                case RoleNames.Register:
                     return Json(await GetForCustomer(offset, amount));
-                case ROLE.ENGINEER:
-                case ROLE.ANALYST:
+                case RoleNames.Engineer:
+                case RoleNames.Analyst:
                     return Json(await GetIssues(offset, amount));
                 default:
                     return BadRequest();
@@ -89,7 +89,7 @@ namespace TransIT.API.Controllers
         public async Task<IActionResult> Create([FromBody] IssueDTO obj)
         {
             var createdEntity = await _serviceFactory.IssueService.CreateAsync(obj);
-            await _issueHub.Clients.Group(ROLE.ENGINEER).SendAsync("ReceiveIssues");
+            await _issueHub.Clients.Group(RoleNames.Engineer).SendAsync("ReceiveIssues");
             return createdEntity != null
                 ? CreatedAtAction(nameof(Create), createdEntity)
                 : (IActionResult)BadRequest();
@@ -129,7 +129,7 @@ namespace TransIT.API.Controllers
         [HttpPost("~/api/v1/datatable/[controller]")]
         public override async Task<IActionResult> Filter(DataTableRequestDTO model)
         {
-            var isCustomer = User.FindFirst(ROLE.ROLE_SCHEMA)?.Value == ROLE.REGISTER;
+            var isCustomer = User.FindFirst(RoleNames.Schema)?.Value == RoleNames.Register;
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
             return Json(
