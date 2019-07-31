@@ -6,8 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using TransIT.API.EndpointFilters.OnException;
 using TransIT.BLL.DTOs;
 using TransIT.BLL.Factory;
-using TransIT.BLL.Services;
-using TransIT.DAL.Models.Entities;
 
 namespace TransIT.API.Controllers
 {
@@ -18,17 +16,14 @@ namespace TransIT.API.Controllers
     [Authorize(Roles = "ADMIN,ENGINEER,REGISTER,ANALYST")]
     public class IssueLogController : FilterController<IssueLogDTO>
     {
+        private const string IssueLogByIssueUrl = "~/api/v1/Issue/{issueId}/IssueLog";
+
+        private const string DataTableTemplateIssueLogByIssueUrl = "~/api/v1/datatable/Issue/{issueId}/IssueLog";
+
         private readonly IServiceFactory _serviceFactory;
 
-        private const string IssueLogByIssueUrl = "~/api/v1/" + nameof(Issue) + "/{issueId}/" + nameof(IssueLog);
-
-        private const string DataTableTemplateIssueLogByIssueUrl =
-            "~/api/v1/datatable/" + nameof(Issue) + "/{issueId}/" + nameof(IssueLog);
-
-        public IssueLogController(
-            IServiceFactory serviceFactory,
-            IFilterService<IssueLogDTO> filterService)
-            : base(filterService)
+        public IssueLogController(IServiceFactory serviceFactory, IFilterServiceFactory filterServiceFactory)
+            : base(filterServiceFactory)
         {
             _serviceFactory = serviceFactory;
         }
@@ -40,11 +35,6 @@ namespace TransIT.API.Controllers
             return result != null
                 ? Json(result)
                 : (IActionResult)BadRequest();
-        }
-
-        private async Task<IEnumerable<IssueLogDTO>> GetMappedEntitiesByIssueId(int issueId)
-        {
-            return await _serviceFactory.IssueLogService.GetRangeByIssueIdAsync(issueId);
         }
 
         [HttpGet]
@@ -109,12 +99,17 @@ namespace TransIT.API.Controllers
             int issueId,
             DataTableRequestDTO model)
         {
-            var dtResponse = ComposeDataTableResponseDTO(
+            var dtResponse = ComposeDataTableResponseDto(
                 await GetMappedEntitiesByIssueId(issueId),
                 model,
-                await _filterService.TotalRecordsAmountAsync());
+                await _filterServiceFactory.GetService<IssueLogDTO>().TotalRecordsAmountAsync());
             dtResponse.RecordsFiltered = (ulong)dtResponse.Data.LongLength;
             return Json(dtResponse);
+        }
+
+        private async Task<IEnumerable<IssueLogDTO>> GetMappedEntitiesByIssueId(int issueId)
+        {
+            return await _serviceFactory.IssueLogService.GetRangeByIssueIdAsync(issueId);
         }
     }
 }

@@ -3,8 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TransIT.BLL.DTOs;
-using TransIT.BLL.Services;
-using TransIT.BLL.Services.Interfaces;
+using TransIT.BLL.Factory;
 
 namespace TransIT.API.Controllers
 {
@@ -15,18 +14,18 @@ namespace TransIT.API.Controllers
     [Authorize(Roles = "ADMIN,ENGINEER,REGISTER,ANALYST")]
     public class CountryController : FilterController<CountryDTO>
     {
-        private readonly ICountryService _countryService;
+        private readonly IServiceFactory _serviceFactory;
 
-        public CountryController(ICountryService countryService, IFilterService<CountryDTO> filterService)
-            : base(filterService)
+        public CountryController(IServiceFactory serviceFactory, IFilterServiceFactory filterServiceFactory)
+            : base(filterServiceFactory)
         {
-            _countryService = countryService;
+            _serviceFactory = serviceFactory;
         }
 
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] uint offset = 0, uint amount = 1000)
         {
-            var result = await _countryService.GetRangeAsync(offset, amount);
+            var result = await _serviceFactory.CountryService.GetRangeAsync(offset, amount);
             if (result != null)
             {
                 return Json(result);
@@ -38,7 +37,7 @@ namespace TransIT.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            var result = await _countryService.GetAsync(id);
+            var result = await _serviceFactory.CountryService.GetAsync(id);
             if (result != null)
             {
                 return Json(result);
@@ -50,7 +49,7 @@ namespace TransIT.API.Controllers
         [HttpGet("/search")]
         public async Task<IActionResult> Get([FromQuery] string search)
         {
-            var result = await _countryService.SearchAsync(search);
+            var result = await _serviceFactory.CountryService.SearchAsync(search);
             if (result != null)
             {
                 return Json(result);
@@ -63,7 +62,7 @@ namespace TransIT.API.Controllers
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Create([FromBody] CountryDTO countryDTO)
         {
-            var createdDTO = await _countryService.CreateAsync(countryDTO);
+            var createdDTO = await _serviceFactory.CountryService.CreateAsync(countryDTO);
 
             if (createdDTO != null)
             {
@@ -79,7 +78,7 @@ namespace TransIT.API.Controllers
         {
             countryDTO.Id = id;
 
-            var result = await _countryService.UpdateAsync(countryDTO);
+            var result = await _serviceFactory.CountryService.UpdateAsync(countryDTO);
 
             if (result != null)
             {
@@ -93,7 +92,7 @@ namespace TransIT.API.Controllers
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Delete(int id)
         {
-            await _countryService.DeleteAsync(id);
+            await _serviceFactory.CountryService.DeleteAsync(id);
             return NoContent();
         }
     }

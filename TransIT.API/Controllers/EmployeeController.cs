@@ -3,8 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TransIT.BLL.DTOs;
-using TransIT.BLL.Services;
-using TransIT.BLL.Services.Interfaces;
+using TransIT.BLL.Factory;
 
 namespace TransIT.API.Controllers
 {
@@ -15,18 +14,18 @@ namespace TransIT.API.Controllers
     [Authorize(Roles = "ADMIN,ENGINEER")]
     public class EmployeeController : FilterController<EmployeeDTO>
     {
-        private readonly IEmployeeService _employeeService;
+        private readonly IServiceFactory _serviceFactory;
 
-        public EmployeeController(IEmployeeService employeeService, IFilterService<EmployeeDTO> filterService)
-            : base(filterService)
+        public EmployeeController(IServiceFactory serviceFactory, IFilterServiceFactory filterServiceFactory)
+            : base(filterServiceFactory)
         {
-            _employeeService = employeeService;
+            _serviceFactory = serviceFactory;
         }
 
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] uint offset = 0, uint amount = 1000)
         {
-            var result = await _employeeService.GetRangeAsync(offset, amount);
+            var result = await _serviceFactory.EmployeeService.GetRangeAsync(offset, amount);
             if (result != null)
             {
                 return Json(result);
@@ -38,7 +37,7 @@ namespace TransIT.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            var result = await _employeeService.GetAsync(id);
+            var result = await _serviceFactory.EmployeeService.GetAsync(id);
             if (result != null)
             {
                 return Json(result);
@@ -50,7 +49,7 @@ namespace TransIT.API.Controllers
         [HttpGet("/search")]
         public async Task<IActionResult> Get([FromQuery] string search)
         {
-            var result = await _employeeService.SearchAsync(search);
+            var result = await _serviceFactory.EmployeeService.SearchAsync(search);
             if (result != null)
             {
                 return Json(result);
@@ -63,7 +62,7 @@ namespace TransIT.API.Controllers
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Create([FromBody] EmployeeDTO employeeDTO)
         {
-            var createdDTO = await _employeeService.CreateAsync(employeeDTO);
+            var createdDTO = await _serviceFactory.EmployeeService.CreateAsync(employeeDTO);
 
             if (createdDTO != null)
             {
@@ -79,7 +78,7 @@ namespace TransIT.API.Controllers
         {
             employeeDTO.Id = id;
 
-            var result = await _employeeService.UpdateAsync(employeeDTO);
+            var result = await _serviceFactory.EmployeeService.UpdateAsync(employeeDTO);
 
             if (result != null)
             {
@@ -93,7 +92,7 @@ namespace TransIT.API.Controllers
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Delete(int id)
         {
-            await _employeeService.DeleteAsync(id);
+            await _serviceFactory.EmployeeService.DeleteAsync(id);
             return NoContent();
         }
     }

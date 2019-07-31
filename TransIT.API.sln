@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28306.52
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29102.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TransIT.DAL", "TransIT.DAL\TransIT.DAL.csproj", "{E524D22E-7F05-4AFC-9082-C87C8E3CA9DB}"
 EndProject
@@ -10,12 +10,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TransIT.BLL", "TransIT.BLL\TransIT.BLL.csproj", "{3BB6FAF4-8D54-4428-AD1F-923A14D3EEE1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TransIT.Tests", "TransIT.Tests\TransIT.Tests.csproj", "{7370EF8B-FD47-47F1-AA90-42C06276AB78}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{41D023F2-2A1B-4300-B2C9-5A39B7CEE4C4}"
-	ProjectSection(SolutionItems) = preProject
-		GlobalSuppressions.cs = GlobalSuppressions.cs
-		stylecop.json = stylecop.json
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

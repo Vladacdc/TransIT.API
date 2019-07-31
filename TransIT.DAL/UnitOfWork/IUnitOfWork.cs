@@ -8,26 +8,47 @@ namespace TransIT.DAL.UnitOfWork
     public interface IUnitOfWork 
     {
         IActionTypeRepository ActionTypeRepository { get; }
+
         ICurrencyRepository CurrencyRepository { get; }
+
         ICountryRepository CountryRepository { get; }
+
         IBillRepository BillRepository { get; }
+
         IDocumentRepository DocumentRepository { get; }
+
         IIssueRepository IssueRepository { get; }
+
         IIssueLogRepository IssueLogRepository { get; }
+
         IMalfunctionRepository MalfunctionRepository { get; }
+
         IMalfunctionGroupRepository MalfunctionGroupRepository { get; }
+
         IMalfunctionSubgroupRepository MalfunctionSubgroupRepository { get; }
+
         IStateRepository StateRepository { get; }
+
         ISupplierRepository SupplierRepository { get; }
+
         IVehicleRepository VehicleRepository { get; }
+
         IVehicleTypeRepository VehicleTypeRepository { get; }
+
         IEmployeeRepository EmployeeRepository { get; }
+
         IPostRepository PostRepository { get; }
-        ITransitionRepository TransitionRepository { get; set; }
-        ILocationRepository LocationRepository { get; set; }
-        IUserRepository UserRepository { get; set; }
-        RoleManager<Role> RoleManager { get; set; }
-        UserManager<User> UserManager { get; set; }
+
+        ITransitionRepository TransitionRepository { get; }
+
+        ILocationRepository LocationRepository { get; }
+
+        IUserRepository UserRepository { get; }
+
+        RoleManager<Role> RoleManager { get; }
+
+        UserManager<User> UserManager { get; }
+
         Task<int> SaveAsync();
     }
 }

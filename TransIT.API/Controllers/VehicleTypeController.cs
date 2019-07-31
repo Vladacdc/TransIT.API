@@ -3,8 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TransIT.BLL.DTOs;
-using TransIT.BLL.Services;
-using TransIT.BLL.Services.Interfaces;
+using TransIT.BLL.Factory;
 
 namespace TransIT.API.Controllers
 {
@@ -15,18 +14,18 @@ namespace TransIT.API.Controllers
     [Authorize(Roles = "ADMIN,ANALYST,ENGINEER")]
     public class VehicleTypeController : FilterController<VehicleTypeDTO>
     {
-        private readonly IVehicleTypeService _vehicleTypeService;
+        private readonly IServiceFactory _serviceFactory;
 
-        public VehicleTypeController(IVehicleTypeService vehicleTypeService, IFilterService<VehicleTypeDTO> filterService)
-            : base(filterService)
+        public VehicleTypeController(IServiceFactory serviceFactory, IFilterServiceFactory filterServiceFactory)
+            : base(filterServiceFactory)
         {
-            _vehicleTypeService = vehicleTypeService;
+            _serviceFactory = serviceFactory;
         }
 
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] uint offset = 0, uint amount = 1000)
         {
-            var result = await _vehicleTypeService.GetRangeAsync(offset, amount);
+            var result = await _serviceFactory.VehicleTypeService.GetRangeAsync(offset, amount);
             if (result != null)
             {
                 return Json(result);
@@ -38,7 +37,7 @@ namespace TransIT.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            var result = await _vehicleTypeService.GetAsync(id);
+            var result = await _serviceFactory.VehicleTypeService.GetAsync(id);
             if (result != null)
             {
                 return Json(result);
@@ -50,7 +49,7 @@ namespace TransIT.API.Controllers
         [HttpGet("/search")]
         public async Task<IActionResult> Get([FromQuery] string search)
         {
-            var result = await _vehicleTypeService.SearchAsync(search);
+            var result = await _serviceFactory.VehicleTypeService.SearchAsync(search);
             if (result != null)
             {
                 return Json(result);
@@ -63,7 +62,7 @@ namespace TransIT.API.Controllers
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Create([FromBody] VehicleTypeDTO vehicleTypeDto)
         {
-            var createdDto = await _vehicleTypeService.CreateAsync(vehicleTypeDto);
+            var createdDto = await _serviceFactory.VehicleTypeService.CreateAsync(vehicleTypeDto);
             if (createdDto != null)
             {
                 return CreatedAtAction(nameof(Create), createdDto);
@@ -78,7 +77,7 @@ namespace TransIT.API.Controllers
         {
             vehicleTypeDto.Id = id;
 
-            var result = await _vehicleTypeService.UpdateAsync(vehicleTypeDto);
+            var result = await _serviceFactory.VehicleTypeService.UpdateAsync(vehicleTypeDto);
 
             if (result != null)
             {
@@ -92,7 +91,7 @@ namespace TransIT.API.Controllers
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Delete(int id)
         {
-            await _vehicleTypeService.DeleteAsync(id);
+            await _serviceFactory.VehicleTypeService.DeleteAsync(id);
             return NoContent();
         }
     }

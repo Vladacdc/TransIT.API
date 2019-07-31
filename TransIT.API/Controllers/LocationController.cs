@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TransIT.BLL.DTOs;
 using TransIT.BLL.Factory;
-using TransIT.BLL.Services;
 
 namespace TransIT.API.Controllers
 {
@@ -17,10 +16,8 @@ namespace TransIT.API.Controllers
     {
         private readonly IServiceFactory _serviceFactory;
 
-        public LocationController(
-            IServiceFactory serviceFactory,
-            IFilterService<LocationDTO> filterService)
-            : base(filterService)
+        public LocationController(IServiceFactory serviceFactory, IFilterServiceFactory filterServiceFactory)
+            : base(filterServiceFactory)
         {
             _serviceFactory = serviceFactory;
         }

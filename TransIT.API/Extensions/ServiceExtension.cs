@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TransIT.BLL.DTOs;
+using TransIT.BLL.Factory;
 using TransIT.BLL.Mappings;
 using TransIT.BLL.Services;
 using TransIT.BLL.Services.FilterServices;
@@ -23,23 +24,23 @@ namespace TransIT.API.Extensions
     {
         public static void ConfigureDbContext(
             this IServiceCollection services,
-            IConfiguration Configuration,
-            IHostingEnvironment Environment)
+            IConfiguration configuration,
+            IHostingEnvironment environment)
         {
-            void configureConnection(DbContextOptionsBuilder options)
+            void ConfigureConnection(DbContextOptionsBuilder options)
             {
-                if (Environment.IsDevelopment())
+                if (environment.IsDevelopment())
                 {
-                    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("TransIT.API"));
+                    options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("TransIT.API"));
                 }
 
-                if (Environment.IsProduction())
+                if (environment.IsProduction())
                 {
-                    options.UseSqlServer(Configuration.GetConnectionString("AzureConnection"), b => b.MigrationsAssembly("TransIT.API"));
+                    options.UseSqlServer(configuration.GetConnectionString("AzureConnection"), b => b.MigrationsAssembly("TransIT.API"));
                 }
             }
 
-            services.AddDbContext<TransITDBContext>(configureConnection);
+            services.AddDbContext<TransITDBContext>(ConfigureConnection);
         }
 
         public static void ConfigureIdentity(this IServiceCollection services)
@@ -147,6 +148,9 @@ namespace TransIT.API.Extensions
             services.AddScoped<IFilterService<TransitionDTO>, TransitionFilterService>();
             services.AddScoped<IFilterService<LocationDTO>, LocationFilterService>();
             services.AddScoped<IFilterService<UserDTO>, UserFilterService>();
+
+            services.AddScoped<IFilterServiceFactory, FilterServiceFactory>();
+            services.AddScoped<IServiceFactory, ServiceFactory>();
         }
 
         public static void ConfigureModelRepositories(this IServiceCollection services)

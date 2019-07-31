@@ -3,9 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TransIT.BLL.DTOs;
-using TransIT.BLL.Services;
-using TransIT.BLL.Services.Interfaces;
-using TransIT.DAL.Models.Entities;
+using TransIT.BLL.Factory;
 
 namespace TransIT.API.Controllers
 {
@@ -16,18 +14,18 @@ namespace TransIT.API.Controllers
     [Authorize(Roles = "ADMIN,ENGINEER,ANALYST")]
     public class DocumentController : FilterController<DocumentDTO>
     {
-        private readonly IDocumentService _documentService;
+        private readonly IServiceFactory _serviceFactory;
 
-        public DocumentController(IDocumentService documentService, IFilterService<DocumentDTO> filterService)
-            : base(filterService)
+        public DocumentController(IServiceFactory serviceFactory, IFilterServiceFactory filterServiceFactory)
+            : base(filterServiceFactory)
         {
-            _documentService = documentService;
+            _serviceFactory = serviceFactory;
         }
 
-        [HttpGet("~/api/v1/" + nameof(IssueLog) + "/{issueLogId}/" + nameof(Document))]
+        [HttpGet("~/api/v1/IssueLog/{issueLogId}/Document")]
         public async Task<IActionResult> GetByIssueLog(int issueLogId)
         {
-            var result = await _documentService.GetRangeByIssueLogIdAsync(issueLogId);
+            var result = await _serviceFactory.DocumentService.GetRangeByIssueLogIdAsync(issueLogId);
 
             if (result != null)
             {
@@ -37,25 +35,25 @@ namespace TransIT.API.Controllers
             return BadRequest();
         }
 
-        [HttpGet("~/api/v1/" + nameof(Document) + "/{id}/file")]
+        [HttpGet("~/api/v1/Document/{id}/file")]
         public async Task<IActionResult> DownloadFile(int id)
         {
-            var document = await _documentService.GetDocumentWithData(id);
+            var document = await _serviceFactory.DocumentService.GetDocumentWithData(id);
 
             return File(document.Data, document.ContentType);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromForm] DocumentDTO documentDTO)
+        public async Task<IActionResult> Create([FromForm] DocumentDTO documentDto)
         {
-            if (documentDTO.File == null && documentDTO.File.Length == 0)
+            if (documentDto.File == null && documentDto.File?.Length == 0)
             {
                 return Content("file not selected");
             }
 
-            var createdEntity = await _documentService.CreateAsync(documentDTO);
+            var createdEntity = await _serviceFactory.DocumentService.CreateAsync(documentDto);
 
-            if (documentDTO.ContentType != "application/pdf")
+            if (documentDto.ContentType != "application/pdf")
             {
                 return Content("format is not pdf");
             }
@@ -68,10 +66,10 @@ namespace TransIT.API.Controllers
             return BadRequest();
         }
 
-        [HttpDelete("~/api/v1/" + nameof(Document) + "/{id}")]
+        [HttpDelete("~/api/v1/Document/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            await _documentService.DeleteAsync(id);
+            await _serviceFactory.DocumentService.DeleteAsync(id);
             return NoContent();
         }
     }

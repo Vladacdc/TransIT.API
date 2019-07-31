@@ -10,7 +10,6 @@ using TransIT.API.Extensions;
 using TransIT.API.Hubs;
 using TransIT.BLL.DTOs;
 using TransIT.BLL.Factory;
-using TransIT.BLL.Services;
 
 namespace TransIT.API.Controllers
 {
@@ -27,29 +26,12 @@ namespace TransIT.API.Controllers
 
         public IssueController(
             IServiceFactory serviceFactory,
-            IFilterService<IssueDTO> filterService,
+            IFilterServiceFactory filterServiceFactory,
             IHubContext<IssueHub> issueHub)
-            : base(filterService)
+            : base(filterServiceFactory)
         {
             _serviceFactory = serviceFactory;
             _issueHub = issueHub;
-        }
-
-        private async Task<IEnumerable<IssueDTO>> GetQueryiedForSpecificUser(
-            DataTableRequestDTO model,
-            string userId,
-            bool isCustomer)
-        {
-            return isCustomer
-                    ? await _serviceFactory.IssueService.GetIssuesBySpecificUser(userId)
-                    : await _filterService.GetQueriedAsync(model);
-        }
-        
-        private async Task<ulong> GetTotalRecordsForSpecificUser(string userId, bool isCustomer)
-        {
-            return isCustomer
-                ? await _serviceFactory.IssueService.GetTotalRecordsForSpecificUser(userId)
-                : await _filterService.TotalRecordsAmountAsync();
         }
 
         [HttpGet]
@@ -114,6 +96,20 @@ namespace TransIT.API.Controllers
             return NoContent();
         }
 
+        [DataTableFilterExceptionFilter]
+        [HttpPost("~/api/v1/datatable/[controller]")]
+        public override async Task<IActionResult> Filter(DataTableRequestDTO model)
+        {
+            var isCustomer = User.FindFirst(RoleNames.Schema)?.Value == RoleNames.Register;
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            return Json(
+                ComposeDataTableResponseDto(
+                    await GetQueryiedForSpecificUser(model, userId, isCustomer),
+                    model,
+                    await GetTotalRecordsForSpecificUser(userId, isCustomer)));
+        }
+
         private async Task<IEnumerable<IssueDTO>> GetForCustomer(uint offset, uint amount)
         {
             string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
@@ -125,18 +121,21 @@ namespace TransIT.API.Controllers
             return await _serviceFactory.IssueService.GetRangeAsync(offset, amount);
         }
 
-        [DataTableFilterExceptionFilter]
-        [HttpPost("~/api/v1/datatable/[controller]")]
-        public override async Task<IActionResult> Filter(DataTableRequestDTO model)
+        private async Task<IEnumerable<IssueDTO>> GetQueryiedForSpecificUser(
+            DataTableRequestDTO model,
+            string userId,
+            bool isCustomer)
         {
-            var isCustomer = User.FindFirst(RoleNames.Schema)?.Value == RoleNames.Register;
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            return isCustomer
+                ? await _serviceFactory.IssueService.GetIssuesBySpecificUser(userId)
+                : await _filterServiceFactory.GetService<IssueDTO>().GetQueriedAsync(model);
+        }
 
-            return Json(
-                ComposeDataTableResponseDTO(
-                    await GetQueryiedForSpecificUser(model, userId, isCustomer),
-                    model,
-                    await GetTotalRecordsForSpecificUser(userId, isCustomer)));
+        private async Task<ulong> GetTotalRecordsForSpecificUser(string userId, bool isCustomer)
+        {
+            return isCustomer
+                ? await _serviceFactory.IssueService.GetTotalRecordsForSpecificUser(userId)
+                : await _filterServiceFactory.GetService<IssueDTO>().TotalRecordsAmountAsync();
         }
     }
 }

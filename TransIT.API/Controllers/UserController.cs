@@ -5,8 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TransIT.API.Extensions;
 using TransIT.BLL.DTOs;
-using TransIT.BLL.Services;
-using TransIT.BLL.Services.Interfaces;
+using TransIT.BLL.Factory;
 
 namespace TransIT.API.Controllers
 {
@@ -17,12 +16,12 @@ namespace TransIT.API.Controllers
     [Authorize(Roles = "ADMIN,ENGINEER")]
     public class UserController : FilterController<UserDTO>
     {
-        private readonly IUserService _userService;
+        private readonly IServiceFactory _serviceFactory;
 
-        public UserController(IUserService userService, IFilterService<UserDTO> filterService)
-            : base(filterService)
+        public UserController(IServiceFactory serviceFactory, IFilterServiceFactory filterServiceFactory)
+            : base(filterServiceFactory)
         {
-            _userService = userService;
+            _serviceFactory = serviceFactory;
         }
 
         [HttpPut("{id}")]
@@ -30,7 +29,7 @@ namespace TransIT.API.Controllers
         public async Task<IActionResult> Update(string id, [FromBody] UserDTO obj)
         {
             obj.Id = id;
-            var result = await _userService.UpdateAsync(obj);
+            var result = await _serviceFactory.UserService.UpdateAsync(obj);
             return result != null
                 ? NoContent()
                 : (IActionResult)BadRequest();
@@ -40,8 +39,8 @@ namespace TransIT.API.Controllers
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> ChangePassword(string id, [FromBody] ChangePasswordDTO changePassword)
         {
-            UserDTO user = await _userService.GetAsync(id);
-            var result = await _userService.UpdatePasswordAsync(user, changePassword.OldPassword, changePassword.Password);
+            var user = await _serviceFactory.UserService.GetAsync(id);
+            var result = await _serviceFactory.UserService.UpdatePasswordAsync(user, changePassword.OldPassword, changePassword.Password);
 
             return result != null
                 ? NoContent()
@@ -54,9 +53,9 @@ namespace TransIT.API.Controllers
             switch (User.FindFirst(RoleNames.Schema)?.Value)
             {
                 case RoleNames.Admin:
-                    return Ok(await _userService.GetRangeAsync(offset, amount));
+                    return Ok(await _serviceFactory.UserService.GetRangeAsync(offset, amount));
                 case RoleNames.Engineer:
-                    var result = await _userService.GetAssignees(offset, amount);
+                    var result = await _serviceFactory.UserService.GetAssignees(offset, amount);
                     return result != null
                         ? Ok(result)
                         : (IActionResult)BadRequest();
@@ -69,18 +68,18 @@ namespace TransIT.API.Controllers
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Create([FromBody] UserDTO obj)
         {
-            var userCreatedResult = await _userService.CreateAsync(obj);
+            var userCreatedResult = await _serviceFactory.UserService.CreateAsync(obj);
 
-            return userCreatedResult != null ?
-                CreatedAtAction(nameof(Create), userCreatedResult) :
-                (IActionResult)BadRequest();
+            return userCreatedResult != null
+                ? CreatedAtAction(nameof(Create), userCreatedResult)
+                : (IActionResult)BadRequest();
         }
 
         [HttpDelete("{id}")]
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Delete(string id)
         {
-            await _userService.DeleteAsync(id);
+            await _serviceFactory.UserService.DeleteAsync(id);
             return NoContent();
         }
     }
