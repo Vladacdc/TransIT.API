@@ -10,7 +10,6 @@ using TransIT.API.EndpointFilters.OnActionExecuting;
 using TransIT.API.EndpointFilters.OnException;
 using TransIT.API.Extensions;
 using TransIT.API.Hubs;
-using TransIT.BLL.Factory;
 
 namespace TransIT.API
 {
@@ -29,17 +28,11 @@ namespace TransIT.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.ConfigureDbContext(Configuration, Environment);
-            services.ConfigureIdentity();
+            services.ConfigureApplication(Configuration, Environment);
 
             services.AddSignalR();
-            services.ConfigureAutoMapper();
             services.ConfigureAuthentication(Configuration);
             services.ConfigureCors();
-            services.ConfigureModelRepositories();
-            services.ConfigureDataAccessServices();
-
-            services.AddScoped<IServiceFactory, ServiceFactory>();
 
             services.ConfigureSwagger();
 
