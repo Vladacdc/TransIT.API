@@ -33,16 +33,23 @@ namespace TransIT.BLL.Helpers
             }
         }
         
-        public static object DetectStringType(string stringValue) =>
-            stringValue == "null"
-                ? null
-                : DateTime.TryParse(stringValue, out var date)
-                    ? date
-                    : int.TryParse(stringValue, out var num)
-                        ? num
-                        : bool.TryParse(stringValue, out var boolean)
-                            ? boolean
-                            : stringValue as object;
+        public static object DetectStringType(string stringValue, string entityType)
+        {
+            if (entityType == "priority")
+            {
+                return int.TryParse(stringValue, out var num);
+            }
+            else
+            {
+                return stringValue == "null" ? null
+                      : DateTime.TryParse(stringValue, out var date) ? date
+                          : int.TryParse(stringValue, out var num)
+                              ? num.ToString()
+                              : bool.TryParse(stringValue, out var boolean)
+                                  ? boolean
+                                  : stringValue as object;
+            }
+        }
 
         public static IQueryable<TEntity> WhereGreater<TEntity>(
             this IQueryable<TEntity> source,
