@@ -110,5 +110,11 @@ namespace TransIT.BLL.Services.ImplementedServices
             User user = await _unitOfWork.UserManager.FindByIdAsync(id);
             await _unitOfWork.UserManager.DeleteAsync(user);
         }
+
+        public async Task<IEnumerable<RoleDTO>> GetRoles()
+        {
+            var roles = _mapper.Map<IEnumerable<RoleDTO>>(await _unitOfWork.RoleManager.Roles.ToListAsync());
+            return roles;
+        }
     }
 }
