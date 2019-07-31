@@ -116,5 +116,10 @@ namespace TransIT.BLL.Services.ImplementedServices
             var roles = _mapper.Map<IEnumerable<RoleDTO>>(await _unitOfWork.RoleManager.Roles.ToListAsync());
             return roles;
         }
+
+        public void UpdateCurrentUserId(string newValue)
+        {
+            _unitOfWork.UserRepository.UpdateCurrentUserId(newValue);
+        }
     }
 }

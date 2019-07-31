@@ -30,6 +30,7 @@ namespace TransIT.DAL.UnitOfWork
         public  ILocationRepository LocationRepository { get; set; }
         public RoleManager<Role> RoleManager { get; set; }
         public UserManager<User> UserManager { get; set; }
+        public IUserRepository UserRepository { get; set; }
 
         public UnitOfWork(
             TransITDBContext context,
@@ -51,6 +52,7 @@ namespace TransIT.DAL.UnitOfWork
             IPostRepository postRepository,
             ITransitionRepository transitionRepository,
             ILocationRepository locationRepository,
+            IUserRepository userRepository,
             RoleManager<Role> roleManager,
             UserManager<User> userManager)
         {
@@ -73,6 +75,7 @@ namespace TransIT.DAL.UnitOfWork
             PostRepository = postRepository;
             TransitionRepository = transitionRepository;
             LocationRepository = locationRepository;
+            UserRepository = userRepository;
             RoleManager = roleManager;
             UserManager = userManager;
         }

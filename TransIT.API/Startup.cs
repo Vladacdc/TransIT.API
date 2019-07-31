@@ -45,6 +45,7 @@ namespace TransIT.API
 
             services.AddMvc(options =>
                 {
+                    options.Filters.Add(typeof(SetCurrentUserAttribute));
                     options.Filters.Add(typeof(ValidateModelStateAttribute));
                     options.Filters.Add(typeof(ApiExceptionFilterAttribute));
                 })

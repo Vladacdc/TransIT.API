@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using TransIT.API.DependencyInjection;
 using TransIT.BLL.DTOs;
 using TransIT.BLL.Mappings;
 using TransIT.BLL.Services;
@@ -12,7 +11,6 @@ using TransIT.BLL.Services.FilterServices;
 using TransIT.BLL.Services.ImplementedServices;
 using TransIT.BLL.Services.Interfaces;
 using TransIT.DAL.Models;
-using TransIT.DAL.Models.DependencyInjection;
 using TransIT.DAL.Models.Entities;
 using TransIT.DAL.Repositories;
 using TransIT.DAL.Repositories.ImplementedRepositories;
@@ -41,7 +39,6 @@ namespace TransIT.API.Extensions
                 }
             }
 
-            services.AddScoped<IUser, CurrentUser>();
             services.AddDbContext<TransITDBContext>(configureConnection);
         }
 
@@ -192,6 +189,7 @@ namespace TransIT.API.Extensions
             services.AddScoped<IPostRepository, PostRepository>();
             services.AddScoped<ITransitionRepository, TransitionRepository>();
             services.AddScoped<ILocationRepository, LocationRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<UserManager<User>>();
             services.AddScoped<RoleManager<Role>>();
 

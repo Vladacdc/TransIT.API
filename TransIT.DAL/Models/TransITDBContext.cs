@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using TransIT.DAL.Models.DependencyInjection;
 using TransIT.DAL.Models.Entities;
 using TransIT.DAL.Models.Entities.Abstractions;
 
@@ -17,26 +16,24 @@ namespace TransIT.DAL.Models
         UserRole, IdentityUserLogin<string>,
         IdentityRoleClaim<string>, IdentityUserToken<string>>
     {
-        private readonly IUser _user;
-
-        /// <summary>
-        /// Initializes a new instance of <see cref="TransITDBContext"/> class without <see cref="IUser"/>.
-        /// </summary>
-        /// <param name="options"></param>
-        public TransITDBContext(DbContextOptions<TransITDBContext> options) : this(options, null)
-        {
-
-        }
+        private string _currentUserId;
 
         /// <summary>
         /// Initializes a new instance of <see cref="TransITDBContext"/> class.
         /// </summary>
         /// <param name="options">An options.</param>
         /// <param name="user">A current user, who is using a <see cref="TransITDBContext"/> at the moment.</param>
-        public TransITDBContext(DbContextOptions<TransITDBContext> options, IUser user)
+        public TransITDBContext(DbContextOptions<TransITDBContext> options)
             : base(options)
         {
-            _user = user;
+        }
+
+        public void UpdateCurrentUserId(string newValue)
+        {
+            if (_currentUserId != newValue)
+            {
+                _currentUserId = newValue;
+            }
         }
 
         public virtual DbSet<ActionType> ActionType { get; set; }
@@ -58,9 +55,9 @@ namespace TransIT.DAL.Models
         public virtual DbSet<Vehicle> Vehicle { get; set; }
         public virtual DbSet<VehicleType> VehicleType { get; set; }
 
-        public async override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            if (_user != null && _user.CurrentUserId != null)
+            if (_currentUserId != null && _currentUserId != null)
             {
                 IEnumerable<EntityEntry> unsavedItems = ChangeTracker.Entries()
                         .Where(entity => entity.Entity is IAuditableEntity &&
@@ -73,15 +70,14 @@ namespace TransIT.DAL.Models
                     DateTime now = DateTime.Now;
                     if (item.State == EntityState.Added)
                     {
-                        entity.CreatedById = _user.CurrentUserId;
+                        entity.CreatedById = _currentUserId;
                     }
-                    entity.UpdatedById = _user.CurrentUserId;
+                    entity.UpdatedById = _currentUserId;
                     entity.UpdatedDate = now;
-                } 
+                }
             }
 
-            int records = await base.SaveChangesAsync(cancellationToken);
-            return records;
+            return base.SaveChangesAsync(cancellationToken);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
