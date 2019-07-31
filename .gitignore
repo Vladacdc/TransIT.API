@@ -265,5 +265,4 @@ __pycache__/
 *.pyc
 
 #Migrations
-/TransIT.API/Migrations
-/TransIT.DAL/Migrations
+Migrations
