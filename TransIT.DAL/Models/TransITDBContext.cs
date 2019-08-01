@@ -55,7 +55,6 @@ namespace TransIT.DAL.Models
                 {
                     _currentUserId = value;
                 }
-                _currentUserId = value;
             }
         }
 
