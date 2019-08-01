@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TransIT.API.Extensions;
 using TransIT.BLL.DTOs;
-using TransIT.BLL.Factory;
+using TransIT.BLL.Factories;
 using TransIT.BLL.Services.Interfaces;
 
 namespace TransIT.API.Controllers

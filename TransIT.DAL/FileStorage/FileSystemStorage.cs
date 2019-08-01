@@ -1,11 +1,10 @@
 ﻿using System;
 using System.IO;
 using Microsoft.AspNetCore.Http;
-using TransIT.BLL.Helpers.FileStorageLogger.FileStorageInterface;
 
-namespace TransIT.BLL.Helpers.FileStorageLogger
+namespace TransIT.DAL.FileStorage
 {
-    class FileSystemStorage : IFileStorageLogger
+    class FileSystemStorage : IFileStorage
     {
         public string Create(IFormFile file)
         {

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TransIT.BLL.DTOs;
-using TransIT.BLL.Factory;
+using TransIT.BLL.Factories;
 using TransIT.BLL.Services.Interfaces;
 
 namespace TransIT.API.Controllers

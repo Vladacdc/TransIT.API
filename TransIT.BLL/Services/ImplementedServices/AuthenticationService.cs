@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using TransIT.BLL.DTOs;
-using TransIT.BLL.Helpers.Abstractions;
+using TransIT.BLL.Factories;
 using TransIT.BLL.Services.Interfaces;
 using TransIT.DAL.UnitOfWork;
 

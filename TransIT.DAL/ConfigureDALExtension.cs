@@ -9,6 +9,7 @@ using TransIT.DAL.Repositories;
 using TransIT.DAL.Repositories.ImplementedRepositories;
 using TransIT.DAL.Repositories.InterfacesRepositories;
 using TransIT.DAL.UnitOfWork;
+using TransIT.DAL.FileStorage;
 
 namespace TransIT.DAL
 {
@@ -23,6 +24,7 @@ namespace TransIT.DAL
             services.ConfigureQueryRepositories();
             services.ConfigureDbContext(configuration, environment);
             services.ConfigureIdentity();
+            services.ConfigureFileStorage();
 
             services.AddScoped<IUnitOfWork, UnitOfWork.UnitOfWork>();
         }
@@ -112,5 +114,10 @@ namespace TransIT.DAL
                 options.Password.RequiredUniqueChars = 1;
             });
         }
+        private static void ConfigureFileStorage(this IServiceCollection services)
+        {
+            services.AddScoped<IFileStorage, AzureFileStorage>();
+        }
+
     }
 }

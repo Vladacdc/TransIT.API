@@ -1,15 +1,13 @@
 ﻿using System;
 using Microsoft.AspNetCore.Http;
-using TransIT.BLL.Helpers.FileStorageLogger.FileStorageInterface;
 using Microsoft.WindowsAzure.Storage;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage.Blob;
 using System.IO;
-using TransIT.BLL.Helpers.Configuration;
 
-namespace TransIT.BLL.Helpers.FileStorageLogger
+namespace TransIT.DAL.FileStorage
 {
-    public class AzureFileStorage : IFileStorageLogger
+    public class AzureFileStorage : IFileStorage
     {
         private CloudStorageAccount storageAccount = null;
 

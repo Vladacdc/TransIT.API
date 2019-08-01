@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TransIT.BLL.DTOs;
-using TransIT.BLL.Factory;
+using TransIT.BLL.Factories;
 using TransIT.BLL.Mappings;
 using TransIT.BLL.Services;
 using TransIT.BLL.Services.FilterServices;

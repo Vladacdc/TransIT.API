@@ -7,11 +7,10 @@ using AutoMapper;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using TransIT.BLL.DTOs;
-using TransIT.BLL.Helpers.FileStorageLogger;
-using TransIT.BLL.Helpers.FileStorageLogger.FileStorageInterface;
 using TransIT.BLL.Services.Interfaces;
 using TransIT.DAL.Models.Entities;
 using TransIT.DAL.UnitOfWork;
+using TransIT.DAL.FileStorage;
 
 namespace TransIT.BLL.Services.ImplementedServices
 {
@@ -21,7 +20,7 @@ namespace TransIT.BLL.Services.ImplementedServices
     /// <see cref="IDocumentService"/>
     public class DocumentService : IDocumentService
     {
-        private readonly IFileStorageLogger _storageLogger;
+        private readonly IFileStorage _storageLogger;
 
         private readonly IUnitOfWork _unitOfWork;
 
@@ -32,11 +31,11 @@ namespace TransIT.BLL.Services.ImplementedServices
         /// </summary>
         /// <param name="unitOfWork">Unit of work pattern</param>
         /// <param name="mapper">Mapper</param>
-        public DocumentService(IUnitOfWork unitOfWork, IMapper mapper)
+        public DocumentService(IUnitOfWork unitOfWork, IMapper mapper, IFileStorage fileStorage)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
-            _storageLogger = LoggerProviderFactory.GetFileStorageLogger();
+            _storageLogger = fileStorage;
         }
 
         public async Task<IEnumerable<DocumentDTO>> GetRangeByIssueLogIdAsync(int issueLogId)

@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc.Filters;
-using TransIT.BLL.Factory;
+using TransIT.BLL.Factories;
 
 namespace TransIT.API.EndpointFilters.OnActionExecuting
 {

@@ -2,7 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using TransIT.BLL.DTOs;
 
-namespace TransIT.BLL.Helpers.Abstractions
+namespace TransIT.BLL.Factories
 {
     /// <summary>
     /// Behavior of jwt

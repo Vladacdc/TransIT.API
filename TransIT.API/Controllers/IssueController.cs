@@ -9,7 +9,7 @@ using TransIT.API.EndpointFilters.OnException;
 using TransIT.API.Extensions;
 using TransIT.API.Hubs;
 using TransIT.BLL.DTOs;
-using TransIT.BLL.Factory;
+using TransIT.BLL.Factories;
 using TransIT.BLL.Services.Interfaces;
 
 namespace TransIT.API.Controllers

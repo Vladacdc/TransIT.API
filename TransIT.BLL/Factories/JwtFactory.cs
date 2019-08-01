@@ -4,9 +4,9 @@ using System.Security.Claims;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using TransIT.BLL.DTOs;
-using TransIT.BLL.Helpers.Abstractions;
+using TransIT.BLL.Helpers;
 
-namespace TransIT.BLL.Helpers
+namespace TransIT.BLL.Factories
 {
     public class JwtFactory : IJwtFactory
     {

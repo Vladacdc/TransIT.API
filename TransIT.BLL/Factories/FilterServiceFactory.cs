@@ -1,7 +1,7 @@
 ﻿using TransIT.BLL.DTOs;
 using TransIT.BLL.Services;
 
-namespace TransIT.BLL.Factory
+namespace TransIT.BLL.Factories
 {
     public class FilterServiceFactory : IFilterServiceFactory
     {

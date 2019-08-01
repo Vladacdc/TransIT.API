@@ -1,6 +1,6 @@
 ﻿using TransIT.BLL.Services.Interfaces;
 
-namespace TransIT.BLL.Factory
+namespace TransIT.BLL.Factories
 {
     public class ServiceFactory : IServiceFactory
     {

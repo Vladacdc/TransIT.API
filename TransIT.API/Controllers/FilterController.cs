@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TransIT.API.EndpointFilters.OnException;
 using TransIT.BLL.DTOs;
-using TransIT.BLL.Factory;
+using TransIT.BLL.Factories;
 
 namespace TransIT.API.Controllers
 {
