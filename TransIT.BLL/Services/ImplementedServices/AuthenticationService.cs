@@ -47,7 +47,7 @@ namespace TransIT.BLL.Services.ImplementedServices
             catch (Exception e)
             {
                 _logger.LogError(e, nameof(SignInAsync));
-                throw e;
+                throw;
             }
         }
 
@@ -72,7 +72,7 @@ namespace TransIT.BLL.Services.ImplementedServices
             catch (Exception e)
             {
                 _logger.LogError(e, nameof(TokenAsync));
-                throw e;
+                throw;
             }
         }
     }
