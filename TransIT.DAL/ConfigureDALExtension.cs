@@ -24,7 +24,7 @@ namespace TransIT.DAL
             services.ConfigureQueryRepositories();
             services.ConfigureDbContext(configuration, environment);
             services.ConfigureIdentity();
-            services.ConfigureFileStorage();
+            services.ConfigureFileStorage(configuration,environment);
 
             services.AddScoped<IUnitOfWork, UnitOfWork.UnitOfWork>();
         }
@@ -77,7 +77,10 @@ namespace TransIT.DAL
             services.AddScoped<IQueryRepository<User>, UserQueryRepository>();
         }
 
-        private static void ConfigureDbContext(this IServiceCollection services, IConfiguration configuration, IHostingEnvironment environment)
+        private static void ConfigureDbContext(
+            this IServiceCollection services, 
+            IConfiguration configuration, 
+            IHostingEnvironment environment)
         {
             void ConfigureConnection(DbContextOptionsBuilder options)
             {
@@ -114,9 +117,21 @@ namespace TransIT.DAL
                 options.Password.RequiredUniqueChars = 1;
             });
         }
-        private static void ConfigureFileStorage(this IServiceCollection services)
+        private static void ConfigureFileStorage(
+            this IServiceCollection services,
+            IConfiguration configuration,
+            IHostingEnvironment environment)
         {
             services.AddScoped<IFileStorage, AzureFileStorage>();
+
+            services.Configure<AzureStorageOptions>((options) =>
+            {
+                var azureOptions = configuration.GetSection(nameof(AzureStorageOptions));
+
+                options.AccountName = azureOptions[nameof(AzureStorageOptions.AccountName)];
+                options.AccountKey = azureOptions[nameof(AzureStorageOptions.AccountKey)];
+                options.ConnectionString = azureOptions[nameof(AzureStorageOptions.ConnectionString)];
+            });
         }
 
     }

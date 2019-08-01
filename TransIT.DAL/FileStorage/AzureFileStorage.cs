@@ -1,8 +1,9 @@
 ﻿using System;
 using Microsoft.AspNetCore.Http;
 using Microsoft.WindowsAzure.Storage;
-using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage.Blob;
+using Microsoft.Extensions.Options;
+using System.Threading.Tasks;
 using System.IO;
 
 namespace TransIT.DAL.FileStorage
@@ -10,6 +11,12 @@ namespace TransIT.DAL.FileStorage
     public class AzureFileStorage : IFileStorage
     {
         private CloudStorageAccount storageAccount = null;
+        private AzureStorageOptions _azureOptions;
+
+        public AzureFileStorage(IOptions<AzureStorageOptions> azureOptions)
+        {
+            _azureOptions = azureOptions.Value;
+        }
 
         public string Create(IFormFile file) => CreateAsync(file).Result.ToString();
         public void Delete(string FilePath) => DeleteAsync(FilePath).ConfigureAwait(false);    
@@ -18,10 +25,10 @@ namespace TransIT.DAL.FileStorage
         
         private async Task<Uri> CreateAsync(IFormFile file)
         {
-            if (CloudStorageAccount.TryParse(AzureConfig.ConnectionString, out storageAccount))
+            if (CloudStorageAccount.TryParse(_azureOptions.ConnectionString, out storageAccount))
             {
                 var client = storageAccount.CreateCloudBlobClient();
-                var container = client.GetContainerReference("transitdocuments");
+                var container = client.GetContainerReference(_azureOptions.AccountName);
                 await container.CreateIfNotExistsAsync();
                 if (await container.CreateIfNotExistsAsync())
                     await container.SetPermissionsAsync(new BlobContainerPermissions { PublicAccess = BlobContainerPublicAccessType.Blob });
@@ -42,10 +49,10 @@ namespace TransIT.DAL.FileStorage
 
         public async Task DeleteAsync(string path)
         {
-            if (CloudStorageAccount.TryParse(AzureConfig.ConnectionString, out storageAccount))
+            if (CloudStorageAccount.TryParse(_azureOptions.ConnectionString, out storageAccount))
             {
                 var client = storageAccount.CreateCloudBlobClient();
-                var container = client.GetContainerReference("transitdocuments");
+                var container = client.GetContainerReference(_azureOptions.AccountName);
                 CloudBlockBlob _blockBlob = container.GetBlockBlobReference(Path.GetFileName(path));
                 await _blockBlob.DeleteAsync();
 
@@ -56,9 +63,9 @@ namespace TransIT.DAL.FileStorage
         public async Task<byte[]> DownloadAsync(string path)
         {
             byte[] result;
-            if (!CloudStorageAccount.TryParse(AzureConfig.ConnectionString, out storageAccount)) return null;
+            if (!CloudStorageAccount.TryParse(_azureOptions.ConnectionString, out storageAccount)) return null;
                 var client = storageAccount.CreateCloudBlobClient();
-                var container = client.GetContainerReference("transitdocuments");
+                var container = client.GetContainerReference(_azureOptions.AccountName);
             CloudBlockBlob _blockBlob = container.GetBlockBlobReference(Path.GetFileName(path));
             using (var mStream = new MemoryStream())
             {
