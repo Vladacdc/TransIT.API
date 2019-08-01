@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TransIT.BLL.DTOs;
-using TransIT.BLL.Services;
+using TransIT.BLL.Factory;
 using TransIT.BLL.Services.Interfaces;
 
 namespace TransIT.API.Controllers
@@ -17,10 +17,10 @@ namespace TransIT.API.Controllers
     {
         private readonly ICurrencyService _currencyService;
 
-        public CurrencyController(ICurrencyService currencyService, IFilterService<CurrencyDTO> filterService)
-            : base(filterService)
+        public CurrencyController(IServiceFactory serviceFactory, IFilterServiceFactory filterServiceFactory)
+            : base(filterServiceFactory)
         {
-            _currencyService = currencyService;
+            _currencyService = serviceFactory.CurrencyService;
         }
 
         [HttpGet]

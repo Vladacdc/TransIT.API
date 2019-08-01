@@ -13,8 +13,7 @@ namespace TransIT.API.Hubs
         {
             await Groups.AddToGroupAsync(
                 Context.ConnectionId,
-                Context.User.FindFirst(RoleNames.Schema)?.Value
-                );
+                Context.User.FindFirst(RoleNames.Schema)?.Value);
             await base.OnConnectedAsync();
         }
 

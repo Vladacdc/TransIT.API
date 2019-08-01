@@ -4,6 +4,8 @@ namespace TransIT.BLL.Factory
 {
     public interface IServiceFactory
     {
+        IAuthenticationService AuthenticationService { get; }
+
         IActionTypeService ActionTypeService { get; }
 
         IBillService BillService { get; }

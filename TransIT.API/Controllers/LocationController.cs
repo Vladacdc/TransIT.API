@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TransIT.BLL.DTOs;
 using TransIT.BLL.Factory;
-using TransIT.BLL.Services;
+using TransIT.BLL.Services.Interfaces;
 
 namespace TransIT.API.Controllers
 {
@@ -15,20 +15,18 @@ namespace TransIT.API.Controllers
     [Authorize(Roles = "ADMIN,ENGINEER,ANALYST")]
     public class LocationController : FilterController<LocationDTO>
     {
-        private readonly IServiceFactory _serviceFactory;
+        private readonly ILocationService _locationService;
 
-        public LocationController(
-            IServiceFactory serviceFactory,
-            IFilterService<LocationDTO> filterService)
-            : base(filterService)
+        public LocationController(IServiceFactory serviceFactory, IFilterServiceFactory filterServiceFactory)
+            : base(filterServiceFactory)
         {
-            _serviceFactory = serviceFactory;
+            _locationService = serviceFactory.LocationService;
         }
 
         [HttpGet]
         public virtual async Task<IActionResult> Get([FromQuery] uint offset = 0, uint amount = 1000)
         {
-            var result = await _serviceFactory.LocationService.GetRangeAsync(offset, amount);
+            var result = await _locationService.GetRangeAsync(offset, amount);
             return result != null
                 ? Json(result)
                 : (IActionResult)BadRequest();
@@ -37,7 +35,7 @@ namespace TransIT.API.Controllers
         [HttpGet("{id}")]
         public virtual async Task<IActionResult> Get(int id)
         {
-            var result = await _serviceFactory.LocationService.GetAsync(id);
+            var result = await _locationService.GetAsync(id);
             return result != null
                 ? Json(result)
                 : (IActionResult)BadRequest();
@@ -46,7 +44,7 @@ namespace TransIT.API.Controllers
         [HttpGet("/search")]
         public virtual async Task<IActionResult> Get([FromQuery] string search)
         {
-            var result = await _serviceFactory.LocationService.SearchAsync(search);
+            var result = await _locationService.SearchAsync(search);
             return result != null
                 ? Json(result)
                 : (IActionResult)BadRequest();
@@ -56,7 +54,7 @@ namespace TransIT.API.Controllers
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Create([FromBody] LocationDTO obj)
         {
-            var createdEntity = await _serviceFactory.LocationService.CreateAsync(obj);
+            var createdEntity = await _locationService.CreateAsync(obj);
             return createdEntity != null
                 ? CreatedAtAction(nameof(Create), createdEntity)
                 : (IActionResult)BadRequest();
@@ -68,7 +66,7 @@ namespace TransIT.API.Controllers
         {
             obj.Id = id;
 
-            var result = await _serviceFactory.LocationService.UpdateAsync(obj);
+            var result = await _locationService.UpdateAsync(obj);
             return result != null
                 ? NoContent()
                 : (IActionResult)BadRequest();
@@ -78,7 +76,7 @@ namespace TransIT.API.Controllers
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Delete(int id)
         {
-            await _serviceFactory.LocationService.DeleteAsync(id);
+            await _locationService.DeleteAsync(id);
             return NoContent();
         }
     }

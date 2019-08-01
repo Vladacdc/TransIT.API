@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TransIT.BLL.DTOs;
-using TransIT.BLL.Services;
+using TransIT.BLL.Factory;
 using TransIT.BLL.Services.Interfaces;
 
 namespace TransIT.API.Controllers
@@ -17,10 +17,10 @@ namespace TransIT.API.Controllers
     {
         private readonly IStateService _stateService;
 
-        public StateController(IStateService stateService, IFilterService<StateDTO> filterService)
-            : base(filterService)
+        public StateController(IServiceFactory serviceFactory, IFilterServiceFactory filterServiceFactory)
+            : base(filterServiceFactory)
         {
-            _stateService = stateService;
+            _stateService = serviceFactory.StateService;
         }
 
         [HttpGet]

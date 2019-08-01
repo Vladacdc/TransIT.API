@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TransIT.BLL.DTOs;
-using TransIT.BLL.Services;
+using TransIT.BLL.Factory;
 using TransIT.BLL.Services.Interfaces;
 
 namespace TransIT.API.Controllers
@@ -17,10 +17,10 @@ namespace TransIT.API.Controllers
     {
         private readonly ITransitionService _transitionService;
 
-        public TransitionController(ITransitionService transitionService, IFilterService<TransitionDTO> filterService)
-            : base(filterService)
+        public TransitionController(IServiceFactory serviceFactory, IFilterServiceFactory filterServiceFactory)
+            : base(filterServiceFactory)
         {
-            _transitionService = transitionService;
+            _transitionService = serviceFactory.TransitionService;
         }
 
         [HttpGet]

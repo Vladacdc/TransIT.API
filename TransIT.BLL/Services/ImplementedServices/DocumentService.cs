@@ -110,7 +110,7 @@ namespace TransIT.BLL.Services.ImplementedServices
 
             _unitOfWork.DocumentRepository.Update(model);
             await _unitOfWork.SaveAsync();
-            return dto;
+            return _mapper.Map<DocumentDTO>(model);
         }
 
         public async Task DeleteAsync(int id)

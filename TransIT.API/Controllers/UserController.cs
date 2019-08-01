@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TransIT.API.Extensions;
 using TransIT.BLL.DTOs;
-using TransIT.BLL.Services;
+using TransIT.BLL.Factory;
 using TransIT.BLL.Services.Interfaces;
 
 namespace TransIT.API.Controllers
@@ -19,10 +19,10 @@ namespace TransIT.API.Controllers
     {
         private readonly IUserService _userService;
 
-        public UserController(IUserService userService, IFilterService<UserDTO> filterService)
-            : base(filterService)
+        public UserController(IServiceFactory serviceFactory, IFilterServiceFactory filterServiceFactory)
+            : base(filterServiceFactory)
         {
-            _userService = userService;
+            _userService = serviceFactory.UserService;
         }
 
         [HttpPut("{id}")]
@@ -40,7 +40,7 @@ namespace TransIT.API.Controllers
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> ChangePassword(string id, [FromBody] ChangePasswordDTO changePassword)
         {
-            UserDTO user = await _userService.GetAsync(id);
+            var user = await _userService.GetAsync(id);
             var result = await _userService.UpdatePasswordAsync(user, changePassword.OldPassword, changePassword.Password);
 
             return result != null
@@ -71,9 +71,9 @@ namespace TransIT.API.Controllers
         {
             var userCreatedResult = await _userService.CreateAsync(obj);
 
-            return userCreatedResult != null ?
-                CreatedAtAction(nameof(Create), userCreatedResult) :
-                (IActionResult)BadRequest();
+            return userCreatedResult != null
+                ? CreatedAtAction(nameof(Create), userCreatedResult)
+                : (IActionResult)BadRequest();
         }
 
         [HttpDelete("{id}")]

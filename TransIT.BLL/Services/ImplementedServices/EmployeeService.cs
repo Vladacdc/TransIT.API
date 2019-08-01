@@ -59,7 +59,7 @@ namespace TransIT.BLL.Services.ImplementedServices
 
             await _unitOfWork.EmployeeRepository.AddAsync(model);
             await _unitOfWork.SaveAsync();
-            return dto;
+            return _mapper.Map<EmployeeDTO>(model);
         }
 
         public async Task<EmployeeDTO> UpdateAsync(EmployeeDTO dto)
@@ -68,7 +68,7 @@ namespace TransIT.BLL.Services.ImplementedServices
 
             _unitOfWork.EmployeeRepository.Update(model);
             await _unitOfWork.SaveAsync();
-            return dto;
+            return _mapper.Map<EmployeeDTO>(model);
         }
 
         public async Task DeleteAsync(int id)

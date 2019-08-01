@@ -13,24 +13,42 @@ namespace TransIT.DAL.UnitOfWork
         public  IActionTypeRepository ActionTypeRepository { get; }
         public  ICountryRepository CountryRepository { get; }
         public  ICurrencyRepository CurrencyRepository { get; }
+
         public  IBillRepository BillRepository { get; }
+
         public  IDocumentRepository DocumentRepository { get; }
+
         public  IIssueRepository IssueRepository { get; }
+
         public  IIssueLogRepository IssueLogRepository { get; }
+
         public  IMalfunctionRepository MalfunctionRepository { get; }
+
         public  IMalfunctionGroupRepository MalfunctionGroupRepository { get; }
+
         public  IMalfunctionSubgroupRepository MalfunctionSubgroupRepository { get; }
+
         public  IStateRepository StateRepository { get; }
+
         public  ISupplierRepository SupplierRepository { get; }
+
         public  IVehicleRepository VehicleRepository { get; }
+
         public  IVehicleTypeRepository VehicleTypeRepository { get; }
+
         public  IEmployeeRepository EmployeeRepository { get; }
+
         public  IPostRepository PostRepository { get; }
-        public  ITransitionRepository TransitionRepository { get; set; }
-        public  ILocationRepository LocationRepository { get; set; }
-        public RoleManager<Role> RoleManager { get; set; }
-        public UserManager<User> UserManager { get; set; }
-        public IUserRepository UserRepository { get; set; }
+
+        public  ITransitionRepository TransitionRepository { get; }
+
+        public  ILocationRepository LocationRepository { get; }
+
+        public RoleManager<Role> RoleManager { get; }
+
+        public UserManager<User> UserManager { get; }
+
+        public IUserRepository UserRepository { get; }
 
         public UnitOfWork(
             TransITDBContext context,
@@ -84,6 +102,5 @@ namespace TransIT.DAL.UnitOfWork
         {
             return _context.SaveChangesAsync();
         }
-
     }
 }

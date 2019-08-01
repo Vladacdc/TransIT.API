@@ -1,6 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc.Filters;
-using System.Security.Claims;
 using TransIT.BLL.Factory;
 
 namespace TransIT.API.EndpointFilters.OnActionExecuting
@@ -16,7 +15,7 @@ namespace TransIT.API.EndpointFilters.OnActionExecuting
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            string id = context?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var id = context?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             _services.UserService.UpdateCurrentUserId(id);
         }
     }

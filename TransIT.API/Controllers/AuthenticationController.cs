@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TransIT.BLL.DTOs;
+using TransIT.BLL.Factory;
 using TransIT.BLL.Services.Interfaces;
 
 namespace TransIT.API.Controllers
@@ -16,8 +17,10 @@ namespace TransIT.API.Controllers
     {
         private readonly IAuthenticationService _authenticationService;
 
-        public AuthenticationController(IAuthenticationService authenticationService) =>
-            _authenticationService = authenticationService;
+        public AuthenticationController(IServiceFactory serviceFactory)
+        {
+            _authenticationService = serviceFactory.AuthenticationService;
+        }
 
         [HttpPost]
         [Route("signin")]

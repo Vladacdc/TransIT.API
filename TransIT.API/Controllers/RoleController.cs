@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using TransIT.BLL.Factory;
 using TransIT.BLL.Services.Interfaces;
 
 namespace TransIT.API.Controllers
@@ -15,10 +16,10 @@ namespace TransIT.API.Controllers
     {
         private readonly IUserService _userService;
 
-        public RoleController(IUserService userService)
+        public RoleController(IServiceFactory serviceFactory)
             : base()
         {
-            _userService = userService;
+            _userService = serviceFactory.UserService;
         }
 
         [HttpGet]

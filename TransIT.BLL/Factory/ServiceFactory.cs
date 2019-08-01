@@ -4,6 +4,8 @@ namespace TransIT.BLL.Factory
 {
     public class ServiceFactory : IServiceFactory
     {
+        public IAuthenticationService AuthenticationService { get; }
+
         public IActionTypeService ActionTypeService { get; }
 
         public IBillService BillService { get; }
@@ -42,7 +44,8 @@ namespace TransIT.BLL.Factory
 
         public IVehicleTypeService VehicleTypeService { get; }
 
-        public ServiceFactory(IActionTypeService actionTypeService,
+        public ServiceFactory(IAuthenticationService authenticationService,
+            IActionTypeService actionTypeService,
             IBillService billService,
             ICountryService countryService,
             ICurrencyService currencyService,
@@ -62,6 +65,7 @@ namespace TransIT.BLL.Factory
             IVehicleService vehicleService,
             IVehicleTypeService vehicleTypeService)
         {
+            AuthenticationService = authenticationService;
             ActionTypeService = actionTypeService;
             BillService = billService;
             CountryService = countryService;

@@ -10,7 +10,7 @@ using TransIT.API.Extensions;
 using TransIT.API.Hubs;
 using TransIT.BLL.DTOs;
 using TransIT.BLL.Factory;
-using TransIT.BLL.Services;
+using TransIT.BLL.Services.Interfaces;
 
 namespace TransIT.API.Controllers
 {
@@ -21,35 +21,18 @@ namespace TransIT.API.Controllers
     [Authorize(Roles = "ENGINEER,REGISTER,ANALYST")]
     public class IssueController : FilterController<IssueDTO>
     {
-        private readonly IServiceFactory _serviceFactory;
+        private readonly IIssueService _issueService;
 
         private readonly IHubContext<IssueHub> _issueHub;
 
         public IssueController(
             IServiceFactory serviceFactory,
-            IFilterService<IssueDTO> filterService,
+            IFilterServiceFactory filterServiceFactory,
             IHubContext<IssueHub> issueHub)
-            : base(filterService)
+            : base(filterServiceFactory)
         {
-            _serviceFactory = serviceFactory;
+            _issueService = serviceFactory.IssueService;
             _issueHub = issueHub;
-        }
-
-        private async Task<IEnumerable<IssueDTO>> GetQueryiedForSpecificUser(
-            DataTableRequestDTO model,
-            string userId,
-            bool isCustomer)
-        {
-            return isCustomer
-                    ? await _serviceFactory.IssueService.GetIssuesBySpecificUser(userId)
-                    : await _filterService.GetQueriedAsync(model);
-        }
-        
-        private async Task<ulong> GetTotalRecordsForSpecificUser(string userId, bool isCustomer)
-        {
-            return isCustomer
-                ? await _serviceFactory.IssueService.GetTotalRecordsForSpecificUser(userId)
-                : await _filterService.TotalRecordsAmountAsync();
         }
 
         [HttpGet]
@@ -70,7 +53,7 @@ namespace TransIT.API.Controllers
         [HttpGet("{id}")]
         public virtual async Task<IActionResult> Get(int id)
         {
-            var result = await _serviceFactory.IssueService.GetAsync(id);
+            var result = await _issueService.GetAsync(id);
             return result != null
                 ? Json(result)
                 : (IActionResult)BadRequest();
@@ -79,7 +62,7 @@ namespace TransIT.API.Controllers
         [HttpGet("/search")]
         public virtual async Task<IActionResult> Get([FromQuery] string search)
         {
-            var result = await _serviceFactory.IssueService.SearchAsync(search);
+            var result = await _issueService.SearchAsync(search);
             return result != null
                 ? Json(result)
                 : (IActionResult)BadRequest();
@@ -88,7 +71,7 @@ namespace TransIT.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] IssueDTO obj)
         {
-            var createdEntity = await _serviceFactory.IssueService.CreateAsync(obj);
+            var createdEntity = await _issueService.CreateAsync(obj);
             await _issueHub.Clients.Group(RoleNames.Engineer).SendAsync("ReceiveIssues");
             return createdEntity != null
                 ? CreatedAtAction(nameof(Create), createdEntity)
@@ -100,7 +83,7 @@ namespace TransIT.API.Controllers
         {
             obj.Id = id;
 
-            var result = await _serviceFactory.IssueService.UpdateAsync(obj);
+            var result = await _issueService.UpdateAsync(obj);
             return result != null
                 ? NoContent()
                 : (IActionResult)BadRequest();
@@ -110,19 +93,8 @@ namespace TransIT.API.Controllers
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Delete(int id)
         {
-            await _serviceFactory.IssueService.DeleteAsync(id);
+            await _issueService.DeleteAsync(id);
             return NoContent();
-        }
-
-        private async Task<IEnumerable<IssueDTO>> GetForCustomer(uint offset, uint amount)
-        {
-            string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            return await _serviceFactory.IssueService.GetRegisteredIssuesAsync(offset, amount, userId);
-        }
-
-        private async Task<IEnumerable<IssueDTO>> GetIssues(uint offset, uint amount)
-        {
-            return await _serviceFactory.IssueService.GetRangeAsync(offset, amount);
         }
 
         [DataTableFilterExceptionFilter]
@@ -133,10 +105,38 @@ namespace TransIT.API.Controllers
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
             return Json(
-                ComposeDataTableResponseDTO(
+                ComposeDataTableResponseDto(
                     await GetQueryiedForSpecificUser(model, userId, isCustomer),
                     model,
                     await GetTotalRecordsForSpecificUser(userId, isCustomer)));
+        }
+
+        private async Task<IEnumerable<IssueDTO>> GetForCustomer(uint offset, uint amount)
+        {
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            return await _issueService.GetRegisteredIssuesAsync(offset, amount, userId);
+        }
+
+        private async Task<IEnumerable<IssueDTO>> GetIssues(uint offset, uint amount)
+        {
+            return await _issueService.GetRangeAsync(offset, amount);
+        }
+
+        private async Task<IEnumerable<IssueDTO>> GetQueryiedForSpecificUser(
+            DataTableRequestDTO model,
+            string userId,
+            bool isCustomer)
+        {
+            return isCustomer
+                ? await _issueService.GetIssuesBySpecificUser(userId)
+                : await _filterServiceFactory.GetService<IssueDTO>().GetQueriedAsync(model);
+        }
+
+        private async Task<ulong> GetTotalRecordsForSpecificUser(string userId, bool isCustomer)
+        {
+            return isCustomer
+                ? await _issueService.GetTotalRecordsForSpecificUser(userId)
+                : await _filterServiceFactory.GetService<IssueDTO>().TotalRecordsAmountAsync();
         }
     }
 }

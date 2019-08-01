@@ -60,7 +60,7 @@ namespace TransIT.BLL.Services.ImplementedServices
 
             await _unitOfWork.CountryRepository.AddAsync(model);
             await _unitOfWork.SaveAsync();
-            return dto;
+            return _mapper.Map<CountryDTO>(model);
         }
 
         public async Task<CountryDTO> UpdateAsync(CountryDTO dto)
@@ -69,7 +69,7 @@ namespace TransIT.BLL.Services.ImplementedServices
 
             _unitOfWork.CountryRepository.Update(model);
             await _unitOfWork.SaveAsync();
-            return dto;
+            return _mapper.Map<CountryDTO>(model);
         }
 
         public async Task DeleteAsync(int id)
