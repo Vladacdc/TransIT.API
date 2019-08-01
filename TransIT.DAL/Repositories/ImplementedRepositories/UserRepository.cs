@@ -18,9 +18,10 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
             _dbContext = dbContext;
         }
 
-        public void UpdateCurrentUserId(string newValue)
+        public string CurrentUserId
         {
-            _dbContext.UpdateCurrentUserId(newValue);
+            get => _dbContext.CurrentUserId;
+            set => _dbContext.CurrentUserId = value;
         }
     }
 }

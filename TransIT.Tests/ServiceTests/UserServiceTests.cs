@@ -65,7 +65,7 @@ namespace TransIT.Tests
             };
             UserDTO result = await userService.CreateAsync(value);
             Assert.NotNull(
-                await userService.UpdatePasswordAsync(result, value.Password, "HelloWorld123@")
+                await userService.UpdatePasswordAsync(result, "HelloWorld123@")
             );
         }
 
