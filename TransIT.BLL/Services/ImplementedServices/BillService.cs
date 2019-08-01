@@ -51,11 +51,11 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<BillDTO> CreateAsync(BillDTO dto)
         {
-            Bill model = _mapper.Map<Bill>(dto);
+            var model = _mapper.Map<Bill>(dto);
 
             await _unitOfWork.BillRepository.AddAsync(model);
             await _unitOfWork.SaveAsync();
-            return dto;
+            return _mapper.Map<BillDTO>(model);
         }
 
         public async Task<BillDTO> UpdateAsync(BillDTO dto)
@@ -64,7 +64,7 @@ namespace TransIT.BLL.Services.ImplementedServices
 
             _unitOfWork.BillRepository.Update(model);
             await _unitOfWork.SaveAsync();
-            return dto;
+            return _mapper.Map<BillDTO>(model);
         }
 
         public async Task DeleteAsync(int id)

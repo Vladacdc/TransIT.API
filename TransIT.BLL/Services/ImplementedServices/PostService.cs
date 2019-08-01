@@ -66,7 +66,7 @@ namespace TransIT.BLL.Services.ImplementedServices
             var model = _mapper.Map<Post>(dto);
             _unitOfWork.PostRepository.Update(model);
             await _unitOfWork.SaveAsync();
-            return dto;
+            return _mapper.Map<PostDTO>(model);
         }
 
         public async Task DeleteAsync(int id)

@@ -59,7 +59,7 @@ namespace TransIT.BLL.Services.ImplementedServices
 
             await _unitOfWork.CurrencyRepository.AddAsync(model);
             await _unitOfWork.SaveAsync();
-            return dto;
+            return _mapper.Map<CurrencyDTO>(model);
         }
 
         public async Task<CurrencyDTO> UpdateAsync(CurrencyDTO dto)
@@ -68,7 +68,7 @@ namespace TransIT.BLL.Services.ImplementedServices
 
             _unitOfWork.CurrencyRepository.Update(model);
             await _unitOfWork.SaveAsync();
-            return dto;
+            return _mapper.Map<CurrencyDTO>(model);
         }
 
         public async Task DeleteAsync(int id)

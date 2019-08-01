@@ -90,9 +90,9 @@ namespace TransIT.BLL.Services.ImplementedServices
         {
             var model = _mapper.Map<Issue>(dto);
 
-            dto = _mapper.Map<IssueDTO>(_unitOfWork.IssueRepository.UpdateWithIgnoreProperty(model, x => x.StateId));
+            _unitOfWork.IssueRepository.UpdateWithIgnoreProperty(model, x => x.StateId);
             await _unitOfWork.SaveAsync();
-            return dto;
+            return _mapper.Map<IssueDTO>(model);
         }
 
         public async Task DeleteByUserAsync(int issueId, string userId)

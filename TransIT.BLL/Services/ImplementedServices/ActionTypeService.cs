@@ -56,16 +56,16 @@ namespace TransIT.BLL.Services.ImplementedServices
         
         public async Task<ActionTypeDTO> CreateAsync(ActionTypeDTO dto)
         {
-            ActionType model = _mapper.Map<ActionType>(dto);
+            var model = _mapper.Map<ActionType>(dto);
 
             await _unitOfWork.ActionTypeRepository.AddAsync(model);
             await _unitOfWork.SaveAsync();
-            return dto;
+            return _mapper.Map<ActionTypeDTO>(model);
         }
 
         public async Task<ActionTypeDTO> UpdateAsync(ActionTypeDTO dto)
         {
-            ActionType model = _mapper.Map<ActionType>(dto);
+            var model = _mapper.Map<ActionType>(dto);
 
             if (model.IsFixed)
             {
@@ -78,12 +78,12 @@ namespace TransIT.BLL.Services.ImplementedServices
 
             _unitOfWork.ActionTypeRepository.Update(model);
             await _unitOfWork.SaveAsync();
-            return dto;
+            return _mapper.Map<ActionTypeDTO>(model);
         }
 
         public async Task DeleteAsync(int id)
         {
-            ActionType model = await _unitOfWork.ActionTypeRepository.GetByIdAsync(id);
+            var model = await _unitOfWork.ActionTypeRepository.GetByIdAsync(id);
 
             if (model.IsFixed)
             {

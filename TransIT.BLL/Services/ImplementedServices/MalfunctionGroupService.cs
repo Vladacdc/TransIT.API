@@ -68,7 +68,7 @@ namespace TransIT.BLL.Services.ImplementedServices
 
             _unitOfWork.MalfunctionGroupRepository.Update(model);
             await _unitOfWork.SaveAsync();
-            return dto;
+            return _mapper.Map<MalfunctionGroupDTO>(model);
         }
 
         public async Task DeleteAsync(int id)
