@@ -41,7 +41,7 @@ namespace TransIT.API.Controllers
         public async Task<IActionResult> ChangePassword(string id, [FromBody] ChangePasswordDTO changePassword)
         {
             var user = await _userService.GetAsync(id);
-            var result = await _userService.UpdatePasswordAsync(user, changePassword.OldPassword, changePassword.Password);
+            var result = await _userService.UpdatePasswordAsync(user, changePassword.Password);
 
             return result != null
                 ? NoContent()

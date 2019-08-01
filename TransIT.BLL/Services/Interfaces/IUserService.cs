@@ -9,7 +9,7 @@ namespace TransIT.BLL.Services.Interfaces
     /// </summary>
     public interface IUserService
     {
-        Task<UserDTO> UpdatePasswordAsync(UserDTO user, string oldPassword, string newPassword);
+        Task<UserDTO> UpdatePasswordAsync(UserDTO user, string newPassword);
         Task<IEnumerable<UserDTO>> GetAssignees(uint offset, uint amount);
         Task<UserDTO> GetAsync(string id);
         Task<IEnumerable<UserDTO>> GetRangeAsync(uint offset, uint amount);

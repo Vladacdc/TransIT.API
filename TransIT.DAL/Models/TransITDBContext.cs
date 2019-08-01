@@ -28,14 +28,6 @@ namespace TransIT.DAL.Models
         {
         }
 
-        public void UpdateCurrentUserId(string newValue)
-        {
-            if (_currentUserId != newValue)
-            {
-                _currentUserId = newValue;
-            }
-        }
-
         public virtual DbSet<ActionType> ActionType { get; set; }
         public virtual DbSet<Bill> Bill { get; set; }
         public virtual DbSet<Country> Country { get; set; }
@@ -54,10 +46,22 @@ namespace TransIT.DAL.Models
         public virtual DbSet<Transition> Transition { get; set; }
         public virtual DbSet<Vehicle> Vehicle { get; set; }
         public virtual DbSet<VehicleType> VehicleType { get; set; }
+        public string CurrentUserId
+        {
+            get => _currentUserId;
+            set
+            {
+                if (_currentUserId != value)
+                {
+                    _currentUserId = value;
+                }
+                _currentUserId = value;
+            }
+        }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            if (_currentUserId != null && _currentUserId != null)
+            if (CurrentUserId != null && CurrentUserId != null)
             {
                 IEnumerable<EntityEntry> unsavedItems = ChangeTracker.Entries()
                         .Where(entity => entity.Entity is IAuditableEntity &&
@@ -70,9 +74,9 @@ namespace TransIT.DAL.Models
                     DateTime now = DateTime.Now;
                     if (item.State == EntityState.Added)
                     {
-                        entity.CreatedById = _currentUserId;
+                        entity.CreatedById = CurrentUserId;
                     }
-                    entity.UpdatedById = _currentUserId;
+                    entity.UpdatedById = CurrentUserId;
                     entity.UpdatedDate = now;
                 }
             }

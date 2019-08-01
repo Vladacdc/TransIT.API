@@ -57,11 +57,14 @@ namespace TransIT.BLL.Services.ImplementedServices
             return updateResult.Succeeded ? _mapper.Map<UserDTO>(user) : null;
         }
 
-        public virtual async Task<UserDTO> UpdatePasswordAsync(UserDTO user, string oldPassword, string newPassword)
+        public virtual async Task<UserDTO> UpdatePasswordAsync(UserDTO user, string newPassword)
         {
             User entity = await _unitOfWork.UserManager.FindByIdAsync(user.Id);
-            IdentityResult result = await _unitOfWork.UserManager
-                .ChangePasswordAsync(entity, oldPassword, newPassword);
+            IdentityResult result = await _unitOfWork.UserManager.RemovePasswordAsync(entity);
+            if (result.Succeeded)
+            {
+                result = await _unitOfWork.UserManager.AddPasswordAsync(entity, newPassword);
+            }
             return result.Succeeded ? user : null;
         }
 
