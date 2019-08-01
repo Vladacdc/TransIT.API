@@ -2,6 +2,6 @@
 {
     public interface IUserRepository
     {
-        void UpdateCurrentUserId(string newValue);
+        string CurrentUserId { get; set; }
     }
 }

@@ -45,10 +45,11 @@ namespace TransIT.BLL.Services.ImplementedServices
         }
 
         /// <see cref="IIssueService"/>
-        public async Task<IEnumerable<IssueDTO>> GetRegisteredIssuesAsync(uint offset, uint amount, string userId)
+        public async Task<IEnumerable<IssueDTO>> GetRegisteredIssuesAsync(uint offset, uint amount)
         {
+            string currentUserId = _unitOfWork.UserRepository.CurrentUserId;
             var entities = await _unitOfWork.IssueRepository.GetQueryable()
-                  .Where(i => i.CreatedById == userId)
+                  .Where(i => i.CreatedById == currentUserId)
                   .Skip((int)offset)
                   .Take((int)amount)
                   .ToListAsync();
@@ -113,17 +114,21 @@ namespace TransIT.BLL.Services.ImplementedServices
             await _unitOfWork.SaveAsync();
         }
 
-        public async Task<ulong> GetTotalRecordsForSpecificUser(string userId)
+        public async Task<ulong> GetTotalRecordsForCurrentUser()
         {
+            string currentUserId = _unitOfWork.UserRepository.CurrentUserId;
+
             return (ulong)await _unitOfWork.IssueRepository.GetQueryable()
-                .Where(issue => issue.CreatedById == userId)
+                .Where(issue => issue.CreatedById == currentUserId)
                 .LongCountAsync();
         }
 
-        public async Task<IEnumerable<IssueDTO>> GetIssuesBySpecificUser(string userId)
+        public async Task<IEnumerable<IssueDTO>> GetIssuesByCurrentUser()
         {
+            string currentUserId = _unitOfWork.UserRepository.CurrentUserId;
+
             var entities = await _unitOfWork.IssueRepository.GetQueryable()
-                .Where(issue => issue.CreatedById == userId)
+                .Where(issue => issue.CreatedById == currentUserId)
                 .ToListAsync();
             return _mapper.Map<IEnumerable<IssueDTO>>(entities);
         }

@@ -102,19 +102,18 @@ namespace TransIT.API.Controllers
         public override async Task<IActionResult> Filter(DataTableRequestDTO model)
         {
             var isCustomer = User.FindFirst(RoleNames.Schema)?.Value == RoleNames.Register;
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
             return Json(
                 ComposeDataTableResponseDto(
-                    await GetQueryiedForSpecificUser(model, userId, isCustomer),
+                    await GetQueryiedForCurrentUser(model, isCustomer),
                     model,
-                    await GetTotalRecordsForSpecificUser(userId, isCustomer)));
+                    await GetTotalRecordsForCurrentUser(isCustomer)));
         }
 
         private async Task<IEnumerable<IssueDTO>> GetForCustomer(uint offset, uint amount)
         {
             string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            return await _issueService.GetRegisteredIssuesAsync(offset, amount, userId);
+            return await _issueService.GetRegisteredIssuesAsync(offset, amount);
         }
 
         private async Task<IEnumerable<IssueDTO>> GetIssues(uint offset, uint amount)
@@ -122,20 +121,19 @@ namespace TransIT.API.Controllers
             return await _issueService.GetRangeAsync(offset, amount);
         }
 
-        private async Task<IEnumerable<IssueDTO>> GetQueryiedForSpecificUser(
+        private async Task<IEnumerable<IssueDTO>> GetQueryiedForCurrentUser(
             DataTableRequestDTO model,
-            string userId,
             bool isCustomer)
         {
             return isCustomer
-                ? await _issueService.GetIssuesBySpecificUser(userId)
+                ? await _issueService.GetIssuesByCurrentUser()
                 : await _filterServiceFactory.GetService<IssueDTO>().GetQueriedAsync(model);
         }
 
-        private async Task<ulong> GetTotalRecordsForSpecificUser(string userId, bool isCustomer)
+        private async Task<ulong> GetTotalRecordsForCurrentUser(bool isCustomer)
         {
             return isCustomer
-                ? await _issueService.GetTotalRecordsForSpecificUser(userId)
+                ? await _issueService.GetTotalRecordsForCurrentUser()
                 : await _filterServiceFactory.GetService<IssueDTO>().TotalRecordsAmountAsync();
         }
     }

@@ -9,20 +9,22 @@ namespace TransIT.BLL.Services.Interfaces
     /// </summary>
     public interface IIssueService : ICrudService<IssueDTO>
     {
-        Task<ulong> GetTotalRecordsForSpecificUser(string userId);
+        /// <summary>
+        /// Gets a total number of issues, created by a current logged in system user. 
+        /// </summary>
+        /// <returns>An integer number.</returns>
+        Task<ulong> GetTotalRecordsForCurrentUser();
 
         /// <summary>
-        /// Gets all issues specific for current user.
+        /// Gets all issues specific for current logged in system user.
         /// </summary>
-        /// <param name="user">A id of user, which created given issues.</param>
         /// <returns>List of issues, which matched this query.</returns>
-        Task<IEnumerable<IssueDTO>> GetIssuesBySpecificUser(string user);
+        Task<IEnumerable<IssueDTO>> GetIssuesByCurrentUser();
 
         /// <summary>
         /// Gets issues specific for current customer
         /// </summary>
-        /// <param name="user">Id of customer</param>
         /// <returns>List of issues</returns>
-        Task<IEnumerable<IssueDTO>> GetRegisteredIssuesAsync(uint offset, uint amount, string user);
+        Task<IEnumerable<IssueDTO>> GetRegisteredIssuesAsync(uint offset, uint amount);
     }
 }
