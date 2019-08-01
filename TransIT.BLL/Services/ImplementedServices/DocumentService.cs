@@ -101,7 +101,7 @@ namespace TransIT.BLL.Services.ImplementedServices
 
             await _unitOfWork.DocumentRepository.AddAsync(model);
             await _unitOfWork.SaveAsync();
-            return await GetAsync(model.Id);
+            return _mapper.Map<DocumentDTO>(model);
         }
 
         public async Task<DocumentDTO> UpdateAsync(DocumentDTO dto)

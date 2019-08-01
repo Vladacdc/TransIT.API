@@ -53,20 +53,20 @@ namespace TransIT.BLL.Services.ImplementedServices
             return _mapper.Map<IEnumerable<SupplierDTO>>(await suppliers.ToListAsync());
         }
 
-        public async Task<SupplierDTO> CreateAsync(SupplierDTO supplierDto)
+        public async Task<SupplierDTO> CreateAsync(SupplierDTO dto)
         {
-            var model = _mapper.Map<Supplier>(supplierDto);
+            var model = _mapper.Map<Supplier>(dto);
             await _unitOfWork.SupplierRepository.AddAsync(model);
             await _unitOfWork.SaveAsync();
-            return await GetAsync(model.Id);
+            return _mapper.Map<SupplierDTO>(model);
         }
 
-        public async Task<SupplierDTO> UpdateAsync(SupplierDTO supplierDto)
+        public async Task<SupplierDTO> UpdateAsync(SupplierDTO dto)
         {
-            var model = _mapper.Map<Supplier>(supplierDto);
+            var model = _mapper.Map<Supplier>(dto);
             _unitOfWork.SupplierRepository.Update(model);
             await _unitOfWork.SaveAsync();
-            return supplierDto;
+            return _mapper.Map<SupplierDTO>(model);
         }
 
         public async Task DeleteAsync(int id)

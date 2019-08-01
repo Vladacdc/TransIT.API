@@ -58,7 +58,7 @@ namespace TransIT.BLL.Services.ImplementedServices
             var model = _mapper.Map<Post>(dto);
             await _unitOfWork.PostRepository.AddAsync(model);
             await _unitOfWork.SaveAsync();
-            return await GetAsync(model.Id);
+            return _mapper.Map<PostDTO>(model);
         }
 
         public async Task<PostDTO> UpdateAsync(PostDTO dto)

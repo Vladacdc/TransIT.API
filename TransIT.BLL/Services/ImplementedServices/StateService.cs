@@ -71,7 +71,7 @@ namespace TransIT.BLL.Services.ImplementedServices
             var model = _mapper.Map<State>(dto);
             await _unitOfWork.StateRepository.AddAsync(model);
             await _unitOfWork.SaveAsync();
-            return await GetAsync(model.Id);
+            return _mapper.Map<StateDTO>(model);
         }
 
         public async Task<StateDTO> UpdateAsync(StateDTO stateDTO)
@@ -85,11 +85,12 @@ namespace TransIT.BLL.Services.ImplementedServices
             {
                 throw new ArgumentException("Incorrect model");
             };
+
             model.TransName = stateDTO.TransName;
 
             _unitOfWork.StateRepository.Update(model);
             await _unitOfWork.SaveAsync();
-            return await GetAsync(model.Id);
+            return _mapper.Map<StateDTO>(model);
         }
 
         public async Task DeleteAsync(int id)

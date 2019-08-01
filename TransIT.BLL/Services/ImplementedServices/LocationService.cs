@@ -50,7 +50,7 @@ namespace TransIT.BLL.Services.ImplementedServices
             var model = _mapper.Map<Location>(dto);
             await _unitOfWork.LocationRepository.AddAsync(model);
             await _unitOfWork.SaveAsync();
-            return await GetAsync(model.Id);
+            return _mapper.Map<LocationDTO>(model);
         }
 
         public async Task<LocationDTO> UpdateAsync(LocationDTO dto)

@@ -64,9 +64,9 @@ namespace TransIT.BLL.Services.ImplementedServices
         {
             var model = _mapper.Map<IssueLog>(dto);
 
-            var newDto = _mapper.Map<IssueLogDTO>(_unitOfWork.IssueLogRepository.Update(model));
+            _unitOfWork.IssueLogRepository.Update(model);
             await _unitOfWork.SaveAsync();
-            return newDto;
+            return _mapper.Map<IssueLogDTO>(model);
         }
 
         public async Task<IssueLogDTO> CreateAsync(IssueLogDTO issueLogDTO)
@@ -91,7 +91,7 @@ namespace TransIT.BLL.Services.ImplementedServices
 
             await _unitOfWork.IssueLogRepository.AddAsync(model);
             await _unitOfWork.SaveAsync();
-            return await GetAsync(model.Id);
+            return _mapper.Map<IssueLogDTO>(model);
         }
 
         public async Task DeleteAsync(int id)

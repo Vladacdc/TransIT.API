@@ -78,7 +78,7 @@ namespace TransIT.BLL.Services.ImplementedServices
 
             await _unitOfWork.IssueRepository.AddAsync(model);
             await _unitOfWork.SaveAsync();
-            return await GetAsync(model.Id);
+            return _mapper.Map<IssueDTO>(model);
         }
 
         private bool IsWarrantyCase(VehicleDTO vehicle)

@@ -55,20 +55,20 @@ namespace TransIT.BLL.Services.ImplementedServices
             return _mapper.Map<IEnumerable<VehicleTypeDTO>>(await vehicleTypes.ToListAsync());
         }
 
-        public async Task<VehicleTypeDTO> CreateAsync(VehicleTypeDTO vehicleTypeDto)
+        public async Task<VehicleTypeDTO> CreateAsync(VehicleTypeDTO dto)
         {
-            var model = _mapper.Map<VehicleType>(vehicleTypeDto);
+            var model = _mapper.Map<VehicleType>(dto);
             await _unitOfWork.VehicleTypeRepository.AddAsync(model);
             await _unitOfWork.SaveAsync();
-            return await GetAsync(model.Id);
+            return _mapper.Map<VehicleTypeDTO>(model);
         }
 
-        public async Task<VehicleTypeDTO> UpdateAsync(VehicleTypeDTO vehicleTypeDto)
+        public async Task<VehicleTypeDTO> UpdateAsync(VehicleTypeDTO dto)
         {
-            var model = _mapper.Map<VehicleType>(vehicleTypeDto);
+            var model = _mapper.Map<VehicleType>(dto);
             _unitOfWork.VehicleTypeRepository.Update(model);
             await _unitOfWork.SaveAsync();
-            return vehicleTypeDto;
+            return _mapper.Map<VehicleTypeDTO>(model);
         }
 
         public async Task DeleteAsync(int id)

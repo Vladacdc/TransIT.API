@@ -51,7 +51,7 @@ namespace TransIT.BLL.Services.ImplementedServices
             var model = _mapper.Map<Transition>(dto);
             await _unitOfWork.TransitionRepository.AddAsync(model);
             await _unitOfWork.SaveAsync();
-            return await GetAsync(model.Id);
+            return _mapper.Map<TransitionDTO>(model);
         }
 
         public async Task<TransitionDTO> UpdateAsync(TransitionDTO dto)
@@ -82,6 +82,5 @@ namespace TransIT.BLL.Services.ImplementedServices
             _unitOfWork.TransitionRepository.Remove(model);
             await _unitOfWork.SaveAsync();
         }
-
     }
 }

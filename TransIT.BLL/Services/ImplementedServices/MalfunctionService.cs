@@ -59,7 +59,7 @@ namespace TransIT.BLL.Services.ImplementedServices
 
             await _unitOfWork.MalfunctionRepository.AddAsync(model);
             await _unitOfWork.SaveAsync();
-            return await GetAsync(model.Id);
+            return _mapper.Map<MalfunctionDTO>(model);
         }
 
         public async Task<MalfunctionDTO> UpdateAsync(MalfunctionDTO dto)
