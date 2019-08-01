@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TransIT.BLL.DTOs;
 using TransIT.BLL.Factory;
+using TransIT.BLL.Services.Interfaces;
 
 namespace TransIT.API.Controllers
 {
@@ -14,18 +15,18 @@ namespace TransIT.API.Controllers
     [Authorize(Roles = "ADMIN,WORKER,ENGINEER,REGISTER,ANALYST")]
     public class StateController : FilterController<StateDTO>
     {
-        private readonly IServiceFactory _serviceFactory;
+        private readonly IStateService _stateService;
 
         public StateController(IServiceFactory serviceFactory, IFilterServiceFactory filterServiceFactory)
             : base(filterServiceFactory)
         {
-            _serviceFactory = serviceFactory;
+            _stateService = serviceFactory.StateService;
         }
 
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] uint offset = 0, uint amount = 1000)
         {
-            var result = await _serviceFactory.StateService.GetRangeAsync(offset, amount);
+            var result = await _stateService.GetRangeAsync(offset, amount);
             if (result != null)
             {
                 return Json(result);
@@ -37,7 +38,7 @@ namespace TransIT.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            var result = await _serviceFactory.StateService.GetAsync(id);
+            var result = await _stateService.GetAsync(id);
             if (result != null)
             {
                 return Json(result);
@@ -49,7 +50,7 @@ namespace TransIT.API.Controllers
         [HttpGet("/search")]
         public async Task<IActionResult> Get([FromQuery] string search)
         {
-            var result = await _serviceFactory.StateService.SearchAsync(search);
+            var result = await _stateService.SearchAsync(search);
             if (result != null)
             {
                 return Json(result);
@@ -62,7 +63,7 @@ namespace TransIT.API.Controllers
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Create([FromBody] StateDTO stateDto)
         {
-            var createdDto = await _serviceFactory.StateService.CreateAsync(stateDto);
+            var createdDto = await _stateService.CreateAsync(stateDto);
             if (createdDto != null)
             {
                 return CreatedAtAction(nameof(Create), createdDto);
@@ -77,7 +78,7 @@ namespace TransIT.API.Controllers
         {
             stateDto.Id = id;
 
-            var result = await _serviceFactory.StateService.UpdateAsync(stateDto);
+            var result = await _stateService.UpdateAsync(stateDto);
 
             if (result != null)
             {
@@ -91,7 +92,7 @@ namespace TransIT.API.Controllers
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Delete(int id)
         {
-            await _serviceFactory.StateService.DeleteAsync(id);
+            await _stateService.DeleteAsync(id);
             return NoContent();
         }
     }

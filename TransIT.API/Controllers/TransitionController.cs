@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TransIT.BLL.DTOs;
 using TransIT.BLL.Factory;
+using TransIT.BLL.Services.Interfaces;
 
 namespace TransIT.API.Controllers
 {
@@ -14,18 +15,18 @@ namespace TransIT.API.Controllers
     [Authorize(Roles = "ADMIN,ENGINEER,ANALYST")]
     public class TransitionController : FilterController<TransitionDTO>
     {
-        private readonly IServiceFactory _serviceFactory;
+        private readonly ITransitionService _transitionService;
 
         public TransitionController(IServiceFactory serviceFactory, IFilterServiceFactory filterServiceFactory)
             : base(filterServiceFactory)
         {
-            _serviceFactory = serviceFactory;
+            _transitionService = serviceFactory.TransitionService;
         }
 
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] uint offset = 0, uint amount = 1000)
         {
-            var result = await _serviceFactory.TransitionService.GetRangeAsync(offset, amount);
+            var result = await _transitionService.GetRangeAsync(offset, amount);
             if (result != null)
             {
                 return Json(result);
@@ -37,7 +38,7 @@ namespace TransIT.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            var result = await _serviceFactory.TransitionService.GetAsync(id);
+            var result = await _transitionService.GetAsync(id);
             if (result != null)
             {
                 return Json(result);
@@ -49,7 +50,7 @@ namespace TransIT.API.Controllers
         [HttpGet("/search")]
         public async Task<IActionResult> Get([FromQuery] string search)
         {
-            var result = await _serviceFactory.TransitionService.SearchAsync(search);
+            var result = await _transitionService.SearchAsync(search);
             if (result != null)
             {
                 return Json(result);
@@ -62,7 +63,7 @@ namespace TransIT.API.Controllers
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Create([FromBody] TransitionDTO transitionDto)
         {
-            var createdDto = await _serviceFactory.TransitionService.CreateAsync(transitionDto);
+            var createdDto = await _transitionService.CreateAsync(transitionDto);
             if (createdDto != null)
             {
                 return CreatedAtAction(nameof(Create), createdDto);
@@ -77,7 +78,7 @@ namespace TransIT.API.Controllers
         {
             transitionDto.Id = id;
 
-            var result = await _serviceFactory.TransitionService.UpdateAsync(transitionDto);
+            var result = await _transitionService.UpdateAsync(transitionDto);
 
             if (result != null)
             {
@@ -91,7 +92,7 @@ namespace TransIT.API.Controllers
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Delete(int id)
         {
-            await _serviceFactory.TransitionService.DeleteAsync(id);
+            await _transitionService.DeleteAsync(id);
             return NoContent();
         }
     }

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TransIT.BLL.DTOs;
 using TransIT.BLL.Factory;
+using TransIT.BLL.Services.Interfaces;
 
 namespace TransIT.API.Controllers
 {
@@ -14,18 +15,18 @@ namespace TransIT.API.Controllers
     [Authorize(Roles = "ADMIN,ENGINEER,REGISTER,ANALYST")]
     public class SupplierController : FilterController<SupplierDTO>
     {
-        private readonly IServiceFactory _serviceFactory;
+        private readonly ISupplierService _supplierService;
 
         public SupplierController(IServiceFactory serviceFactory, IFilterServiceFactory filterServiceFactory)
             : base(filterServiceFactory)
         {
-            _serviceFactory = serviceFactory;
+            _supplierService = serviceFactory.SupplierService;
         }
 
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] uint offset = 0, uint amount = 1000)
         {
-            var result = await _serviceFactory.SupplierService.GetRangeAsync(offset, amount);
+            var result = await _supplierService.GetRangeAsync(offset, amount);
             if (result != null)
             {
                 return Json(result);
@@ -37,7 +38,7 @@ namespace TransIT.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            var result = await _serviceFactory.SupplierService.GetAsync(id);
+            var result = await _supplierService.GetAsync(id);
             if (result != null)
             {
                 return Json(result);
@@ -49,7 +50,7 @@ namespace TransIT.API.Controllers
         [HttpGet("/search")]
         public async Task<IActionResult> Get([FromQuery] string search)
         {
-            var result = await _serviceFactory.SupplierService.SearchAsync(search);
+            var result = await _supplierService.SearchAsync(search);
             if (result != null)
             {
                 return Json(result);
@@ -62,7 +63,7 @@ namespace TransIT.API.Controllers
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Create([FromBody] SupplierDTO supplierDto)
         {
-            var createdDto = await _serviceFactory.SupplierService.CreateAsync(supplierDto);
+            var createdDto = await _supplierService.CreateAsync(supplierDto);
             if (createdDto != null)
             {
                 return CreatedAtAction(nameof(Create), createdDto);
@@ -77,7 +78,7 @@ namespace TransIT.API.Controllers
         {
             supplierDto.Id = id;
 
-            var result = await _serviceFactory.SupplierService.UpdateAsync(supplierDto);
+            var result = await _supplierService.UpdateAsync(supplierDto);
 
             if (result != null)
             {
@@ -91,7 +92,7 @@ namespace TransIT.API.Controllers
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Delete(int id)
         {
-            await _serviceFactory.SupplierService.DeleteAsync(id);
+            await _supplierService.DeleteAsync(id);
             return NoContent();
         }
     }

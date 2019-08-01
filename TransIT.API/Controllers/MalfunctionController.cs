@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TransIT.BLL.DTOs;
 using TransIT.BLL.Factory;
+using TransIT.BLL.Services.Interfaces;
 
 namespace TransIT.API.Controllers
 {
@@ -14,18 +15,18 @@ namespace TransIT.API.Controllers
     [Authorize(Roles = "ADMIN,ENGINEER,REGISTER,ANALYST")]
     public class MalfunctionController : FilterController<MalfunctionDTO>
     {
-        private readonly IServiceFactory _serviceFactory;
+        private readonly IMalfunctionService _malfunctionService;
 
         public MalfunctionController(IServiceFactory serviceFactory, IFilterServiceFactory filterServiceFactory)
             : base(filterServiceFactory)
         {
-            _serviceFactory = serviceFactory;
+            _malfunctionService = serviceFactory.MalfunctionService;
         }
 
         [HttpGet]
         public virtual async Task<IActionResult> Get([FromQuery] uint offset = 0, uint amount = 1000)
         {
-            var result = await _serviceFactory.MalfunctionService.GetRangeAsync(offset, amount);
+            var result = await _malfunctionService.GetRangeAsync(offset, amount);
             return result != null
                 ? Json(result)
                 : (IActionResult)BadRequest();
@@ -34,7 +35,7 @@ namespace TransIT.API.Controllers
         [HttpGet("{id}")]
         public virtual async Task<IActionResult> Get(int id)
         {
-            var result = await _serviceFactory.MalfunctionService.GetAsync(id);
+            var result = await _malfunctionService.GetAsync(id);
             return result != null
                 ? Json(result)
                 : (IActionResult)BadRequest();
@@ -43,7 +44,7 @@ namespace TransIT.API.Controllers
         [HttpGet("/search")]
         public virtual async Task<IActionResult> Get([FromQuery] string search)
         {
-            var result = await _serviceFactory.MalfunctionService.SearchAsync(search);
+            var result = await _malfunctionService.SearchAsync(search);
             return result != null
                 ? Json(result)
                 : (IActionResult)BadRequest();
@@ -53,7 +54,7 @@ namespace TransIT.API.Controllers
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Create([FromBody] MalfunctionDTO obj)
         {
-            var createdEntity = await _serviceFactory.MalfunctionService.CreateAsync(obj);
+            var createdEntity = await _malfunctionService.CreateAsync(obj);
             return createdEntity != null
                 ? CreatedAtAction(nameof(Create), createdEntity)
                 : (IActionResult)BadRequest();
@@ -65,7 +66,7 @@ namespace TransIT.API.Controllers
         {
             obj.Id = id;
 
-            var result = await _serviceFactory.MalfunctionService.UpdateAsync(obj);
+            var result = await _malfunctionService.UpdateAsync(obj);
             return result != null
                 ? NoContent()
                 : (IActionResult)BadRequest();
@@ -75,7 +76,7 @@ namespace TransIT.API.Controllers
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Delete(int id)
         {
-            await _serviceFactory.MalfunctionService.DeleteAsync(id);
+            await _malfunctionService.DeleteAsync(id);
             return NoContent();
         }
     }

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TransIT.BLL.DTOs;
 using TransIT.BLL.Factory;
+using TransIT.BLL.Services.Interfaces;
 
 namespace TransIT.API.Controllers
 {
@@ -14,18 +15,18 @@ namespace TransIT.API.Controllers
     [Authorize(Roles = "ADMIN,ENGINEER,REGISTER,ANALYST")]
     public class ActionTypeController : FilterController<ActionTypeDTO>
     {
-        private readonly IServiceFactory _serviceFactory;
+        private readonly IActionTypeService _actionTypeService;
 
         public ActionTypeController(IServiceFactory serviceFactory, IFilterServiceFactory filterServiceFactory)
             : base(filterServiceFactory)
         {
-            _serviceFactory = serviceFactory;
+            _actionTypeService = serviceFactory.ActionTypeService;
         }
 
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] uint offset = 0, uint amount = 1000)
         {
-            var result = await _serviceFactory.ActionTypeService.GetRangeAsync(offset, amount);
+            var result = await _actionTypeService.GetRangeAsync(offset, amount);
             if (result != null)
             {
                 return Json(result);
@@ -37,7 +38,7 @@ namespace TransIT.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            var result = await _serviceFactory.ActionTypeService.GetAsync(id);
+            var result = await _actionTypeService.GetAsync(id);
             if (result != null)
             {
                 return Json(result);
@@ -49,7 +50,7 @@ namespace TransIT.API.Controllers
         [HttpGet("/search")]
         public async Task<IActionResult> Get([FromQuery] string search)
         {
-            var result = await _serviceFactory.ActionTypeService.SearchAsync(search);
+            var result = await _actionTypeService.SearchAsync(search);
             if (result != null)
             {
                 return Json(result);
@@ -62,7 +63,7 @@ namespace TransIT.API.Controllers
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Create([FromBody] ActionTypeDTO actionTypeDTO)
         {
-            var createdDTO = await _serviceFactory.ActionTypeService.CreateAsync(actionTypeDTO);
+            var createdDTO = await _actionTypeService.CreateAsync(actionTypeDTO);
 
             if (createdDTO != null)
             {
@@ -78,7 +79,7 @@ namespace TransIT.API.Controllers
         {
             actionTypeDTO.Id = id;
 
-            var result = await _serviceFactory.ActionTypeService.UpdateAsync(actionTypeDTO);
+            var result = await _actionTypeService.UpdateAsync(actionTypeDTO);
 
             if (result != null)
             {
@@ -92,7 +93,7 @@ namespace TransIT.API.Controllers
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Delete(int id)
         {
-            await _serviceFactory.ActionTypeService.DeleteAsync(id);
+            await _actionTypeService.DeleteAsync(id);
             return NoContent();
         }
     }

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TransIT.BLL.DTOs;
 using TransIT.BLL.Factory;
+using TransIT.BLL.Services.Interfaces;
 
 namespace TransIT.API.Controllers
 {
@@ -14,18 +15,18 @@ namespace TransIT.API.Controllers
     [Authorize(Roles = "ADMIN,ENGINEER,ANALYST")]
     public class DocumentController : FilterController<DocumentDTO>
     {
-        private readonly IServiceFactory _serviceFactory;
+        private readonly IDocumentService _documentService;
 
         public DocumentController(IServiceFactory serviceFactory, IFilterServiceFactory filterServiceFactory)
             : base(filterServiceFactory)
         {
-            _serviceFactory = serviceFactory;
+            _documentService = serviceFactory.DocumentService;
         }
 
         [HttpGet("~/api/v1/IssueLog/{issueLogId}/Document")]
         public async Task<IActionResult> GetByIssueLog(int issueLogId)
         {
-            var result = await _serviceFactory.DocumentService.GetRangeByIssueLogIdAsync(issueLogId);
+            var result = await _documentService.GetRangeByIssueLogIdAsync(issueLogId);
 
             if (result != null)
             {
@@ -38,7 +39,7 @@ namespace TransIT.API.Controllers
         [HttpGet("~/api/v1/Document/{id}/file")]
         public async Task<IActionResult> DownloadFile(int id)
         {
-            var document = await _serviceFactory.DocumentService.GetDocumentWithData(id);
+            var document = await _documentService.GetDocumentWithData(id);
 
             return File(document.Data, document.ContentType);
         }
@@ -51,7 +52,7 @@ namespace TransIT.API.Controllers
                 return Content("file not selected");
             }
 
-            var createdEntity = await _serviceFactory.DocumentService.CreateAsync(documentDto);
+            var createdEntity = await _documentService.CreateAsync(documentDto);
 
             if (documentDto.ContentType != "application/pdf")
             {
@@ -69,7 +70,7 @@ namespace TransIT.API.Controllers
         [HttpDelete("~/api/v1/Document/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            await _serviceFactory.DocumentService.DeleteAsync(id);
+            await _documentService.DeleteAsync(id);
             return NoContent();
         }
     }

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TransIT.BLL.DTOs;
 using TransIT.BLL.Factory;
+using TransIT.BLL.Services.Interfaces;
 
 namespace TransIT.API.Controllers
 {
@@ -14,18 +15,18 @@ namespace TransIT.API.Controllers
     [Authorize(Roles = "ENGINEER,REGISTER,ANALYST")]
     public class BillController : FilterController<BillDTO>
     {
-        private readonly IServiceFactory _serviceFactory;
+        private readonly IBillService _billService;
 
         public BillController(IServiceFactory serviceFactory, IFilterServiceFactory filterServiceFactory)
             : base(filterServiceFactory)
         {
-            _serviceFactory = serviceFactory;
+            _billService = serviceFactory.BillService;
         }
 
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] uint offset = 0, uint amount = 1000)
         {
-            var result = await _serviceFactory.BillService.GetRangeAsync(offset, amount);
+            var result = await _billService.GetRangeAsync(offset, amount);
             if (result != null)
             {
                 return Json(result);
@@ -37,7 +38,7 @@ namespace TransIT.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            var result = await _serviceFactory.BillService.GetAsync(id);
+            var result = await _billService.GetAsync(id);
             if (result != null)
             {
                 return Json(result);
@@ -49,7 +50,7 @@ namespace TransIT.API.Controllers
         [HttpGet("/search")]
         public async Task<IActionResult> Get([FromQuery] string search)
         {
-            var result = await _serviceFactory.BillService.SearchAsync(search);
+            var result = await _billService.SearchAsync(search);
             if (result != null)
             {
                 return Json(result);
@@ -61,7 +62,7 @@ namespace TransIT.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] BillDTO billDTO)
         {
-            var createdDTO = await _serviceFactory.BillService.CreateAsync(billDTO);
+            var createdDTO = await _billService.CreateAsync(billDTO);
 
             if (createdDTO != null)
             {
@@ -76,7 +77,7 @@ namespace TransIT.API.Controllers
         {
             billDTO.Id = id;
 
-            var result = await _serviceFactory.BillService.UpdateAsync(billDTO);
+            var result = await _billService.UpdateAsync(billDTO);
 
             if (result != null)
             {
@@ -89,7 +90,7 @@ namespace TransIT.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            await _serviceFactory.BillService.DeleteAsync(id);
+            await _billService.DeleteAsync(id);
             return NoContent();
         }
     }
