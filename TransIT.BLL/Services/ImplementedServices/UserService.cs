@@ -122,7 +122,7 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public void UpdateCurrentUserId(string newValue)
         {
-            _unitOfWork.UserRepository.UpdateCurrentUserId(newValue);
+            _unitOfWork.UserRepository.CurrentUserId = newValue;
         }
     }
 }
