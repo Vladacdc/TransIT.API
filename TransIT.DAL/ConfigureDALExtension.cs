@@ -122,7 +122,14 @@ namespace TransIT.DAL
             IConfiguration configuration,
             IHostingEnvironment environment)
         {
-            services.AddScoped<IFileStorage, AzureFileStorage>();
+            if (environment.IsProduction())
+            {
+                services.AddScoped<IFileStorage, AzureFileStorage>();
+            }
+            if (environment.IsDevelopment())
+            {
+                services.AddScoped<IFileStorage, LocalFileStorage>();
+            }
 
             services.Configure<AzureStorageOptions>((options) =>
             {

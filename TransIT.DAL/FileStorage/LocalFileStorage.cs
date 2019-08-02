@@ -4,14 +4,13 @@ using Microsoft.AspNetCore.Http;
 
 namespace TransIT.DAL.FileStorage
 {
-    class FileSystemStorage : IFileStorage
+    internal class LocalFileStorage : IFileStorage
     {
         public string Create(IFormFile file)
         {
-            var filePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "//source//" + "TransportITDocuments";
-            //  var filePath = Directory.GetCurrentDirectory() + "\\wwwroot\\" + "TransportITDocuments";
+            var filePath = @"..\TransIT.DAL"+@"\LocalFileStorage";
             Directory.CreateDirectory(filePath);
-            filePath = Path.Combine(filePath, DateTime.Now.ToString("MM/dd/yyyy/HH/mm/ss") + file.FileName);
+            filePath = Path.Combine(filePath, DateTime.Now.ToString("MM_dd_yyyy_HH_mm_ss") + file.FileName);
 
             using (FileStream fileStream = new FileStream(filePath, FileMode.CreateNew))
             {

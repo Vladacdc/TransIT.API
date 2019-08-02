@@ -8,7 +8,7 @@ using System.IO;
 
 namespace TransIT.DAL.FileStorage
 {
-    public class AzureFileStorage : IFileStorage
+    internal class AzureFileStorage : IFileStorage
     {
         private CloudStorageAccount storageAccount = null;
         private AzureStorageOptions _azureOptions;
