@@ -14,6 +14,11 @@ namespace TransIT.DAL.Models
                 .HasName("UQ_VINCODE_UNIQUE")
                 .IsUnique();
 
+
+            builder.HasIndex(e => e.InventoryId)
+               .HasName("UQ_INVENTORY_ID_UNIQUE")
+               .IsUnique();
+
             builder.Property(e => e.Id).HasColumnName("ID");
 
             builder.Property(e => e.Brand)
