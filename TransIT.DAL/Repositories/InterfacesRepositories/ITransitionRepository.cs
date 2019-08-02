@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using TransIT.DAL.Models.Entities;
+﻿using TransIT.DAL.Models.Entities;
 
 namespace TransIT.DAL.Repositories.InterfacesRepositories
 {

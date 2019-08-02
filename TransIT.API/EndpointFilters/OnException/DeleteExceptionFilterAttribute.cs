@@ -13,7 +13,7 @@ namespace TransIT.API.EndpointFilters.OnException
         {
             var exceptionType = context.Exception.GetType();
             var result = new ContentResult();
-            
+
             result.Content = context.Exception.Message;
             result.StatusCode =
                 exceptionType == typeof(UnauthorizedAccessException)

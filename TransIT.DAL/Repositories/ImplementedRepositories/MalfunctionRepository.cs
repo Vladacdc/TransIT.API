@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using TransIT.DAL.Models;
 using TransIT.DAL.Models.Entities;
 using TransIT.DAL.Repositories.InterfacesRepositories;
 
@@ -9,7 +10,7 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
 {
     public class MalfunctionRepository : BaseRepository<Malfunction>, IMalfunctionRepository
     {
-        public MalfunctionRepository(DbContext context)
+        public MalfunctionRepository(TransITDBContext context)
                : base(context)
         {
         }
@@ -24,6 +25,6 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
                     .Include(m => m.Create)
                     .Include(m => m.Mod)
                     .Include(m => m.MalfunctionSubgroup)
-                        .ThenInclude(s => s.MalfunctionGroup).OrderByDescending(u => u.ModDate).ThenByDescending(x => x.CreateDate);
+                        .ThenInclude(s => s.MalfunctionGroup).OrderByDescending(u => u.UpdatedDate).ThenByDescending(x => x.CreatedDate);
     }
 }

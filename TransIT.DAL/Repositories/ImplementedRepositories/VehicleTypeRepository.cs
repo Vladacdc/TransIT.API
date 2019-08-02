@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using TransIT.DAL.Models;
 using TransIT.DAL.Models.Entities;
 using TransIT.DAL.Repositories.InterfacesRepositories;
 
@@ -9,7 +10,7 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
 {
     public class VehicleTypeRepository : BaseRepository<VehicleType>, IVehicleTypeRepository
     {
-        public VehicleTypeRepository(DbContext context)
+        public VehicleTypeRepository(TransITDBContext context)
             : base(context)
         {
         }
@@ -22,6 +23,6 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
 
         protected override IQueryable<VehicleType> ComplexEntities => Entities.
                    Include(a => a.Create).
-                   Include(b => b.Mod).OrderByDescending(u => u.ModDate).ThenByDescending(x => x.CreateDate);
+                   Include(b => b.Mod).OrderByDescending(u => u.UpdatedDate).ThenByDescending(x => x.CreatedDate);
     }
 }

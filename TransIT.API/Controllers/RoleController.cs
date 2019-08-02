@@ -1,44 +1,35 @@
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using TransIT.BLL.Services;
+using TransIT.BLL.Factories;
 using TransIT.BLL.Services.Interfaces;
-using TransIT.BLL.DTOs;
-using TransIT.DAL.Models.Entities;
 
 namespace TransIT.API.Controllers
 {
+    [ApiController]
+    [EnableCors("CorsPolicy")]
+    [Produces("application/json")]
+    [Route("api/v1/[controller]")]
     [Authorize(Roles = "ADMIN")]
-    public class RoleController : DataController<Role, RoleDTO>
+    public class RoleController : Controller
     {
-        private readonly IRoleService _roleService;
-        
-        public RoleController(
-            IMapper mapper, 
-            IRoleService roleService,
-            IFilterService<Role> odService
-            ) : base(mapper, roleService, odService)
+        private readonly IUserService _userService;
+
+        public RoleController(IServiceFactory serviceFactory)
+            : base()
         {
-            _roleService = roleService;
+            _userService = serviceFactory.UserService;
         }
 
-        [HttpPost]
-        public override Task<IActionResult> Create([FromBody] RoleDTO obj)
+        [HttpGet]
+        public async Task<IActionResult> Get()
         {
-            return Task.FromResult(StatusCode(501) as IActionResult);
-        }
-        
-        [HttpPut("{id}")]
-        public override Task<IActionResult> Update(int id, [FromBody] RoleDTO obj)
-        {
-            return Task.FromResult(StatusCode(501) as IActionResult);
-        }
+            var result = await _userService.GetRoles();
 
-        [HttpDelete("{id}")]
-        public override Task<IActionResult> Delete(int id)
-        {
-            return Task.FromResult(StatusCode(501) as IActionResult);
+            return result != null
+                ? Ok(result)
+                : (IActionResult)BadRequest();
         }
     }
 }

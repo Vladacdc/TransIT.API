@@ -1,51 +1,86 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
+using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using TransIT.BLL.DTOs;
 using TransIT.BLL.Services.Interfaces;
 using TransIT.DAL.Models.Entities;
-using TransIT.DAL.Repositories.InterfacesRepositories;
 using TransIT.DAL.UnitOfWork;
 
 namespace TransIT.BLL.Services.ImplementedServices
 {
-    public class TransitionService : CrudService<Transition>, ITransitionService
+    public class TransitionService : ITransitionService
     {
-        public TransitionService(
-            IUnitOfWork unitOfWork,
-            ILogger<CrudService<Transition>> logger,
-            ITransitionRepository repository) : base(unitOfWork, logger, repository) { }
+        private readonly IUnitOfWork _unitOfWork;
 
-        public async override Task DeleteAsync(int id)
+        private readonly IMapper _mapper;
+
+        public TransitionService(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            try
-            {
-                var model = await GetAsync(id);
-                if (model.IsFixed)
-                {
-                    throw new ConstraintException("Current state can not be deleted");
-                }
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
+        }
 
-                _repository.Remove(model);
-                await _unitOfWork.SaveAsync();
-            }
-            catch (DbUpdateException e)
+        public async Task<TransitionDTO> GetAsync(int id)
+        {
+            return _mapper.Map<TransitionDTO>(await _unitOfWork.TransitionRepository.GetByIdAsync(id));
+        }
+
+        public async Task<IEnumerable<TransitionDTO>> GetRangeAsync(uint offset, uint amount)
+        {
+            var entities = await _unitOfWork.TransitionRepository.GetRangeAsync(offset, amount);
+            return _mapper.Map<IEnumerable<TransitionDTO>>(entities);
+        }
+
+        public async Task<IEnumerable<TransitionDTO>> SearchAsync(string search)
+        {
+            var transitions = await _unitOfWork.TransitionRepository.SearchExpressionAsync(
+                            search
+                                .Split(new[] { ' ', ',', '.' }, StringSplitOptions.RemoveEmptyEntries)
+                                .Select(x => x.Trim().ToUpperInvariant())
+                            );
+
+            return _mapper.Map<IEnumerable<TransitionDTO>>(await transitions.ToListAsync());
+        }
+
+        public async Task<TransitionDTO> CreateAsync(TransitionDTO dto)
+        {
+            var model = _mapper.Map<Transition>(dto);
+            await _unitOfWork.TransitionRepository.AddAsync(model);
+            await _unitOfWork.SaveAsync();
+            return _mapper.Map<TransitionDTO>(model);
+        }
+
+        public async Task<TransitionDTO> UpdateAsync(TransitionDTO dto)
+        {
+            var model = _mapper.Map<Transition>(dto);
+            if (model.IsFixed)
             {
-                var sqlExc = e.GetBaseException() as SqlException;
-                if (sqlExc?.Number == 547)
-                {
-                    _logger.LogDebug(sqlExc, $"Number of sql exception: {sqlExc.Number.ToString()}");
-                    throw new ConstraintException("There are constrained entities, delete them firstly.", sqlExc);
-                }
-                _logger.LogError(e, nameof(DeleteAsync), e.Entries);
+                throw new ConstraintException("Can not be edited");
             }
-            catch (Exception e)
+            if (dto.IsFixed)
             {
-                _logger.LogError(e, nameof(DeleteAsync));
-                throw;
+                throw new ArgumentException("Incorrect model");
             }
+
+            _unitOfWork.TransitionRepository.Update(model);
+            await _unitOfWork.SaveAsync();
+            return _mapper.Map<TransitionDTO>(model);
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var model = await GetAsync(id);
+            if (model.IsFixed)
+            {
+                throw new ConstraintException("Can not be deleted");
+            }
+
+            _unitOfWork.TransitionRepository.Remove(model);
+            await _unitOfWork.SaveAsync();
         }
     }
 }

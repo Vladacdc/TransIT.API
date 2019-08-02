@@ -1,13 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TransIT.API.EndpointFilters.OnException;
 using TransIT.BLL.DTOs;
-using TransIT.BLL.Services;
-using TransIT.DAL.Models.Entities.Abstractions;
+using TransIT.BLL.Factories;
 
 namespace TransIT.API.Controllers
 {
@@ -15,54 +13,54 @@ namespace TransIT.API.Controllers
     [EnableCors("CorsPolicy")]
     [Produces("application/json")]
     [Route("api/v1/[controller]")]
-    public abstract class FilterController<TEntity, TEntityDTO> : Controller
-        where TEntity : class, IEntity, new()
-        where TEntityDTO : class
+    public abstract class FilterController<TEntityDto> : Controller
+        where TEntityDto : class, new()
     {
         protected const string DataTableTemplateUri = "~/api/v1/datatable/[controller]";
-        protected readonly IFilterService<TEntity> _filterService;
-        protected readonly IMapper _mapper;
 
-        public FilterController(IFilterService<TEntity> filterService, IMapper mapper)
+        protected readonly IFilterServiceFactory _filterServiceFactory;
+
+        protected FilterController(IFilterServiceFactory filterServiceFactory)
         {
-            _filterService = filterService;
-            _mapper = mapper;
+            _filterServiceFactory = filterServiceFactory;
         }
-        
+
         [DataTableFilterExceptionFilter]
         [HttpPost(DataTableTemplateUri)]
-        public virtual async Task<IActionResult> Filter(DataTableRequestDTO model) =>
-            Json(
-                ComposeDataTableResponseDTO(
+        public virtual async Task<IActionResult> Filter(DataTableRequestDTO model)
+        {
+            return Json(
+                ComposeDataTableResponseDto(
                     await GetMappedEntitiesByModel(model),
                     model,
-                    _filterService.TotalRecordsAmount()
-                    )
-                );
-        
-        protected async Task<IEnumerable<TEntityDTO>> GetMappedEntitiesByModel(DataTableRequestDTO model) =>
-            _mapper.Map<IEnumerable<TEntityDTO>>(
-                await _filterService.GetQueriedAsync(model)
-                );
+                    await _filterServiceFactory.GetService<TEntityDto>().TotalRecordsAmountAsync()));
+        }
 
-        protected virtual DataTableResponseDTO ComposeDataTableResponseDTO(
-            IEnumerable<TEntityDTO> res,
+        protected async Task<IEnumerable<TEntityDto>> GetMappedEntitiesByModel(DataTableRequestDTO model)
+        {
+            return await _filterServiceFactory.GetService<TEntityDto>().GetQueriedAsync(model);
+        }
+
+        protected virtual DataTableResponseDTO ComposeDataTableResponseDto(
+            IEnumerable<TEntityDto> res,
             DataTableRequestDTO model,
-            ulong totalAmount,   
-            string errorMessage = "") =>
-            new DataTableResponseDTO
+            ulong totalAmount,
+            string errorMessage = "")
+        {
+            return new DataTableResponseDTO
             {
-                Draw = (ulong) model.Draw,
+                Draw = (ulong)model.Draw,
                 Data = res.ToArray(),
                 RecordsTotal = totalAmount,
                 RecordsFiltered =
-                    model.Filters != null
-                    && model.Filters.Any()
-                    || model.Search != null
-                    && !string.IsNullOrEmpty(model.Search.Value)
-                        ? (ulong) res.Count()
+                    (model.Filters != null
+                     && model.Filters.Any())
+                    || (model.Search != null
+                        && !string.IsNullOrEmpty(model.Search.Value))
+                        ? (ulong)res.Count()
                         : totalAmount,
-                Error = errorMessage
+                Error = errorMessage,
             };
+        }
     }
 }

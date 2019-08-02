@@ -1,73 +1,42 @@
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using TransIT.API.EndpointFilters.OnException;
 using Microsoft.AspNetCore.SignalR;
-using TransIT.API.Hubs;
-using TransIT.BLL.Services;
-using TransIT.BLL.Services.Interfaces;
-using TransIT.BLL.DTOs;
-using TransIT.DAL.Models.Entities;
+using TransIT.API.EndpointFilters.OnException;
 using TransIT.API.Extensions;
-
+using TransIT.API.Hubs;
+using TransIT.BLL.DTOs;
+using TransIT.BLL.Factories;
+using TransIT.BLL.Services.Interfaces;
 
 namespace TransIT.API.Controllers
 {
+    [ApiController]
+    [EnableCors("CorsPolicy")]
+    [Produces("application/json")]
+    [Route("api/v1/[controller]")]
     [Authorize(Roles = "ENGINEER,REGISTER,ANALYST")]
-    public class IssueController : DataController<Issue, IssueDTO>
+    public class IssueController : FilterController<IssueDTO>
     {
         private readonly IIssueService _issueService;
+
         private readonly IHubContext<IssueHub> _issueHub;
 
         public IssueController(
-            IMapper mapper,
-            IIssueService issueService,
-            IFilterService<Issue> odService,
-            IHubContext<IssueHub> issueHub
-            ) : base(mapper, issueService, odService)
+            IServiceFactory serviceFactory,
+            IFilterServiceFactory filterServiceFactory,
+            IHubContext<IssueHub> issueHub)
+            : base(filterServiceFactory)
         {
-            _issueService = issueService;
+            _issueService = serviceFactory.IssueService;
             _issueHub = issueHub;
         }
 
-        [DataTableFilterExceptionFilter]
-        [HttpPost(DataTableTemplateUri)]
-        public override async Task<IActionResult> Filter(DataTableRequestDTO model)
-        {
-            var isCustomer = User.FindFirst(RoleNames.Schema)?.Value == RoleNames.Register;
-            var userId = GetUserId();
-
-            return Json(
-                ComposeDataTableResponseDTO(
-                    await GetQueryiedForSpecificUser(model, userId, isCustomer),
-                    model,
-                    GetTotalRecordsForSpecificUser(userId, isCustomer)
-                    )
-                );
-        }
-
-        private async Task<IEnumerable<IssueDTO>> GetQueryiedForSpecificUser(
-            DataTableRequestDTO model,
-            int userId,
-            bool isCustomer) =>
-            _mapper.Map<IEnumerable<IssueDTO>>(
-                isCustomer
-                    ? await _filterService.GetQueriedWithWhereAsync(model, x => x.CreateId == userId)
-                    : await _filterService.GetQueriedAsync(model)
-                );
-
-        private ulong GetTotalRecordsForSpecificUser(
-            int userId,
-            bool isCustomer) =>
-            isCustomer
-                ? _filterService.TotalRecordsAmount(x => x.CreateId == userId)
-                : _filterService.TotalRecordsAmount();
-
         [HttpGet]
-        public override async Task<IActionResult> Get([FromQuery] uint offset = 0, uint amount = 1000)
+        public async Task<IActionResult> Get([FromQuery] uint offset = 0, uint amount = 1000)
         {
             switch (User.FindFirst(RoleNames.Schema)?.Value)
             {
@@ -81,29 +50,90 @@ namespace TransIT.API.Controllers
             }
         }
 
-        [HttpPost]
-        public override async Task<IActionResult> Create([FromBody] IssueDTO obj)
+        [HttpGet("{id}")]
+        public virtual async Task<IActionResult> Get(int id)
         {
-            IActionResult result = await base.Create(obj);
+            var result = await _issueService.GetAsync(id);
+            return result != null
+                ? Json(result)
+                : (IActionResult)BadRequest();
+        }
+
+        [HttpGet("/search")]
+        public virtual async Task<IActionResult> Get([FromQuery] string search)
+        {
+            var result = await _issueService.SearchAsync(search);
+            return result != null
+                ? Json(result)
+                : (IActionResult)BadRequest();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] IssueDTO obj)
+        {
+            var createdEntity = await _issueService.CreateAsync(obj);
             await _issueHub.Clients.Group(RoleNames.Engineer).SendAsync("ReceiveIssues");
-            return result;
+            return createdEntity != null
+                ? CreatedAtAction(nameof(Create), createdEntity)
+                : (IActionResult)BadRequest();
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, [FromBody] IssueDTO obj)
+        {
+            obj.Id = id;
+
+            var result = await _issueService.UpdateAsync(obj);
+            return result != null
+                ? NoContent()
+                : (IActionResult)BadRequest();
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await _issueService.DeleteAsync(id);
+            return NoContent();
+        }
+
+        [DataTableFilterExceptionFilter]
+        [HttpPost("~/api/v1/datatable/[controller]")]
+        public override async Task<IActionResult> Filter(DataTableRequestDTO model)
+        {
+            var isCustomer = User.FindFirst(RoleNames.Schema)?.Value == RoleNames.Register;
+
+            return Json(
+                ComposeDataTableResponseDto(
+                    await GetQueryiedForCurrentUser(model, isCustomer),
+                    model,
+                    await GetTotalRecordsForCurrentUser(isCustomer)));
         }
 
         private async Task<IEnumerable<IssueDTO>> GetForCustomer(uint offset, uint amount)
         {
-            int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var res = await _issueService.GetRegisteredIssuesAsync(offset, amount, userId);
-            return res != null
-                ? _mapper.Map<IEnumerable<IssueDTO>>(res)
-                : null;
+            return await _issueService.GetRegisteredIssuesAsync(offset, amount);
         }
 
         private async Task<IEnumerable<IssueDTO>> GetIssues(uint offset, uint amount)
         {
-            var res = await _issueService.GetRangeAsync(offset, amount);
-            return res != null
-                ? _mapper.Map<IEnumerable<IssueDTO>>(res)
-                : null;
+            return await _issueService.GetRangeAsync(offset, amount);
+        }
+
+        private async Task<IEnumerable<IssueDTO>> GetQueryiedForCurrentUser(
+            DataTableRequestDTO model,
+            bool isCustomer)
+        {
+            return isCustomer
+                ? await _issueService.GetIssuesByCurrentUser()
+                : await _filterServiceFactory.GetService<IssueDTO>().GetQueriedAsync(model);
+        }
+
+        private async Task<ulong> GetTotalRecordsForCurrentUser(bool isCustomer)
+        {
+            return isCustomer
+                ? await _issueService.GetTotalRecordsForCurrentUser()
+                : await _filterServiceFactory.GetService<IssueDTO>().TotalRecordsAmountAsync();
         }
     }
 }

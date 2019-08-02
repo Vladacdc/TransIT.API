@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using TransIT.DAL.Models;
 using TransIT.DAL.Models.Entities;
 using TransIT.DAL.Repositories.InterfacesRepositories;
 
@@ -9,7 +10,7 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
 {
     public class DocumentRepository : BaseRepository<Document>, IDocumentRepository
     {
-        public DocumentRepository(DbContext context)
+        public DocumentRepository(TransITDBContext context)
             : base(context)
         {
         }
@@ -41,7 +42,7 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
             .Include(z => z.IssueLog)
             .ThenInclude(x => x.Issue.AssignedTo)
             .Include(a => a.Mod)
-            .OrderByDescending(u => u.ModDate)
-            .ThenByDescending(x => x.CreateDate);
+            .OrderByDescending(u => u.UpdatedDate)
+            .ThenByDescending(x => x.CreatedDate);
     }
 }

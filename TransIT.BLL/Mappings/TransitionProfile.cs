@@ -1,6 +1,6 @@
-﻿using TransIT.BLL.DTOs;
+﻿using AutoMapper;
+using TransIT.BLL.DTOs;
 using TransIT.DAL.Models.Entities;
-using AutoMapper;
 
 namespace TransIT.BLL.Mappings
 {
@@ -9,8 +9,8 @@ namespace TransIT.BLL.Mappings
         public TransitionProfile()
         {
             CreateMap<TransitionDTO, Transition>()
-            .ForMember(i => i.ModId, opt => opt.Ignore())
-            .ForMember(i => i.CreateId, opt => opt.Ignore())
+            .ForMember(i => i.UpdatedById, opt => opt.Ignore())
+            .ForMember(i => i.CreatedById, opt => opt.Ignore())
             .ForMember(i => i.Mod, opt => opt.Ignore())
             .ForMember(i => i.Create, opt => opt.Ignore())
             .ForMember(i => i.ActionType, opt => opt.Ignore())
@@ -19,8 +19,8 @@ namespace TransIT.BLL.Mappings
             .ForMember(i => i.FromStateId, opt => opt.MapFrom(x => x.FromState.Id))
             .ForMember(i => i.ToState, opt => opt.Ignore())
             .ForMember(i => i.ToStateId, opt => opt.MapFrom(x => x.ToState.Id))
-            .ForMember(i => i.CreateDate, opt => opt.Ignore())
-            .ForMember(i => i.ModDate, opt => opt.Ignore());
+            .ForMember(i => i.CreatedDate, opt => opt.Ignore())
+            .ForMember(i => i.UpdatedDate, opt => opt.Ignore());
 
             CreateMap<Transition, TransitionDTO>();
         }

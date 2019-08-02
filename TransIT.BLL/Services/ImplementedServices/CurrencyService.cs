@@ -1,7 +1,12 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using TransIT.BLL.DTOs;
 using TransIT.BLL.Services.Interfaces;
 using TransIT.DAL.Models.Entities;
-using TransIT.DAL.Repositories.InterfacesRepositories;
 using TransIT.DAL.UnitOfWork;
 
 namespace TransIT.BLL.Services.ImplementedServices
@@ -10,18 +15,66 @@ namespace TransIT.BLL.Services.ImplementedServices
     /// Currency CRUD service
     /// </summary>
     /// <see cref="ICurrencyService"/>
-    public class CurrencyService : CrudService<Currency>, ICurrencyService
+    public class CurrencyService : ICurrencyService
     {
+        private readonly IUnitOfWork _unitOfWork;
+
+        private readonly IMapper _mapper;
+
         /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="unitOfWork">Unit of work pattern</param>
-        /// <param name="logger">Log on error</param>
-        /// <param name="repository">CRUD operations on entity</param>
-        /// <see cref="CrudService{TEntity}"/>
-        public CurrencyService(
-            IUnitOfWork unitOfWork,
-            ILogger<CrudService<Currency>> logger,
-            ICurrencyRepository repository) : base(unitOfWork, logger, repository) { }
+        public CurrencyService(IUnitOfWork unitOfWork, IMapper mapper)
+        {
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
+        }
+
+        public async Task<CurrencyDTO> GetAsync(int id)
+        {
+            return _mapper.Map<CurrencyDTO>(await _unitOfWork.CurrencyRepository.GetByIdAsync(id));
+        }
+
+        public async Task<IEnumerable<CurrencyDTO>> GetRangeAsync(uint offset, uint amount)
+        {
+            var entities = await _unitOfWork.CurrencyRepository.GetRangeAsync(offset, amount);
+            return _mapper.Map<IEnumerable<CurrencyDTO>>(entities);
+        }
+
+        public async Task<IEnumerable<CurrencyDTO>> SearchAsync(string search)
+        {
+            var currencies = await _unitOfWork.CurrencyRepository.SearchExpressionAsync(
+                search
+                    .Split(new[] { ' ', ',', '.' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(x => x.Trim().ToUpperInvariant())
+                );
+
+            return _mapper.Map<IEnumerable<CurrencyDTO>>(await currencies.ToListAsync());
+        }
+
+        public async Task<CurrencyDTO> CreateAsync(CurrencyDTO dto)
+        {
+            var model = _mapper.Map<Currency>(dto);
+
+            await _unitOfWork.CurrencyRepository.AddAsync(model);
+            await _unitOfWork.SaveAsync();
+            return _mapper.Map<CurrencyDTO>(model);
+        }
+
+        public async Task<CurrencyDTO> UpdateAsync(CurrencyDTO dto)
+        {
+            var model = _mapper.Map<Currency>(dto);
+
+            _unitOfWork.CurrencyRepository.Update(model);
+            await _unitOfWork.SaveAsync();
+            return _mapper.Map<CurrencyDTO>(model);
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            _unitOfWork.CurrencyRepository.Remove(id);
+            await _unitOfWork.SaveAsync();
+        }
     }
 }

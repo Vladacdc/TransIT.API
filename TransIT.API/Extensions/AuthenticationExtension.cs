@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using TransIT.BLL.Factories;
 using TransIT.BLL.Helpers;
-using TransIT.BLL.Helpers.Abstractions;
 using TransIT.BLL.Services.ImplementedServices;
 using TransIT.BLL.Services.Interfaces;
 
@@ -20,7 +20,7 @@ namespace TransIT.API.Extensions
             var key = GenerateKey(25);
             var jwtAppSettingOptions = configuration.GetSection(nameof(JwtIssuerOptions));
             var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
- 
+
             services.Configure<JwtIssuerOptions>(options =>
             {
                 options.Issuer = jwtAppSettingOptions[nameof(JwtIssuerOptions.Issuer)];
@@ -45,7 +45,7 @@ namespace TransIT.API.Extensions
 
                 RequireExpirationTime = false,
                 ValidateLifetime = true,
-                ClockSkew = TimeSpan.Zero
+                ClockSkew = TimeSpan.Zero,
             };
 
             _ = services.AddAuthentication(options =>
@@ -66,10 +66,12 @@ namespace TransIT.API.Extensions
                           if (!string.IsNullOrEmpty(accessToken)
                               && context.HttpContext.Request.Path
                                   .StartsWithSegments("/issuehub"))
+                          {
                               context.Token = accessToken;
+                          }
 
                           return Task.CompletedTask;
-                      }
+                      },
                   };
               });
 
@@ -79,12 +81,16 @@ namespace TransIT.API.Extensions
 
         private static string GenerateKey(int length)
         {
-            var characterArray =
-                "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxy0123456789".ToCharArray();
+            var characterArray = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxy0123456789".ToCharArray();
             if (length < 0)
+            {
                 throw new ArgumentException("length must not be negative", "length");
+            }
+
             if (length > int.MaxValue / 8)
+            {
                 throw new ArgumentException("length is too big", "length");
+            }
 
             var bytes = new byte[length * 8];
             new RNGCryptoServiceProvider().GetBytes(bytes);
@@ -94,7 +100,8 @@ namespace TransIT.API.Extensions
                 ulong value = BitConverter.ToUInt64(bytes, i * 8);
                 result[i] = characterArray[value % (uint)characterArray.Length];
             }
+
             return new string(result);
-        }    
+        }
     }
 }

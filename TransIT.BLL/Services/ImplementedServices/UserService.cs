@@ -1,14 +1,13 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using TransIT.API.Extensions;
-using TransIT.BLL.Security.Hashers;
+using TransIT.BLL.DTOs;
 using TransIT.BLL.Services.Interfaces;
 using TransIT.DAL.Models.Entities;
-using TransIT.DAL.Repositories.InterfacesRepositories;
 using TransIT.DAL.UnitOfWork;
 
 namespace TransIT.BLL.Services.ImplementedServices
@@ -17,14 +16,10 @@ namespace TransIT.BLL.Services.ImplementedServices
     /// User model CRUD
     /// </summary>
     /// <see cref="IUserService"/>
-    public class UserService : CrudService<User>, IUserService
+    public class UserService : IUserService
     {
-        /// <summary>
-        /// Manages password hashing
-        /// </summary>
-        protected IPasswordHasher _hasher;
-
-        protected IRoleRepository _roleRepository;
+        private readonly IMapper _mapper;
+        private readonly IUnitOfWork _unitOfWork;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserService"/> class.
@@ -35,76 +30,99 @@ namespace TransIT.BLL.Services.ImplementedServices
         /// <param name="repository">CRUD operations on entity</param>
         /// <see cref="CrudService{TEntity}"/>
         public UserService(
-            IUnitOfWork unitOfWork,
-            ILogger<CrudService<User>> logger,
-            IUserRepository repository,
-            IRoleRepository roleRepository,
-            IPasswordHasher hasher) : base(unitOfWork, logger, repository)
+            IMapper mapper,
+            IUnitOfWork unitOfWork)
         {
-            _hasher = hasher;
-            _roleRepository = roleRepository;
+            _mapper = mapper;
+            _unitOfWork = unitOfWork;
         }
 
         /// <summary>
-        /// Creates user if login and password not empty and does not exist in DB
-        /// hashes password and set zero to id
+        /// Updates a user in a database.
         /// </summary>
-        /// <see cref="IPasswordHasher.HashPassword(string)"/>
-        /// <param name="user">User model</param>
-        /// <returns>Is successful</returns>
-        public override async Task<User> CreateAsync(User user)
+        /// <param name="model">The user DTO.</param>
+        /// <returns>Updated user DTO.</returns>
+        public async Task<UserDTO> UpdateAsync(UserDTO model)
         {
-            user.Password = _hasher.HashPassword(user.Password);
-            return await base.CreateAsync(user);
+            User user = await _unitOfWork.UserManager.FindByIdAsync(model.Id);
+            IList<string> roles = await _unitOfWork.UserManager.GetRolesAsync(user);
+            if (roles.Count > 0)
+            {
+                await _unitOfWork.UserManager.RemoveFromRoleAsync(user, roles.First());
+            }
+
+            await _unitOfWork.UserManager.AddToRoleAsync(user, model.Role.Name);
+            user = _mapper.Map(model, user);
+            IdentityResult updateResult = await _unitOfWork.UserManager.UpdateAsync(user);
+            return updateResult.Succeeded ? _mapper.Map<UserDTO>(user) : null;
         }
 
-        public override async Task<User> UpdateAsync(User model)
+        public virtual async Task<UserDTO> UpdatePasswordAsync(UserDTO user, string newPassword)
         {
-            try
+            User entity = await _unitOfWork.UserManager.FindByIdAsync(user.Id);
+            IdentityResult result = await _unitOfWork.UserManager.RemovePasswordAsync(entity);
+            if (result.Succeeded)
             {
-                var res = _repository.UpdateWithIgnoreProperty(model, u => u.Password);
-                await _unitOfWork.SaveAsync();
-                return res;
+                result = await _unitOfWork.UserManager.AddPasswordAsync(entity, newPassword);
             }
-            catch (DbUpdateException e)
-            {
-                _logger.LogError(e, nameof(UpdateAsync), e.Entries);
-                return null;
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, nameof(UpdateAsync));
-                throw e;
-            }
+            return result.Succeeded ? user : null;
         }
 
-        public virtual async Task<User> UpdatePasswordAsync(User user, string newPassword)
+        public virtual async Task<IEnumerable<UserDTO>> GetAssignees(uint offset, uint amount)
         {
-            try
-            {
-                user.Password = _hasher.HashPassword(newPassword);
-
-                var res = _repository.Update(user);
-                await _unitOfWork.SaveAsync();
-                return res;
-            }
-            catch (DbUpdateException e)
-            {
-                _logger.LogError(e, nameof(UpdatePasswordAsync), e.Entries);
-                return null;
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, nameof(UpdatePasswordAsync));
-                throw e;
-            }
+            IEnumerable<User> workers = (await _unitOfWork.UserManager.GetUsersInRoleAsync(RoleNames.Worker))
+                .Skip((int)offset)
+                .Take((int)amount);
+            return _mapper.Map<IEnumerable<UserDTO>>(workers);
         }
 
-        public virtual async Task<IEnumerable<User>> GetAssignees(uint offset, uint amount) =>
-            (await _repository.GetAllAsync())
-            .AsQueryable()
-            .Where(x => x.Role.Name == RoleNames.Worker)
-            .Skip((int)offset)
-            .Take((int)amount);
+        public async Task<UserDTO> GetAsync(string id)
+        {
+            User entity = await _unitOfWork.UserManager.FindByIdAsync(id);
+            return entity == null ? null : _mapper.Map<UserDTO>(entity);
+        }
+
+        public async Task<IEnumerable<UserDTO>> GetRangeAsync(uint offset, uint amount)
+        {
+            List<User> source = await _unitOfWork.UserManager.Users
+                .Include(u => u.UserRoles)
+                .ThenInclude(ur => ur.Role)
+                .Skip((int)offset)
+                .Take((int)amount)
+                .ToListAsync();
+            return _mapper.Map<IEnumerable<UserDTO>>(source);
+        }
+
+        public async Task<UserDTO> CreateAsync(UserDTO value)
+        {
+            User user = _mapper.Map<User>(value);
+            IdentityResult result = await _unitOfWork.UserManager.CreateAsync(user);
+            if (result.Succeeded && value.Password != null)
+            {
+                result = await _unitOfWork.UserManager.AddPasswordAsync(user, value.Password);
+            }
+            if (result.Succeeded)
+            {
+                result = await _unitOfWork.UserManager.AddToRoleAsync(user, value.Role.Name);
+            }
+            return result.Succeeded ? _mapper.Map<UserDTO>(user) : null;
+        }
+
+        public async Task DeleteAsync(string id)
+        {
+            User user = await _unitOfWork.UserManager.FindByIdAsync(id);
+            await _unitOfWork.UserManager.DeleteAsync(user);
+        }
+
+        public async Task<IEnumerable<RoleDTO>> GetRoles()
+        {
+            var roles = _mapper.Map<IEnumerable<RoleDTO>>(await _unitOfWork.RoleManager.Roles.ToListAsync());
+            return roles;
+        }
+
+        public void UpdateCurrentUserId(string newValue)
+        {
+            _unitOfWork.UserRepository.CurrentUserId = newValue;
+        }
     }
 }

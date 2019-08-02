@@ -1,27 +1,30 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using TransIT.DAL.Models.Entities;
+using TransIT.BLL.DTOs;
 
 namespace TransIT.BLL.Services.Interfaces
 {
     /// <summary>
     /// Issue type model CRUD
     /// </summary>
-    public interface IIssueService : ICrudService<Issue>
+    public interface IIssueService : ICrudService<IssueDTO>
     {
+        /// <summary>
+        /// Gets a total number of issues, created by a current logged in system user. 
+        /// </summary>
+        /// <returns>An integer number.</returns>
+        Task<ulong> GetTotalRecordsForCurrentUser();
+
+        /// <summary>
+        /// Gets all issues specific for current logged in system user.
+        /// </summary>
+        /// <returns>List of issues, which matched this query.</returns>
+        Task<IEnumerable<IssueDTO>> GetIssuesByCurrentUser();
+
         /// <summary>
         /// Gets issues specific for current customer
         /// </summary>
-        /// <param name="userId">Id of customer</param>
         /// <returns>List of issues</returns>
-        Task<IEnumerable<Issue>> GetRegisteredIssuesAsync(uint offset, uint amount, int userId);
-
-        /// <summary>
-        /// Remove issue if current user owns it.
-        /// </summary>
-        /// <param name="issueId">Id of issue to delete</param>
-        /// <param name="userId">Id of user</param>
-        /// <returns>void</returns>
-        Task DeleteByUserAsync(int issueId, int userId);
+        Task<IEnumerable<IssueDTO>> GetRegisteredIssuesAsync(uint offset, uint amount);
     }
 }

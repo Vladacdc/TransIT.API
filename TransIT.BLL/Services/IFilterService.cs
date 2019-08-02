@@ -1,20 +1,12 @@
-using System;
-using System.Threading.Tasks;
 using System.Collections.Generic;
-using System.Linq.Expressions;
-using TransIT.DAL.Models.Entities.Abstractions;
+using System.Threading.Tasks;
 using TransIT.BLL.DTOs;
 
 namespace TransIT.BLL.Services
 {    
-    public interface IFilterService<TEntity> where TEntity : class, IEntity, new()
+    public interface IFilterService<TEntityDTO> where TEntityDTO : class, new()
     {
-        ulong TotalRecordsAmount();
-        ulong TotalRecordsAmount(Expression<Func<TEntity, bool>> expression);
-        Task<IEnumerable<TEntity>> GetQueriedAsync();
-        Task<IEnumerable<TEntity>> GetQueriedAsync(DataTableRequestDTO dataFilter);
-        Task<IEnumerable<TEntity>> GetQueriedWithWhereAsync(
-            DataTableRequestDTO dataFilter,
-            Expression<Func<TEntity, bool>> matchExpression);
+        Task<ulong> TotalRecordsAmountAsync();
+        Task<IEnumerable<TEntityDTO>> GetQueriedAsync(DataTableRequestDTO dataFilter);
     }
 }

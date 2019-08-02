@@ -1,7 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Swashbuckle.AspNetCore.Swagger;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace TransIT.API.Extensions
 {
@@ -14,11 +14,11 @@ namespace TransIT.API.Extensions
                     c.SwaggerDoc("v1", new Info
                     {
                         Version = "v1",
-                        Title = "TransIT API"
+                        Title = "TransIT API",
                     });
                     var security = new Dictionary<string, IEnumerable<string>>
                     {
-                    {"Bearer", new string[] { }},
+                    { "Bearer", new string[] { } },
                     };
 
                     c.AddSecurityDefinition("Bearer", new ApiKeyScheme
@@ -26,7 +26,7 @@ namespace TransIT.API.Extensions
                         Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
                         Name = "Authorization",
                         In = "header",
-                        Type = "apiKey"
+                        Type = "apiKey",
                     });
                     c.AddSecurityRequirement(security);
                     c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());

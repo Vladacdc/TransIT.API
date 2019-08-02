@@ -1,32 +1,27 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using System;
+using System.Collections.Generic;
 using TransIT.DAL.Models.Entities;
+using TransIT.DAL.Models;
 using TransIT.DAL.Repositories.InterfacesRepositories;
 
 namespace TransIT.DAL.Repositories.ImplementedRepositories
 {
-    public class UserRepository : BaseRepository<User>, IUserRepository
+    public class UserRepository : IUserRepository
     {
-        public UserRepository(DbContext context)
-            : base(context)
-        {
-        }
-        
-        public override Task<IQueryable<User>> SearchExpressionAsync(IEnumerable<string> strs) =>
-            Task.FromResult(
-                GetQueryable().Where(entity =>
-                    strs.Any(str => entity.Login.ToUpperInvariant().Contains(str)
-                    || entity.Email.ToUpperInvariant().Contains(str)
-                    || entity.PhoneNumber.ToUpperInvariant().Contains(str)
-                    || entity.LastName.ToUpperInvariant().Contains(str)
-                    || entity.FirstName.ToUpperInvariant().Contains(str)))
-                );
+        private readonly TransITDBContext _dbContext;
 
-        protected override IQueryable<User> ComplexEntities => Entities.
-            Include(u => u.Role).
-            Include(a => a.Create).
-            Include(b => b.Mod).OrderByDescending(u => u.ModDate).ThenByDescending(x => x.CreateDate);
+        public UserRepository(TransITDBContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
+
+        public string CurrentUserId
+        {
+            get => _dbContext.CurrentUserId;
+            set => _dbContext.CurrentUserId = value;
+        }
     }
 }

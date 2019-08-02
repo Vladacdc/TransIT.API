@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+using TransIT.DAL.Models;
 using TransIT.DAL.Models.Entities;
 using TransIT.DAL.Repositories.InterfacesRepositories;
 
@@ -9,7 +9,7 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
 {
     public class CurrencyRepository : BaseRepository<Currency>, ICurrencyRepository
     {
-        public CurrencyRepository(DbContext context)
+        public CurrencyRepository(TransITDBContext context)
             : base(context)
         {
         }

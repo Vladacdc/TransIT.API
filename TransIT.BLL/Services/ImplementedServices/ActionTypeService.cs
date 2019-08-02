@@ -1,12 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
+using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
+using TransIT.BLL.DTOs;
 using TransIT.BLL.Services.Interfaces;
 using TransIT.DAL.Models.Entities;
-using TransIT.DAL.Repositories.InterfacesRepositories;
 using TransIT.DAL.UnitOfWork;
 
 namespace TransIT.BLL.Services.ImplementedServices
@@ -15,79 +16,82 @@ namespace TransIT.BLL.Services.ImplementedServices
     /// Malfunction Group CRUD service
     /// </summary>
     /// <see cref="IActionTypeService"/>
-    public class ActionTypeService : CrudService<ActionType>, IActionTypeService
+    public class ActionTypeService : IActionTypeService
     {
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
+
         /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="unitOfWork">Unit of work pattern</param>
-        /// <param name="logger">Log on error</param>
-        /// <param name="repository">CRUD operations on entity</param>
-        /// <see cref="CrudService{TEntity}"/>
-        public ActionTypeService(
-            IUnitOfWork unitOfWork,
-            ILogger<CrudService<ActionType>> logger,
-            IActionTypeRepository repository) : base(unitOfWork, logger, repository) { }
-        
-        public async override Task<ActionType> UpdateAsync(ActionType model)
+        /// <param name="mapper"></param>
+        public ActionTypeService(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            try
-            {
-                var newModel = await GetAsync(model.Id);
-                if (newModel.IsFixed)
-                {
-                    throw new ConstraintException("Current state can not be edited");
-                }
-                if (model.IsFixed)
-                {
-                    throw new ArgumentException("Incorrect model");
-                }
-                newModel.Name = model.Name;
-
-                _repository.Update(newModel);
-                await _unitOfWork.SaveAsync();
-                return newModel;
-            }
-            catch (DbUpdateException e)
-            {
-                _logger.LogError(e, nameof(UpdateAsync), e.Entries);
-                return null;
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, nameof(UpdateAsync));
-                throw;
-            }
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
-        public async override Task DeleteAsync(int id)
+        public async Task<ActionTypeDTO> GetAsync(int id)
         {
-            try
-            {
-                var model = await GetAsync(id);
-                if (model.IsFixed)
-                {
-                    throw new ConstraintException("Current state can not be deleted");
-                }
+            return _mapper.Map<ActionTypeDTO>(await _unitOfWork.ActionTypeRepository.GetByIdAsync(id));
+        }
 
-                _repository.Remove(model);
-                await _unitOfWork.SaveAsync();
-            }
-            catch (DbUpdateException e)
+        public async Task<IEnumerable<ActionTypeDTO>> GetRangeAsync(uint offset, uint amount)
+        {
+            var entities = await _unitOfWork.ActionTypeRepository.GetRangeAsync(offset, amount);
+            return _mapper.Map<IEnumerable<ActionTypeDTO>>(entities);
+        }
+
+        public async Task<IEnumerable<ActionTypeDTO>> SearchAsync(string search)
+        {
+            var actionTypes = await _unitOfWork.ActionTypeRepository.SearchExpressionAsync(
+           search
+               .Split(new[] { ' ', ',', '.' }, StringSplitOptions.RemoveEmptyEntries)
+               .Select(x => x.Trim().ToUpperInvariant())
+           );
+
+            return _mapper.Map<IEnumerable<ActionTypeDTO>>(await actionTypes.ToListAsync());
+        }
+        
+        public async Task<ActionTypeDTO> CreateAsync(ActionTypeDTO dto)
+        {
+            var model = _mapper.Map<ActionType>(dto);
+
+            await _unitOfWork.ActionTypeRepository.AddAsync(model);
+            await _unitOfWork.SaveAsync();
+            return _mapper.Map<ActionTypeDTO>(model);
+        }
+
+        public async Task<ActionTypeDTO> UpdateAsync(ActionTypeDTO dto)
+        {
+            var model = _mapper.Map<ActionType>(dto);
+
+            if (model.IsFixed)
             {
-                var sqlExc = e.GetBaseException() as SqlException;
-                if (sqlExc?.Number == 547)
-                {
-                    _logger.LogDebug(sqlExc, $"Number of sql exception: {sqlExc.Number.ToString()}");
-                    throw new ConstraintException("There are constrained entities, delete them firstly.", sqlExc);
-                }
-                _logger.LogError(e, nameof(DeleteAsync), e.Entries);
+                throw new ConstraintException("Current state can not be edited");
             }
-            catch (Exception e)
+            if (dto.IsFixed)
             {
-                _logger.LogError(e, nameof(DeleteAsync));
-                throw;
+                throw new ArgumentException("Incorrect model");
             }
+
+            _unitOfWork.ActionTypeRepository.Update(model);
+            await _unitOfWork.SaveAsync();
+            return _mapper.Map<ActionTypeDTO>(model);
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var model = await _unitOfWork.ActionTypeRepository.GetByIdAsync(id);
+
+            if (model.IsFixed)
+            {
+                throw new ConstraintException("Current state can not be deleted");
+            }
+
+            _unitOfWork.ActionTypeRepository.Remove(model);
+            await _unitOfWork.SaveAsync();
         }
     }
 }

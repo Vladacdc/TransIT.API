@@ -1,92 +1,77 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Security.Claims;
 using System.Threading.Tasks;
-using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.StaticFiles;
-using TransIT.BLL.Services;
-using TransIT.BLL.Services.Interfaces;
 using TransIT.BLL.DTOs;
-using TransIT.DAL.Models.Entities;
-using TransIT.BLL.Helpers.FileStorageLogger.FileStorageInterface;
-using TransIT.BLL.Helpers.FileStorageLogger;
+using TransIT.BLL.Factories;
+using TransIT.BLL.Services.Interfaces;
 
 namespace TransIT.API.Controllers
 {
+    [ApiController]
+    [EnableCors("CorsPolicy")]
+    [Produces("application/json")]
+    [Route("api/v1/[controller]")]
     [Authorize(Roles = "ADMIN,ENGINEER,ANALYST")]
-    public class DocumentController : DataController<Document, DocumentDTO>
+    public class DocumentController : FilterController<DocumentDTO>
     {
         private readonly IDocumentService _documentService;
-        private readonly IFileStorageLogger _storageLogger;
 
-        public DocumentController(
-            IMapper mapper,
-            IDocumentService documentService,
-            IFilterService<Document> odService
-            ) : base(mapper, documentService, odService)
+        public DocumentController(IServiceFactory serviceFactory, IFilterServiceFactory filterServiceFactory)
+            : base(filterServiceFactory)
         {
-            _documentService = documentService;
-            _storageLogger = LoggerProviderFactory.GetFileStorageLogger();
+            _documentService = serviceFactory.DocumentService;
         }
 
-        [HttpGet("~/api/v1/" + nameof(IssueLog) + "/{issueLogId}/" + nameof(Document))]
-        public async virtual Task<IActionResult> GetByIssueLog(int issueLogId)
+        [HttpGet("~/api/v1/IssueLog/{issueLogId}/Document")]
+        public async Task<IActionResult> GetByIssueLog(int issueLogId)
         {
             var result = await _documentService.GetRangeByIssueLogIdAsync(issueLogId);
-            return result != null
-                ? Json(_mapper.Map<IEnumerable<DocumentDTO>>(result))
-                : (IActionResult) BadRequest();
-        }
 
-        [HttpGet("~/api/v1/" + nameof(Document) + "/{id}/file")]
-        public async virtual Task<IActionResult> DownloadFile(int id)
-        {
-            var result = await _documentService.GetAsync(id);
-            byte[] fileData = _storageLogger.Download(result.Path);
-            var provider = new FileExtensionContentTypeProvider();
-            string contentType;
-            if (!provider.TryGetContentType(Path.GetFileName(result.Path), out contentType))
+            if (result != null)
             {
-                contentType = "application/octet-stream";
+                return Json(result);
             }
-            return File(fileData, contentType);
+
+            return BadRequest();
         }
 
+        [HttpGet("~/api/v1/Document/{id}/file")]
+        public async Task<IActionResult> DownloadFile(int id)
+        {
+            var document = await _documentService.GetDocumentWithData(id);
+
+            return File(document.Data, document.ContentType);
+        }
 
         [HttpPost]
-        public override async Task<IActionResult> Create([FromForm] DocumentDTO document)
+        public async Task<IActionResult> Create([FromForm] DocumentDTO documentDto)
         {
-            if (document.File == null&& !(document.File.Length > 0))
+            if (documentDto.File == null && documentDto.File?.Length == 0)
+            {
                 return Content("file not selected");
-            var provider = new FileExtensionContentTypeProvider();
-            string contentType;
+            }
 
-            _ = provider.TryGetContentType(Path.GetFileName(document.File.FileName), out contentType);
-           if(contentType!=  "application/pdf") return Content("format is not pdf");
+            var createdEntity = await _documentService.CreateAsync(documentDto);
 
-            document.Path = _storageLogger.Create(document.File);
-            var entity = _mapper.Map<Document>(document);
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            if (documentDto.ContentType != "application/pdf")
+            {
+                return Content("format is not pdf");
+            }
 
-            entity.ModId = userId;
-            entity.CreateId = userId;
+            if (createdEntity != null)
+            {
+                return CreatedAtAction(nameof(Create), createdEntity);
+            }
 
-            var createdEntity = await _documentService.CreateAsync(entity);
-
-            return createdEntity != null
-                ? CreatedAtAction(nameof(Create), _mapper.Map<DocumentDTO>(createdEntity))
-                : (IActionResult)BadRequest();
+            return BadRequest();
         }
-        [HttpDelete("~/api/v1/" + nameof(Document) + "/{id}")]
-        public override async Task<IActionResult> Delete(int id)
+
+        [HttpDelete("~/api/v1/Document/{id}")]
+        public async Task<IActionResult> Delete(int id)
         {
             await _documentService.DeleteAsync(id);
             return NoContent();
         }
-
-
     }
 }

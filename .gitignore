@@ -3,6 +3,8 @@
 
 .DS_Store
 
+*.StyleCop
+
 # User-specific files
 *.suo
 *.user
@@ -261,4 +263,6 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
-/TransIT.DAL/Migrations
+
+#Migrations
+Migrations

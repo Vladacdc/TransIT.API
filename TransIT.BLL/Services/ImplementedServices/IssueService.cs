@@ -1,16 +1,13 @@
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
+using TransIT.BLL.DTOs;
 using TransIT.BLL.Helpers;
 using TransIT.BLL.Services.Interfaces;
 using TransIT.DAL.Models.Entities;
-using TransIT.DAL.Repositories;
-using TransIT.DAL.Repositories.InterfacesRepositories;
 using TransIT.DAL.UnitOfWork;
 
 namespace TransIT.BLL.Services.ImplementedServices
@@ -19,96 +16,121 @@ namespace TransIT.BLL.Services.ImplementedServices
     /// Issue CRUD service.
     /// </summary>
     /// <see cref="IIssueService"/>
-    public class IssueService : CrudService<Issue>, IIssueService
+    public class IssueService : IIssueService
     {
-        private IVehicleRepository _vehicleRepository;
+        private readonly IUnitOfWork _unitOfWork;
+
+        private readonly IMapper _mapper;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="IssueService"/> class.
         /// Ctor.
         /// </summary>
         /// <param name="unitOfWork">Unit of work pattern</param>
-        /// <param name="logger">Log on error</param>
-        /// <param name="repository">CRUD operations on entity</param>
-        /// <see cref="CrudService{TEntity}"/>
-        public IssueService(
-            IUnitOfWork unitOfWork,
-            ILogger<CrudService<Issue>> logger,
-            IIssueRepository repository,
-            IVehicleRepository vehicleRepository) : base(unitOfWork, logger, repository)
+        public IssueService(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _vehicleRepository = vehicleRepository;
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
+        }
+
+        public async Task<IssueDTO> GetAsync(int id)
+        {
+            return _mapper.Map<IssueDTO>(await _unitOfWork.IssueRepository.GetByIdAsync(id));
+        }
+
+        public async Task<IEnumerable<IssueDTO>> GetRangeAsync(uint offset, uint amount)
+        {
+            var entities = await _unitOfWork.IssueRepository.GetRangeAsync(offset, amount);
+            return _mapper.Map<IEnumerable<IssueDTO>>(entities);
         }
 
         /// <see cref="IIssueService"/>
-        public async Task<IEnumerable<Issue>> GetRegisteredIssuesAsync(uint offset, uint amount, int userId)
+        public async Task<IEnumerable<IssueDTO>> GetRegisteredIssuesAsync(uint offset, uint amount)
         {
-            var issues = await _repository.GetAllAsync(i => i.CreateId == userId);
-            return issues.AsQueryable().Skip((int)offset).Take((int)amount);
+            string currentUserId = _unitOfWork.UserRepository.CurrentUserId;
+            var entities = await _unitOfWork.IssueRepository.GetQueryable()
+                  .Where(i => i.CreatedById == currentUserId)
+                  .Skip((int)offset)
+                  .Take((int)amount)
+                  .ToListAsync();
+            return _mapper.Map<IEnumerable<IssueDTO>>(entities);
         }
 
-        public override async Task<Issue> CreateAsync(Issue issue)
+        public async Task<IEnumerable<IssueDTO>> SearchAsync(string search)
         {
-            Vehicle vehicle = await _vehicleRepository.GetByIdAsync(issue.VehicleId);
+            var issues = await _unitOfWork.IssueRepository.SearchExpressionAsync(
+                search
+                    .Split(new[] { ' ', ',', '.' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(x => x.Trim().ToUpperInvariant())
+                );
+
+            return _mapper.Map<IEnumerable<IssueDTO>>(await issues.ToListAsync());
+        }
+
+        public async Task<IssueDTO> CreateAsync(IssueDTO dto)
+        {
+            var vehicle = _mapper.Map<VehicleDTO>(await _unitOfWork.VehicleRepository.GetByIdAsync(dto.Vehicle.Id));
             if (IsWarrantyCase(vehicle))
-                issue.Warranty = true;
+            {
+                dto.Warranty = true;
+            }
 
-            return await base.CreateAsync(issue);
+            var model = _mapper.Map<Issue>(dto);
+
+            await _unitOfWork.IssueRepository.AddAsync(model);
+            await _unitOfWork.SaveAsync();
+            return _mapper.Map<IssueDTO>(model);
         }
 
-        private bool IsWarrantyCase(Vehicle vehicle)
+        private bool IsWarrantyCase(VehicleDTO vehicle)
         {
             return DateTime.Now.CompareTo(vehicle?.WarrantyEndDate) < 0;
         }
 
-        public override async Task<Issue> UpdateAsync(Issue model)
+        public async Task<IssueDTO> UpdateAsync(IssueDTO dto)
         {
-            try
-            {
-                model = _repository.UpdateWithIgnoreProperty(model, x => x.StateId);
-                await _unitOfWork.SaveAsync();
-                return model;
-            }
-            catch (DbUpdateException e)
-            {
-                _logger.LogError(e, nameof(UpdateAsync), e.Entries);
-                throw;
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, nameof(UpdateAsync));
-                throw;
-            }
+            var model = _mapper.Map<Issue>(dto);
+
+            _unitOfWork.IssueRepository.UpdateWithIgnoreProperty(model, x => x.StateId);
+            await _unitOfWork.SaveAsync();
+            return _mapper.Map<IssueDTO>(model);
         }
 
-        public async Task DeleteByUserAsync(int issueId, int userId)
+        public async Task DeleteByUserAsync(int issueId, string userId)
         {
-            try
+            var issueToDelete = await GetAsync(issueId);
+            if (issueToDelete?.CreatedById != userId)
             {
-                var issueToDelete = await GetAsync(issueId);
-                if (issueToDelete?.CreateId != userId)
-                    throw new UnauthorizedAccessException("Current user doesn't have access to delete this issue");
-
-                _repository.Remove(issueToDelete);
-                await _unitOfWork.SaveAsync();
-            }
-            catch (DbUpdateException e)
-            {
-                var sqlExc = e.GetBaseException() as SqlException;
-                if (sqlExc?.Number == 547)
-                {
-                    _logger.LogDebug(sqlExc, $"Number of sql exception: {sqlExc.Number.ToString()}");
-                    throw new ConstraintException("There are constrained entities, delete them firstly.", sqlExc);
-                }
-
-                _logger.LogError(e, nameof(DeleteAsync), e.Entries);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, nameof(DeleteAsync));
-                throw;
+                throw new UnauthorizedAccessException("Current user doesn't have access to delete this issue");
             }
 
+            _unitOfWork.IssueRepository.Remove(issueToDelete.Id);
+            await _unitOfWork.SaveAsync();
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            _unitOfWork.IssueRepository.Remove(id);
+            await _unitOfWork.SaveAsync();
+        }
+
+        public async Task<ulong> GetTotalRecordsForCurrentUser()
+        {
+            string currentUserId = _unitOfWork.UserRepository.CurrentUserId;
+
+            return (ulong)await _unitOfWork.IssueRepository.GetQueryable()
+                .Where(issue => issue.CreatedById == currentUserId)
+                .LongCountAsync();
+        }
+
+        public async Task<IEnumerable<IssueDTO>> GetIssuesByCurrentUser()
+        {
+            string currentUserId = _unitOfWork.UserRepository.CurrentUserId;
+
+            var entities = await _unitOfWork.IssueRepository.GetQueryable()
+                .Where(issue => issue.CreatedById == currentUserId)
+                .ToListAsync();
+            return _mapper.Map<IEnumerable<IssueDTO>>(entities);
         }
     }
 }

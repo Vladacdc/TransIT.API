@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using TransIT.BLL.DTOs;
 using TransIT.BLL.Helpers;
 using TransIT.DAL.Models.Entities.Abstractions;
@@ -10,47 +10,26 @@ using TransIT.DAL.Repositories;
 
 namespace TransIT.BLL.Services
 {
-    public class FilterService<TEntity> : IFilterService<TEntity>
-        where TEntity : class, IEntity, new()
+    public class FilterService<TEntity> 
+        where TEntity : class, IAuditableEntity, new()
     {        
         protected readonly IQueryRepository<TEntity> _queryRepository;
-        protected readonly ICrudService<TEntity> _crudService;
-
-        public ulong TotalRecordsAmount() =>
-            (ulong)_queryRepository
-                .GetQueryable()
-                .LongCount();
         
-        public ulong TotalRecordsAmount(Expression<Func<TEntity, bool>> expression) =>
-            (ulong)_queryRepository
-                .GetQueryable()
-                .Where(expression)
-                .LongCount();
-        
-        public FilterService(
-            IQueryRepository<TEntity> queryRepository,
-            ICrudService<TEntity> crudService)
+        public FilterService(IQueryRepository<TEntity> queryRepository)
         {
             _queryRepository = queryRepository;
-            _crudService = crudService;
         }
 
-        public virtual Task<IEnumerable<TEntity>> GetQueriedAsync() =>
-            Task.FromResult<IEnumerable<TEntity>>(
-                _queryRepository.GetQueryable()
-                );
+
+        public async Task<ulong> TotalRecordsAmount()
+        {
+            return (ulong) (await _queryRepository
+                .GetQueryable()
+                .LongCountAsync());
+        }
 
         public virtual async Task<IEnumerable<TEntity>> GetQueriedAsync(DataTableRequestDTO dataFilter) => 
             await GetQueriedAsync(dataFilter, await DetermineDataSource(dataFilter));
-
-        public virtual async Task<IEnumerable<TEntity>> GetQueriedWithWhereAsync(
-            DataTableRequestDTO dataFilter,
-            Expression<Func<TEntity, bool>> whereExpression) =>
-            ProcessQuery(
-                dataFilter,
-                await DetermineDataSource(dataFilter),
-                whereExpression
-                );
 
         protected virtual Task<IQueryable<TEntity>> GetQueriedAsync(
             DataTableRequestDTO dataFilter,
@@ -102,12 +81,6 @@ namespace TransIT.BLL.Services
             return data;
         }
 
-        private IQueryable<TEntity> ProcessQuery(
-            DataTableRequestDTO dataFilter,
-            IQueryable<TEntity> data,
-            Expression<Func<TEntity, bool>> whereExpression) =>
-            ProcessQuery(dataFilter, data.Where(whereExpression));
-
         private IQueryable<TEntity> TableOrderBy(DataTableRequestDTO dataFilter, IQueryable<TEntity> data)
         {
             data = data.OrderBy(
@@ -124,7 +97,7 @@ namespace TransIT.BLL.Services
 
         private IQueryable<TEntity> TableWhereEqual(DataTableRequestDTO.FilterType filter, IQueryable<TEntity> data)
         {
-            var value = FilterProcessingHelper.DetectStringType(filter.Value);
+            var value = FilterProcessingHelper.DetectStringType(filter.Value, filter.EntityPropertyPath);
             return value == null
                 ? data
                 : data.Where(filter.EntityPropertyPath, value, filter.Operator);
