@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using TransIT.BLL.DTOs;
 
 namespace TransIT.API.EndpointFilters.OnException
 {
@@ -12,14 +13,15 @@ namespace TransIT.API.EndpointFilters.OnException
         public Task OnExceptionAsync(ExceptionContext context)
         {
             var exceptionType = context.Exception.GetType();
-            var result = new ContentResult();
+            var result = new ObjectResult(
+                new ExtendedErrorDTO(context.Exception)
+            );
 
-            result.Content = context.Exception.Message;
             result.StatusCode =
                 exceptionType == typeof(ArgumentException)
                 || exceptionType == typeof(ConstraintException)
                     ? StatusCodes.Status409Conflict
-                    : StatusCodes.Status400BadRequest;
+                    : StatusCodes.Status500InternalServerError;
 
             context.Result = result;
             context.ExceptionHandled = true;
