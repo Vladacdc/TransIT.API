@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using LinqKit;
 using Microsoft.EntityFrameworkCore;
 using TransIT.DAL.Models;
 using TransIT.DAL.Models.Entities;
@@ -15,11 +16,25 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
         {
         }
         
-        public override Task<IQueryable<MalfunctionGroup>> SearchExpressionAsync(IEnumerable<string> strs) =>
-            Task.FromResult(
-                GetQueryable().Where(entity =>
-                    strs.Any(str => entity.Name.ToUpperInvariant().Contains(str)))
-                );
+         public override Task<IQueryable<MalfunctionGroup>> SearchExpressionAsync(IEnumerable<string> strs)
+        {
+            var predicate = PredicateBuilder.New<MalfunctionGroup>();
+
+            foreach (string keyword in strs)
+            {
+                string temp = keyword;
+                predicate = predicate.And(entity =>
+                       entity.Name != null && entity.Name != string.Empty &&
+                           EF.Functions.Like(entity.Name, '%' + temp + '%')
+                    );
+            }
+
+            return Task.FromResult(
+                GetQueryable()
+                .AsExpandable()
+                .Where(predicate)
+            );
+        }
 
         protected override IQueryable<MalfunctionGroup> ComplexEntities => Entities.
                    Include(t => t.Create).

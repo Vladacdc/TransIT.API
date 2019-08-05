@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using LinqKit;
 using Microsoft.EntityFrameworkCore;
 using TransIT.DAL.Models;
 using TransIT.DAL.Models.Entities;
@@ -15,14 +16,30 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
         {
         }
 
-        public override Task<IQueryable<Transition>> SearchExpressionAsync(IEnumerable<string> strs) =>
-            Task.FromResult(
-                GetQueryable().Where(transition =>
-                    strs.Any(str => transition.FromState.TransName.ToUpperInvariant().Contains(str)
-                                    || transition.ToState.TransName.ToUpperInvariant().Contains(str)
-                                    || transition.ActionType.Name.ToUpperInvariant().Contains(str)))
-                );
-        
+        public override Task<IQueryable<Transition>> SearchExpressionAsync(IEnumerable<string> strs)
+        {
+            var predicate = PredicateBuilder.New<Transition>();
+
+            foreach (string keyword in strs)
+            {
+                string temp = keyword;
+                predicate = predicate.And(entity =>
+                       entity.FromState.TransName != null && entity.FromState.TransName != string.Empty &&
+                           EF.Functions.Like(entity.FromState.TransName, '%' + temp + '%')
+                    || entity.ToState.TransName != null && entity.ToState.TransName != string.Empty &&
+                           EF.Functions.Like(entity.ToState.TransName, '%' + temp + '%')
+                    || entity.ActionType.Name != null && entity.ActionType.Name != string.Empty &&
+                           EF.Functions.Like(entity.ActionType.Name, '%' + temp + '%')
+                    );
+            }
+
+            return Task.FromResult(
+                GetQueryable()
+                .AsExpandable()
+                .Where(predicate)
+            );
+        }
+
         protected override IQueryable<Transition> ComplexEntities => Entities.
            Include(u => u.ActionType).
            Include(u => u.FromState).

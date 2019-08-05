@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using LinqKit;
 using TransIT.DAL.Models;
 using TransIT.DAL.Models.Entities;
 using TransIT.DAL.Repositories.InterfacesRepositories;
@@ -15,16 +16,35 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
         {
         }
 
-        public override Task<IQueryable<Vehicle>> SearchExpressionAsync(IEnumerable<string> strs) =>
-                  Task.FromResult(
-                      GetQueryable().Where(entity =>
-                          strs.Any(str => !string.IsNullOrEmpty(entity.Brand) && entity.Brand.ToUpperInvariant().Contains(str)
-                          || !string.IsNullOrEmpty(entity.RegNum) && entity.RegNum.ToUpperInvariant().Contains(str)
-                          || !string.IsNullOrEmpty(entity.InventoryId) && entity.InventoryId.ToUpperInvariant().Contains(str)
-                          || !string.IsNullOrEmpty(entity.Model) && entity.Model.ToUpperInvariant().Contains(str)
-                          || !string.IsNullOrEmpty(entity.Vincode) && entity.Vincode.ToUpperInvariant().Contains(str)
-                          || !string.IsNullOrEmpty(entity.VehicleType.Name) && entity.VehicleType.Name.ToUpperInvariant().Contains(str)
-                      )));
+        public override Task<IQueryable<Vehicle>> SearchExpressionAsync(IEnumerable<string> strs)
+        {
+            var predicate = PredicateBuilder.New<Vehicle>();
+
+            foreach (string keyword in strs)
+            {
+                string temp = keyword;
+                predicate = predicate.And(entity =>
+                       entity.Brand != null && entity.Brand != string.Empty &&
+                           EF.Functions.Like(entity.Brand, '%' + temp + '%')
+                    || entity.RegNum != null && entity.RegNum != string.Empty &&
+                           EF.Functions.Like(entity.RegNum, '%' + temp + '%')
+                    || entity.InventoryId != null && entity.InventoryId != string.Empty &&
+                           EF.Functions.Like(entity.InventoryId, '%' + temp + '%')
+                    || entity.Model != null && entity.Model != string.Empty &&
+                           EF.Functions.Like(entity.Model, '%' + temp + '%')
+                    || entity.Vincode != null && entity.Vincode != string.Empty &&
+                           EF.Functions.Like(entity.Vincode, '%' + temp + '%')
+                    || entity.VehicleType != null && entity.VehicleType.Name != string.Empty &&
+                           EF.Functions.Like(entity.VehicleType.Name, '%' + temp + '%')
+                    );
+            }
+
+            return Task.FromResult(
+                GetQueryable()
+                .AsExpandable()
+                .Where(predicate)
+            );
+        }
 
         protected override IQueryable<Vehicle> ComplexEntities => Entities.
                     Include(u => u.VehicleType).

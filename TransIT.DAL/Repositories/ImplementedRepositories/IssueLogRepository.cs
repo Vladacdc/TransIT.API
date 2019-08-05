@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using LinqKit;
 using Microsoft.EntityFrameworkCore;
 using TransIT.DAL.Models;
 using TransIT.DAL.Models.Entities;
@@ -13,18 +14,42 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
         public IssueLogRepository(TransITDBContext context)
             : base(context)
         {
-        }
+        } 
 
-        public override Task<IQueryable<IssueLog>> SearchExpressionAsync(IEnumerable<string> strs) =>
-            Task.FromResult(
-                GetQueryable().Where(entity =>
-                    strs.Any(str => !string.IsNullOrEmpty(entity.Description) && entity.Description.ToUpperInvariant().Contains(str)
-                    || !string.IsNullOrEmpty(entity.NewState.TransName) && entity.NewState.TransName.ToUpperInvariant().Contains(str)
-                    || !string.IsNullOrEmpty(entity.OldState.TransName) && entity.OldState.TransName.ToUpperInvariant().Contains(str)
-                    || !string.IsNullOrEmpty(entity.Expenses.ToString()) && entity.Expenses.ToString().ToUpperInvariant().Contains(str)
-                    || !string.IsNullOrEmpty(entity.ActionType.Name) && entity.ActionType.Name.ToUpperInvariant().Contains(str)
-                    || !string.IsNullOrEmpty(entity.Issue.Vehicle.InventoryId) && entity.Issue.Vehicle.InventoryId.ToUpperInvariant().Contains(str)))
-                );
+        public override Task<IQueryable<IssueLog>> SearchExpressionAsync(IEnumerable<string> strs)
+        {
+            var predicate = PredicateBuilder.New<IssueLog>();
+
+            foreach (string keyword in strs)
+            {
+                string temp = keyword;
+                predicate = predicate.And(entity =>
+                       entity.Description != null && entity.Description != string.Empty &&
+                           EF.Functions.Like(entity.Description, '%' + temp + '%')
+                    || entity.NewState.TransName != null && entity.NewState.TransName != string.Empty &&
+                           EF.Functions.Like(entity.NewState.TransName, '%' + temp + '%')
+                    || entity.OldState.TransName != null && entity.OldState.TransName != string.Empty &&
+                           EF.Functions.Like(entity.OldState.TransName, '%' + temp + '%')
+                    || entity.ActionType.Name != null && entity.ActionType.Name != string.Empty &&
+                           EF.Functions.Like(entity.ActionType.Name, '%' + temp + '%')
+                    || entity.Issue.Vehicle.InventoryId != null && entity.Issue.Vehicle.InventoryId != string.Empty &&
+                           EF.Functions.Like(entity.Issue.Vehicle.InventoryId, '%' + temp + '%')
+                    );
+
+                if (decimal.TryParse(temp, out decimal parsedDecimal))
+                {
+                    predicate = predicate.And(
+                        entity => entity.Expenses != null && entity.Expenses.Value == parsedDecimal
+                    );
+                }
+            }
+
+            return Task.FromResult(
+                GetQueryable()
+                .AsExpandable()
+                .Where(predicate)
+            );
+        }
 
         protected override IQueryable<IssueLog> ComplexEntities => Entities
             .Include(t => t.ActionType)

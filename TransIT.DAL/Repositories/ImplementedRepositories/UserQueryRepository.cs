@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
+using LinqKit;
 using Microsoft.EntityFrameworkCore;
 using TransIT.DAL.Models;
 using TransIT.DAL.Models.Entities;
@@ -27,17 +30,35 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
             return _users;
         }
 
-        /// <summary>
-        /// Search is only by UserName !!!
-        /// Need to fix.
-        /// </summary>
-        /// <param name="strs"></param>
-        /// <returns></returns>
         public Task<IQueryable<User>> SearchExpressionAsync(IEnumerable<string> strs)
         {
-            //need to fix
+            var predicate = PredicateBuilder.New<User>();
+
+            foreach (string keyword in strs)
+            {
+                string temp = keyword;
+
+                predicate = predicate.And(entity =>
+                       entity.FirstName != null && entity.FirstName != string.Empty &&
+                           EF.Functions.Like(entity.FirstName, '%' + temp + '%')
+                    || entity.MiddleName != null && entity.MiddleName != string.Empty &&
+                           EF.Functions.Like(entity.MiddleName, '%' + temp + '%')
+                    || entity.LastName != null && entity.LastName != string.Empty &&
+                           EF.Functions.Like(entity.LastName, '%' + temp + '%')
+                    || entity.NormalizedUserName != null && entity.NormalizedUserName != string.Empty &&
+                           EF.Functions.Like(entity.NormalizedUserName, '%' + temp + '%')
+                    || entity.NormalizedEmail != null && entity.NormalizedEmail != string.Empty &&
+                           EF.Functions.Like(entity.NormalizedEmail, '%' + temp + '%')
+                    || entity.PhoneNumber != null && entity.PhoneNumber != string.Empty &&
+                           EF.Functions.Like(entity.PhoneNumber, '%' + temp + '%'));
+            }
+
             return Task.FromResult(
-               GetQueryable().Where(entity => entity.UserName == strs.FirstOrDefault()));
+                GetQueryable()
+                .AsExpandable()
+                .Where(predicate)
+            );
         }
+
     }
 }

@@ -46,10 +46,10 @@ namespace TransIT.BLL.Services.ImplementedServices
         public async Task<IEnumerable<ActionTypeDTO>> SearchAsync(string search)
         {
             var actionTypes = await _unitOfWork.ActionTypeRepository.SearchExpressionAsync(
-           search
-               .Split(new[] { ' ', ',', '.' }, StringSplitOptions.RemoveEmptyEntries)
-               .Select(x => x.Trim().ToUpperInvariant())
-           );
+                search
+                    .Split(new[] { ' ', ',', '.' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(x => x.Trim().ToUpperInvariant())
+            );
 
             return _mapper.Map<IEnumerable<ActionTypeDTO>>(await actionTypes.ToListAsync());
         }
