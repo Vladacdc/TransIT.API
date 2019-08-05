@@ -7,6 +7,8 @@ namespace TransIT.DAL.Models.Entities
 {
     public class User : IdentityUser, IAuditableEntity
     {
+        public const string ActiveTranslated = "активний";
+        public const string NotActiveTranslated = "неактивний";
         public User()
         {
             ActionTypeCreate = new HashSet<ActionType>();

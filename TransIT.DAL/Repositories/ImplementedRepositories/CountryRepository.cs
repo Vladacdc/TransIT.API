@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using LinqKit;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TransIT.DAL.Models;
@@ -14,10 +16,23 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
         {
         }
         
-        public override Task<IQueryable<Country>> SearchExpressionAsync(IEnumerable<string> strs) =>
-            Task.FromResult(
-                GetQueryable().Where(entity =>
-                    strs.Any(str => entity.Name.ToUpperInvariant().Contains(str)))
+        public override Task<IQueryable<Country>> SearchExpressionAsync(IEnumerable<string> strs)
+        {
+            var predicate = PredicateBuilder.New<Country>();
+
+            foreach (string keyword in strs)
+            {
+                string temp = keyword;
+                predicate = predicate.And(entity =>
+                        EF.Functions.Like(entity.Name, '%' + temp + '%')
+                    );
+            }
+
+            return Task.FromResult(
+                GetQueryable()
+                .AsExpandable()
+                .Where(predicate)
             );
+        }
     }
 }

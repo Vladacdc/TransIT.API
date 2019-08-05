@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -10,11 +11,11 @@ using TransIT.DAL.Repositories;
 
 namespace TransIT.BLL.Services
 {
-    public class FilterService<TEntity> 
+    public class FilterService<TEntity>
         where TEntity : class, IAuditableEntity, new()
-    {        
+    {
         protected readonly IQueryRepository<TEntity> _queryRepository;
-        
+
         public FilterService(IQueryRepository<TEntity> queryRepository)
         {
             _queryRepository = queryRepository;
@@ -23,35 +24,49 @@ namespace TransIT.BLL.Services
 
         public async Task<ulong> TotalRecordsAmount()
         {
-            return (ulong) (await _queryRepository
+            return (ulong)(await _queryRepository
                 .GetQueryable()
                 .LongCountAsync());
         }
 
-        public virtual async Task<IEnumerable<TEntity>> GetQueriedAsync(DataTableRequestDTO dataFilter) => 
-            await GetQueriedAsync(dataFilter, await DetermineDataSource(dataFilter));
+        public virtual async Task<IList<TEntity>> GetQueriedAsync(DataTableRequestDTO dataFilter)
+        {
+            var queryable = GetQueried(dataFilter, await DetermineDataSource(dataFilter));
+            return await queryable.ToListAsync();
+        }
 
-        protected virtual Task<IQueryable<TEntity>> GetQueriedAsync(
+        protected IQueryable<TEntity> GetQueried(
             DataTableRequestDTO dataFilter,
-            IQueryable<TEntity> dataSource) =>
-            Task.FromResult(ProcessQuery(dataFilter, dataSource));
+            IQueryable<TEntity> dataSource)
+        {
+            return ProcessQuery(dataFilter, dataSource);
+        }
 
-        private async Task<IQueryable<TEntity>> DetermineDataSource(DataTableRequestDTO dataFilter) =>
-            dataFilter.Search != null
-            && !string.IsNullOrEmpty(dataFilter.Search.Value)
-                ? await _queryRepository.SearchExpressionAsync(
-                      dataFilter.Search.Value
-                        .Split(new[] {' ', ',', '.'}, StringSplitOptions.RemoveEmptyEntries)
-                        .Select(x => x.Trim().ToUpperInvariant())
-                      )
-                : _queryRepository.GetQueryable();
+        private async Task<IQueryable<TEntity>> DetermineDataSource(DataTableRequestDTO dataFilter)
+        {
+            bool searchNotEmpty = dataFilter.Search != null &&
+                                  !string.IsNullOrEmpty(dataFilter.Search.Value);
+
+            IQueryable<TEntity> entities;
+
+            if (searchNotEmpty)
+            {
+                entities = await _queryRepository.SearchExpressionAsync(dataFilter.SearchEntries);
+            }
+            else
+            {
+                entities = _queryRepository.GetQueryable();
+            } 
+
+            return entities;
+        }
 
         private IQueryable<TEntity> ProcessQuery(DataTableRequestDTO dataFilter, IQueryable<TEntity> data)
         {
             if (dataFilter.Filters != null
                 && dataFilter.Filters.Any())
                 data = ProcessQueryFilter(dataFilter.Filters, data);
-            
+
             if (dataFilter.Columns != null
                 && dataFilter.Order != null
                 && dataFilter.Columns.Any()
@@ -61,7 +76,7 @@ namespace TransIT.BLL.Services
                     && !string.IsNullOrEmpty(o.Dir)
                     && o.Column >= 0))
                 data = TableOrderBy(dataFilter, data);
-            
+
             if (dataFilter.Start >= 0
                 && dataFilter.Length > 0)
                 data = data

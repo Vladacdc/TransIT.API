@@ -1,4 +1,8 @@
-﻿namespace TransIT.BLL.DTOs
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace TransIT.BLL.DTOs
 {
     public class DataTableRequestDTO
     {
@@ -12,6 +16,15 @@
         public ColumnType[] Columns { get; set; }
         public OrderType[] Order { get; set; }
         public FilterType[] Filters { get; set; }
+
+        public IEnumerable<string> SearchEntries
+        {
+            get
+            {
+                return Search.Value.Split(new[] { ' ', ',', '.' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(x => x.Trim().ToUpperInvariant());
+            }
+        }
 
         public class OrderType
         {

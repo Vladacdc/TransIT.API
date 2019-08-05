@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using LinqKit;
 using Microsoft.EntityFrameworkCore;
 using TransIT.DAL.Models;
 using TransIT.DAL.Models.Entities;
@@ -15,11 +16,27 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
         {
         }
 
-        public override Task<IQueryable<Bill>> SearchExpressionAsync(IEnumerable<string> strs) =>
-            Task.FromResult(
-                GetQueryable().Where(entity =>
-                    strs.Any(str => entity.Sum.ToString().Contains(str)))
+        public override Task<IQueryable<Bill>> SearchExpressionAsync(IEnumerable<string> strs)
+        {
+            var predicate = PredicateBuilder.New<Bill>();
+
+            foreach (string keyword in strs)
+            {
+                string temp = keyword;
+                if (decimal.TryParse(temp, out decimal parsedDecimal))
+                {
+                    predicate = predicate.And(entity =>
+                        entity.Sum == parsedDecimal
+                    );
+                }
+            }
+
+            return Task.FromResult(
+                GetQueryable()
+                .AsExpandable()
+                .Where(predicate)
             );
+        }
         
         protected override IQueryable<Bill> ComplexEntities => Entities.
            Include(t => t.Create).
