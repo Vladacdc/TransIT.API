@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 
 namespace TransIT.BLL.Helpers
-{   
+{
     public static class FilterProcessingHelper
     {
         public static IQueryable<TEntity> Where<TEntity>(
@@ -23,32 +23,40 @@ namespace TransIT.BLL.Helpers
                 case ">":
                     return source.WhereGreater(leftProperty, constantValue);
                 case "<":
-                    return source.WhereLess(leftProperty, constantValue); 
+                    return source.WhereLess(leftProperty, constantValue);
                 case ">=":
-                    return source.WhereGreaterOrEqual(leftProperty, constantValue); 
+                    return source.WhereGreaterOrEqual(leftProperty, constantValue);
                 case "<=":
                     return source.WhereLessOrEqual(leftProperty, constantValue);
                 default:
                     return source;
             }
         }
-        
+
         public static object DetectStringType(string stringValue, string entityType)
         {
-            if (entityType == "priority")
+            object result;
+            if (stringValue == "null")
             {
-                return int.TryParse(stringValue, out var num);
+                result = null;
+            }
+            else if (DateTime.TryParse(stringValue, out var date))
+            {
+                result = date;
+            }
+            else if (int.TryParse(stringValue, out var num1))
+            {
+                result = num1;
+            }
+            else if (bool.TryParse(stringValue, out var boolean))
+            {
+                result = boolean;
             }
             else
             {
-                return stringValue == "null" ? null
-                      : DateTime.TryParse(stringValue, out var date) ? date
-                          : int.TryParse(stringValue, out var num)
-                              ? num.ToString()
-                              : bool.TryParse(stringValue, out var boolean)
-                                  ? boolean
-                                  : stringValue as object;
+                result = stringValue;
             }
+            return result;
         }
 
         public static IQueryable<TEntity> WhereGreater<TEntity>(
@@ -62,13 +70,13 @@ namespace TransIT.BLL.Helpers
             string leftProperty,
             object constantValue) =>
             ApplyOperatorInLambda(source, leftProperty, constantValue, Expression.LessThan);
-        
+
         public static IQueryable<TEntity> WhereGreaterOrEqual<TEntity>(
             this IQueryable<TEntity> source,
             string leftProperty,
             object constantValue) =>
             ApplyOperatorInLambda(source, leftProperty, constantValue, Expression.GreaterThanOrEqual);
-        
+
         public static IQueryable<TEntity> WhereLessOrEqual<TEntity>(
             this IQueryable<TEntity> source,
             string leftProperty,
@@ -80,13 +88,13 @@ namespace TransIT.BLL.Helpers
             string leftProperty,
             object constantValue) =>
             ApplyOperatorInLambda(source, leftProperty, constantValue, Expression.Equal);
-        
+
         public static IQueryable<TEntity> WhereNotEqual<TEntity>(
             this IQueryable<TEntity> source,
             string leftProperty,
             object constantValue) =>
             ApplyOperatorInLambda(source, leftProperty, constantValue, Expression.NotEqual);
-        
+
         public static IQueryable<TEntity> ApplyOperatorInLambda<TEntity>(
             IQueryable<TEntity> source,
             string leftProperty,
@@ -114,7 +122,7 @@ namespace TransIT.BLL.Helpers
                         )
                     )
                 );
-        }        
+        }
 
         public static IQueryable<TEntity> OrderBy<TEntity>(this IQueryable<TEntity> source, string orderByProperty, bool desc) =>
             source.Provider.CreateQuery<TEntity>(
@@ -124,12 +132,12 @@ namespace TransIT.BLL.Helpers
                     desc ? "OrderByDescending" : "OrderBy"
                     )
                 );
-        
+
         public static IQueryable<TEntity> ThenBy<TEntity>(this IQueryable<TEntity> source, string orderByProperty, bool desc) =>
             source.Provider.CreateQuery<TEntity>(
                 BuildOrderByExpression(
                     source,
-                    CapitalizeSentence(orderByProperty), 
+                    CapitalizeSentence(orderByProperty),
                     desc ? "ThenByDescending" : "ThenBy"
                     )
                 );
@@ -138,11 +146,11 @@ namespace TransIT.BLL.Helpers
             Expression.Call(
                 typeof(Queryable),
                 "Where",
-                new[] {source.ElementType},
+                new[] { source.ElementType },
                 source.Expression,
                 Expression.Quote(lambda)
                 );
-        
+
         private static MethodCallExpression BuildOrderByExpression<TEntity>(
             IQueryable<TEntity> source,
             string[] propertyPath,
@@ -158,7 +166,7 @@ namespace TransIT.BLL.Helpers
             return Expression.Call(
                 typeof(Queryable),
                 method,
-                new[] {source.ElementType, propertyType},
+                new[] { source.ElementType, propertyType },
                 source.Expression,
                 Expression.Quote(
                     Expression.Lambda(propertyAccess, parameter)
@@ -176,7 +184,7 @@ namespace TransIT.BLL.Helpers
         public static PropertyInfo GetPropertyByPath(PropertyInfo property, IEnumerable<string> propertyPath) =>
             ChangeAndReturn(
                 property,
-                propertyPath, 
+                propertyPath,
                 (name, prop) => prop.PropertyType.GetProperty(name)
                 );
 
@@ -188,12 +196,12 @@ namespace TransIT.BLL.Helpers
                     );
             return property;
         }
-        
+
         public static string[] CapitalizeSentence(string str) =>
             str.Split('.')
                 .Select(Capitalize)
                 .ToArray();
-        
+
         private static string Capitalize(string str) =>
             $"{str.First().ToString().ToUpper()}{str.Substring(1)}";
     }
