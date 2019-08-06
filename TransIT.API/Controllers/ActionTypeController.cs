@@ -32,7 +32,7 @@ namespace TransIT.API.Controllers
                 return Json(result);
             }
 
-            return BadRequest();
+            return StatusCode(500);
         }
 
         [HttpGet("{id}")]
@@ -44,7 +44,7 @@ namespace TransIT.API.Controllers
                 return Json(result);
             }
 
-            return BadRequest();
+            return StatusCode(500);
         }
 
         [HttpGet("/search")]
@@ -56,7 +56,7 @@ namespace TransIT.API.Controllers
                 return Json(result);
             }
 
-            return BadRequest();
+            return StatusCode(500);
         }
 
         [HttpPost]
@@ -70,7 +70,7 @@ namespace TransIT.API.Controllers
                 return CreatedAtAction(nameof(Create), createdDTO);
             }
 
-            return BadRequest();
+            return StatusCode(500);
         }
 
         [HttpPut("{id}")]
@@ -86,7 +86,7 @@ namespace TransIT.API.Controllers
                 return NoContent();
             }
 
-            return BadRequest();
+            return StatusCode(500);
         }
 
         [HttpDelete("{id}")]

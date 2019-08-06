@@ -56,7 +56,7 @@ namespace TransIT.API.Controllers
             var result = await _issueService.GetAsync(id);
             return result != null
                 ? Json(result)
-                : (IActionResult)BadRequest();
+                : (IActionResult)StatusCode(500);
         }
 
         [HttpGet("/search")]
@@ -65,7 +65,7 @@ namespace TransIT.API.Controllers
             var result = await _issueService.SearchAsync(search);
             return result != null
                 ? Json(result)
-                : (IActionResult)BadRequest();
+                : (IActionResult)StatusCode(500);
         }
 
         [HttpPost]
@@ -75,7 +75,7 @@ namespace TransIT.API.Controllers
             await _issueHub.Clients.Group(RoleNames.Engineer).SendAsync("ReceiveIssues");
             return createdEntity != null
                 ? CreatedAtAction(nameof(Create), createdEntity)
-                : (IActionResult)BadRequest();
+                : (IActionResult)StatusCode(500);
         }
 
         [HttpPut("{id}")]
@@ -86,7 +86,7 @@ namespace TransIT.API.Controllers
             var result = await _issueService.UpdateAsync(obj);
             return result != null
                 ? NoContent()
-                : (IActionResult)BadRequest();
+                : (IActionResult)StatusCode(500);
         }
 
         [HttpDelete("{id}")]

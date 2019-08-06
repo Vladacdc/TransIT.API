@@ -33,7 +33,7 @@ namespace TransIT.API.Controllers
                 return Json(result);
             }
 
-            return BadRequest();
+            return StatusCode(500);
         }
 
         [HttpGet("~/api/v1/Document/{id}/file")]
@@ -64,7 +64,7 @@ namespace TransIT.API.Controllers
                 return CreatedAtAction(nameof(Create), createdEntity);
             }
 
-            return BadRequest();
+            return StatusCode(500);
         }
 
         [HttpDelete("~/api/v1/Document/{id}")]

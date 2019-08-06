@@ -32,7 +32,7 @@ namespace TransIT.API.Controllers
                 return Json(result);
             }
 
-            return BadRequest();
+            return StatusCode(500, Json("Supplier get error"));
         }
 
         [HttpGet("{id}")]
@@ -44,7 +44,7 @@ namespace TransIT.API.Controllers
                 return Json(result);
             }
 
-            return BadRequest();
+            return StatusCode(500, Json("Supplier get error"));
         }
 
         [HttpGet("/search")]
@@ -56,7 +56,7 @@ namespace TransIT.API.Controllers
                 return Json(result);
             }
 
-            return BadRequest();
+            return StatusCode(500, Json("Supplier get error"));
         }
 
         [HttpPost]
@@ -69,7 +69,7 @@ namespace TransIT.API.Controllers
                 return CreatedAtAction(nameof(Create), createdDto);
             }
 
-            return BadRequest();
+            return StatusCode(500, Json("Supplier create error"));
         }
 
         [HttpPut("{id}")]
@@ -85,7 +85,7 @@ namespace TransIT.API.Controllers
                 return NoContent();
             }
 
-            return BadRequest();
+            return StatusCode(500,Json("Supplier update error"));
         }
 
         [HttpDelete("{id}")]

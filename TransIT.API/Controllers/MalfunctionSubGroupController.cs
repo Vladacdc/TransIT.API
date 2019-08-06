@@ -29,7 +29,7 @@ namespace TransIT.API.Controllers
             var result = await _malfunctionSubgroupService.GetRangeAsync(offset, amount);
             return result != null
                 ? Json(result)
-                : (IActionResult)BadRequest();
+                : (IActionResult)StatusCode(500);
         }
 
         [HttpGet("{id}")]
@@ -38,7 +38,7 @@ namespace TransIT.API.Controllers
             var result = await _malfunctionSubgroupService.GetAsync(id);
             return result != null
                 ? Json(result)
-                : (IActionResult)BadRequest();
+                : (IActionResult)StatusCode(500);
         }
 
         [HttpGet("/search")]
@@ -47,7 +47,7 @@ namespace TransIT.API.Controllers
             var result = await _malfunctionSubgroupService.SearchAsync(search);
             return result != null
                 ? Json(result)
-                : (IActionResult)BadRequest();
+                : (IActionResult)StatusCode(500);
         }
 
         [HttpPost]
@@ -57,7 +57,7 @@ namespace TransIT.API.Controllers
             var createdEntity = await _malfunctionSubgroupService.CreateAsync(obj);
             return createdEntity != null
                 ? CreatedAtAction(nameof(Create), createdEntity)
-                : (IActionResult)BadRequest();
+                : (IActionResult)StatusCode(500);
         }
 
         [HttpPut("{id}")]
@@ -69,7 +69,7 @@ namespace TransIT.API.Controllers
             var result = await _malfunctionSubgroupService.UpdateAsync(obj);
             return result != null
                 ? NoContent()
-                : (IActionResult)BadRequest();
+                : StatusCode(500);
         }
 
         [HttpDelete("{id}")]

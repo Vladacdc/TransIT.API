@@ -29,7 +29,7 @@ namespace TransIT.API.Controllers
 
             return result != null
                 ? Ok(result)
-                : (IActionResult)BadRequest();
+                : (IActionResult)StatusCode(500);
         }
     }
 }

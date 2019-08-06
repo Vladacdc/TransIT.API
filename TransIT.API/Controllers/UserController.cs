@@ -33,7 +33,7 @@ namespace TransIT.API.Controllers
             var result = await _userService.UpdateAsync(obj);
             return result != null
                 ? NoContent()
-                : (IActionResult)BadRequest();
+                : StatusCode(500);
         }
 
         [HttpPut("{id}/password")]
@@ -45,7 +45,7 @@ namespace TransIT.API.Controllers
 
             return result != null
                 ? NoContent()
-                : (IActionResult)BadRequest();
+                : StatusCode(500);
         }
 
         [HttpGet]
@@ -59,7 +59,7 @@ namespace TransIT.API.Controllers
                     var result = await _userService.GetAssignees(offset, amount);
                     return result != null
                         ? Ok(result)
-                        : (IActionResult)BadRequest();
+                        : (IActionResult)StatusCode(500);
                 default:
                     return StatusCode(StatusCodes.Status500InternalServerError);
             }

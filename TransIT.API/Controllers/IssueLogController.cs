@@ -35,7 +35,7 @@ namespace TransIT.API.Controllers
             var result = await _issueLogService.GetRangeByIssueIdAsync(issueId);
             return result != null
                 ? Json(result)
-                : (IActionResult)BadRequest();
+                : (IActionResult)StatusCode(500);
         }
 
         [HttpGet]
@@ -44,7 +44,7 @@ namespace TransIT.API.Controllers
             var result = await _issueLogService.GetRangeAsync(offset, amount);
             return result != null
                 ? Json(result)
-                : (IActionResult)BadRequest();
+                : (IActionResult)StatusCode(500);
         }
 
         [HttpGet("{id}")]
@@ -53,7 +53,7 @@ namespace TransIT.API.Controllers
             var result = await _issueLogService.GetAsync(id);
             return result != null
                 ? Json(result)
-                : (IActionResult)BadRequest();
+                : (IActionResult)StatusCode(500);
         }
 
         [HttpGet("/search")]
@@ -62,7 +62,7 @@ namespace TransIT.API.Controllers
             var result = await _issueLogService.SearchAsync(search);
             return result != null
                 ? Json(result)
-                : (IActionResult)BadRequest();
+                : (IActionResult)StatusCode(500);
         }
 
         [HttpPost]
@@ -71,7 +71,7 @@ namespace TransIT.API.Controllers
             var result = await _issueLogService.CreateAsync(obj);
             return result != null
                 ? CreatedAtAction(nameof(Create), result)
-                : (IActionResult)BadRequest();
+                : (IActionResult)StatusCode(500);
         }
 
         [HttpPut("{id}")]
@@ -83,7 +83,7 @@ namespace TransIT.API.Controllers
             var result = await _issueLogService.UpdateAsync(obj);
             return result != null
                 ? NoContent()
-                : (IActionResult)BadRequest();
+                : (IActionResult)StatusCode(500);
         }
 
         [HttpDelete("{id}")]

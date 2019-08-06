@@ -29,7 +29,7 @@ namespace TransIT.API.Controllers
             var result = await _postService.GetRangeAsync(offset, amount);
             return result != null
                 ? Json(result)
-                : (IActionResult)BadRequest();
+                : (IActionResult)StatusCode(500);
         }
 
         [HttpGet("{id}")]
@@ -38,7 +38,7 @@ namespace TransIT.API.Controllers
             var result = await _postService.GetAsync(id);
             return result != null
                 ? Json(result)
-                : (IActionResult)BadRequest();
+                : (IActionResult)StatusCode(500);
         }
 
         [HttpGet("/search")]
@@ -47,7 +47,7 @@ namespace TransIT.API.Controllers
             var result = await _postService.SearchAsync(search);
             return result != null
                 ? Json(result)
-                : (IActionResult)BadRequest();
+                : (IActionResult)StatusCode(500);
         }
 
         [HttpPost]
@@ -57,7 +57,7 @@ namespace TransIT.API.Controllers
             var createdEntity = await _postService.CreateAsync(obj);
             return createdEntity != null
                 ? CreatedAtAction(nameof(Create), createdEntity)
-                : (IActionResult)BadRequest();
+                : (IActionResult)StatusCode(500);
         }
 
         [HttpPut("{id}")]
@@ -69,7 +69,7 @@ namespace TransIT.API.Controllers
             var result = await _postService.UpdateAsync(obj);
             return result != null
                 ? NoContent()
-                : (IActionResult)BadRequest();
+                : StatusCode(500);
         }
 
         [HttpDelete("{id}")]
