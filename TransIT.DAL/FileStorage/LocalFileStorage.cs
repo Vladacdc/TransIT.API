@@ -1,22 +1,29 @@
 ﻿using System;
 using System.IO;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 
 namespace TransIT.DAL.FileStorage
 {
     internal class LocalFileStorage : IFileStorage
     {
+        private LocalStorageOptions _localOptions;
+
+        public LocalFileStorage(IOptions<LocalStorageOptions> options)
+        {
+            _localOptions = options.Value;
+        }
+
         public string Create(IFormFile file)
         {
-            var filePath = @"..\TransIT.DAL"+@"\LocalFileStorage";
-            Directory.CreateDirectory(filePath);
-            filePath = Path.Combine(filePath, DateTime.Now.ToString("MM_dd_yyyy_HH_mm_ss") + file.FileName);
+            Directory.CreateDirectory(_localOptions.FolderPath);
+            _localOptions.FolderPath = Path.Combine(_localOptions.FolderPath, DateTime.Now.ToString("MM_dd_yyyy_HH_mm_ss") + file.FileName);
 
-            using (FileStream fileStream = new FileStream(filePath, FileMode.CreateNew))
+            using (FileStream fileStream = new FileStream(_localOptions.FolderPath, FileMode.CreateNew))
             {
                  file.CopyTo(fileStream);
             }
-            return filePath;
+            return _localOptions.FolderPath;
         }
 
         public void Delete(string FilePath)

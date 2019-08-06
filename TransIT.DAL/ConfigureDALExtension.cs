@@ -10,13 +10,14 @@ using TransIT.DAL.Repositories.ImplementedRepositories;
 using TransIT.DAL.Repositories.InterfacesRepositories;
 using TransIT.DAL.UnitOfWork;
 using TransIT.DAL.FileStorage;
+using System;
 
 namespace TransIT.DAL
 {
     public static class ConfigureDALExtension
     {
         public static void ConfigureDAL(
-            this IServiceCollection services, 
+            this IServiceCollection services,
             IConfiguration configuration,
             IHostingEnvironment environment)
         {
@@ -24,7 +25,7 @@ namespace TransIT.DAL
             services.ConfigureQueryRepositories();
             services.ConfigureDbContext(configuration, environment);
             services.ConfigureIdentity();
-            services.ConfigureFileStorage(configuration,environment);
+            services.ConfigureFileStorage(configuration, environment);
 
             services.AddScoped<IUnitOfWork, UnitOfWork.UnitOfWork>();
         }
@@ -78,8 +79,8 @@ namespace TransIT.DAL
         }
 
         private static void ConfigureDbContext(
-            this IServiceCollection services, 
-            IConfiguration configuration, 
+            this IServiceCollection services,
+            IConfiguration configuration,
             IHostingEnvironment environment)
         {
             void ConfigureConnection(DbContextOptionsBuilder options)
@@ -122,23 +123,45 @@ namespace TransIT.DAL
             IConfiguration configuration,
             IHostingEnvironment environment)
         {
+            var fileStorage = configuration.GetSection("FileStorage");
+
+            Action ConfigureLocalStorage = () =>
+            {
+                services.AddScoped<IFileStorage, LocalFileStorage>();
+
+                services.Configure<LocalStorageOptions>((options) =>
+                {
+                    var localOptions = fileStorage.GetSection(nameof(LocalStorageOptions));
+
+                    options.FolderPath = localOptions[nameof(LocalStorageOptions.FolderPath)];
+                });
+            };
+
             if (environment.IsProduction())
             {
-                services.AddScoped<IFileStorage, AzureFileStorage>();
+                switch (fileStorage["Type"])
+                {
+                    case "Azure":
+                        services.AddScoped<IFileStorage, AzureFileStorage>();
+                        services.Configure<AzureStorageOptions>((options) =>
+                        {
+                            var azureOptions = fileStorage.GetSection(nameof(AzureStorageOptions));
+
+                            options.AccountName = azureOptions[nameof(AzureStorageOptions.AccountName)];
+                            options.AccountKey = azureOptions[nameof(AzureStorageOptions.AccountKey)];
+                            options.ConnectionString = azureOptions[nameof(AzureStorageOptions.ConnectionString)];
+                        });
+                        break;
+                    default:
+                        ConfigureLocalStorage();
+                        break;
+                }
             }
             if (environment.IsDevelopment())
             {
-                services.AddScoped<IFileStorage, LocalFileStorage>();
+                ConfigureLocalStorage();
             }
 
-            services.Configure<AzureStorageOptions>((options) =>
-            {
-                var azureOptions = configuration.GetSection(nameof(AzureStorageOptions));
-
-                options.AccountName = azureOptions[nameof(AzureStorageOptions.AccountName)];
-                options.AccountKey = azureOptions[nameof(AzureStorageOptions.AccountKey)];
-                options.ConnectionString = azureOptions[nameof(AzureStorageOptions.ConnectionString)];
-            });
         }
 
     }
