@@ -33,7 +33,7 @@ namespace TransIT.BLL.Helpers
             }
         }
 
-        public static object DetectStringType(string stringValue, string entityType)
+        public static object TryParseStringValue(string stringValue)
         {
             object result;
             if (stringValue == "null")
@@ -106,12 +106,10 @@ namespace TransIT.BLL.Helpers
                 parameter,
                 CapitalizeSentence(leftProperty)
             );
-            var secondPropertyAccess = (Expression)
-                Expression.Constant(
-                    constantValue,
-                    constantValue.GetType()
-                    );
-            secondPropertyAccess = Expression.Convert(secondPropertyAccess, firstPropertyAccess.Type);
+            
+            var secondPropertyAccess = Expression.Convert(
+                Expression.Constant(constantValue, constantValue.GetType()), firstPropertyAccess.Type
+            );
 
             return source.Provider.CreateQuery<TEntity>(
                 BuildWhereExpression(
@@ -149,7 +147,7 @@ namespace TransIT.BLL.Helpers
                 new[] { source.ElementType },
                 source.Expression,
                 Expression.Quote(lambda)
-                );
+            );
 
         private static MethodCallExpression BuildOrderByExpression<TEntity>(
             IQueryable<TEntity> source,
@@ -161,7 +159,7 @@ namespace TransIT.BLL.Helpers
             var propertyType = GetPropertyByPath(
                 source.ElementType.GetProperty(propertyPath.First()),
                 propertyPath.Skip(1)
-                ).PropertyType;
+            ).PropertyType;
 
             return Expression.Call(
                 typeof(Queryable),
@@ -175,34 +173,31 @@ namespace TransIT.BLL.Helpers
         }
 
         public static Expression GetAccessProperty(Expression propertyAccess, IEnumerable<string> propertyPath) =>
-            ChangeAndReturn(
-                propertyAccess,
-                propertyPath,
-                (name, prop) => Expression.PropertyOrField(prop, name)
-                );
+            ChangeAndReturn(propertyAccess, propertyPath, (name, prop) => Expression.PropertyOrField(prop, name));
 
         public static PropertyInfo GetPropertyByPath(PropertyInfo property, IEnumerable<string> propertyPath) =>
-            ChangeAndReturn(
-                property,
-                propertyPath,
-                (name, prop) => prop.PropertyType.GetProperty(name)
-                );
+            ChangeAndReturn(property, propertyPath, (name, prop) => prop.PropertyType.GetProperty(name));
 
         private static T ChangeAndReturn<T>(T property, IEnumerable<string> propertyPath, Func<string, T, T> changer)
         {
             propertyPath.ToList()
                 .ForEach(name =>
-                    property = changer(name, property)
-                    );
+                {
+                    property = changer(name, property);
+                });
             return property;
         }
 
-        public static string[] CapitalizeSentence(string str) =>
-            str.Split('.')
-                .Select(Capitalize)
-                .ToArray();
+        public static string[] CapitalizeSentence(string str)
+        {
+            return str.Split('.')
+                      .Select(Capitalize)
+                      .ToArray();
+        }
 
-        private static string Capitalize(string str) =>
-            $"{str.First().ToString().ToUpper()}{str.Substring(1)}";
+        private static string Capitalize(string str)
+        {
+            return $"{str.First().ToString().ToUpper()}{str.Substring(1)}";
+        }
     }
 }
