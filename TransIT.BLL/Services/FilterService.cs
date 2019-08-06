@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -20,8 +18,7 @@ namespace TransIT.BLL.Services
         {
             _queryRepository = queryRepository;
         }
-
-
+        
         public async Task<ulong> TotalRecordsAmount()
         {
             return (ulong)(await _queryRepository
@@ -31,21 +28,8 @@ namespace TransIT.BLL.Services
 
         public virtual async Task<IList<TEntity>> GetQueriedAsync(DataTableRequestDTO dataFilter)
         {
-            var queryable = GetQueried(dataFilter, await DetermineDataSource(dataFilter));
-            return await queryable.ToListAsync();
-        }
-
-        protected IQueryable<TEntity> GetQueried(
-            DataTableRequestDTO dataFilter,
-            IQueryable<TEntity> dataSource)
-        {
-            return ProcessQuery(dataFilter, dataSource);
-        }
-
-        private async Task<IQueryable<TEntity>> DetermineDataSource(DataTableRequestDTO dataFilter)
-        {
             bool searchNotEmpty = dataFilter.Search != null &&
-                                  !string.IsNullOrEmpty(dataFilter.Search.Value);
+                                 !string.IsNullOrEmpty(dataFilter.Search.Value);
 
             IQueryable<TEntity> entities;
 
@@ -56,32 +40,35 @@ namespace TransIT.BLL.Services
             else
             {
                 entities = _queryRepository.GetQueryable();
-            } 
+            }
 
-            return entities;
-        }
+            var queryable = ProcessQuery(dataFilter, entities);
+            return await queryable.ToListAsync();
+        } 
 
         private IQueryable<TEntity> ProcessQuery(DataTableRequestDTO dataFilter, IQueryable<TEntity> data)
         {
-            if (dataFilter.Filters != null
-                && dataFilter.Filters.Any())
+            if (dataFilter.Filters != null && dataFilter.Filters.Any())
+            {
                 data = ProcessQueryFilter(dataFilter.Filters, data);
+            }
 
             if (dataFilter.Columns != null
                 && dataFilter.Order != null
                 && dataFilter.Columns.Any()
                 && dataFilter.Order.Any()
-                && dataFilter.Order.All(o =>
-                    o != null
-                    && !string.IsNullOrEmpty(o.Dir)
-                    && o.Column >= 0))
+                && dataFilter.Order.All(o => o != null && !string.IsNullOrEmpty(o.Dir) && o.Column >= 0))
+            {
                 data = TableOrderBy(dataFilter, data);
+            }
 
             if (dataFilter.Start >= 0
                 && dataFilter.Length > 0)
+            {
                 data = data
                     .Skip(dataFilter.Start)
                     .Take(dataFilter.Length);
+            }
 
             return data;
         }
@@ -91,8 +78,9 @@ namespace TransIT.BLL.Services
             IQueryable<TEntity> data)
         {
             filters.ToList().ForEach(filter =>
-                data = TableWhereEqual(filter, data)
-                );
+            {
+                data = TableWhereEqual(filter, data);
+            });
             return data;
         }
 
@@ -101,21 +89,29 @@ namespace TransIT.BLL.Services
             data = data.OrderBy(
                 dataFilter.Columns[dataFilter.Order[0].Column].Data,
                 dataFilter.Order[0].Dir == DataTableRequestDTO.DataTableDescending
-                );
+            );
             for (var i = 1; i < dataFilter.Order.Length; ++i)
+            {
                 data = data.ThenBy(
                     dataFilter.Columns[dataFilter.Order[i].Column].Data,
                     dataFilter.Order[i].Dir == DataTableRequestDTO.DataTableDescending
-                    );
+                );
+            }
+
             return data;
         }
 
         private IQueryable<TEntity> TableWhereEqual(DataTableRequestDTO.FilterType filter, IQueryable<TEntity> data)
         {
-            var value = FilterProcessingHelper.DetectStringType(filter.Value, filter.EntityPropertyPath);
-            return value == null
-                ? data
-                : data.Where(filter.EntityPropertyPath, value, filter.Operator);
+            var value = FilterProcessingHelper.TryParseStringValue(filter.Value);
+            if (value == null)
+            {
+                return data;
+            }
+            else
+            {
+                return data.Where(filter.EntityPropertyPath, value, filter.Operator);
+            }
         }
     }
 }

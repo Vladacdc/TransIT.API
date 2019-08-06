@@ -77,9 +77,9 @@ namespace TransIT.BLL.Services.ImplementedServices
             issueLogDTO.OldState.Id = issueLogDTO.Issue.State.Id;
             issueLogDTO.Issue.State.Id = issueLogDTO.NewState.Id;
             issueLogDTO.Issue.Deadline = oldIssueDTO.Deadline;
-            issueLogDTO.Issue.AssignedTo.Id = oldIssueDTO.AssignedTo.Id;
+            issueLogDTO.Issue.AssignedTo = oldIssueDTO.AssignedTo;
 
-            if (issueLogDTO.OldState.Id != issueLogDTO.NewState.Id
+            if (issueLogDTO.OldState != issueLogDTO.NewState
                 && !(await _unitOfWork.TransitionRepository.GetAllAsync(x =>
                         x.FromStateId == issueLogDTO.OldState.Id
                         && x.ActionTypeId == issueLogDTO.ActionType.Id
