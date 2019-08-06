@@ -103,7 +103,7 @@ namespace TransIT.BLL.Services
 
         private IQueryable<TEntity> TableWhereEqual(DataTableRequestDTO.FilterType filter, IQueryable<TEntity> data)
         {
-            var value = FilterProcessingHelper.DetectStringType(filter.Value, filter.EntityPropertyPath);
+            var value = FilterProcessingHelper.TryParseStringValue(filter.Value);
             if (value == null)
             {
                 return data;
