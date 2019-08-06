@@ -20,7 +20,7 @@ namespace TransIT.API.EndpointFilters.OnException
                     ? StatusCodes.Status403Forbidden
                     : exceptionType == typeof(ConstraintException)
                         ? StatusCodes.Status409Conflict
-                        : StatusCodes.Status400BadRequest;
+                        : StatusCodes.Status500InternalServerError;
 
             context.Result = result;
             context.ExceptionHandled = true;

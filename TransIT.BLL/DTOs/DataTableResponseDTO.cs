@@ -7,5 +7,6 @@
         public ulong RecordsFiltered { get; set; }
         public object[] Data { get; set; }
         public string Error { get; set; }
+        public ExtendedErrorDTO ServerErrorInfo { get; set; }
     }
 }

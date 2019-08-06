@@ -21,8 +21,15 @@ namespace TransIT.BLL.DTOs
         {
             get
             {
-                return Search.Value.Split(new[] { ' ', ',', '.' }, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(x => x.Trim().ToUpperInvariant());
+                if (Search != null && Search.Value != null)
+                {
+                    return Search.Value.Split(new[] { ' ', ',', '.' }, StringSplitOptions.RemoveEmptyEntries)
+                        .Select(x => x.Trim().ToUpperInvariant());
+                }
+                else
+                {
+                    return Enumerable.Empty<string>();
+                }
             }
         }
 
