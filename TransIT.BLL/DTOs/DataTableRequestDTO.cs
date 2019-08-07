@@ -15,7 +15,7 @@ namespace TransIT.BLL.DTOs
         public SearchType Search { get; set; }
         public ColumnType[] Columns { get; set; }
         public OrderType[] Order { get; set; }
-        public FilterType[] Filters { get; set; }
+        public List<FilterType> Filters { get; set; }
 
         public IEnumerable<string> SearchEntries
         {
