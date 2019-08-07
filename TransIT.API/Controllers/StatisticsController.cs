@@ -18,7 +18,7 @@ namespace TransIT.API.Controllers
             _statisticsService = serviceFactory.StatisticService;
         }
 
-        [HttpPost]
+        [HttpGet]
 
         public async Task<IActionResult> CountMalfunction(string malfunctionName, string vehicleTypeName)
         {
@@ -31,7 +31,7 @@ namespace TransIT.API.Controllers
             return BadRequest();
         }
 
-        [HttpPost]
+        [HttpGet]
 
         public async Task<IActionResult> CountMalfunctionSubgroup(string malfunctionSubgroupName, string vehicleTypeName)
         {
@@ -44,7 +44,7 @@ namespace TransIT.API.Controllers
             return BadRequest();
         }
 
-        [HttpPost]
+        [HttpGet]
 
         public async Task<IActionResult> CountMalfunctionGroup(string malfunctionGroupName, string vehicleTypeName)
         {
