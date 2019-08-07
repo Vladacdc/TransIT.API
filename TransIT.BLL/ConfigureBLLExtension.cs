@@ -48,6 +48,7 @@ namespace TransIT.BLL
             services.AddScoped<IPostService, PostService>();
             services.AddScoped<ITransitionService, TransitionService>();
             services.AddScoped<ILocationService, LocationService>();
+            services.AddScoped<IStatisticsService, StatisticsService>();
         }
 
         private static void ConfigureFilterServices(this IServiceCollection services)
