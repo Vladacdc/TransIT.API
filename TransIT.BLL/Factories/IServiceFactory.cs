@@ -34,6 +34,7 @@ namespace TransIT.BLL.Factories
 
         IStateService StateService { get; }
 
+        IStatisticsService StatisticService { get; }
         ISupplierService SupplierService { get; }
 
         ITransitionService TransitionService { get; }
