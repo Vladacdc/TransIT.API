@@ -18,11 +18,11 @@ namespace TransIT.API.Controllers
             _statisticsService = serviceFactory.StatisticService;
         }
 
-        [HttpGet]
+        [HttpPost]
 
-        public async Task<IActionResult> Get(MalfunctionDTO malfunctionDto,VehicleTypeDTO vehicleTypeDto)
+        public async Task<IActionResult> CountMalfunction(string malfunctionName, string vehicleTypeName)
         {
-            var result = await _statisticsService.CountMalfunction(malfunctionDto,vehicleTypeDto);
+            var result = await _statisticsService.CountMalfunction(malfunctionName, vehicleTypeName);
             if (result != null)
             {
                 return Json(result);
@@ -31,11 +31,11 @@ namespace TransIT.API.Controllers
             return BadRequest();
         }
 
-        [HttpGet]
+        [HttpPost]
 
-        public async Task<IActionResult> Get(MalfunctionSubgroupDTO malfunctionSubgroupDto, VehicleTypeDTO vehicleTypeDto)
+        public async Task<IActionResult> CountMalfunctionSubgroup(string malfunctionSubgroupName, string vehicleTypeName)
         {
-            var result = await _statisticsService.CountMalfunctionSubGroup(malfunctionSubgroupDto, vehicleTypeDto);
+            var result = await _statisticsService.CountMalfunctionSubGroup(malfunctionSubgroupName, vehicleTypeName);
             if (result != null)
             {
                 return Json(result);
@@ -44,11 +44,11 @@ namespace TransIT.API.Controllers
             return BadRequest();
         }
 
-        [HttpGet]
+        [HttpPost]
 
-        public async Task<IActionResult> Get(MalfunctionGroupDTO malfunctionGroupDto, VehicleTypeDTO vehicleTypeDto)
+        public async Task<IActionResult> CountMalfunctionGroup(string malfunctionGroupName, string vehicleTypeName)
         {
-            var result = await _statisticsService.CountMalfunctionGroup(malfunctionGroupDto, vehicleTypeDto);
+            var result = await _statisticsService.CountMalfunctionGroup(malfunctionGroupName, vehicleTypeName);
             if (result != null)
             {
                 return Json(result);

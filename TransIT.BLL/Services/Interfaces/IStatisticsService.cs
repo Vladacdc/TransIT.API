@@ -9,10 +9,10 @@ namespace TransIT.BLL.Services.Interfaces
 {
     public interface IStatisticsService
     {
-        Task<int> CountMalfunction(MalfunctionDTO malfunctionDto, VehicleTypeDTO vehicleTypeDto);
+        Task<int> CountMalfunction(string malfunctionName, string vehicleTypeName);
 
-        Task<int> CountMalfunctionSubGroup(MalfunctionSubgroupDTO malfunctionSubgroupDto, VehicleTypeDTO vehicleTypeDto);
+        Task<int> CountMalfunctionSubGroup(string malfunctionSubgroupName, string vehicleTypeName);
 
-        Task<int> CountMalfunctionGroup(MalfunctionGroupDTO malfunctionGroupDto, VehicleTypeDTO vehicleTypeDto);
+        Task<int> CountMalfunctionGroup(string malfunctionGroupName, string vehicleTypeName);
     }
 }

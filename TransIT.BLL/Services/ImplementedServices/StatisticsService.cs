@@ -26,29 +26,29 @@ namespace TransIT.BLL.Services.ImplementedServices
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        public async Task<int> CountMalfunction(MalfunctionDTO malfunctionDto, VehicleTypeDTO vehicleTypeDto)
+        public async Task<int> CountMalfunction(string malfunctionName, string vehicleTypeName)
         {
-            var issues =await _unitOfWork.IssueRepository.GetAllAsync(i =>i.Vehicle.VehicleType.Name ==vehicleTypeDto.Name && i.Malfunction.Name==malfunctionDto.Name);
+            var issues =await _unitOfWork.IssueRepository.GetAllAsync(i =>i.Vehicle.VehicleType.Name == vehicleTypeName && i.Malfunction.Name==malfunctionName);
             return issues.Count();
         }
 
-        public async Task<int> CountMalfunctionSubGroup(MalfunctionSubgroupDTO malfunctionSubgroupDto, VehicleTypeDTO vehicleTypeDto)
+        public async Task<int> CountMalfunctionSubGroup(string malfunctionSubgroupName, string vehicleTypeName)
         {
             int count = 0;
-            foreach (var i in _mapper.Map<MalfunctionSubgroup>(malfunctionSubgroupDto).Malfunction)
+            foreach (var i in (await _unitOfWork.MalfunctionSubgroupRepository.GetAllAsync(i => i.Name == malfunctionSubgroupName)).FirstOrDefault().Malfunction)
             {
-                count +=await CountMalfunction(_mapper.Map<MalfunctionDTO>(i), vehicleTypeDto);
+                count +=await CountMalfunction(i.Name,vehicleTypeName);
             }
 
             return count;
         }
 
-        public async Task<int> CountMalfunctionGroup(MalfunctionGroupDTO malfunctionGroupDto, VehicleTypeDTO vehicleTypeDto)
+        public async Task<int> CountMalfunctionGroup(string malfunctionGroupName, string vehicleTypeName)
         {
             var count = 0;
-            foreach (var i in _mapper.Map<MalfunctionGroup>(malfunctionGroupDto).MalfunctionSubgroup)
+            foreach (var i in (await _unitOfWork.MalfunctionGroupRepository.GetAllAsync(i => i.Name == malfunctionGroupName)).FirstOrDefault().MalfunctionSubgroup)
             {
-                count += await CountMalfunctionSubGroup(_mapper.Map<MalfunctionSubgroupDTO>(i), vehicleTypeDto);
+                count += await CountMalfunctionSubGroup(i.Name, vehicleTypeName);
             }
 
             return count;
