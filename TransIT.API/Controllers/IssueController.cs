@@ -10,6 +10,7 @@ using TransIT.API.Extensions;
 using TransIT.API.Hubs;
 using TransIT.BLL.DTOs;
 using TransIT.BLL.Factories;
+using TransIT.BLL.Services;
 using TransIT.BLL.Services.Interfaces;
 
 namespace TransIT.API.Controllers
@@ -21,8 +22,9 @@ namespace TransIT.API.Controllers
     [Authorize(Roles = "ENGINEER,REGISTER,ANALYST")]
     public class IssueController : FilterController<IssueDTO>
     {
+        private readonly IUserService _userService; 
         private readonly IIssueService _issueService;
-
+        private readonly IFilterService<IssueDTO> _filterService;
         private readonly IHubContext<IssueHub> _issueHub;
 
         public IssueController(
@@ -31,6 +33,8 @@ namespace TransIT.API.Controllers
             IHubContext<IssueHub> issueHub)
             : base(filterServiceFactory)
         {
+            _userService = serviceFactory.UserService;
+            _filterService = filterServiceFactory.GetService<IssueDTO>();
             _issueService = serviceFactory.IssueService;
             _issueHub = issueHub;
         }
@@ -124,16 +128,28 @@ namespace TransIT.API.Controllers
             DataTableRequestDTO model,
             bool isCustomer)
         {
-            return isCustomer
-                ? await _issueService.GetIssuesByCurrentUser()
-                : await _filterServiceFactory.GetService<IssueDTO>().GetQueriedAsync(model);
+            if (isCustomer)
+            {
+                if (model.Filters == null)
+                {
+                    model.Filters = new List<DataTableRequestDTO.FilterType>();
+                }
+
+                model.Filters.Add(new DataTableRequestDTO.FilterType()
+                {
+                    EntityPropertyPath = "CreatedById",
+                    Operator = "==",
+                    Value = _userService.GetCurrentUserId()
+                });
+            }
+            return await _filterService.GetQueriedAsync(model);
         }
 
         private async Task<ulong> GetTotalRecordsForCurrentUser(bool isCustomer)
         {
             return isCustomer
                 ? await _issueService.GetTotalRecordsForCurrentUser()
-                : await _filterServiceFactory.GetService<IssueDTO>().TotalRecordsAmountAsync();
+                : await _filterService.TotalRecordsAmountAsync();
         }
     }
 }
