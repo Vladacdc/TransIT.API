@@ -35,9 +35,14 @@ namespace TransIT.BLL.Services.ImplementedServices
         public async Task<int> CountMalfunctionSubGroup(string malfunctionSubgroupName, string vehicleTypeName)
         {
             int count = 0;
-            foreach (var i in (await _unitOfWork.MalfunctionSubgroupRepository.GetAllAsync(i => i.Name == malfunctionSubgroupName)).FirstOrDefault().Malfunction)
+            var malfunctions = (await _unitOfWork.MalfunctionSubgroupRepository.GetAllAsync(i => i.Name == malfunctionSubgroupName)).FirstOrDefault().Malfunction;
+
+            if (malfunctions != null)
             {
-                count +=await CountMalfunction(i.Name,vehicleTypeName);
+                foreach (var i in malfunctions)
+                {
+                    count += await CountMalfunction(i.Name, vehicleTypeName);
+                }
             }
 
             return count;
@@ -46,9 +51,14 @@ namespace TransIT.BLL.Services.ImplementedServices
         public async Task<int> CountMalfunctionGroup(string malfunctionGroupName, string vehicleTypeName)
         {
             var count = 0;
-            foreach (var i in (await _unitOfWork.MalfunctionGroupRepository.GetAllAsync(i => i.Name == malfunctionGroupName)).FirstOrDefault().MalfunctionSubgroup)
+            var malfunctionSubgroups = (await _unitOfWork.MalfunctionGroupRepository.GetAllAsync(i => i.Name == malfunctionGroupName)).FirstOrDefault().MalfunctionSubgroup;
+
+            if (malfunctionSubgroups != null)
             {
-                count += await CountMalfunctionSubGroup(i.Name, vehicleTypeName);
+                foreach (var i in malfunctionSubgroups)
+                {
+                    count += await CountMalfunctionSubGroup(i.Name, vehicleTypeName);
+                }
             }
 
             return count;
