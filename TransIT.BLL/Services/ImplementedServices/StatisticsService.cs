@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using AutoMapper;
-using TransIT.BLL.DTOs;
 using TransIT.BLL.Services.Interfaces;
 using TransIT.DAL.Models.Entities;
 using TransIT.DAL.UnitOfWork;
@@ -15,17 +11,15 @@ namespace TransIT.BLL.Services.ImplementedServices
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        private readonly IMapper _mapper;
-
         /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="unitOfWork">Unit of work pattern</param>
-        public StatisticsService(IUnitOfWork unitOfWork, IMapper mapper)
+        public StatisticsService(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            _mapper = mapper;
         }
+
         public async Task<int> CountMalfunction(string malfunctionName, string vehicleTypeName)
         {
             var issues =await _unitOfWork.IssueRepository.GetAllAsync(i =>i.Vehicle.VehicleType.Name == vehicleTypeName && i.Malfunction.Name==malfunctionName);
@@ -62,6 +56,45 @@ namespace TransIT.BLL.Services.ImplementedServices
             }
 
             return count;
+        }
+
+        public async Task<List<int>> GetMalfunctionStatistics(string malfunctionName)
+        {
+            var vehicleTypes = await _unitOfWork.VehicleTypeRepository.GetAllAsync();
+            List<int> result = new List<int>();
+
+            foreach (VehicleType vehicleType in vehicleTypes)
+            {
+                result.Add(await CountMalfunction(malfunctionName, vehicleType.Name));
+            }
+
+            return result;
+        }
+
+        public async Task<List<int>> GetMalfunctionSubGroupStatistics(string malfunctionSubGroupName)
+        {
+            var vehicleTypes = await _unitOfWork.VehicleTypeRepository.GetAllAsync();
+            List<int> result = new List<int>();
+
+            foreach (VehicleType vehicleType in vehicleTypes)
+            {
+                result.Add(await CountMalfunctionSubGroup(malfunctionSubGroupName, vehicleType.Name));
+            }
+
+            return result;
+        }
+
+        public async Task<List<int>> GetMalfunctionGroupStatistics(string malfunctionGroupName)
+        {
+            var vehicleTypes = await _unitOfWork.VehicleTypeRepository.GetAllAsync();
+            List<int> result = new List<int>();
+
+            foreach (VehicleType vehicleType in vehicleTypes)
+            {
+                result.Add(await CountMalfunctionGroup(malfunctionGroupName, vehicleType.Name));
+            }
+
+            return result;
         }
     }
 }
