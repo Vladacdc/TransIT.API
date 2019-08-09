@@ -23,9 +23,9 @@ namespace TransIT.DAL
         {
             services.ConfigureRepositories();
             services.ConfigureQueryRepositories();
-            services.ConfigureDbContext(configuration, environment);
+            services.ConfigureDbContext(configuration);
             services.ConfigureIdentity();
-            services.ConfigureFileStorage(configuration, environment);
+            services.ConfigureFileStorage(configuration);
 
             services.AddScoped<IUnitOfWork, UnitOfWork.UnitOfWork>();
         }
@@ -80,22 +80,12 @@ namespace TransIT.DAL
 
         private static void ConfigureDbContext(
             this IServiceCollection services,
-            IConfiguration configuration,
-            IHostingEnvironment environment)
+            IConfiguration configuration)
         {
             void ConfigureConnection(DbContextOptionsBuilder options)
             {
-                if (environment.IsDevelopment())
-                {
                     options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
                         b => b.MigrationsAssembly("TransIT.API"));
-                }
-
-                if (environment.IsProduction())
-                {
-                    options.UseSqlServer(configuration.GetConnectionString("AzureConnection"),
-                        b => b.MigrationsAssembly("TransIT.API"));
-                }
             }
 
             services.AddDbContext<TransITDBContext>(ConfigureConnection);
@@ -121,9 +111,9 @@ namespace TransIT.DAL
 
         private static void ConfigureFileStorage(
             this IServiceCollection services,
-            IConfiguration fileStorage
-            )
+            IConfiguration configuration)
         {
+            var fileStorage = configuration.GetSection("FileStorage");
             switch (fileStorage["Type"])
             {
                 case "Azure":
@@ -149,22 +139,6 @@ namespace TransIT.DAL
                     break;
                 default:
                     throw new Exception();
-            }
-        }
-
-        private static void ConfigureFileStorage(
-            this IServiceCollection services,
-            IConfiguration configuration,
-            IHostingEnvironment environment)
-        {
-
-            if (environment.IsProduction())
-            {
-                services.ConfigureFileStorage(configuration.GetSection("Production:FileStorage"));
-            }
-            if (environment.IsDevelopment())
-            {
-                services.ConfigureFileStorage(configuration.GetSection("Development:FileStorage"));
             }
         }
     }
