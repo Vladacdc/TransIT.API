@@ -22,39 +22,66 @@ namespace TransIT.API.Controllers
         [Route("api/v1/[controller]/countmalfunction")]
         public async Task<IActionResult> CountMalfunction(string malfunctionName, string vehicleTypeName)
         {
-            var result = await _statisticsService.CountMalfunction(malfunctionName, vehicleTypeName);
-            if (result != null)
+            try
             {
-                return Json(result);
+                var result = await _statisticsService.CountMalfunction(malfunctionName, vehicleTypeName);
+                if (result != null)
+                {
+                    return Json(result);
+                }
+                else
+                {
+                    return null;
+                }
             }
-
-            return BadRequest();
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
         }
 
         [HttpGet]
         [Route("api/v1/[controller]/countmalfunctionsubgroup")]
         public async Task<IActionResult> CountMalfunctionSubgroup(string malfunctionSubgroupName, string vehicleTypeName)
         {
-            var result = await _statisticsService.CountMalfunctionSubGroup(malfunctionSubgroupName, vehicleTypeName);
-            if (result != null)
+            try
             {
-                return Json(result);
+                var result = await _statisticsService.CountMalfunctionSubGroup(malfunctionSubgroupName, vehicleTypeName);
+                if (result != null)
+                {
+                    return Json(result);
+                }
+                else
+                {
+                    return null;
+                }
             }
-
-            return BadRequest();
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
         }
 
         [HttpGet]
         [Route("api/v1/[controller]/countmalfunctiongroup")]
         public async Task<IActionResult> CountMalfunctionGroup(string malfunctionGroupName, string vehicleTypeName)
         {
-            var result = await _statisticsService.CountMalfunctionGroup(malfunctionGroupName, vehicleTypeName);
-            if (result != null)
+            try
             {
-                return Json(result);
+                var result = await _statisticsService.CountMalfunctionGroup(malfunctionGroupName, vehicleTypeName);
+                if (result != null)
+                {
+                    return Json(result);
+                }
+                else
+                {
+                    return null;
+                }
             }
-
-            return BadRequest();
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
         }
     }
 }
