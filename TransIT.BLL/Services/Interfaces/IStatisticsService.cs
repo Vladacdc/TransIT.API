@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using TransIT.BLL.DTOs;
-using TransIT.DAL.Models.Entities;
 
 namespace TransIT.BLL.Services.Interfaces
 {
@@ -14,5 +10,11 @@ namespace TransIT.BLL.Services.Interfaces
         Task<int> CountMalfunctionSubGroup(string malfunctionSubgroupName, string vehicleTypeName);
 
         Task<int> CountMalfunctionGroup(string malfunctionGroupName, string vehicleTypeName);
+
+        Task<List<int>> GetMalfunctionStatistics(string malfunctionName);
+
+        Task<List<int>> GetMalfunctionSubGroupStatistics(string malfunctionSubgroupName);
+
+        Task<List<int>> GetMalfunctionGroupStatistics(string malfunctionGroupName);
     }
 }
