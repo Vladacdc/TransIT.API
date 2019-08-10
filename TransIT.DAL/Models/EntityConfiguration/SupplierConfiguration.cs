@@ -35,7 +35,7 @@ namespace TransIT.DAL.Models
             builder.Property(e => e.FullName)
                 .IsRequired()
                 .HasColumnName("FULL_NAME")
-                .HasMaxLength(500);
+                .HasMaxLength(60);
 
             builder.Property(e => e.UpdatedDate)
                 .HasColumnName("MOD_DATE")
@@ -47,7 +47,7 @@ namespace TransIT.DAL.Models
             builder.Property(e => e.Name)
                 .IsRequired()
                 .HasColumnName("NAME")
-                .HasMaxLength(50);
+                .HasMaxLength(30);
 
             builder.HasOne(d => d.Country)
                 .WithMany(p => p.Supplier)

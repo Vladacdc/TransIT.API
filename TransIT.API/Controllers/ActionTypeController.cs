@@ -1,4 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Data;
+using System.Data.SqlClient;
+using System.Data.SqlTypes;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
@@ -26,67 +30,112 @@ namespace TransIT.API.Controllers
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] uint offset = 0, uint amount = 1000)
         {
-            var result = await _actionTypeService.GetRangeAsync(offset, amount);
-            if (result != null)
+            try
             {
-                return Json(result);
+                var result = await _actionTypeService.GetRangeAsync(offset, amount);
+                if (result != null)
+                {
+                    return Json(result);
+                }
+                else
+                {
+                    return null;
+                }
             }
-
-            return BadRequest();
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            var result = await _actionTypeService.GetAsync(id);
-            if (result != null)
+            try
             {
-                return Json(result);
+                var result = await _actionTypeService.GetAsync(id);
+                if (result != null)
+                {
+                    return Json(result);
+                }
+                else
+                {
+                    return null;
+                }
             }
-
-            return BadRequest();
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
         }
 
         [HttpGet("/search")]
         public async Task<IActionResult> Get([FromQuery] string search)
         {
-            var result = await _actionTypeService.SearchAsync(search);
-            if (result != null)
+            try
             {
-                return Json(result);
+                var result = await _actionTypeService.SearchAsync(search);
+                if (result != null)
+                {
+                    return Json(result);
+                }
+                else
+                {
+                    return null;
+                }
             }
-
-            return BadRequest();
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
         }
 
         [HttpPost]
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Create([FromBody] ActionTypeDTO actionTypeDTO)
         {
-            var createdDTO = await _actionTypeService.CreateAsync(actionTypeDTO);
-
-            if (createdDTO != null)
+            try
             {
-                return CreatedAtAction(nameof(Create), createdDTO);
-            }
+                var createdDTO = await _actionTypeService.CreateAsync(actionTypeDTO);
 
-            return BadRequest();
+                if (createdDTO != null)
+                {
+                    return CreatedAtAction(nameof(Create), createdDTO);
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         [HttpPut("{id}")]
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Update(int id, [FromBody] ActionTypeDTO actionTypeDTO)
         {
-            actionTypeDTO.Id = id;
-
-            var result = await _actionTypeService.UpdateAsync(actionTypeDTO);
-
-            if (result != null)
+            try
             {
-                return NoContent();
-            }
+                actionTypeDTO.Id = id;
 
-            return BadRequest();
+                var result = await _actionTypeService.UpdateAsync(actionTypeDTO);
+
+                if (result != null)
+                {
+                    return NoContent();
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         [HttpDelete("{id}")]
