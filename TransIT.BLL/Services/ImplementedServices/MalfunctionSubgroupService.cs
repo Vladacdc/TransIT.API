@@ -42,6 +42,14 @@ namespace TransIT.BLL.Services.ImplementedServices
             return _mapper.Map<IEnumerable<MalfunctionSubgroupDTO>>(entities);
         }
 
+        public async Task<IEnumerable<MalfunctionSubgroupDTO>> GetByGroupNameAsync(string groupName)
+        {
+            var entities = await _unitOfWork.MalfunctionSubgroupRepository.GetAllAsync(
+                ms => ms.MalfunctionGroup.Name == groupName);
+
+            return _mapper.Map<IEnumerable<MalfunctionSubgroupDTO>>(entities);
+        }
+
         public async Task<IEnumerable<MalfunctionSubgroupDTO>> SearchAsync(string search)
         {
             var countries = await _unitOfWork.MalfunctionSubgroupRepository.SearchExpressionAsync(

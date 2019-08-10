@@ -36,7 +36,7 @@ namespace TransIT.API.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode(500,e.Message);
+                return StatusCode(500, e.Message);
             }
         }
 
@@ -46,6 +46,23 @@ namespace TransIT.API.Controllers
             try
             {
                 var result = await _malfunctionService.GetAsync(id);
+                return result != null
+                    ? Json(result)
+                    : null;
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("getbysubgroupname")]
+        public async Task<IActionResult> GetBySubgroupName(string subgroupName)
+        {
+            try
+            {
+                var result = await _malfunctionService.GetBySubgroupNameAsync(subgroupName);
                 return result != null
                     ? Json(result)
                     : null;

@@ -72,6 +72,23 @@ namespace TransIT.API.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("getbygroupname")]
+        public async Task<IActionResult> GetByGroupName(string groupName)
+        {
+            try
+            {
+                var result = await _malfunctionSubgroupService.GetByGroupNameAsync(groupName);
+                return result != null
+                    ? Json(result)
+                    : null;
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+        }
+
         [HttpPost]
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Create([FromBody] MalfunctionSubgroupDTO obj)

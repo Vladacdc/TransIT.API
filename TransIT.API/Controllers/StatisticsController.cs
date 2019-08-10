@@ -1,11 +1,18 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TransIT.BLL.Factories;
 using TransIT.BLL.Services.Interfaces;
 
 namespace TransIT.API.Controllers
 {
+    [ApiController]
+    [EnableCors("CorsPolicy")]
+    [Produces("application/json")]
+    [Route("api/v1/[controller]")]
+    [Authorize(Roles = "ANALYST")]
     public class StatisticsController : Controller
     {
         private readonly IStatisticsService _statisticsService;
@@ -16,7 +23,7 @@ namespace TransIT.API.Controllers
         }
 
         [HttpGet]
-        [Route("api/v1/[controller]/countmalfunction")]
+        [Route("countmalfunction")]
         public async Task<IActionResult> CountMalfunction(string malfunctionName, string vehicleTypeName)
         {
             try
@@ -38,7 +45,7 @@ namespace TransIT.API.Controllers
         }
 
         [HttpGet]
-        [Route("api/v1/[controller]/countmalfunctionsubgroup")]
+        [Route("countmalfunctionsubgroup")]
         public async Task<IActionResult> CountMalfunctionSubgroup(string malfunctionSubgroupName, string vehicleTypeName)
         {
             try
@@ -60,7 +67,7 @@ namespace TransIT.API.Controllers
         }
 
         [HttpGet]
-        [Route("api/v1/[controller]/countmalfunctiongroup")]
+        [Route("countmalfunctiongroup")]
         public async Task<IActionResult> CountMalfunctionGroup(string malfunctionGroupName, string vehicleTypeName)
         {
             try
@@ -82,7 +89,7 @@ namespace TransIT.API.Controllers
         }
 
         [HttpGet]
-        [Route("api/v1/[controller]/malfunctionstatistics")]
+        [Route("malfunctionstatistics")]
         public async Task<IActionResult> GetMalfunctionStatistics(string malfunctionName)
         {
             try
@@ -105,7 +112,7 @@ namespace TransIT.API.Controllers
         }
 
         [HttpGet]
-        [Route("api/v1/[controller]/malfunctiongroupstatistics")]
+        [Route("malfunctiongroupstatistics")]
         public async Task<IActionResult> GetMalfunctionGroupStatistics(string malfunctionGroupName)
         {
             try
@@ -128,7 +135,7 @@ namespace TransIT.API.Controllers
         }
 
         [HttpGet]
-        [Route("api/v1/[controller]/malfunctionsubgroupstatistics")]
+        [Route("malfunctionsubgroupstatistics")]
         public async Task<IActionResult> GetMalfunctionSubGroupStatistics(string malfunctionSubGroupName)
         {
             try
