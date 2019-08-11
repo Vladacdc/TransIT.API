@@ -73,7 +73,7 @@ namespace TransIT.API.Controllers
         }
 
         [HttpGet]
-        [Route("api/v1/[controller]/getbygroupname")]
+        [Route("getbygroupname")]
         public async Task<IActionResult> GetByGroupName(string groupName)
         {
             try
