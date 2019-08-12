@@ -12,8 +12,7 @@ namespace TransIT.DAL.Repositories
         Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate);
         Task<IEnumerable<TEntity>> GetRangeAsync(uint index, uint amount);
         Task<TEntity> AddAsync(TEntity entity);
-
-        TEntity Remove(params object[] keys);
+        Task<TEntity> RemoveAsync(params object[] keys);
         TEntity Remove(TEntity entity);
         TEntity Update(TEntity entity);
         TEntity UpdateWithIgnoreProperty<TProperty>(TEntity entity,

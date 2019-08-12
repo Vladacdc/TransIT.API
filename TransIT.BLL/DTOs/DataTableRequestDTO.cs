@@ -42,7 +42,6 @@ namespace TransIT.BLL.DTOs
         public class SearchType
         {
             public string Value { get; set; }
-            public bool Regex { get; set; }
         }
 
         public class ColumnType

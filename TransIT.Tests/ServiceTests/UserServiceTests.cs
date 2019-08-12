@@ -10,20 +10,22 @@ using Xunit;
 
 namespace TransIT.Tests
 {
-    public class UserServiceTests : IClassFixture<UnitOfWorkFixture>
+    public class UserServiceTests : IClassFixture<UnitOfWorkFixture>, IClassFixture<MapperFixture>
     {
         private readonly UnitOfWorkFixture _fixture;
+        private readonly MapperFixture _mapperFixture;
 
-        public UserServiceTests(UnitOfWorkFixture unitOfWorkFixture)
+        public UserServiceTests(UnitOfWorkFixture unitOfWorkFixture, MapperFixture mapperFixture)
         {
             _fixture = unitOfWorkFixture;
+            _mapperFixture = mapperFixture;
         }
 
         [Fact]
         public async Task UserService_Should_Get_Single_User()
         {
             IUnitOfWork unitOfWork = _fixture.CreateMockUnitOfWork();
-            UserService userService = new UserService(_fixture.Mapper, unitOfWork);
+            UserService userService = new UserService(_mapperFixture.Mapper, unitOfWork);
             UserDTO result = await userService.CreateAsync(new TestUser());
 
             Assert.Equal(new TestUser(), result, new UserComparer());
@@ -33,7 +35,7 @@ namespace TransIT.Tests
         public async Task UserService_Should_Get_Range_Users()
         {
             IUnitOfWork unitOfWork = _fixture.CreateMockUnitOfWork();
-            UserService userService = new UserService(_fixture.Mapper, unitOfWork);
+            UserService userService = new UserService(_mapperFixture.Mapper, unitOfWork);
             TestUser[] users = {
                 new TestUser { Email = "aaaaa@aa.c" },
                 new TestUser
@@ -57,7 +59,7 @@ namespace TransIT.Tests
         public async Task UserService_Should_Update_Password()
         {
             IUnitOfWork unitOfWork = _fixture.CreateMockUnitOfWork();
-            UserService userService = new UserService(_fixture.Mapper, unitOfWork);
+            UserService userService = new UserService(_mapperFixture.Mapper, unitOfWork);
             TestUser value = new TestUser
             {
                 Email = "shewchenkoandriy@gmail.com",
@@ -73,7 +75,7 @@ namespace TransIT.Tests
         public async Task UserService_Should_Get_Assignees()
         {
             IUnitOfWork unitOfWork = _fixture.CreateMockUnitOfWork();
-            UserService userService = new UserService(_fixture.Mapper, unitOfWork);
+            UserService userService = new UserService(_mapperFixture.Mapper, unitOfWork);
             List<UserDTO> assigned = new List<UserDTO>
             {
                 new TestUser
@@ -107,7 +109,7 @@ namespace TransIT.Tests
         public async Task UserService_Should_Update_User()
         {
             IUnitOfWork unitOfWork = _fixture.CreateMockUnitOfWork();
-            UserService userService = new UserService(_fixture.Mapper, unitOfWork);
+            UserService userService = new UserService(_mapperFixture.Mapper, unitOfWork);
             UserDTO result = await userService.CreateAsync(new TestUser());
             result.Email = "arsendomanich228@gmail.com";
             result.FirstName = "Arsen";
@@ -121,7 +123,7 @@ namespace TransIT.Tests
         public async Task UserService_Should_Create_User()
         {
             IUnitOfWork unitOfWork = _fixture.CreateMockUnitOfWork();
-            UserService userService = new UserService(_fixture.Mapper, unitOfWork);
+            UserService userService = new UserService(_mapperFixture.Mapper, unitOfWork);
             UserDTO result = await userService.CreateAsync(new TestUser());
             Assert.NotNull(result);
             Assert.NotNull(result.Role);
@@ -132,7 +134,7 @@ namespace TransIT.Tests
         public async Task UserService_Should_Delete_User()
         {
             IUnitOfWork unitOfWork = _fixture.CreateMockUnitOfWork();
-            UserService userService = new UserService(_fixture.Mapper, unitOfWork);
+            UserService userService = new UserService(_mapperFixture.Mapper, unitOfWork);
             UserDTO result = await userService.CreateAsync(new TestUser());
             await userService.DeleteAsync(result.Id);
             Assert.Null(await userService.GetAsync(result.Id));

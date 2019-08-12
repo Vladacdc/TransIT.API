@@ -70,6 +70,15 @@ namespace TransIT.DAL.Models
                 .HasForeignKey(d => d.PostId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_EMPLOYEE_POST");
+
+            builder.HasIndex(e => e.AttachedUserId)
+                .IsUnique();
+
+            builder.HasOne(e => e.AttachedUser)
+                .WithMany(u => u.Employees)
+                .HasForeignKey(e => e.AttachedUserId)
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("FK_ATTACHED_USER");
         }
     }
 }

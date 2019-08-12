@@ -17,35 +17,36 @@ namespace TransIT.DAL.Repositories
 
         public BaseRepository(TransITDBContext context)
         {
+            _entities = context.Set<TEntity>();
             _context = context;
         }
 
         public virtual Task<TEntity> GetByIdAsync(int id)
         {
-            return ComplexEntities.SingleOrDefaultAsync(t => t.Id.Equals(id));
+            return ComplexEntities.Where(t => t.Id == id).FirstOrDefaultAsync();
         }
 
-        public virtual Task<IEnumerable<TEntity>> GetAllAsync()
+        public async virtual Task<IEnumerable<TEntity>> GetAllAsync()
         {
-            return Task.FromResult<IEnumerable<TEntity>>(ComplexEntities);
+            return await ComplexEntities.ToListAsync();
         }
 
-        public virtual Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate)
+        public async virtual Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return Task.FromResult<IEnumerable<TEntity>>(ComplexEntities.Where(predicate));
+            return await ComplexEntities.Where(predicate).ToListAsync();
         }
 
         public virtual async Task<TEntity> AddAsync(TEntity entity)
         {
-            return (await Entities.AddAsync(entity)).Entity;
+            return (await _entities.AddAsync(entity)).Entity;
         }
 
-        public virtual TEntity Remove(params object[] keys)
+        public async virtual Task<TEntity> RemoveAsync(params object[] keys)
         {
-            var model = Entities.Find(keys);
+            var model = await _entities.FindAsync(keys);
             if (model != null)
             {
-                model = Entities.Remove(model).Entity;
+                model = _entities.Remove(model).Entity;
             }
 
             return model;
@@ -53,17 +54,17 @@ namespace TransIT.DAL.Repositories
 
         public virtual TEntity Remove(TEntity entity)
         {
-            return Entities.Remove(entity).Entity;
+            return _entities.Remove(entity).Entity;
         }
 
         public virtual TEntity Update(TEntity entity)
         {
-            return Entities.Update(entity).Entity;
+            return _entities.Update(entity).Entity;
         }
 
-        public virtual Task<IEnumerable<TEntity>> GetRangeAsync(uint index, uint amount)
+        public async virtual Task<IEnumerable<TEntity>> GetRangeAsync(uint index, uint amount)
         {
-            return Task.FromResult<IEnumerable<TEntity>>(ComplexEntities.Skip((int)index).Take((int)amount));
+            return await ComplexEntities.Skip((int)index).Take((int)amount).ToListAsync();
         }
 
         public virtual TEntity UpdateWithIgnoreProperty<TProperty>(
@@ -74,27 +75,12 @@ namespace TransIT.DAL.Repositories
             return entity;
         }
 
-        protected virtual DbSet<TEntity> Entities
-        {
-            get
-            {
-                return _entities ?? (_entities = _context.Set<TEntity>());
-            }
-        }
+        protected virtual DbSet<TEntity> Entities => _entities;
 
-        protected virtual IQueryable<TEntity> ComplexEntities
-        {
-            get
-            {
-                return Entities;
-            }
-        }
-        
+        protected virtual IQueryable<TEntity> ComplexEntities => Entities;
+
         public abstract Task<IQueryable<TEntity>> SearchExpressionAsync(IEnumerable<string> strs);
 
-        public IQueryable<TEntity> GetQueryable()
-        {
-            return ComplexEntities;
-        }
+        public IQueryable<TEntity> GetQueryable() => ComplexEntities;
     }
 }

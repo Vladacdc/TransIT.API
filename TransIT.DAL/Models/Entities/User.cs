@@ -7,8 +7,6 @@ namespace TransIT.DAL.Models.Entities
 {
     public class User : IdentityUser, IAuditableEntity
     {
-        public const string ActiveTranslated = "активний";
-        public const string NotActiveTranslated = "неактивний";
         public User()
         {
             ActionTypeCreate = new HashSet<ActionType>();
@@ -47,6 +45,7 @@ namespace TransIT.DAL.Models.Entities
             VehicleMod = new HashSet<Vehicle>();
             VehicleTypeCreate = new HashSet<VehicleType>();
             VehicleTypeMod = new HashSet<VehicleType>();
+            Employees = new HashSet<Employee>();
         }
         
         public string FirstName { get; set; }
@@ -59,6 +58,7 @@ namespace TransIT.DAL.Models.Entities
         public string UpdatedById { get; set; }
         public virtual User CreatedBy { get; set; }
         public virtual User ModifiedBy { get; set; }
+        public virtual ICollection<Employee> Employees { get; set; }
         public ICollection<UserRole> UserRoles { get; set; }
         public virtual ICollection<ActionType> ActionTypeCreate { get; set; }
         public virtual ICollection<ActionType> ActionTypeMod { get; set; }

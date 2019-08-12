@@ -110,6 +110,52 @@ namespace TransIT.API.Controllers
             }
         }
 
+        [HttpGet("attach/users")]
+        public async Task<IActionResult> GetNotAttachedUsers()
+        {
+            return Ok(await _employeeService.GetNotAttachedUsersAsync());
+        }
+
+        [HttpGet("attach/{userId}")]
+        public async Task<IActionResult> GetEmployeeForUserAsync([FromRoute] string userId)
+        {
+            return Ok(await _employeeService.GetEmployeeForUserAsync(userId));
+        }
+
+        [HttpPost("attach/{employee}/{user}")]
+        public async Task<IActionResult> AttachUserToEmployee([FromRoute] int employee, [FromRoute] string user)
+        {
+            var attachResult = await _employeeService.AttachUserAsync(employee, user);
+            IActionResult result;
+            if (attachResult == EmployeeDTO.CannotAttachUser)
+            {
+                result = BadRequest("Cannot attach this user, because it's already attached.");
+            }
+            else if (attachResult == EmployeeDTO.DoesNotExist)
+            {
+                result = BadRequest("User or employee doesn't exist.");
+            }
+            else
+            {
+                result = Ok(attachResult);
+            }
+            return result;
+        }
+
+        [HttpDelete("attach/{employee}")]
+        public async Task<IActionResult> RemoveUserFromEmployee([FromRoute] int employee)
+        {
+            var deleteResult = await _employeeService.RemoveUserAsync(employee);
+            if (deleteResult != EmployeeDTO.DoesNotExist)
+            {
+                return NoContent();
+            }
+            else
+            {
+                return BadRequest("Employee doesn't exist");
+            }
+        }
+
         [HttpPut("{id}")]
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Update(int id, [FromBody] EmployeeDTO employeeDTO)

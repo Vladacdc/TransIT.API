@@ -101,7 +101,7 @@ namespace TransIT.BLL.Services.ImplementedServices
                 throw new ConstraintException("Current state can not be deleted");
             }
 
-            _unitOfWork.StateRepository.Remove(model.Id);
+            await _unitOfWork.StateRepository.RemoveAsync(model.Id);
             await _unitOfWork.SaveAsync();
         }
     }
