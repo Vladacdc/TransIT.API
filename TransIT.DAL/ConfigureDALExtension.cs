@@ -10,6 +10,7 @@ using TransIT.DAL.Repositories.ImplementedRepositories;
 using TransIT.DAL.Repositories.InterfacesRepositories;
 using TransIT.DAL.UnitOfWork;
 using TransIT.DAL.FileStorage;
+using TransIT.DAL.Exceptions;
 using System;
 
 namespace TransIT.DAL
@@ -114,9 +115,9 @@ namespace TransIT.DAL
             IConfiguration configuration)
         {
             var fileStorage = configuration.GetSection("FileStorage");
-            switch (fileStorage["Type"])
+            switch (fileStorage["Type"].ToLower())
             {
-                case "Azure":
+                case "azure":
                     services.AddScoped<IFileStorage, AzureFileStorage>();
                     services.Configure<AzureStorageOptions>((options) =>
                     {
@@ -127,7 +128,7 @@ namespace TransIT.DAL
                         options.ConnectionString = azureOptions[nameof(AzureStorageOptions.ConnectionString)];
                     });
                     break;
-                case "Local":
+                case "local":
                     services.AddScoped<IFileStorage, LocalFileStorage>();
 
                     services.Configure<LocalStorageOptions>((options) =>
@@ -138,7 +139,7 @@ namespace TransIT.DAL
                     });
                     break;
                 default:
-                    throw new Exception();
+                    throw new InvalidStorageTypeException($"{fileStorage["Type"]} isn't valid file storage type");
             }
         }
     }
