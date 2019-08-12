@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TransIT.BLL.DTOs;
+using TransIT.BLL.Exceptions;
 using TransIT.BLL.Factories;
 using TransIT.BLL.Services.Interfaces;
 
@@ -47,21 +48,22 @@ namespace TransIT.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromForm] DocumentDTO documentDto)
         {
-            if (documentDto.File == null && documentDto.File?.Length == 0)
+            try
+            {
+                var createdEntity = await _documentService.CreateAsync(documentDto);
+
+                if (createdEntity != null)
+                {
+                    return CreatedAtAction(nameof(Create), createdEntity);
+                }
+            }
+            catch (EmptyDocumentException)
             {
                 return Content("file not selected");
             }
-
-            var createdEntity = await _documentService.CreateAsync(documentDto);
-
-            if (documentDto.ContentType != "application/pdf")
+            catch (DocumentContentException)
             {
                 return Content("format is not pdf");
-            }
-
-            if (createdEntity != null)
-            {
-                return CreatedAtAction(nameof(Create), createdEntity);
             }
 
             return BadRequest();

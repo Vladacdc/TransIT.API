@@ -11,6 +11,7 @@ using TransIT.BLL.Services.Interfaces;
 using TransIT.DAL.Models.Entities;
 using TransIT.DAL.UnitOfWork;
 using TransIT.DAL.FileStorage;
+using TransIT.BLL.Exceptions;
 
 namespace TransIT.BLL.Services.ImplementedServices
 {
@@ -88,11 +89,21 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<DocumentDTO> CreateAsync(DocumentDTO dto)
         {
+            if (dto.File == null && dto.File?.Length == 0)
+            {
+                throw new EmptyDocumentException();
+            }
+
             var provider = new FileExtensionContentTypeProvider();
 
             _ = provider.TryGetContentType(Path.GetFileName(dto.File.FileName), out string contentType);
 
-            dto.ContentType = contentType;
+            if (contentType != "application/pdf")
+            {
+                throw new DocumentContentException();
+            }
+
+                dto.ContentType = contentType;
             dto.Path = _storageLogger.Create(dto.File);
 
 
