@@ -75,12 +75,27 @@ namespace TransIT.DAL.Repositories
             return entity;
         }
 
-        protected virtual DbSet<TEntity> Entities => _entities;
+        protected virtual DbSet<TEntity> Entities
+        {
+            get
+            {
+                return _entities;
+            }
+        }
 
-        protected virtual IQueryable<TEntity> ComplexEntities => Entities;
+        protected virtual IQueryable<TEntity> ComplexEntities
+        {
+            get
+            {
+                return Entities.AsNoTracking();
+            }
+        }
 
         public abstract Task<IQueryable<TEntity>> SearchExpressionAsync(IEnumerable<string> strs);
 
-        public IQueryable<TEntity> GetQueryable() => ComplexEntities;
+        public IQueryable<TEntity> GetQueryable()
+        {
+            return ComplexEntities;
+        }
     }
 }

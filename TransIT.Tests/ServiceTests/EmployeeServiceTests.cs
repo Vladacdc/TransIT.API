@@ -128,20 +128,20 @@ namespace TransIT.Tests
             Assert.Equal(expected, actual, new EmployeeComparer());
         }
 
-        //[Fact]
-        //public async Task EmployeeService_Should_Get_Not_Attached_Users()
-        //{
-        //    InitializeConstants();
-        //    var fake = CreateWithMockedUsers();
-        //    var employees = new EmployeeService(fake.Object, _mapper);
+        [Fact]
+        public async Task EmployeeService_Should_Get_Not_Attached_Users()
+        {
+            InitializeConstants();
+            var fake = CreateWithMockedUsers();
+            var employees = new EmployeeService(fake.Object, _mapper);
 
-        //    await employees.CreateAsync(_mapper.Map<EmployeeDTO>(_sampleEmployee));
-        //    await employees.AttachUserAsync(_sampleEmployee.Id, SomeUserId);
+            await employees.CreateAsync(_mapper.Map<EmployeeDTO>(_sampleEmployee));
+            await employees.AttachUserAsync(_sampleEmployee.Id, SomeUserId);
 
-        //    var actual = await employees.GetNotAttachedUsersAsync();
+            var actual = await employees.GetNotAttachedUsersAsync();
 
-        //    Assert.Equal(2, actual.Count);
-        //}
+            Assert.Equal(2, actual.Count);
+        }
 
 
         private void InitializeConstants()
