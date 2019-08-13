@@ -92,24 +92,24 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<DocumentDTO> CreateAsync(DocumentDTO dto)
         {
-            //TODO: rewrite exception, so it throws WrongFileSize
-            //TODO: make 256 configurable value
-            if (dto.File == null && dto.File?.Length < 256)
+            //TODO: make 5*1024*1024 configurable value
+            if (dto.File == null)
             {
                 throw new EmptyDocumentException();
             }
             string contentType;
 
-            using (var stream = dto.File.OpenReadStream())
+            if (dto.File.Length > 5 * 1024 * 1024)
             {
-                var file = new byte[256];
-                stream.Read(file, 0, 256);
-                contentType = MimeType.GetMimeType(file);
+                throw new WrongDocumentSizeException();
             }
+
+            contentType = MimeType.GetMimeType(dto.File.OpenReadStream());
             if (contentType != "application/pdf")
             {
                 throw new DocumentContentException();
             }
+
             dto.ContentType = contentType;
             dto.Path = _storageLogger.Create(dto.File);
 

@@ -59,11 +59,19 @@ namespace TransIT.API.Controllers
             }
             catch (EmptyDocumentException)
             {
-                return Content("file not selected");
+                return Content("file is not selected");
             }
             catch (DocumentContentException)
             {
                 return Content("format is not pdf");
+            }
+            catch (WrongDocumentSizeException)
+            {
+                return Content("file is too large");
+            }
+            catch (DocumentException)
+            {
+                return Content("error with this file, choose different one");
             }
 
             return BadRequest();
