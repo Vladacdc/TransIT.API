@@ -8,10 +8,11 @@ using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using TransIT.BLL.DTOs;
 using TransIT.BLL.Services.Interfaces;
+using TransIT.BLL.Exceptions;
+using TransIT.BLL.Helpers;
 using TransIT.DAL.Models.Entities;
 using TransIT.DAL.UnitOfWork;
 using TransIT.DAL.FileStorage;
-using TransIT.BLL.Exceptions;
 
 namespace TransIT.BLL.Services.ImplementedServices
 {
@@ -75,6 +76,7 @@ namespace TransIT.BLL.Services.ImplementedServices
 
             result.Data = _storageLogger.Download(result.Path);
 
+            //TODO: look at this
             var provider = new FileExtensionContentTypeProvider();
 
             if (!provider.TryGetContentType(Path.GetFileName(result.Path), out string contentType))
@@ -87,23 +89,28 @@ namespace TransIT.BLL.Services.ImplementedServices
             return result;
         }
 
+
         public async Task<DocumentDTO> CreateAsync(DocumentDTO dto)
         {
-            if (dto.File == null && dto.File?.Length == 0)
+            //TODO: rewrite exception, so it throws WrongFileSize
+            //TODO: make 256 configurable value
+            if (dto.File == null && dto.File?.Length < 256)
             {
                 throw new EmptyDocumentException();
             }
+            string contentType;
 
-            var provider = new FileExtensionContentTypeProvider();
-
-            _ = provider.TryGetContentType(Path.GetFileName(dto.File.FileName), out string contentType);
-
+            using (var stream = dto.File.OpenReadStream())
+            {
+                var file = new byte[256];
+                stream.Read(file, 0, 256);
+                contentType = MimeType.GetMimeType(file);
+            }
             if (contentType != "application/pdf")
             {
                 throw new DocumentContentException();
             }
-
-                dto.ContentType = contentType;
+            dto.ContentType = contentType;
             dto.Path = _storageLogger.Create(dto.File);
 
 
