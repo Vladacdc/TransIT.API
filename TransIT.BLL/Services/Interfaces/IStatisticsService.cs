@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using TransIT.BLL.DTOs;
 
 namespace TransIT.BLL.Services.Interfaces
 {
@@ -16,5 +17,11 @@ namespace TransIT.BLL.Services.Interfaces
         Task<List<int>> GetMalfunctionSubGroupStatistics(string malfunctionSubgroupName);
 
         Task<List<int>> GetMalfunctionGroupStatistics(string malfunctionGroupName);
+
+        Task<List<StatisticsDTO>> GetAllGroupsStatistics();
+
+        Task<List<StatisticsDTO>> GetAllSubgroupsStatistics(string groupName = null);
+
+        Task<List<StatisticsDTO>> GetAllMalfunctionsStatistics(string subgroupName = null);
     }
 }

@@ -28,15 +28,9 @@ namespace TransIT.API.Controllers
         {
             try
             {
-                var result = await _statisticsService.CountMalfunction(malfunctionName, vehicleTypeName);
-                if (result != null)
-                {
-                    return Json(result);
-                }
-                else
-                {
-                    return null;
-                }
+                int result = await _statisticsService.CountMalfunction(malfunctionName, vehicleTypeName);
+
+                return Json(result);
             }
             catch (Exception e)
             {
@@ -51,14 +45,8 @@ namespace TransIT.API.Controllers
             try
             {
                 var result = await _statisticsService.CountMalfunctionSubGroup(malfunctionSubgroupName, vehicleTypeName);
-                if (result != null)
-                {
-                    return Json(result);
-                }
-                else
-                {
-                    return null;
-                }
+
+                return Json(result);
             }
             catch (Exception e)
             {
@@ -73,14 +61,8 @@ namespace TransIT.API.Controllers
             try
             {
                 var result = await _statisticsService.CountMalfunctionGroup(malfunctionGroupName, vehicleTypeName);
-                if (result != null)
-                {
-                    return Json(result);
-                }
-                else
-                {
-                    return null;
-                }
+
+                return Json(result);
             }
             catch (Exception e)
             {
@@ -141,6 +123,75 @@ namespace TransIT.API.Controllers
             try
             {
                 var result = await _statisticsService.GetMalfunctionSubGroupStatistics(malfunctionSubGroupName);
+
+                if (result != null)
+                {
+                    return Json(result);
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("allMalfunctionsStatistics")]
+        public async Task<IActionResult> GetAllMalfunctionsStatistics(string malfunctionSubgroupName)
+        {
+            try
+            {
+                var result = await _statisticsService.GetAllMalfunctionsStatistics(malfunctionSubgroupName);
+
+                if (result != null)
+                {
+                    return Json(result);
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("AllMalfunctionGroupsStatistics")]
+        public async Task<IActionResult> GetAllMalfunctionGroupsStatistics()
+        {
+            try
+            {
+                var result = await _statisticsService.GetAllGroupsStatistics();
+
+                if (result != null)
+                {
+                    return Json(result);
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("AllMalfunctionSubgroupsStatistics")]
+        public async Task<IActionResult> GetAllMalfunctionSubgroupsStatistics(string malfunctionGroupName)
+        {
+            try
+            {
+                var result = await _statisticsService.GetAllSubgroupsStatistics(malfunctionGroupName);
 
                 if (result != null)
                 {
