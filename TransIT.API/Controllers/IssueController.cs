@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -145,7 +146,7 @@ namespace TransIT.API.Controllers
             var isCustomer = User.FindFirst(RoleNames.Schema)?.Value == RoleNames.Register;
 
             return Json(
-                ComposeDataTableResponseDto(
+                this.ComposeDataTableResponseDto(
                     await GetQueryiedForCurrentUser(model, isCustomer),
                     model,
                     await GetTotalRecordsForCurrentUser(isCustomer)));
@@ -187,6 +188,28 @@ namespace TransIT.API.Controllers
             return isCustomer
                 ? await _issueService.GetTotalRecordsForCurrentUser()
                 : await _filterService.TotalRecordsAmountAsync();
+        }
+
+        protected override DataTableResponseDTO ComposeDataTableResponseDto(
+            IEnumerable<IssueDTO> res,
+            DataTableRequestDTO model,
+            ulong totalAmount,
+            string errorMessage = "")
+        {
+            return new DataTableResponseDTO
+            {
+                Draw = (ulong)model.Draw,
+                Data = res.ToArray(),
+                RecordsTotal = totalAmount,
+                RecordsFiltered =
+                    (model.Filters.Count > 1
+                     && model.Filters.Any())
+                    || (model.Search != null
+                        && !string.IsNullOrEmpty(model.Search.Value))
+                        ? (ulong)res.Count()
+                        : totalAmount,
+                Error = errorMessage,
+            };
         }
     }
 }
