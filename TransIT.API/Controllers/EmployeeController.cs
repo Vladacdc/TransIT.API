@@ -110,6 +110,18 @@ namespace TransIT.API.Controllers
             }
         }
 
+        [HttpGet("boardnumber/{number}")]
+        public async Task<IActionResult> GetByBoardNumber(int number)
+        {
+            return Ok(await _employeeService.GetByBoardNumber(number));
+        }
+
+        [HttpGet("boardnumbers")]
+        public async Task<IActionResult> GetBoardNumbers()
+        {
+            return Ok(await _employeeService.GetBoardNumbers());
+        }
+
         [HttpGet("attach/users")]
         public async Task<IActionResult> GetNotAttachedUsers()
         {

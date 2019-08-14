@@ -31,12 +31,24 @@ namespace TransIT.BLL.Services.Interfaces
         /// <returns>A data tranfer object, with attached user.</returns>
         Task<EmployeeDTO> AttachUserAsync(int employee, string user);
 
-
         /// <summary>
         /// Removes an attached user from employee account.
         /// </summary>
         /// <param name="employee">An employee ID.</param>
         /// <returns>A data tranfer object, without attached user.</returns>
         Task<EmployeeDTO> RemoveUserAsync(int employee);
+
+        /// <summary>
+        /// Gets all board numbers at once.
+        /// </summary>
+        /// <returns>A list of integers.</returns>
+        Task<List<int>> GetBoardNumbers();
+
+        /// <summary>
+        /// Gets an employee by its board number.
+        /// </summary>
+        /// <param name="boardNumber">A board number.</param>
+        /// <returns>An employee dto.</returns>
+        Task<EmployeeDTO> GetByBoardNumber(int boardNumber);
     }
 }

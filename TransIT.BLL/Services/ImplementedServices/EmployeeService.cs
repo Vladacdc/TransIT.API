@@ -155,5 +155,33 @@ namespace TransIT.BLL.Services.ImplementedServices
                  .ToListAsync();
             return _mapper.Map<List<UserDTO>>(entities);
         }
+
+        /// <summary>
+        /// Gets all board numbers at once.
+        /// </summary>
+        /// <returns>A list of integers.</returns>
+        public Task<List<int>> GetBoardNumbers()
+        {
+            return _unitOfWork.EmployeeRepository
+                .GetQueryable()
+                .Where(e => e.AttachedUserId == null)
+                .Select(e => e.BoardNumber)
+                .OrderBy(n => n)
+                .ToListAsync();
+        }
+
+        /// <summary>
+        /// Gets an employee by its board number.
+        /// </summary>
+        /// <param name="boardNumber">A board number.</param>
+        /// <returns>A</returns>
+        public async Task<EmployeeDTO> GetByBoardNumber(int boardNumber)
+        {
+            var entity = await _unitOfWork.EmployeeRepository
+                .GetQueryable()
+                .Where(e => e.BoardNumber == boardNumber)
+                .SingleOrDefaultAsync();
+            return _mapper.Map<EmployeeDTO>(entity);
+        }
     }
 }

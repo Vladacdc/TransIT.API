@@ -79,7 +79,7 @@ namespace TransIT.BLL.Services.ImplementedServices
                 throw new ConstraintException("Can not be deleted");
             }
 
-            await _unitOfWork.TransitionRepository.RemoveAsync(model);
+            await _unitOfWork.TransitionRepository.RemoveAsync(id);
             await _unitOfWork.SaveAsync();
         }
     }
