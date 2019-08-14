@@ -137,34 +137,42 @@ namespace TransIT.API.Controllers
         [HttpPost("attach/{employee}/{user}")]
         public async Task<IActionResult> AttachUserToEmployee([FromRoute] int employee, [FromRoute] string user)
         {
-            var attachResult = await _employeeService.AttachUserAsync(employee, user);
-            IActionResult result;
-            if (attachResult == EmployeeDTO.CannotAttachUser)
+            try
             {
-                result = BadRequest("Cannot attach this user, because it's already attached.");
+                var attachResult = await _employeeService.AttachUserAsync(employee, user);
+                if (attachResult == null)
+                {
+                    return BadRequest("Cannot attach user or user doesn't exist");
+                }
+                else
+                {
+                    return Ok(attachResult);
+                }
             }
-            else if (attachResult == EmployeeDTO.DoesNotExist)
+            catch (Exception e)
             {
-                result = BadRequest("User or employee doesn't exist.");
+                return StatusCode(500, new ExtendedErrorDTO(e));
             }
-            else
-            {
-                result = Ok(attachResult);
-            }
-            return result;
         }
 
         [HttpDelete("attach/{employee}")]
         public async Task<IActionResult> RemoveUserFromEmployee([FromRoute] int employee)
         {
-            var deleteResult = await _employeeService.RemoveUserAsync(employee);
-            if (deleteResult != EmployeeDTO.DoesNotExist)
+            try
             {
-                return NoContent();
+                var deleteResult = await _employeeService.RemoveUserAsync(employee);
+                if (deleteResult != null)
+                {
+                    return NoContent();
+                }
+                else
+                {
+                    return BadRequest("Employee doesn't exist");
+                }
             }
-            else
+            catch (Exception e)
             {
-                return BadRequest("Employee doesn't exist");
+                return StatusCode(500, new ExtendedErrorDTO(e));
             }
         }
 

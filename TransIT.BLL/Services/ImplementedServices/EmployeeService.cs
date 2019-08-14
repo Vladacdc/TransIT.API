@@ -86,28 +86,22 @@ namespace TransIT.BLL.Services.ImplementedServices
         {
             var userEntity = await _unitOfWork.UserManager.FindByIdAsync(user);
             var employeeEntity = await _unitOfWork.EmployeeRepository.GetByIdAsync(employee);
-
-            EmployeeDTO dto = EmployeeDTO.DoesNotExist;
-
+ 
             if (userEntity != null && employeeEntity != null)
             {
                 bool wasAttached = await _unitOfWork.EmployeeRepository
                     .GetQueryable()
                     .AnyAsync(e => e.AttachedUserId == user);
 
-                if (wasAttached)
-                {
-                    dto = EmployeeDTO.CannotAttachUser;
-                }
-                else
-                {
+                if (!wasAttached)
+                { 
                     employeeEntity.AttachedUserId = userEntity.Id;
                     await _unitOfWork.SaveAsync();
                     employeeEntity.AttachedUser = userEntity;
-                    dto = _mapper.Map<EmployeeDTO>(employeeEntity);
+                    return _mapper.Map<EmployeeDTO>(employeeEntity);
                 }
             }
-            return dto;
+            return null;
         }
 
         /// <summary>
@@ -119,15 +113,14 @@ namespace TransIT.BLL.Services.ImplementedServices
         {
             var employeeEntity = await _unitOfWork.EmployeeRepository.GetByIdAsync(employee);
 
-            EmployeeDTO dto = EmployeeDTO.DoesNotExist;
             if (employeeEntity != null)
             {
                 employeeEntity.AttachedUserId = null;
                 employeeEntity.AttachedUser = null;
                 await _unitOfWork.SaveAsync();
-                dto = _mapper.Map<EmployeeDTO>(employeeEntity);
+                return _mapper.Map<EmployeeDTO>(employeeEntity);
             }
-            return dto;
+            return null;
         }
 
         /// <summary>

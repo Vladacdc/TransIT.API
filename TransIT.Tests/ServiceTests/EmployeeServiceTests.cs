@@ -23,7 +23,6 @@ namespace TransIT.Tests
         private Employee _sampleEmployee;
         private Employee _someOtherEmployee;
         private User _sampleUser;
-        private User _someOtherUser;
         private Mock<IUnitOfWork> _unitOfWork;
         private IMapper _mapper;
 
@@ -43,7 +42,7 @@ namespace TransIT.Tests
             await employees.CreateAsync(_mapper.Map<EmployeeDTO>(_sampleEmployee));
             var actual = await employees.AttachUserAsync(_sampleEmployee.Id, SomeUserId);
 
-            Assert.NotEqual(EmployeeDTO.DoesNotExist, actual);
+            Assert.NotNull(actual);
             Assert.NotNull(actual.AttachedUser);
         }
 
@@ -55,7 +54,7 @@ namespace TransIT.Tests
             var fake = CreateUnitOfWork();
             var employees = new EmployeeService(fake.Object, _mapper);
             var actual = await employees.AttachUserAsync(1, SomeUserId);
-            Assert.Equal(EmployeeDTO.DoesNotExist, actual);
+            Assert.Null(actual);
         }
 
         [Fact]
@@ -70,7 +69,7 @@ namespace TransIT.Tests
             await employees.AttachUserAsync(_sampleEmployee.Id, SomeUserId);
             var actual = await employees.AttachUserAsync(_someOtherEmployee.Id, SomeUserId);
 
-            Assert.Equal(EmployeeDTO.CannotAttachUser, actual);
+            Assert.Null(actual);
         }
 
         [Fact]
@@ -83,7 +82,7 @@ namespace TransIT.Tests
             await employees.CreateAsync(_mapper.Map<EmployeeDTO>(_sampleEmployee));
             var actual = await employees.AttachUserAsync(_sampleEmployee.Id, Guid.NewGuid().ToString());
 
-            Assert.Equal(EmployeeDTO.DoesNotExist, actual);
+            Assert.Null(actual);
         }
 
         [Fact]
@@ -98,7 +97,7 @@ namespace TransIT.Tests
             await employees.AttachUserAsync(_sampleEmployee.Id, SomeUserId);
             var actual = await employees.RemoveUserAsync(_sampleEmployee.Id);
 
-            Assert.NotEqual(EmployeeDTO.DoesNotExist, dto);
+            Assert.NotNull(dto);
             Assert.Null(actual.AttachedUser);
         }
 
@@ -110,7 +109,7 @@ namespace TransIT.Tests
             var employees = new EmployeeService(fake.Object, _mapper);
             await employees.AttachUserAsync(1, SomeUserId);
             var actual = await employees.RemoveUserAsync(1);
-            Assert.Equal(EmployeeDTO.DoesNotExist, actual);
+            Assert.Null(actual);
         }
 
         [Fact]
