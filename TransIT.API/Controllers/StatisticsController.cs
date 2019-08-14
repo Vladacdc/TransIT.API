@@ -23,7 +23,7 @@ namespace TransIT.API.Controllers
         }
 
         [HttpGet]
-        [Route("countmalfunction")]
+        [Route("countMalfunction")]
         public async Task<IActionResult> CountMalfunction(string malfunctionName, string vehicleTypeName)
         {
             try
@@ -39,12 +39,12 @@ namespace TransIT.API.Controllers
         }
 
         [HttpGet]
-        [Route("countmalfunctionsubgroup")]
+        [Route("countMalfunctionSubgroup")]
         public async Task<IActionResult> CountMalfunctionSubgroup(string malfunctionSubgroupName, string vehicleTypeName)
         {
             try
             {
-                var result = await _statisticsService.CountMalfunctionSubGroup(malfunctionSubgroupName, vehicleTypeName);
+                int result = await _statisticsService.CountMalfunctionSubGroup(malfunctionSubgroupName, vehicleTypeName);
 
                 return Json(result);
             }
@@ -55,12 +55,12 @@ namespace TransIT.API.Controllers
         }
 
         [HttpGet]
-        [Route("countmalfunctiongroup")]
+        [Route("countMalfunctionGroup")]
         public async Task<IActionResult> CountMalfunctionGroup(string malfunctionGroupName, string vehicleTypeName)
         {
             try
             {
-                var result = await _statisticsService.CountMalfunctionGroup(malfunctionGroupName, vehicleTypeName);
+                int result = await _statisticsService.CountMalfunctionGroup(malfunctionGroupName, vehicleTypeName);
 
                 return Json(result);
             }
@@ -71,7 +71,7 @@ namespace TransIT.API.Controllers
         }
 
         [HttpGet]
-        [Route("malfunctionstatistics")]
+        [Route("malfunctionStatistics")]
         public async Task<IActionResult> GetMalfunctionStatistics(string malfunctionName)
         {
             try
@@ -94,7 +94,7 @@ namespace TransIT.API.Controllers
         }
 
         [HttpGet]
-        [Route("malfunctiongroupstatistics")]
+        [Route("malfunctionGroupStatistics")]
         public async Task<IActionResult> GetMalfunctionGroupStatistics(string malfunctionGroupName)
         {
             try
@@ -117,7 +117,7 @@ namespace TransIT.API.Controllers
         }
 
         [HttpGet]
-        [Route("malfunctionsubgroupstatistics")]
+        [Route("malfunctionSubgroupStatistics")]
         public async Task<IActionResult> GetMalfunctionSubGroupStatistics(string malfunctionSubGroupName)
         {
             try
@@ -163,7 +163,7 @@ namespace TransIT.API.Controllers
         }
 
         [HttpGet]
-        [Route("AllMalfunctionGroupsStatistics")]
+        [Route("allMalfunctionGroupsStatistics")]
         public async Task<IActionResult> GetAllMalfunctionGroupsStatistics()
         {
             try
@@ -186,7 +186,7 @@ namespace TransIT.API.Controllers
         }
 
         [HttpGet]
-        [Route("AllMalfunctionSubgroupsStatistics")]
+        [Route("allMalfunctionSubgroupsStatistics")]
         public async Task<IActionResult> GetAllMalfunctionSubgroupsStatistics(string malfunctionGroupName)
         {
             try
