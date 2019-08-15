@@ -203,7 +203,7 @@ namespace TransIT.API.Controllers
                 RecordsTotal = totalAmount,
                 RecordsFiltered =
                     (model.Filters?.Count > 1)
-                    || (!string.IsNullOrEmpty(model.Search.Value))
+                    || (!string.IsNullOrEmpty(model.Search?.Value))
                         ? (ulong)res.Count()
                         : totalAmount,
                 Error = errorMessage,
