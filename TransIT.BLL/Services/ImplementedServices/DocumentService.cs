@@ -84,21 +84,16 @@ namespace TransIT.BLL.Services.ImplementedServices
         {
             var result = await GetAsync(documentId);
 
-            result.Data = _storageLogger.Download(result.Path);
-
-            //TODO: look at this
-            var provider = new FileExtensionContentTypeProvider();
-
-            if (!provider.TryGetContentType(Path.GetFileName(result.Path), out string contentType))
+            try
             {
-                contentType = "application/octet-stream";
+            result.Data = _storageLogger.Download(result.Path);
             }
-
-            result.ContentType = contentType;
-
+            catch(Exception ex)
+            {
+                throw new DocumentDownloadException($"Couldn't access file {result.Path}",ex);
+            }
             return result;
         }
-
 
         public async Task<DocumentDTO> CreateAsync(DocumentDTO dto)
         {

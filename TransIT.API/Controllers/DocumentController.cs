@@ -40,9 +40,15 @@ namespace TransIT.API.Controllers
         [HttpGet("~/api/v1/Document/{id}/file")]
         public async Task<IActionResult> DownloadFile(int id)
         {
-            var document = await _documentService.GetDocumentWithData(id);
-
-            return File(document.Data, document.ContentType);
+            try
+            {
+                var document = await _documentService.GetDocumentWithData(id);
+                return File(document.Data, document.ContentType);
+            }
+            catch (DocumentDownloadException)
+            {
+                return Content("File isn't accessible");
+            }
         }
 
         [HttpPost]
