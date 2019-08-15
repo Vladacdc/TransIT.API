@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using TransIT.BLL.DTOs;
 using TransIT.BLL.Services.Interfaces;
 using TransIT.BLL.Exceptions;
 using TransIT.BLL.Helpers;
+using TransIT.BLL.Services.ServicesOptions;
 using TransIT.DAL.Models.Entities;
 using TransIT.DAL.UnitOfWork;
 using TransIT.DAL.FileStorage;
@@ -28,16 +30,24 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         private readonly IMapper _mapper;
 
+        private readonly DocumentServiceOptions _options;
+
         /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="unitOfWork">Unit of work pattern</param>
         /// <param name="mapper">Mapper</param>
-        public DocumentService(IUnitOfWork unitOfWork, IMapper mapper, IFileStorage fileStorage)
+        public DocumentService(
+            IUnitOfWork unitOfWork,
+            IMapper mapper,
+            IFileStorage fileStorage,
+            IOptions<DocumentServiceOptions> options
+            )
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _storageLogger = fileStorage;
+            _options = options.Value;
         }
 
         public async Task<IEnumerable<DocumentDTO>> GetRangeByIssueLogIdAsync(int issueLogId)
@@ -92,14 +102,13 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<DocumentDTO> CreateAsync(DocumentDTO dto)
         {
-            //TODO: make 5*1024*1024 configurable value
             if (dto.File == null)
             {
                 throw new EmptyDocumentException();
             }
             string contentType;
 
-            if (dto.File.Length > 5 * 1024 * 1024)
+            if (dto.File.Length > _options.MaximumSize)
             {
                 throw new WrongDocumentSizeException();
             }

@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -6,6 +7,7 @@ using TransIT.BLL.DTOs;
 using TransIT.BLL.Factories;
 using TransIT.BLL.Mappings;
 using TransIT.BLL.Services;
+using TransIT.BLL.Services.ServicesOptions;
 using TransIT.BLL.Services.FilterServices;
 using TransIT.BLL.Services.ImplementedServices;
 using TransIT.BLL.Services.Interfaces;
@@ -23,6 +25,8 @@ namespace TransIT.BLL
 
             services.AddScoped<IServiceFactory, ServiceFactory>();
             services.AddScoped<IFilterServiceFactory, FilterServiceFactory>();
+
+            services.ConfigureDocumentService(configuration);
 
             services.ConfigureDAL(configuration, hostingEnvironment);
         }
@@ -98,6 +102,19 @@ namespace TransIT.BLL
                 c.AddProfile(new TransitionProfile());
                 c.AddProfile(new LocationProfile());
             }).CreateMapper());
+        }
+
+        private static void ConfigureDocumentService(
+            this IServiceCollection services,
+            IConfiguration configuration)
+        {
+            services.Configure<DocumentServiceOptions>((options) => {
+                var documentServiceOptions = configuration.GetSection(nameof(DocumentServiceOptions));
+
+                long maxmimumSize = Convert.ToInt64(documentServiceOptions[nameof(options.MaximumSize)]);
+
+                options.MaximumSize = (maxmimumSize > 0) ? maxmimumSize : long.MaxValue;
+            });
         }
     }
 }
