@@ -6,6 +6,6 @@ namespace TransIT.BLL.DTOs
     {
         public string FieldName { get; set; }
 
-        public ICollection<int> Statistics { get; set; }
+        public IEnumerable<int> Statistics { get; set; }
     }
 }
