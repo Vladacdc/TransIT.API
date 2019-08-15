@@ -124,5 +124,10 @@ namespace TransIT.BLL.Services.ImplementedServices
         {
             _unitOfWork.UserRepository.CurrentUserId = newValue;
         }
+
+        public string GetCurrentUserId()
+        {
+            return _unitOfWork.UserRepository.CurrentUserId;
+        }
     }
 }

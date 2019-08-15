@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
@@ -26,66 +27,111 @@ namespace TransIT.API.Controllers
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] uint offset = 0, uint amount = 1000)
         {
-            var result = await _vehicleTypeService.GetRangeAsync(offset, amount);
-            if (result != null)
+            try
             {
-                return Json(result);
+                var result = await _vehicleTypeService.GetRangeAsync(offset, amount);
+                if (result != null)
+                {
+                    return Json(result);
+                }
+                else
+                {
+                    return null;
+                }
             }
-
-            return BadRequest();
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            var result = await _vehicleTypeService.GetAsync(id);
-            if (result != null)
+            try
             {
-                return Json(result);
+                var result = await _vehicleTypeService.GetAsync(id);
+                if (result != null)
+                {
+                    return Json(result);
+                }
+                else
+                {
+                    return null;
+                }
             }
-
-            return BadRequest();
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
         }
 
         [HttpGet("/search")]
         public async Task<IActionResult> Get([FromQuery] string search)
         {
-            var result = await _vehicleTypeService.SearchAsync(search);
-            if (result != null)
+            try
             {
-                return Json(result);
+                var result = await _vehicleTypeService.SearchAsync(search);
+                if (result != null)
+                {
+                    return Json(result);
+                }
+                else
+                {
+                    return null;
+                }
             }
-
-            return BadRequest();
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
         }
 
         [HttpPost]
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Create([FromBody] VehicleTypeDTO vehicleTypeDto)
         {
-            var createdDto = await _vehicleTypeService.CreateAsync(vehicleTypeDto);
-            if (createdDto != null)
+            try
             {
-                return CreatedAtAction(nameof(Create), createdDto);
+                var createdDto = await _vehicleTypeService.CreateAsync(vehicleTypeDto);
+                if (createdDto != null)
+                {
+                    return CreatedAtAction(nameof(Create), createdDto);
+                }
+                else
+                {
+                    return null;
+                }
             }
-
-            return BadRequest();
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         [HttpPut("{id}")]
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Update(int id, [FromBody] VehicleTypeDTO vehicleTypeDto)
         {
-            vehicleTypeDto.Id = id;
-
-            var result = await _vehicleTypeService.UpdateAsync(vehicleTypeDto);
-
-            if (result != null)
+            try
             {
-                return NoContent();
-            }
+                vehicleTypeDto.Id = id;
 
-            return BadRequest();
+                var result = await _vehicleTypeService.UpdateAsync(vehicleTypeDto);
+
+                if (result != null)
+                {
+                    return NoContent();
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         [HttpDelete("{id}")]

@@ -18,5 +18,6 @@ namespace TransIT.BLL.Services.Interfaces
         Task DeleteAsync(string id);
         Task<IEnumerable<RoleDTO>> GetRoles();
         void UpdateCurrentUserId(string newValue);
+        string GetCurrentUserId();
     }
 }

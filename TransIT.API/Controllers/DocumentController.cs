@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
@@ -27,14 +28,23 @@ namespace TransIT.API.Controllers
         [HttpGet("~/api/v1/IssueLog/{issueLogId}/Document")]
         public async Task<IActionResult> GetByIssueLog(int issueLogId)
         {
-            var result = await _documentService.GetRangeByIssueLogIdAsync(issueLogId);
-
-            if (result != null)
+            try
             {
-                return Json(result);
-            }
+                var result = await _documentService.GetRangeByIssueLogIdAsync(issueLogId);
 
-            return BadRequest();
+                if (result != null)
+                {
+                    return Json(result);
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
         }
 
         [HttpGet("~/api/v1/Document/{id}/file")]
@@ -43,11 +53,22 @@ namespace TransIT.API.Controllers
             try
             {
                 var document = await _documentService.GetDocumentWithData(id);
-                return File(document.Data, document.ContentType);
+                if (document != null)
+                {
+                    return File(document.Data, document.ContentType);
+                }
+                else
+                {
+                    return null;
+                }
             }
             catch (DocumentDownloadException)
             {
                 return Content("File isn't accessible");
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e);
             }
         }
 
@@ -61,6 +82,10 @@ namespace TransIT.API.Controllers
                 if (createdEntity != null)
                 {
                     return CreatedAtAction(nameof(Create), createdEntity);
+                }
+                else
+                {
+                    return null;
                 }
             }
             catch (EmptyDocumentException)
@@ -79,8 +104,10 @@ namespace TransIT.API.Controllers
             {
                 return Content("error with this file, choose different one");
             }
-
-            return BadRequest();
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         [HttpDelete("~/api/v1/Document/{id}")]
