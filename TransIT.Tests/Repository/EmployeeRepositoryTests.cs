@@ -14,6 +14,7 @@ namespace TransIT.Tests
         [Fact]
         public async Task Employee_Repository_Should_Add_Employee()
         {
+            // Arrange
             var context = CreateDbContext();
             var repository = new EmployeeRepository(context);
             var expectedEntity = new Employee(new Post() { Name = "Big Boss" , Id = 5 })
@@ -24,17 +25,18 @@ namespace TransIT.Tests
                 BoardNumber = 228,
                 Id = 20
             };
-
+            // Act
             await repository.AddAsync(expectedEntity);
             await context.SaveChangesAsync();
             var actualEntity = await repository.GetByIdAsync(expectedEntity.Id);
-
+            // Assert
             Assert.Equal(expectedEntity, actualEntity);
         }
 
         [Fact]
         public async Task Employee_Repository_Should_Get_All()
         {
+            // Arrange
             var context = CreateDbContext();
             var repository = new EmployeeRepository(context);
             var expectedEntity = new Employee(new Post() { Name = "Big Boss", Id = 5 })
@@ -45,11 +47,11 @@ namespace TransIT.Tests
                 BoardNumber = 228,
                 Id = 20
             };
-
+            // Act
             await repository.AddAsync(expectedEntity);
             await context.SaveChangesAsync();
             var entities = await repository.GetAllAsync();
-
+            // Assert
             Assert.Single(entities.ToList());
         }
 

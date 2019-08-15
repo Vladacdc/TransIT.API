@@ -153,7 +153,7 @@ namespace TransIT.BLL.Services.ImplementedServices
         /// Gets all board numbers at once.
         /// </summary>
         /// <returns>A list of integers.</returns>
-        public Task<List<int>> GetBoardNumbers()
+        public Task<List<int>> GetBoardNumbersAsync()
         {
             return _unitOfWork.EmployeeRepository
                 .GetQueryable()
@@ -168,7 +168,7 @@ namespace TransIT.BLL.Services.ImplementedServices
         /// </summary>
         /// <param name="boardNumber">A board number.</param>
         /// <returns>A</returns>
-        public async Task<EmployeeDTO> GetByBoardNumber(int boardNumber)
+        public async Task<EmployeeDTO> GetByBoardNumberAsync(int boardNumber)
         {
             var entity = await _unitOfWork.EmployeeRepository
                 .GetQueryable()

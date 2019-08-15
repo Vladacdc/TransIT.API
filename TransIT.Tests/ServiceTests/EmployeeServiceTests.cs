@@ -35,13 +35,14 @@ namespace TransIT.Tests
         [Fact]
         public async Task EmployeeService_Should_Attach_A_User()
         {
+            // Arrange
             InitializeConstants();
             var fake = CreateUnitOfWork();
             var employees = new EmployeeService(fake.Object, _mapper);
-
+            // Act
             await employees.CreateAsync(_mapper.Map<EmployeeDTO>(_sampleEmployee));
             var actual = await employees.AttachUserAsync(_sampleEmployee.Id, SomeUserId);
-
+            // Assert
             Assert.NotNull(actual);
             Assert.NotNull(actual.AttachedUser);
         }
@@ -50,53 +51,59 @@ namespace TransIT.Tests
         [Fact]
         public async Task EmployeeService_Should_Not_Attach_Non_Existing_Employee()
         {
+            // Arrange
             InitializeConstants();
             var fake = CreateUnitOfWork();
             var employees = new EmployeeService(fake.Object, _mapper);
+            // Act
             var actual = await employees.AttachUserAsync(1, SomeUserId);
+            // Assert
             Assert.Null(actual);
         }
 
         [Fact]
         public async Task EmployeeService_Should_Not_Attach_Already_Attached_User()
         {
+            // Arrange
             InitializeConstants();
             var fake = CreateUnitOfWork();
             var employees = new EmployeeService(fake.Object, _mapper);
-
+            // Act
             await employees.CreateAsync(_mapper.Map<EmployeeDTO>(_sampleEmployee));
             await employees.CreateAsync(_mapper.Map<EmployeeDTO>(_someOtherEmployee));
             await employees.AttachUserAsync(_sampleEmployee.Id, SomeUserId);
             var actual = await employees.AttachUserAsync(_someOtherEmployee.Id, SomeUserId);
-
+            // Assert
             Assert.Null(actual);
         }
 
         [Fact]
         public async Task EmployeeService_Should_Return_Empty_If_Non_Existing_User()
         {
+            // Arrange
             InitializeConstants();
             var fake = CreateUnitOfWork();
             var employees = new EmployeeService(fake.Object, _mapper);
-
+            // Act
             await employees.CreateAsync(_mapper.Map<EmployeeDTO>(_sampleEmployee));
             var actual = await employees.AttachUserAsync(_sampleEmployee.Id, Guid.NewGuid().ToString());
-
+            // Assert
             Assert.Null(actual);
         }
 
         [Fact]
         public async Task EmployeeService_Should_Remove_Attached_User()
         {
+            // Arrange
             InitializeConstants();
             var fake = CreateUnitOfWork();
             var employees = new EmployeeService(fake.Object, _mapper);
             var dto = _mapper.Map<EmployeeDTO>(_sampleEmployee);
-
+            // Act
             await employees.CreateAsync(dto);
             await employees.AttachUserAsync(_sampleEmployee.Id, SomeUserId);
             var actual = await employees.RemoveUserAsync(_sampleEmployee.Id);
-
+            // Assert
             Assert.NotNull(dto);
             Assert.Null(actual.AttachedUser);
         }
@@ -104,41 +111,45 @@ namespace TransIT.Tests
         [Fact]
         public async Task EmployeeService_RemoveUser_Should_Ignore_If_Non_Existing_Employee()
         {
+            // Arrange
             InitializeConstants();
             var fake = CreateUnitOfWork();
             var employees = new EmployeeService(fake.Object, _mapper);
+            // Act
             await employees.AttachUserAsync(1, SomeUserId);
             var actual = await employees.RemoveUserAsync(1);
+            // Assert
             Assert.Null(actual);
         }
 
         [Fact]
         public async Task EmployeeService_Should_Get_Employee_Which_User_Was_Attached_To()
         {
+            // Arrange
             InitializeConstants();
             var fake = CreateUnitOfWork();
             var employees = new EmployeeService(fake.Object, _mapper);
-
+            // Act
             EmployeeDTO expected = _mapper.Map<EmployeeDTO>(_sampleEmployee);
             await employees.CreateAsync(expected);
             await employees.AttachUserAsync(_sampleEmployee.Id, SomeUserId);
             var actual = await employees.GetEmployeeForUserAsync(SomeUserId);
-
+            // Assert
             Assert.Equal(expected, actual, new EmployeeComparer());
         }
 
         [Fact]
         public async Task EmployeeService_Should_Get_Not_Attached_Users()
         {
+            // Arrange
             InitializeConstants();
             var fake = CreateWithMockedUsers();
             var employees = new EmployeeService(fake.Object, _mapper);
-
+            // Act
             await employees.CreateAsync(_mapper.Map<EmployeeDTO>(_sampleEmployee));
             await employees.AttachUserAsync(_sampleEmployee.Id, SomeUserId);
-
             var actual = await employees.GetNotAttachedUsersAsync();
-
+            // Assert
             Assert.Equal(2, actual.Count);
         }
 

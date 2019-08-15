@@ -42,13 +42,13 @@ namespace TransIT.BLL.Services.Interfaces
         /// Gets all board numbers at once.
         /// </summary>
         /// <returns>A list of integers.</returns>
-        Task<List<int>> GetBoardNumbers();
+        Task<List<int>> GetBoardNumbersAsync();
 
         /// <summary>
         /// Gets an employee by its board number.
         /// </summary>
         /// <param name="boardNumber">A board number.</param>
         /// <returns>An employee dto.</returns>
-        Task<EmployeeDTO> GetByBoardNumber(int boardNumber);
+        Task<EmployeeDTO> GetByBoardNumberAsync(int boardNumber);
     }
 }

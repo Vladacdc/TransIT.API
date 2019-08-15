@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using TransIT.BLL.DTOs;
 using TransIT.BLL.Factories;
 using TransIT.BLL.Services.Interfaces;
@@ -17,11 +18,13 @@ namespace TransIT.API.Controllers
     public class EmployeeController : FilterController<EmployeeDTO>
     {
         private readonly IEmployeeService _employeeService;
+        private readonly ILogger<EmployeeController> _logger;
 
-        public EmployeeController(IServiceFactory serviceFactory, IFilterServiceFactory filterServiceFactory)
+        public EmployeeController(IServiceFactory serviceFactory, IFilterServiceFactory filterServiceFactory, ILogger<EmployeeController> logger)
             : base(filterServiceFactory)
         {
             _employeeService = serviceFactory.EmployeeService;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -41,7 +44,8 @@ namespace TransIT.API.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode(500, e);
+                _logger.LogError(e, string.Empty);
+                return StatusCode(500, new ExtendedErrorDTO(e));
             }
         }
 
@@ -62,7 +66,8 @@ namespace TransIT.API.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode(500, e);
+                _logger.LogError(e, string.Empty);
+                return StatusCode(500, new ExtendedErrorDTO(e));
             }
         }
 
@@ -83,7 +88,8 @@ namespace TransIT.API.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode(500, e);
+                _logger.LogError(e, string.Empty);
+                return StatusCode(500, new ExtendedErrorDTO(e));
             }
         }
 
@@ -106,20 +112,21 @@ namespace TransIT.API.Controllers
             }
             catch (Exception e)
             {
-                throw e;
+                _logger.LogError(e, string.Empty);
+                return StatusCode(500, new ExtendedErrorDTO(e));
             }
         }
 
         [HttpGet("boardnumber/{number}")]
         public async Task<IActionResult> GetByBoardNumber(int number)
         {
-            return Ok(await _employeeService.GetByBoardNumber(number));
+            return Ok(await _employeeService.GetByBoardNumberAsync(number));
         }
 
         [HttpGet("boardnumbers")]
         public async Task<IActionResult> GetBoardNumbers()
         {
-            return Ok(await _employeeService.GetBoardNumbers());
+            return Ok(await _employeeService.GetBoardNumbersAsync());
         }
 
         [HttpGet("attach/users")]
@@ -151,6 +158,7 @@ namespace TransIT.API.Controllers
             }
             catch (Exception e)
             {
+                _logger.LogError(e, string.Empty);
                 return StatusCode(500, new ExtendedErrorDTO(e));
             }
         }
@@ -172,6 +180,7 @@ namespace TransIT.API.Controllers
             }
             catch (Exception e)
             {
+                _logger.LogError(e, string.Empty);
                 return StatusCode(500, new ExtendedErrorDTO(e));
             }
         }
@@ -197,7 +206,8 @@ namespace TransIT.API.Controllers
             }
             catch (Exception e)
             {
-                throw e;
+                _logger.LogError(e, string.Empty);
+                return StatusCode(500, new ExtendedErrorDTO(e));
             }
         }
 
@@ -205,8 +215,16 @@ namespace TransIT.API.Controllers
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Delete(int id)
         {
-            await _employeeService.DeleteAsync(id);
-            return NoContent();
+            try
+            {
+                await _employeeService.DeleteAsync(id);
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, string.Empty);
+                return StatusCode(500, new ExtendedErrorDTO(e));
+            }
         }
     }
 }

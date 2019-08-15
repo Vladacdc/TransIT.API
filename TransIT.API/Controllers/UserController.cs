@@ -35,8 +35,8 @@ namespace TransIT.API.Controllers
                 obj.Id = id;
                 var result = await _userService.UpdateAsync(obj);
                 return result != null
-                    ? NoContent()
-                    : null;
+                    ? Ok(result)
+                    : (IActionResult)BadRequest("User doesn't exist");
             }
             catch (Exception e)
             {

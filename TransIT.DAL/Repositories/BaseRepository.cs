@@ -23,12 +23,12 @@ namespace TransIT.DAL.Repositories
 
         public virtual Task<TEntity> GetByIdAsync(int id)
         {
-            return ComplexEntities.Where(t => t.Id == id).FirstOrDefaultAsync();
+            return ComplexEntities.SingleOrDefaultAsync(entity => entity.Id == id);
         }
 
-        public async virtual Task<IEnumerable<TEntity>> GetAllAsync()
+        public virtual Task<IEnumerable<TEntity>> GetAllAsync()
         {
-            return await ComplexEntities.ToListAsync();
+            return Task.FromResult(ComplexEntities.AsEnumerable());
         }
 
         public async virtual Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate)
