@@ -26,19 +26,20 @@ namespace TransIT.DAL.Repositories
             return ComplexEntities.SingleOrDefaultAsync(entity => entity.Id == id);
         }
 
-        public virtual Task<IEnumerable<TEntity>> GetAllAsync()
+        public virtual Task<List<TEntity>> GetAllAsync()
         {
-            return Task.FromResult(ComplexEntities.AsEnumerable());
+            return ComplexEntities.ToListAsync();
         }
 
-        public async virtual Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate)
+        public virtual Task<List<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return await ComplexEntities.Where(predicate).ToListAsync();
+            return ComplexEntities.Where(predicate).ToListAsync();
         }
 
         public virtual async Task<TEntity> AddAsync(TEntity entity)
         {
-            return (await _entities.AddAsync(entity)).Entity;
+            var entityEntry = await _entities.AddAsync(entity);
+            return entityEntry.Entity;
         }
 
         public async virtual Task<TEntity> RemoveAsync(params object[] keys)
@@ -62,9 +63,9 @@ namespace TransIT.DAL.Repositories
             return _entities.Update(entity).Entity;
         }
 
-        public async virtual Task<IEnumerable<TEntity>> GetRangeAsync(uint index, uint amount)
+        public virtual Task<List<TEntity>> GetRangeAsync(uint index, uint amount)
         {
-            return await ComplexEntities.Skip((int)index).Take((int)amount).ToListAsync();
+            return ComplexEntities.Skip((int)index).Take((int)amount).ToListAsync();
         }
 
         public virtual TEntity UpdateWithIgnoreProperty<TProperty>(
