@@ -120,25 +120,57 @@ namespace TransIT.API.Controllers
         [HttpGet("boardnumber/{number}")]
         public async Task<IActionResult> GetByBoardNumber(int number)
         {
-            return Ok(await _employeeService.GetByBoardNumberAsync(number));
+            try
+            {
+                return Ok(await _employeeService.GetByBoardNumberAsync(number));
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, string.Empty);
+                return StatusCode(500, new ExtendedErrorDTO(e));
+            }
         }
 
         [HttpGet("boardnumbers")]
         public async Task<IActionResult> GetBoardNumbers()
         {
-            return Ok(await _employeeService.GetBoardNumbersAsync());
+            try
+            {
+                return Ok(await _employeeService.GetBoardNumbersAsync());
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, string.Empty);
+                return StatusCode(500, new ExtendedErrorDTO(e));
+            }
         }
 
         [HttpGet("attach/users")]
         public async Task<IActionResult> GetNotAttachedUsers()
         {
-            return Ok(await _employeeService.GetNotAttachedUsersAsync());
+            try
+            {
+                return Ok(await _employeeService.GetNotAttachedUsersAsync());
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, string.Empty);
+                return StatusCode(500, new ExtendedErrorDTO(e));
+            }
         }
 
         [HttpGet("attach/{userId}")]
         public async Task<IActionResult> GetEmployeeForUserAsync([FromRoute] string userId)
         {
-            return Ok(await _employeeService.GetEmployeeForUserAsync(userId));
+            try
+            {
+                return Ok(await _employeeService.GetEmployeeForUserAsync(userId));
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, string.Empty);
+                return StatusCode(500, new ExtendedErrorDTO(e));
+            }
         }
 
         [HttpPost("attach/{employee}/{user}")]
