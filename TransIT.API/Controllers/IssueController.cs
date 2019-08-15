@@ -202,10 +202,8 @@ namespace TransIT.API.Controllers
                 Data = res.ToArray(),
                 RecordsTotal = totalAmount,
                 RecordsFiltered =
-                    (model.Filters?.Count > 1
-                     && model.Filters.Any())
-                    || (model.Search != null
-                        && !string.IsNullOrEmpty(model.Search.Value))
+                    (model.Filters?.Count > 1)
+                    || (!string.IsNullOrEmpty(model.Search.Value))
                         ? (ulong)res.Count()
                         : totalAmount,
                 Error = errorMessage,
