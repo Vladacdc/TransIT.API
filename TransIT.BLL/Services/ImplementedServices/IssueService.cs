@@ -91,7 +91,7 @@ namespace TransIT.BLL.Services.ImplementedServices
         {
             var model = _mapper.Map<Issue>(dto);
 
-            _unitOfWork.IssueRepository.UpdateWithIgnoreProperty(model, x => x.StateId);
+            _unitOfWork.IssueRepository.Update(model);
             await _unitOfWork.SaveAsync();
             return _mapper.Map<IssueDTO>(model);
         }
