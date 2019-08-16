@@ -96,7 +96,7 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task DeleteAsync(int id)
         {
-            _unitOfWork.IssueLogRepository.Remove(id);
+            await _unitOfWork.IssueLogRepository.RemoveAsync(id);
             await _unitOfWork.SaveAsync();
         }
     }

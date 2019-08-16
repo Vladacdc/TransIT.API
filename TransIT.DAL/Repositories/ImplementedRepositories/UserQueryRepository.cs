@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using System.Text;
 using LinqKit;
 using Microsoft.EntityFrameworkCore;
 using TransIT.DAL.Models;
@@ -22,7 +23,6 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
                 .Include(u => u.UserRoles)
                 .ThenInclude(ur => ur.Role)
                 .AsQueryable();
-
         }
 
         public IQueryable<User> GetQueryable()
@@ -33,6 +33,7 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
         public Task<IQueryable<User>> SearchExpressionAsync(IEnumerable<string> strs)
         {
             var predicate = PredicateBuilder.New<User>();
+            var secondPredicate = PredicateBuilder.New<UserRole>();
 
             foreach (string keyword in strs)
             {
@@ -52,7 +53,6 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
                     || entity.PhoneNumber != null && entity.PhoneNumber != string.Empty &&
                            EF.Functions.Like(entity.PhoneNumber, '%' + temp + '%'));
             }
-
             return Task.FromResult(
                 GetQueryable()
                 .AsExpandable()
