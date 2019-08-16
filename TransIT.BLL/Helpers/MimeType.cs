@@ -6,7 +6,8 @@ namespace TransIT.BLL.Helpers
 {
     public class MimeType
     {
-        private static readonly byte[] PDF = { 37, 80, 68, 70, 45, 49, 46 };
+        // this is the binary value that every PDF file starts with
+        private static readonly byte[] PDFHeader = { 37, 80, 68, 70, 45, 49, 46 };
 
         public static string GetMimeType(Stream stream)
         {
@@ -20,7 +21,7 @@ namespace TransIT.BLL.Helpers
                 stream.Read(file, 0, minimumNeededSize);
             }
 
-            if (stream.Length >= 7 && file.Take(7).SequenceEqual(PDF))
+            if (stream.Length >= 7 && file.Take(7).SequenceEqual(PDFHeader))
             {
                 mime = "application/pdf";
             }
