@@ -44,7 +44,7 @@ namespace TransIT.API.Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError(e, string.Empty);
+                _logger.LogError(e, e.Message);
                 return StatusCode(500, new ExtendedErrorDTO(e));
             }
         }
@@ -66,7 +66,7 @@ namespace TransIT.API.Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError(e, string.Empty);
+                _logger.LogError(e, e.Message);
                 return StatusCode(500, new ExtendedErrorDTO(e));
             }
         }
@@ -88,7 +88,7 @@ namespace TransIT.API.Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError(e, string.Empty);
+                _logger.LogError(e, e.Message);
                 return StatusCode(500, new ExtendedErrorDTO(e));
             }
         }
@@ -112,7 +112,7 @@ namespace TransIT.API.Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError(e, string.Empty);
+                _logger.LogError(e, e.Message);
                 return StatusCode(500, new ExtendedErrorDTO(e));
             }
         }
@@ -126,7 +126,7 @@ namespace TransIT.API.Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError(e, string.Empty);
+                _logger.LogError(e, e.Message);
                 return StatusCode(500, new ExtendedErrorDTO(e));
             }
         }
@@ -140,7 +140,7 @@ namespace TransIT.API.Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError(e, string.Empty);
+                _logger.LogError(e, e.Message);
                 return StatusCode(500, new ExtendedErrorDTO(e));
             }
         }
@@ -154,7 +154,7 @@ namespace TransIT.API.Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError(e, string.Empty);
+                _logger.LogError(e, e.Message);
                 return StatusCode(500, new ExtendedErrorDTO(e));
             }
         }
@@ -168,7 +168,7 @@ namespace TransIT.API.Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError(e, string.Empty);
+                _logger.LogError(e, e.Message);
                 return StatusCode(500, new ExtendedErrorDTO(e));
             }
         }
@@ -190,7 +190,7 @@ namespace TransIT.API.Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError(e, string.Empty);
+                _logger.LogError(e, e.Message);
                 return StatusCode(500, new ExtendedErrorDTO(e));
             }
         }
@@ -212,7 +212,7 @@ namespace TransIT.API.Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError(e, string.Empty);
+                _logger.LogError(e, e.Message);
                 return StatusCode(500, new ExtendedErrorDTO(e));
             }
         }
@@ -238,7 +238,7 @@ namespace TransIT.API.Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError(e, string.Empty);
+                _logger.LogError(e, e.Message);
                 return StatusCode(500, new ExtendedErrorDTO(e));
             }
         }
@@ -254,7 +254,7 @@ namespace TransIT.API.Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError(e, string.Empty);
+                _logger.LogError(e, e.Message);
                 return StatusCode(500, new ExtendedErrorDTO(e));
             }
         }
