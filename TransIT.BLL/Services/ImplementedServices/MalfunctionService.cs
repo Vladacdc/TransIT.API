@@ -42,6 +42,15 @@ namespace TransIT.BLL.Services.ImplementedServices
             return _mapper.Map<IEnumerable<MalfunctionDTO>>(entities);
         }
 
+
+        public async Task<IEnumerable<MalfunctionDTO>> GetBySubgroupNameAsync(string subgroupName)
+        {
+            var entities = await _unitOfWork.MalfunctionRepository.GetAllAsync(
+                m => m.MalfunctionSubgroup.Name==subgroupName);
+
+            return _mapper.Map<IEnumerable<MalfunctionDTO>>(entities);
+        }
+
         public async Task<IEnumerable<MalfunctionDTO>> SearchAsync(string search)
         {
             var malfunctions = await _unitOfWork.MalfunctionRepository.SearchExpressionAsync(
@@ -73,7 +82,7 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task DeleteAsync(int id)
         {
-            _unitOfWork.MalfunctionRepository.Remove(id);
+            await _unitOfWork.MalfunctionRepository.RemoveAsync(id);
             await _unitOfWork.SaveAsync();
         }
     }

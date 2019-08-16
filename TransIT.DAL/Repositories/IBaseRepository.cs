@@ -8,12 +8,11 @@ namespace TransIT.DAL.Repositories
     public interface IBaseRepository<TEntity> : IQueryRepository<TEntity> where TEntity : class
     {
         Task<TEntity> GetByIdAsync(int id);
-        Task<IEnumerable<TEntity>> GetAllAsync();
-        Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate);
-        Task<IEnumerable<TEntity>> GetRangeAsync(uint index, uint amount);
+        Task<List<TEntity>> GetAllAsync();
+        Task<List<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate);
+        Task<List<TEntity>> GetRangeAsync(uint index, uint amount);
         Task<TEntity> AddAsync(TEntity entity);
-
-        TEntity Remove(params object[] keys);
+        Task<TEntity> RemoveAsync(params object[] keys);
         TEntity Remove(TEntity entity);
         TEntity Update(TEntity entity);
         TEntity UpdateWithIgnoreProperty<TProperty>(TEntity entity,

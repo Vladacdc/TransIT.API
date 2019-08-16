@@ -10,7 +10,7 @@ namespace TransIT.BLL.Mappings
         public UserProfile()
         {
 
-            CreateMap<UserDTO, User>()                
+            CreateMap<UserDTO, User>()
                 .ForMember(u => u.UpdatedById, opt => opt.Ignore())
                 .ForMember(u => u.CreatedById, opt => opt.Ignore())
                 .ForMember(u => u.ModifiedBy, opt => opt.Ignore())
@@ -43,10 +43,11 @@ namespace TransIT.BLL.Mappings
                 .ForMember(u => u.ActionTypeCreate, opt => opt.Ignore())
                 .ForMember(u => u.InverseCreate, opt => opt.Ignore())
                 .ForMember(u => u.SupplierCreate, opt => opt.Ignore())
-                .ForMember(u => u.UserRoles, opt => opt.Ignore()); ;
+                .ForMember(u => u.UserRoles, opt => opt.Ignore());
             CreateMap<User, UserDTO>()
                 .ForMember(u => u.Password, opt => opt.Ignore())
-                .ForMember(u => u.Role, opt => opt.MapFrom(u=>u.UserRoles.FirstOrDefault().Role));
+                .ForMember(u => u.Role, opt => opt.MapFrom(u => u.UserRoles.FirstOrDefault().Role))
+                .ForMember(u => u.Employee, opt => opt.MapFrom(u => u.Employees.FirstOrDefault()));
         }
 
     }

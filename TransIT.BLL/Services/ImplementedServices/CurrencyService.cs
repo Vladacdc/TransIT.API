@@ -73,7 +73,7 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task DeleteAsync(int id)
         {
-            _unitOfWork.CurrencyRepository.Remove(id);
+            await _unitOfWork.CurrencyRepository.RemoveAsync(id);
             await _unitOfWork.SaveAsync();
         }
     }

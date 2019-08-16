@@ -87,6 +87,7 @@ namespace TransIT.BLL.Services.ImplementedServices
             List<User> source = await _unitOfWork.UserManager.Users
                 .Include(u => u.UserRoles)
                 .ThenInclude(ur => ur.Role)
+                .Include(u => u.Employees)
                 .Skip((int)offset)
                 .Take((int)amount)
                 .ToListAsync();

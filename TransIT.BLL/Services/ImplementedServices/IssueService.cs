@@ -104,13 +104,13 @@ namespace TransIT.BLL.Services.ImplementedServices
                 throw new UnauthorizedAccessException("Current user doesn't have access to delete this issue");
             }
 
-            _unitOfWork.IssueRepository.Remove(issueToDelete.Id);
+            await _unitOfWork.IssueRepository.RemoveAsync(issueToDelete.Id);
             await _unitOfWork.SaveAsync();
         }
 
         public async Task DeleteAsync(int id)
         {
-            _unitOfWork.IssueRepository.Remove(id);
+            await _unitOfWork.IssueRepository.RemoveAsync(id);
             await _unitOfWork.SaveAsync();
         }
 

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Logging;
 using TransIT.BLL.DTOs;
 
 namespace TransIT.API.EndpointFilters.OnException
@@ -16,6 +17,7 @@ namespace TransIT.API.EndpointFilters.OnException
                 Error = context.Exception.Message,
                 ServerErrorInfo = new ExtendedErrorDTO(context.Exception)
             };
+
             context.Result = new ObjectResult(responseBody)
             {
                 StatusCode = StatusCodes.Status500InternalServerError
