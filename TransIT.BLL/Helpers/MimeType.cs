@@ -13,15 +13,16 @@ namespace TransIT.BLL.Helpers
         {
             string mime = "application/octet-stream"; //DEFAULT UNKNOWN MIME TYPE
             byte[] file;
+            int blockSize = 256;
 
             using (stream)
             {
-                int minimumNeededSize = (int)((256 < stream.Length) ? 256 : stream.Length);
+                int minimumNeededSize = (int)((blockSize < stream.Length) ? blockSize : stream.Length);
                 file = new byte[minimumNeededSize];
                 stream.Read(file, 0, minimumNeededSize);
             }
 
-            if (stream.Length >= 7 && file.Take(7).SequenceEqual(PDFHeader))
+            if (stream.Length >= PDFHeader.Length && file.Take(PDFHeader.Length).SequenceEqual(PDFHeader))
             {
                 mime = "application/pdf";
             }
