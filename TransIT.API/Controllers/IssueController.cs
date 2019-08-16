@@ -131,7 +131,7 @@ namespace TransIT.API.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "ADMIN")]
+        [Authorize(Roles = "ADMIN,REGISTER")]
         public async Task<IActionResult> Delete(int id)
         {
             await _issueService.DeleteAsync(id);
