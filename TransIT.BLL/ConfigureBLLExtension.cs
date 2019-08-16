@@ -12,6 +12,7 @@ using TransIT.BLL.Services.FilterServices;
 using TransIT.BLL.Services.ImplementedServices;
 using TransIT.BLL.Services.Interfaces;
 using TransIT.DAL;
+using TransIT.DAL.Exceptions;
 
 namespace TransIT.BLL
 {
@@ -109,15 +110,40 @@ namespace TransIT.BLL
             this IServiceCollection services,
             IConfiguration configuration)
         {
-            services.Configure<DocumentServiceOptions>((options) => {
+            services.Configure<DocumentServiceOptions>((options) =>
+            {
+                long maximumSize;
                 var documentServiceOptions = configuration.GetSection(nameof(DocumentServiceOptions));
 
-                //Here Convert class is used instead of parse method,
-                //because when devops specifies incorrect configuration value,
-                //he will see an exception right away.
-                long maxmimumSize = Convert.ToInt64(documentServiceOptions[nameof(options.MaximumSize)]);
+                if (documentServiceOptions.Exists())
+                {
+                    var maximumSizeConfiguration = documentServiceOptions.GetSection(nameof(options.MaximumSize));
 
-                options.MaximumSize = (maxmimumSize > 0) ? maxmimumSize : long.MaxValue;
+                    if (maximumSizeConfiguration.Exists())
+                    {
+                        long bytesInMb = 1024 * 1024;
+
+                        //Here Convert class is used instead of parse method,
+                        //because when devops specifies incorrect configuration value,
+                        //he will see an exception right away.
+                        maximumSize = Convert.ToInt64(maximumSizeConfiguration.Value) * bytesInMb;
+                    }
+                    else
+                    {
+                        maximumSize = Int64.MaxValue;
+                    }
+                }
+                else
+                {
+                    maximumSize = Int64.MaxValue;
+                }
+
+                if (maximumSize <= 0)
+                {
+                    throw new InvalidValueException("Size cannot be zero or negative");
+                }
+
+                options.MaximumSize = maximumSize;
             });
         }
     }
