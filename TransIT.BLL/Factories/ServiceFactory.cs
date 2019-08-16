@@ -33,6 +33,7 @@ namespace TransIT.BLL.Factories
         public IPostService PostService { get; }
 
         public IStateService StateService { get; }
+
         public IStatisticsService StatisticService { get; }
 
         public ISupplierService SupplierService { get; }
