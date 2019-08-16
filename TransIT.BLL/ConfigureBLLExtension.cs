@@ -112,7 +112,7 @@ namespace TransIT.BLL
             services.Configure<DocumentServiceOptions>((options) => {
                 var documentServiceOptions = configuration.GetSection(nameof(DocumentServiceOptions));
 
-                //Here is used Convert class instead of parse method,
+                //Here Convert class is used instead of parse method,
                 //because when devops specifies incorrect configuration value,
                 //he will see an exception right away.
                 long maxmimumSize = Convert.ToInt64(documentServiceOptions[nameof(options.MaximumSize)]);
