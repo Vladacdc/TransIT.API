@@ -139,7 +139,6 @@ namespace TransIT.API.Controllers
             return NoContent();
         }
 
-        [DataTableFilterExceptionFilter]
         [HttpPost("~/api/v1/datatable/[controller]")]
         public override async Task<IActionResult> Filter(DataTableRequestDTO model)
         {

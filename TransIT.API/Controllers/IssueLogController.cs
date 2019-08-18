@@ -138,7 +138,6 @@ namespace TransIT.API.Controllers
             return NoContent();
         }
 
-        [DataTableFilterExceptionFilter]
         [HttpPost(DataTableTemplateIssueLogByIssueUrl)]
         public virtual async Task<IActionResult> Filter(
             int issueId,
