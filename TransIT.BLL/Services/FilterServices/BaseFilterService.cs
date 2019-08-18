@@ -7,6 +7,7 @@ using TransIT.DAL.Repositories;
 
 namespace TransIT.BLL.Services.FilterServices
 {
+    //TODO: Rewrite all filter, this solution causes bugs and bad architecture
     public class BaseFilterService<TEntity, TDto> : IFilterService<TDto>
         where TEntity : class, IAuditableEntity, new()
         where TDto : class, new()

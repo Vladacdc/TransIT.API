@@ -6,8 +6,12 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using TransIT.BLL.DTOs;
 using TransIT.BLL.Services.Interfaces;
+using TransIT.BLL.Exceptions;
+using TransIT.BLL.Helpers;
+using TransIT.BLL.Services.ServicesOptions;
 using TransIT.DAL.Models.Entities;
 using TransIT.DAL.UnitOfWork;
 using TransIT.DAL.FileStorage;
@@ -26,16 +30,24 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         private readonly IMapper _mapper;
 
+        private readonly DocumentServiceOptions _options;
+
         /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="unitOfWork">Unit of work pattern</param>
         /// <param name="mapper">Mapper</param>
-        public DocumentService(IUnitOfWork unitOfWork, IMapper mapper, IFileStorage fileStorage)
+        public DocumentService(
+            IUnitOfWork unitOfWork,
+            IMapper mapper,
+            IFileStorage fileStorage,
+            IOptions<DocumentServiceOptions> options
+            )
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _storageLogger = fileStorage;
+            _options = options.Value;
         }
 
         public async Task<IEnumerable<DocumentDTO>> GetRangeByIssueLogIdAsync(int issueLogId)
@@ -72,25 +84,35 @@ namespace TransIT.BLL.Services.ImplementedServices
         {
             var result = await GetAsync(documentId);
 
-            result.Data = _storageLogger.Download(result.Path);
-
-            var provider = new FileExtensionContentTypeProvider();
-
-            if (!provider.TryGetContentType(Path.GetFileName(result.Path), out string contentType))
+            try
             {
-                contentType = "application/octet-stream";
+            result.Data = _storageLogger.Download(result.Path);
             }
-
-            result.ContentType = contentType;
-
+            catch(Exception ex)
+            {
+                throw new DocumentDownloadException($"Couldn't access file {result.Path}",ex);
+            }
             return result;
         }
 
         public async Task<DocumentDTO> CreateAsync(DocumentDTO dto)
         {
-            var provider = new FileExtensionContentTypeProvider();
+            if (dto.File == null)
+            {
+                throw new EmptyDocumentException();
+            }
+            string contentType;
 
-            _ = provider.TryGetContentType(Path.GetFileName(dto.File.FileName), out string contentType);
+            if (dto.File.Length > _options.MaximumSize)
+            {
+                throw new WrongDocumentSizeException();
+            }
+
+            contentType = MimeType.GetMimeType(dto.File.OpenReadStream());
+            if (contentType != "application/pdf")
+            {
+                throw new DocumentContentException();
+            }
 
             dto.ContentType = contentType;
             dto.Path = _storageLogger.Create(dto.File);
