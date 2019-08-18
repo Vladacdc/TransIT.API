@@ -42,6 +42,11 @@ namespace TransIT.DAL.Models
                 .HasColumnName("NEW_DATE")
                 .HasColumnType("datetime");
 
+            builder.Property(e => e.ContentType)
+                .IsRequired()
+                .HasColumnName("CONTENT_TYPE")
+                .HasMaxLength(500)
+                .IsUnicode(true);
 
             builder.Property(e => e.Path)
                 .IsRequired()
