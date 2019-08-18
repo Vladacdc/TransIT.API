@@ -10,8 +10,17 @@ namespace TransIT.API.EndpointFilters.OnException
 {
     public class DataTableFilterExceptionFilterAttribute : Attribute, IAsyncExceptionFilter
     {
+        private readonly ILogger _logger;
+
+        public DataTableFilterExceptionFilterAttribute(ILoggerFactory loggerFactory)
+        {
+            _logger = loggerFactory.CreateLogger(typeof(DataTableFilterExceptionFilterAttribute).Name);
+        }
+
         public Task OnExceptionAsync(ExceptionContext context)
         {
+            _logger.LogError(context.Exception, context.Exception.Message);
+
             var responseBody = new DataTableResponseDTO
             {
                 Error = context.Exception.Message,
