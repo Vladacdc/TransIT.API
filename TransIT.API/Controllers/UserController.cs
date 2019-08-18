@@ -66,7 +66,6 @@ namespace TransIT.API.Controllers
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] uint offset = 0, uint amount = 1000)
         {
-            throw new Exception("Hello from User controller");
             try
             {
                 switch (User.FindFirst(RoleNames.Schema)?.Value)
