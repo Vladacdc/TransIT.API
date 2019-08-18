@@ -24,7 +24,7 @@ namespace TransIT.API.Controllers
     [Authorize(Roles = "ENGINEER,REGISTER,ANALYST")]
     public class IssueController : FilterController<IssueDTO>
     {
-        private readonly IUserService _userService; 
+        private readonly IUserService _userService;
         private readonly IIssueService _issueService;
         private readonly IFilterService<IssueDTO> _filterService;
         private readonly IHubContext<IssueHub> _issueHub;
@@ -44,91 +44,55 @@ namespace TransIT.API.Controllers
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] uint offset = 0, uint amount = 1000)
         {
-            try
+            switch (User.FindFirst(RoleNames.Schema)?.Value)
             {
-                switch (User.FindFirst(RoleNames.Schema)?.Value)
-                {
-                    case RoleNames.Register:
-                        return Json(await GetForCustomer(offset, amount));
-                    case RoleNames.Engineer:
-                    case RoleNames.Analyst:
-                        return Json(await GetIssues(offset, amount));
-                    default:
-                        return null;
-                }
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, e.Message);
+                case RoleNames.Register:
+                    return Json(await GetForCustomer(offset, amount));
+                case RoleNames.Engineer:
+                case RoleNames.Analyst:
+                    return Json(await GetIssues(offset, amount));
+                default:
+                    return null;
             }
         }
 
         [HttpGet("{id}")]
         public virtual async Task<IActionResult> Get(int id)
         {
-            try
-            {
-                var result = await _issueService.GetAsync(id);
-                return result != null
-                    ? Json(result)
-                    : null;
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, e.Message);
-            }
-
+            var result = await _issueService.GetAsync(id);
+            return result != null
+                ? Json(result)
+                : null;
         }
 
         [HttpGet("/search")]
         public virtual async Task<IActionResult> Get([FromQuery] string search)
         {
-            try
-            {
-                var result = await _issueService.SearchAsync(search);
-                return result != null
-                    ? Json(result)
-                    : null;
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, e.Message);
-            }
+            var result = await _issueService.SearchAsync(search);
+            return result != null
+                ? Json(result)
+                : null;
         }
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] IssueDTO obj)
         {
-            try
-            {
-                var createdEntity = await _issueService.CreateAsync(obj);
-                await _issueHub.Clients.Group(RoleNames.Engineer).SendAsync("ReceiveIssues");
-                return createdEntity != null
-                    ? CreatedAtAction(nameof(Create), createdEntity)
-                    : null;
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
+            var createdEntity = await _issueService.CreateAsync(obj);
+            await _issueHub.Clients.Group(RoleNames.Engineer).SendAsync("ReceiveIssues");
+            return createdEntity != null
+                ? CreatedAtAction(nameof(Create), createdEntity)
+                : null;
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] IssueDTO obj)
         {
-            try
-            {
-                obj.Id = id;
+            obj.Id = id;
 
-                var result = await _issueService.UpdateAsync(obj);
-                return result != null
-                    ? NoContent()
-                    : null;
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
+            var result = await _issueService.UpdateAsync(obj);
+            return result != null
+                ? NoContent()
+                : null;
         }
 
         [HttpDelete("{id}")]

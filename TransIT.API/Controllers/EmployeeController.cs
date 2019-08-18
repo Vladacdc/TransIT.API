@@ -30,66 +30,42 @@ namespace TransIT.API.Controllers
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] uint offset = 0, uint amount = 1000)
         {
-            try
+            var result = await _employeeService.GetRangeAsync(offset, amount);
+            if (result != null)
             {
-                var result = await _employeeService.GetRangeAsync(offset, amount);
-                if (result != null)
-                {
-                    return Json(result);
-                }
-                else
-                {
-                    return null;
-                }
+                return Json(result);
             }
-            catch (Exception e)
+            else
             {
-                _logger.LogError(e, e.Message);
-                return StatusCode(500, new ExtendedErrorDTO(e));
+                return null;
             }
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            try
+            var result = await _employeeService.GetAsync(id);
+            if (result != null)
             {
-                var result = await _employeeService.GetAsync(id);
-                if (result != null)
-                {
-                    return Json(result);
-                }
-                else
-                {
-                    return null;
-                }
+                return Json(result);
             }
-            catch (Exception e)
+            else
             {
-                _logger.LogError(e, e.Message);
-                return StatusCode(500, new ExtendedErrorDTO(e));
+                return null;
             }
         }
 
         [HttpGet("/search")]
         public async Task<IActionResult> Get([FromQuery] string search)
         {
-            try
+            var result = await _employeeService.SearchAsync(search);
+            if (result != null)
             {
-                var result = await _employeeService.SearchAsync(search);
-                if (result != null)
-                {
-                    return Json(result);
-                }
-                else
-                {
-                    return null;
-                }
+                return Json(result);
             }
-            catch (Exception e)
+            else
             {
-                _logger.LogError(e, e.Message);
-                return StatusCode(500, new ExtendedErrorDTO(e));
+                return null;
             }
         }
 
@@ -97,123 +73,67 @@ namespace TransIT.API.Controllers
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Create([FromBody] EmployeeDTO employeeDTO)
         {
-            try
-            {
-                var createdDTO = await _employeeService.CreateAsync(employeeDTO);
+            var createdDTO = await _employeeService.CreateAsync(employeeDTO);
 
-                if (createdDTO != null)
-                {
-                    return CreatedAtAction(nameof(Create), createdDTO);
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            catch (Exception e)
+            if (createdDTO != null)
             {
-                _logger.LogError(e, e.Message);
-                return StatusCode(500, new ExtendedErrorDTO(e));
+                return CreatedAtAction(nameof(Create), createdDTO);
+            }
+            else
+            {
+                return null;
             }
         }
 
         [HttpGet("boardnumber/{number}")]
         public async Task<IActionResult> GetByBoardNumber(int number)
         {
-            try
-            {
-                return Ok(await _employeeService.GetByBoardNumberAsync(number));
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, e.Message);
-                return StatusCode(500, new ExtendedErrorDTO(e));
-            }
+            return Ok(await _employeeService.GetByBoardNumberAsync(number));
         }
 
         [HttpGet("boardnumbers")]
         public async Task<IActionResult> GetBoardNumbers()
         {
-            try
-            {
-                return Ok(await _employeeService.GetBoardNumbersAsync());
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, e.Message);
-                return StatusCode(500, new ExtendedErrorDTO(e));
-            }
+            return Ok(await _employeeService.GetBoardNumbersAsync());
         }
 
         [HttpGet("attach/users")]
         public async Task<IActionResult> GetNotAttachedUsers()
         {
-            try
-            {
-                return Ok(await _employeeService.GetNotAttachedUsersAsync());
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, e.Message);
-                return StatusCode(500, new ExtendedErrorDTO(e));
-            }
+            return Ok(await _employeeService.GetNotAttachedUsersAsync());
         }
 
         [HttpGet("attach/{userId}")]
         public async Task<IActionResult> GetEmployeeForUserAsync([FromRoute] string userId)
         {
-            try
-            {
-                return Ok(await _employeeService.GetEmployeeForUserAsync(userId));
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, e.Message);
-                return StatusCode(500, new ExtendedErrorDTO(e));
-            }
+            return Ok(await _employeeService.GetEmployeeForUserAsync(userId));
         }
 
         [HttpPost("attach/{employee}/{user}")]
         public async Task<IActionResult> AttachUserToEmployee([FromRoute] int employee, [FromRoute] string user)
         {
-            try
+            var attachResult = await _employeeService.AttachUserAsync(employee, user);
+            if (attachResult == null)
             {
-                var attachResult = await _employeeService.AttachUserAsync(employee, user);
-                if (attachResult == null)
-                {
-                    return BadRequest("Cannot attach user or user doesn't exist");
-                }
-                else
-                {
-                    return Ok(attachResult);
-                }
+                return BadRequest("Cannot attach user or user doesn't exist");
             }
-            catch (Exception e)
+            else
             {
-                _logger.LogError(e, e.Message);
-                return StatusCode(500, new ExtendedErrorDTO(e));
+                return Ok(attachResult);
             }
         }
 
         [HttpDelete("attach/{employee}")]
         public async Task<IActionResult> RemoveUserFromEmployee([FromRoute] int employee)
         {
-            try
+            var deleteResult = await _employeeService.RemoveUserAsync(employee);
+            if (deleteResult != null)
             {
-                var deleteResult = await _employeeService.RemoveUserAsync(employee);
-                if (deleteResult != null)
-                {
-                    return NoContent();
-                }
-                else
-                {
-                    return BadRequest("Employee doesn't exist");
-                }
+                return NoContent();
             }
-            catch (Exception e)
+            else
             {
-                _logger.LogError(e, e.Message);
-                return StatusCode(500, new ExtendedErrorDTO(e));
+                return BadRequest("Employee doesn't exist");
             }
         }
 
@@ -221,25 +141,17 @@ namespace TransIT.API.Controllers
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Update(int id, [FromBody] EmployeeDTO employeeDTO)
         {
-            try
+            employeeDTO.Id = id;
+
+            var result = await _employeeService.UpdateAsync(employeeDTO);
+
+            if (result != null)
             {
-                employeeDTO.Id = id;
-
-                var result = await _employeeService.UpdateAsync(employeeDTO);
-
-                if (result != null)
-                {
-                    return NoContent();
-                }
-                else
-                {
-                    return null;
-                }
+                return NoContent();
             }
-            catch (Exception e)
+            else
             {
-                _logger.LogError(e, e.Message);
-                return StatusCode(500, new ExtendedErrorDTO(e));
+                return null;
             }
         }
 
@@ -247,16 +159,8 @@ namespace TransIT.API.Controllers
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Delete(int id)
         {
-            try
-            {
-                await _employeeService.DeleteAsync(id);
-                return NoContent();
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, e.Message);
-                return StatusCode(500, new ExtendedErrorDTO(e));
-            }
+            await _employeeService.DeleteAsync(id);
+            return NoContent();
         }
     }
 }

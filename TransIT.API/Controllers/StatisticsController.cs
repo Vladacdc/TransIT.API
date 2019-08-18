@@ -26,70 +26,42 @@ namespace TransIT.API.Controllers
         [Route("countMalfunction")]
         public async Task<IActionResult> CountMalfunction(string malfunctionName, string vehicleTypeName)
         {
-            try
-            {
-                int result = await _statisticsService.CountMalfunction(malfunctionName, vehicleTypeName);
+            int result = await _statisticsService.CountMalfunction(malfunctionName, vehicleTypeName);
 
-                return Json(result);
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, e.Message);
-            }
+            return Json(result);
         }
 
         [HttpGet]
         [Route("countMalfunctionSubgroup")]
         public async Task<IActionResult> CountMalfunctionSubgroup(string malfunctionSubgroupName, string vehicleTypeName)
         {
-            try
-            {
-                int result = await _statisticsService.CountMalfunctionSubGroup(malfunctionSubgroupName, vehicleTypeName);
+            int result = await _statisticsService.CountMalfunctionSubGroup(malfunctionSubgroupName, vehicleTypeName);
 
-                return Json(result);
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, e.Message);
-            }
+            return Json(result);
         }
 
         [HttpGet]
         [Route("countMalfunctionGroup")]
         public async Task<IActionResult> CountMalfunctionGroup(string malfunctionGroupName, string vehicleTypeName)
         {
-            try
-            {
-                int result = await _statisticsService.CountMalfunctionGroup(malfunctionGroupName, vehicleTypeName);
+            int result = await _statisticsService.CountMalfunctionGroup(malfunctionGroupName, vehicleTypeName);
 
-                return Json(result);
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, e.Message);
-            }
+            return Json(result);
         }
 
         [HttpGet]
         [Route("malfunctionStatistics")]
         public async Task<IActionResult> GetMalfunctionStatistics(string malfunctionName)
         {
-            try
-            {
-                var result = await _statisticsService.GetMalfunctionStatistics(malfunctionName);
+            var result = await _statisticsService.GetMalfunctionStatistics(malfunctionName);
 
-                if (result != null)
-                {
-                    return Json(result);
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            catch (Exception e)
+            if (result != null)
             {
-                return StatusCode(500, e.Message);
+                return Json(result);
+            }
+            else
+            {
+                return null;
             }
         }
 
@@ -97,22 +69,15 @@ namespace TransIT.API.Controllers
         [Route("malfunctionGroupStatistics")]
         public async Task<IActionResult> GetMalfunctionGroupStatistics(string malfunctionGroupName)
         {
-            try
-            {
-                var result = await _statisticsService.GetMalfunctionGroupStatistics(malfunctionGroupName);
+            var result = await _statisticsService.GetMalfunctionGroupStatistics(malfunctionGroupName);
 
-                if (result != null)
-                {
-                    return Json(result);
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            catch (Exception e)
+            if (result != null)
             {
-                return StatusCode(500, e.Message);
+                return Json(result);
+            }
+            else
+            {
+                return null;
             }
         }
 
@@ -120,22 +85,15 @@ namespace TransIT.API.Controllers
         [Route("malfunctionSubgroupStatistics")]
         public async Task<IActionResult> GetMalfunctionSubGroupStatistics(string malfunctionSubGroupName)
         {
-            try
-            {
-                var result = await _statisticsService.GetMalfunctionSubGroupStatistics(malfunctionSubGroupName);
+            var result = await _statisticsService.GetMalfunctionSubGroupStatistics(malfunctionSubGroupName);
 
-                if (result != null)
-                {
-                    return Json(result);
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            catch (Exception e)
+            if (result != null)
             {
-                return StatusCode(500, e.Message);
+                return Json(result);
+            }
+            else
+            {
+                return null;
             }
         }
 
@@ -143,22 +101,15 @@ namespace TransIT.API.Controllers
         [Route("allMalfunctionsStatistics")]
         public async Task<IActionResult> GetAllMalfunctionsStatistics(string malfunctionSubgroupName)
         {
-            try
-            {
-                var result = await _statisticsService.GetAllMalfunctionsStatistics(malfunctionSubgroupName);
+            var result = await _statisticsService.GetAllMalfunctionsStatistics(malfunctionSubgroupName);
 
-                if (result != null)
-                {
-                    return Json(result);
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            catch (Exception e)
+            if (result != null)
             {
-                return StatusCode(500, e.Message);
+                return Json(result);
+            }
+            else
+            {
+                return null;
             }
         }
 
@@ -166,22 +117,15 @@ namespace TransIT.API.Controllers
         [Route("allMalfunctionGroupsStatistics")]
         public async Task<IActionResult> GetAllMalfunctionGroupsStatistics()
         {
-            try
-            {
-                var result = await _statisticsService.GetAllGroupsStatistics();
+            var result = await _statisticsService.GetAllGroupsStatistics();
 
-                if (result != null)
-                {
-                    return Json(result);
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            catch (Exception e)
+            if (result != null)
             {
-                return StatusCode(500, e.Message);
+                return Json(result);
+            }
+            else
+            {
+                return null;
             }
         }
 
@@ -189,22 +133,15 @@ namespace TransIT.API.Controllers
         [Route("allMalfunctionSubgroupsStatistics")]
         public async Task<IActionResult> GetAllMalfunctionSubgroupsStatistics(string malfunctionGroupName)
         {
-            try
-            {
-                var result = await _statisticsService.GetAllSubgroupsStatistics(malfunctionGroupName);
+            var result = await _statisticsService.GetAllSubgroupsStatistics(malfunctionGroupName);
 
-                if (result != null)
-                {
-                    return Json(result);
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            catch (Exception e)
+            if (result != null)
             {
-                return StatusCode(500, e.Message);
+                return Json(result);
+            }
+            else
+            {
+                return null;
             }
         }
     }

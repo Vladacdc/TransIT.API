@@ -27,63 +27,42 @@ namespace TransIT.API.Controllers
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] uint offset = 0, uint amount = 1000)
         {
-            try
+            var result = await _vehicleTypeService.GetRangeAsync(offset, amount);
+            if (result != null)
             {
-                var result = await _vehicleTypeService.GetRangeAsync(offset, amount);
-                if (result != null)
-                {
-                    return Json(result);
-                }
-                else
-                {
-                    return null;
-                }
+                return Json(result);
             }
-            catch (Exception e)
+            else
             {
-                return StatusCode(500, e.Message);
+                return null;
             }
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            try
+            var result = await _vehicleTypeService.GetAsync(id);
+            if (result != null)
             {
-                var result = await _vehicleTypeService.GetAsync(id);
-                if (result != null)
-                {
-                    return Json(result);
-                }
-                else
-                {
-                    return null;
-                }
+                return Json(result);
             }
-            catch (Exception e)
+            else
             {
-                return StatusCode(500, e.Message);
+                return null;
             }
         }
 
         [HttpGet("/search")]
         public async Task<IActionResult> Get([FromQuery] string search)
         {
-            try
+            var result = await _vehicleTypeService.SearchAsync(search);
+            if (result != null)
             {
-                var result = await _vehicleTypeService.SearchAsync(search);
-                if (result != null)
-                {
-                    return Json(result);
-                }
-                else
-                {
-                    return null;
-                }
+                return Json(result);
             }
-            catch (Exception e)
+            else
             {
-                return StatusCode(500, e.Message);
+                return null;
             }
         }
 
@@ -91,21 +70,14 @@ namespace TransIT.API.Controllers
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Create([FromBody] VehicleTypeDTO vehicleTypeDto)
         {
-            try
+            var createdDto = await _vehicleTypeService.CreateAsync(vehicleTypeDto);
+            if (createdDto != null)
             {
-                var createdDto = await _vehicleTypeService.CreateAsync(vehicleTypeDto);
-                if (createdDto != null)
-                {
-                    return CreatedAtAction(nameof(Create), createdDto);
-                }
-                else
-                {
-                    return null;
-                }
+                return CreatedAtAction(nameof(Create), createdDto);
             }
-            catch (Exception e)
+            else
             {
-                throw e;
+                return null;
             }
         }
 
@@ -113,24 +85,17 @@ namespace TransIT.API.Controllers
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Update(int id, [FromBody] VehicleTypeDTO vehicleTypeDto)
         {
-            try
+            vehicleTypeDto.Id = id;
+
+            var result = await _vehicleTypeService.UpdateAsync(vehicleTypeDto);
+
+            if (result != null)
             {
-                vehicleTypeDto.Id = id;
-
-                var result = await _vehicleTypeService.UpdateAsync(vehicleTypeDto);
-
-                if (result != null)
-                {
-                    return NoContent();
-                }
-                else
-                {
-                    return null;
-                }
+                return NoContent();
             }
-            catch (Exception e)
+            else
             {
-                throw e;
+                return null;
             }
         }
 

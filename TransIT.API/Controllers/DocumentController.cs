@@ -28,22 +28,15 @@ namespace TransIT.API.Controllers
         [HttpGet("~/api/v1/IssueLog/{issueLogId}/Document")]
         public async Task<IActionResult> GetByIssueLog(int issueLogId)
         {
-            try
-            {
-                var result = await _documentService.GetRangeByIssueLogIdAsync(issueLogId);
+            var result = await _documentService.GetRangeByIssueLogIdAsync(issueLogId);
 
-                if (result != null)
-                {
-                    return Json(result);
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            catch (Exception e)
+            if (result != null)
             {
-                return StatusCode(500, e.Message);
+                return Json(result);
+            }
+            else
+            {
+                return null;
             }
         }
 

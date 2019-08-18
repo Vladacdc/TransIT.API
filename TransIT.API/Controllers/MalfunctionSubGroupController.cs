@@ -27,102 +27,60 @@ namespace TransIT.API.Controllers
         [HttpGet]
         public virtual async Task<IActionResult> Get([FromQuery] uint offset = 0, uint amount = 1000)
         {
-            try
-            {
-                var result = await _malfunctionSubgroupService.GetRangeAsync(offset, amount);
-                return result != null
-                    ? Json(result)
-                    : null;
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, e.Message);
-            }
+            var result = await _malfunctionSubgroupService.GetRangeAsync(offset, amount);
+            return result != null
+                ? Json(result)
+                : null;
         }
 
         [HttpGet("{id}")]
         public virtual async Task<IActionResult> Get(int id)
         {
-            try
-            {
-                var result = await _malfunctionSubgroupService.GetAsync(id);
-                return result != null
-                    ? Json(result)
-                    : null;
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, e.Message);
-            }
+            var result = await _malfunctionSubgroupService.GetAsync(id);
+            return result != null
+                ? Json(result)
+                : null;
         }
 
         [HttpGet("/search")]
         public virtual async Task<IActionResult> Get([FromQuery] string search)
         {
-            try
-            {
-                var result = await _malfunctionSubgroupService.SearchAsync(search);
-                return result != null
-                    ? Json(result)
-                    : null;
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, e.Message);
-            }
+            var result = await _malfunctionSubgroupService.SearchAsync(search);
+            return result != null
+                ? Json(result)
+                : null;
         }
 
         [HttpGet]
         [Route("getbygroupname")]
         public async Task<IActionResult> GetByGroupName(string groupName)
         {
-            try
-            {
-                var result = await _malfunctionSubgroupService.GetByGroupNameAsync(groupName);
-                return result != null
-                    ? Json(result)
-                    : null;
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, e.Message);
-            }
+            var result = await _malfunctionSubgroupService.GetByGroupNameAsync(groupName);
+            return result != null
+                ? Json(result)
+                : null;
         }
 
         [HttpPost]
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Create([FromBody] MalfunctionSubgroupDTO obj)
         {
-            try
-            {
-                var createdEntity = await _malfunctionSubgroupService.CreateAsync(obj);
-                return createdEntity != null
-                    ? CreatedAtAction(nameof(Create), createdEntity)
-                    : null;
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
+            var createdEntity = await _malfunctionSubgroupService.CreateAsync(obj);
+            return createdEntity != null
+                ? CreatedAtAction(nameof(Create), createdEntity)
+                : null;
         }
 
         [HttpPut("{id}")]
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Update(int id, [FromBody] MalfunctionSubgroupDTO obj)
         {
-            try
-            {
-                obj.Id = id;
+            obj.Id = id;
 
-                var result = await _malfunctionSubgroupService.UpdateAsync(obj);
-                return result != null
-                    ? NoContent()
-                    : null;
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
+            var result = await _malfunctionSubgroupService.UpdateAsync(obj);
+            return result != null
+                ? NoContent()
+                : null;
         }
 
         [HttpDelete("{id}")]
