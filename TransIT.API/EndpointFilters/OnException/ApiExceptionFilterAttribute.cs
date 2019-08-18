@@ -18,11 +18,6 @@ namespace TransIT.API.EndpointFilters.OnException
 
         public override void OnException(ExceptionContext context)
         {
-            if (_hostingEnvironment.IsDevelopment())
-            {
-                return;
-            }
-
             context.Result = new ObjectResult(new ExtendedErrorDTO(context.Exception))
             {
                 StatusCode = StatusCodes.Status500InternalServerError
