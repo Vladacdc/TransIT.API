@@ -54,6 +54,8 @@ namespace TransIT.DAL.UnitOfWork
 
         public IUnitRepository UnitRepository { get; }
 
+        public IManufacturerRepository ManufacturerRepository { get; }
+
         public UnitOfWork(
             TransITDBContext context,
             IActionTypeRepository actionTypeRepository,
@@ -77,7 +79,8 @@ namespace TransIT.DAL.UnitOfWork
             IUserRepository userRepository,
             RoleManager<Role> roleManager,
             UserManager<User> userManager, 
-            IUnitRepository unitRepository)
+            IUnitRepository unitRepository, 
+            IManufacturerRepository manufacturerRepository)
         {
             _context = context;
             ActionTypeRepository = actionTypeRepository;
@@ -102,6 +105,7 @@ namespace TransIT.DAL.UnitOfWork
             RoleManager = roleManager;
             UserManager = userManager;
             UnitRepository = unitRepository;
+            ManufacturerRepository = manufacturerRepository;
         }
 
         public Task<int> SaveAsync()

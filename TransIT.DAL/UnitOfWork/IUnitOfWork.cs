@@ -51,6 +51,8 @@ namespace TransIT.DAL.UnitOfWork
 
         IUnitRepository UnitRepository { get; }
 
+        IManufacturerRepository ManufacturerRepository { get; }
+
         Task<int> SaveAsync();
     }
 }

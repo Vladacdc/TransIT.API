@@ -3,15 +3,14 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using TransIT.DAL.Exceptions;
+using TransIT.DAL.FileStorage;
 using TransIT.DAL.Models;
 using TransIT.DAL.Models.Entities;
 using TransIT.DAL.Repositories;
 using TransIT.DAL.Repositories.ImplementedRepositories;
 using TransIT.DAL.Repositories.InterfacesRepositories;
 using TransIT.DAL.UnitOfWork;
-using TransIT.DAL.FileStorage;
-using TransIT.DAL.Exceptions;
-using System;
 
 namespace TransIT.DAL
 {
@@ -55,6 +54,7 @@ namespace TransIT.DAL
             services.AddScoped<UserManager<User>>();
             services.AddScoped<RoleManager<Role>>();
             services.AddScoped<IUnitRepository, UnitRepository>();
+            services.AddScoped<IManufacturerRepository, ManufacturerRepository>();
         }
 
         private static void ConfigureQueryRepositories(this IServiceCollection services)
@@ -79,6 +79,7 @@ namespace TransIT.DAL
             services.AddScoped<IQueryRepository<Location>, LocationRepository>();
             services.AddScoped<IQueryRepository<User>, UserQueryRepository>();
             services.AddScoped<IQueryRepository<Unit>, UnitRepository>();
+            services.AddScoped<IQueryRepository<Manufacturer>, ManufacturerRepository>();
         }
 
         private static void ConfigureDbContext(
@@ -87,8 +88,8 @@ namespace TransIT.DAL
         {
             void ConfigureConnection(DbContextOptionsBuilder options)
             {
-                    options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
-                        b => b.MigrationsAssembly("TransIT.API"));
+                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
+                    b => b.MigrationsAssembly("TransIT.API"));
             }
 
             services.AddDbContext<TransITDBContext>(ConfigureConnection);

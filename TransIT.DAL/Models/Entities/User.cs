@@ -148,8 +148,12 @@ namespace TransIT.DAL.Models.Entities
 
         public virtual ICollection<VehicleType> VehicleTypeMod { get; set; }
 
-        public ICollection<Unit> UnitCreate { get; set; }
+        public virtual ICollection<Unit> UnitCreate { get; set; }
 
-        public ICollection<Unit> UnitMod { get; set; }
+        public virtual ICollection<Unit> UnitMod { get; set; }
+
+        public virtual ICollection<Manufacturer> ManufacturerCreate { get; set; }
+
+        public virtual ICollection<Manufacturer> ManufacturerMod { get; set; }
     }
 }
