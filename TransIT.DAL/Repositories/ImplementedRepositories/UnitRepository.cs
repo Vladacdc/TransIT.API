@@ -22,10 +22,9 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
             foreach (var keyword in strArr)
             {
                 predicate = predicate.And(entity =>
-                    EF.Functions.Like(entity.Name, '%' + keyword + '%')
-                ).And(entity =>
+                    EF.Functions.Like(entity.Name, '%' + keyword + '%') ||
                     EF.Functions.Like(entity.ShortName, "%" + keyword + "%")
-                );
+                    );
             }
 
             return Task.FromResult(

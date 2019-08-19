@@ -35,6 +35,7 @@ namespace TransIT.BLL.Factories
         IStateService StateService { get; }
 
         IStatisticsService StatisticService { get; }
+
         ISupplierService SupplierService { get; }
 
         ITransitionService TransitionService { get; }
@@ -44,5 +45,7 @@ namespace TransIT.BLL.Factories
         IVehicleService VehicleService { get; }
 
         IVehicleTypeService VehicleTypeService { get; }
+
+        IUnitService UnitService { get; }
     }
 }

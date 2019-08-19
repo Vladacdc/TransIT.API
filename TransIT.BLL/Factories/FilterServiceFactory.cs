@@ -43,6 +43,8 @@ namespace TransIT.BLL.Factories
 
         public IFilterService<VehicleTypeDTO> VehicleTypeFilterService { get; }
 
+        public IFilterService<UnitDTO> UnitFilterService { get; }
+
         public IFilterService<TEntityDTO> GetService<TEntityDTO>() where TEntityDTO : class, new()
         {
             switch (typeof(TEntityDTO).Name)
@@ -142,6 +144,11 @@ namespace TransIT.BLL.Factories
                     return (IFilterService<TEntityDTO>) VehicleTypeFilterService;
                 }
 
+                case nameof(UnitDTO):
+                {
+                    return (IFilterService<TEntityDTO>) UnitFilterService;
+                }
+
                 default:
                 {
                     return null;
@@ -167,7 +174,8 @@ namespace TransIT.BLL.Factories
             IFilterService<TransitionDTO> transitionFilterService,
             IFilterService<UserDTO> userFilterService,
             IFilterService<VehicleDTO> vehicleFilterService,
-            IFilterService<VehicleTypeDTO> vehicleTypeFilterService)
+            IFilterService<VehicleTypeDTO> vehicleTypeFilterService, 
+            IFilterService<UnitDTO> unitFilterService)
         {
             ActionTypeFilterService = actionTypeFilterService;
             BillFilterService = billFilterService;
@@ -188,6 +196,7 @@ namespace TransIT.BLL.Factories
             UserFilterService = userFilterService;
             VehicleFilterService = vehicleFilterService;
             VehicleTypeFilterService = vehicleTypeFilterService;
+            UnitFilterService = unitFilterService;
         }
     }
 }

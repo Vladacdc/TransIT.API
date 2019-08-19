@@ -54,6 +54,7 @@ namespace TransIT.BLL
             services.AddScoped<ITransitionService, TransitionService>();
             services.AddScoped<ILocationService, LocationService>();
             services.AddScoped<IStatisticsService, StatisticsService>();
+            services.AddScoped<IUnitService, UnitService>();
         }
 
         private static void ConfigureFilterServices(this IServiceCollection services)
@@ -77,6 +78,7 @@ namespace TransIT.BLL
             services.AddScoped<IFilterService<TransitionDTO>, TransitionFilterService>();
             services.AddScoped<IFilterService<LocationDTO>, LocationFilterService>();
             services.AddScoped<IFilterService<UserDTO>, UserFilterService>();
+            services.AddScoped<IFilterService<UnitDTO>, UnitFilterService>();
         }
 
         private static void ConfigureAutoMapper(this IServiceCollection services)
@@ -103,6 +105,7 @@ namespace TransIT.BLL
                 c.AddProfile(new EmployeeProfile());
                 c.AddProfile(new TransitionProfile());
                 c.AddProfile(new LocationProfile());
+                c.AddProfile(new UnitProfile());
             }).CreateMapper());
         }
 
