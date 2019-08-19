@@ -77,6 +77,7 @@ namespace TransIT.BLL
             services.AddScoped<IFilterService<TransitionDTO>, TransitionFilterService>();
             services.AddScoped<IFilterService<LocationDTO>, LocationFilterService>();
             services.AddScoped<IFilterService<UserDTO>, UserFilterService>();
+            services.AddScoped<IFilterService<PartInDTO>, PartsInFilterService>();
         }
 
         private static void ConfigureAutoMapper(this IServiceCollection services)
@@ -103,6 +104,7 @@ namespace TransIT.BLL
                 c.AddProfile(new EmployeeProfile());
                 c.AddProfile(new TransitionProfile());
                 c.AddProfile(new LocationProfile());
+                c.AddProfile(new PartInProfile());
             }).CreateMapper());
         }
 

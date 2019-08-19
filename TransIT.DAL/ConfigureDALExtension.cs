@@ -52,6 +52,7 @@ namespace TransIT.DAL
             services.AddScoped<ITransitionRepository, TransitionRepository>();
             services.AddScoped<ILocationRepository, LocationRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IPartsInRepository, PartsInRepository>();
             services.AddScoped<UserManager<User>>();
             services.AddScoped<RoleManager<Role>>();
         }
@@ -77,6 +78,7 @@ namespace TransIT.DAL
             services.AddScoped<IQueryRepository<Transition>, TransitionRepository>();
             services.AddScoped<IQueryRepository<Location>, LocationRepository>();
             services.AddScoped<IQueryRepository<User>, UserQueryRepository>();
+            services.AddScoped<IQueryRepository<PartIn>, PartsInRepository>();
         }
 
         private static void ConfigureDbContext(

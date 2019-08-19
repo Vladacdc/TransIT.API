@@ -43,6 +43,8 @@ namespace TransIT.DAL.UnitOfWork
 
         ILocationRepository LocationRepository { get; }
 
+        IPartsInRepository PartsInRepository { get; }
+
         IUserRepository UserRepository { get; }
 
         RoleManager<Role> RoleManager { get; }
