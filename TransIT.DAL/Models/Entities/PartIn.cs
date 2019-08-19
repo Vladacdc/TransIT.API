@@ -14,6 +14,10 @@ namespace TransIT.DAL.Models.Entities
         public uint Amount { get; set; }
         public float Price { get; set; }
         public DateTime ArrivalDate { get; set; }
+
+        /// <summary>
+        /// Номер партії.
+        /// </summary>
         public string Batch { get; set; }
         public int? UnitId { get; set; }
         public int? PartId { get; set; }

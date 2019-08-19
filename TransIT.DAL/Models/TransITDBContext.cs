@@ -115,6 +115,7 @@ namespace TransIT.DAL.Models
             modelBuilder.ApplyConfiguration(new VehicleConfiguration());
             modelBuilder.ApplyConfiguration(new VehicleTypeConfiguration());
             modelBuilder.ApplyConfiguration(new UserRoleConfiguration());
+            modelBuilder.ApplyConfiguration(new PartsInConfiguration());
             #endregion
         }
     }

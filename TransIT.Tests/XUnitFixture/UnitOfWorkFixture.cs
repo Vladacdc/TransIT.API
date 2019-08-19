@@ -67,6 +67,7 @@ namespace TransIT.Tests
                 new TransitionRepository(transITDBContext),
                 new LocationRepository(transITDBContext),
                 new UserRepository(transITDBContext),
+                new PartsInRepository(transITDBContext),
                 MockHelpers.TestRoleManager(roleStore),
                 MockHelpers.TestUserManager(userStore)
             );

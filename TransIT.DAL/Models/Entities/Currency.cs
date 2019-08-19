@@ -23,5 +23,6 @@ namespace TransIT.DAL.Models.Entities
         public virtual User Mod { get; set; }
         
         public virtual ICollection<Supplier> Supplier { get; set; }
+        public virtual ICollection<PartIn> PartInNavigation { get; set; }
     }
 }

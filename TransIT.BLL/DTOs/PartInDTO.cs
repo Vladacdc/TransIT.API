@@ -4,14 +4,37 @@ namespace TransIT.BLL.DTOs
 {
     public class PartInDTO
     {
+        private uint amount;
+        private float price;
+
         public PartInDTO()
         {
 
         }
 
         public int Id { get; set; }
-        public uint Amount { get; set; }
-        public float Price { get; set; }
+        public uint Amount
+        {
+            get => amount;
+            set
+            {
+                if (value == 0)
+                    throw new ArgumentOutOfRangeException("Only positive values are accepted", nameof(Amount));
+                amount = value;
+            }
+        }
+        public float Price
+        {
+            get => price;
+            set
+            {
+                if (value <= 0)
+                {
+                    throw new ArgumentOutOfRangeException("Only positive values are accepted", nameof(Price));
+                }
+                price = value;
+            }
+        }
         public DateTime ArrivalDate { get; set; }
         public string Batch { get; set; }
         public int? UnitId { get; set; }
