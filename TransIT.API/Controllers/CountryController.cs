@@ -27,112 +27,34 @@ namespace TransIT.API.Controllers
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] uint offset = 0, uint amount = 1000)
         {
-            try
-            {
-                var result = await _countryService.GetRangeAsync(offset, amount);
-                if (result != null)
-                {
-                    return Json(result);
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            catch(Exception e)
-            {
-                return StatusCode(500, e.Message);
-            }
+            return Json(await _countryService.GetRangeAsync(offset, amount));
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            try
-            {
-                var result = await _countryService.GetAsync(id);
-                if (result != null)
-                {
-                    return Json(result);
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, e.Message);
-            }
+            return Json(await _countryService.GetAsync(id));
         }
 
         [HttpGet("/search")]
         public async Task<IActionResult> Get([FromQuery] string search)
         {
-            try
-            {
-                var result = await _countryService.SearchAsync(search);
-                if (result != null)
-                {
-                    return Json(result);
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, e.Message);
-            }
+            return Json(await _countryService.SearchAsync(search));
         }
 
         [HttpPost]
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Create([FromBody] CountryDTO countryDTO)
         {
-            try
-            {
-                var createdDTO = await _countryService.CreateAsync(countryDTO);
-
-                if (createdDTO != null)
-                {
-                    return CreatedAtAction(nameof(Create), createdDTO);
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
+            return CreatedAtAction(nameof(Create), await _countryService.CreateAsync(countryDTO));
         }
 
         [HttpPut("{id}")]
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Update(int id, [FromBody] CountryDTO countryDTO)
         {
-            try
-            {
-                countryDTO.Id = id;
-
-                var result = await _countryService.UpdateAsync(countryDTO);
-
-                if (result != null)
-                {
-                    return NoContent();
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
+            countryDTO.Id = id;
+            return Json(await _countryService.UpdateAsync(countryDTO));
         }
 
         [HttpDelete("{id}")]

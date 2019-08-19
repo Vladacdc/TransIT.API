@@ -26,51 +26,26 @@ namespace TransIT.API.Controllers
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] uint offset = 0, uint amount = 1000)
         {
-            var result = await _currencyService.GetRangeAsync(offset, amount);
-            if (result != null)
-            {
-                return Json(result);
-            }
-
-            return BadRequest();
+            return Json(await _currencyService.GetRangeAsync(offset, amount));
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            var result = await _currencyService.GetAsync(id);
-            if (result != null)
-            {
-                return Json(result);
-            }
-
-            return BadRequest();
+            return Json(await _currencyService.GetAsync(id));
         }
 
         [HttpGet("/search")]
         public async Task<IActionResult> Get([FromQuery] string search)
         {
-            var result = await _currencyService.SearchAsync(search);
-            if (result != null)
-            {
-                return Json(result);
-            }
-
-            return BadRequest();
+            return Json(await _currencyService.SearchAsync(search));
         }
 
         [HttpPost]
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Create([FromBody] CurrencyDTO currencyDTO)
         {
-            var createdDTO = await _currencyService.CreateAsync(currencyDTO);
-
-            if (createdDTO != null)
-            {
-                return CreatedAtAction(nameof(Create), createdDTO);
-            }
-
-            return BadRequest();
+            return CreatedAtAction(nameof(Create), await _currencyService.CreateAsync(currencyDTO));
         }
 
         [HttpPut("{id}")]
@@ -78,15 +53,7 @@ namespace TransIT.API.Controllers
         public async Task<IActionResult> Update(int id, [FromBody] CurrencyDTO currencyDTO)
         {
             currencyDTO.Id = id;
-
-            var result = await _currencyService.UpdateAsync(currencyDTO);
-
-            if (result != null)
-            {
-                return NoContent();
-            }
-
-            return BadRequest();
+            return Json(await _currencyService.UpdateAsync(currencyDTO));
         }
 
         [HttpDelete("{id}")]

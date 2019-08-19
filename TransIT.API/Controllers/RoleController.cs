@@ -25,11 +25,7 @@ namespace TransIT.API.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var result = await _userService.GetRoles();
-
-            return result != null
-                ? Ok(result)
-                : (IActionResult)BadRequest();
+            return Json(await _userService.GetRoles());
         }
     }
 }
