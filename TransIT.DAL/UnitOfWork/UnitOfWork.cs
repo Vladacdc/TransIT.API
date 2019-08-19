@@ -11,7 +11,9 @@ namespace TransIT.DAL.UnitOfWork
         private readonly TransITDBContext _context;
 
         public  IActionTypeRepository ActionTypeRepository { get; }
+
         public  ICountryRepository CountryRepository { get; }
+
         public  ICurrencyRepository CurrencyRepository { get; }
 
         public  IBillRepository BillRepository { get; }
@@ -37,6 +39,8 @@ namespace TransIT.DAL.UnitOfWork
         public  IVehicleTypeRepository VehicleTypeRepository { get; }
 
         public  IEmployeeRepository EmployeeRepository { get; }
+
+        public IPartRepository PartRepository { get; }
 
         public  IPostRepository PostRepository { get; }
 
@@ -67,6 +71,7 @@ namespace TransIT.DAL.UnitOfWork
             IVehicleRepository vehicleRepository,
             IVehicleTypeRepository vehicleTypeRepository,
             IEmployeeRepository employeeRepository,
+            IPartRepository partRepository,
             IPostRepository postRepository,
             ITransitionRepository transitionRepository,
             ILocationRepository locationRepository,
@@ -90,6 +95,7 @@ namespace TransIT.DAL.UnitOfWork
             VehicleRepository = vehicleRepository;
             VehicleTypeRepository = vehicleTypeRepository;
             EmployeeRepository = employeeRepository;
+            PartRepository = partRepository;
             PostRepository = postRepository;
             TransitionRepository = transitionRepository;
             LocationRepository = locationRepository;
