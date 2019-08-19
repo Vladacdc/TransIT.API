@@ -29,6 +29,8 @@ namespace TransIT.BLL.Factories
 
         IFilterService<MalfunctionSubgroupDTO> MalfunctionSubgroupFilterService { get; }
 
+        IFilterService<PartDTO> PartFilterService { get; }
+
         IFilterService<PostDTO> PostFilterService { get; }
 
         IFilterService<StateDTO> StateFilterService { get; }
