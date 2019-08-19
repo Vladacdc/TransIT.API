@@ -43,10 +43,7 @@ namespace TransIT.API.Controllers
         {
             var user = await _userService.GetAsync(id);
             var result = await _userService.UpdatePasswordAsync(user, changePassword.Password);
-
-            return result != null
-                ? NoContent()
-                : null;
+            return Json(result);
         }
 
         [HttpGet]
@@ -70,11 +67,7 @@ namespace TransIT.API.Controllers
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Create([FromBody] UserDTO obj)
         {
-            var userCreatedResult = await _userService.CreateAsync(obj);
-
-            return userCreatedResult != null
-                ? CreatedAtAction(nameof(Create), userCreatedResult)
-                : null;
+            return CreatedAtAction(nameof(Create), await _userService.CreateAsync(obj));
         }
 
         [HttpDelete("{id}")]

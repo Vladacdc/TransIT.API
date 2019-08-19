@@ -27,38 +27,26 @@ namespace TransIT.API.Controllers
         [HttpGet]
         public virtual async Task<IActionResult> Get([FromQuery] uint offset = 0, uint amount = 1000)
         {
-            var result = await _locationService.GetRangeAsync(offset, amount);
-            return result != null
-                ? Json(result)
-                : null;
+            return Json(await _locationService.GetRangeAsync(offset, amount));
         }
 
         [HttpGet("{id}")]
         public virtual async Task<IActionResult> Get(int id)
         {
-            var result = await _locationService.GetAsync(id);
-            return result != null
-                ? Json(result)
-                : null;
+            return Json(await _locationService.GetAsync(id));
         }
 
         [HttpGet("/search")]
         public virtual async Task<IActionResult> Get([FromQuery] string search)
         {
-            var result = await _locationService.SearchAsync(search);
-            return result != null
-                ? Json(result)
-                : null;
+            return Json(await _locationService.SearchAsync(search));
         }
 
         [HttpPost]
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Create([FromBody] LocationDTO obj)
         {
-            var createdEntity = await _locationService.CreateAsync(obj);
-            return createdEntity != null
-                ? CreatedAtAction(nameof(Create), createdEntity)
-                : null;
+            return CreatedAtAction(nameof(Create), await _locationService.CreateAsync(obj));
         }
 
         [HttpPut("{id}")]
@@ -66,11 +54,7 @@ namespace TransIT.API.Controllers
         public async Task<IActionResult> Update(int id, [FromBody] LocationDTO obj)
         {
             obj.Id = id;
-
-            var result = await _locationService.UpdateAsync(obj);
-            return result != null
-                ? NoContent()
-                : null;
+            return Json(await _locationService.UpdateAsync(obj));
         }
 
         [HttpDelete("{id}")]

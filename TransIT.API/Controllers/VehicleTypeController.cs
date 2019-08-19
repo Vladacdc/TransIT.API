@@ -27,58 +27,26 @@ namespace TransIT.API.Controllers
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] uint offset = 0, uint amount = 1000)
         {
-            var result = await _vehicleTypeService.GetRangeAsync(offset, amount);
-            if (result != null)
-            {
-                return Json(result);
-            }
-            else
-            {
-                return null;
-            }
+            return Json(await _vehicleTypeService.GetRangeAsync(offset, amount));
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            var result = await _vehicleTypeService.GetAsync(id);
-            if (result != null)
-            {
-                return Json(result);
-            }
-            else
-            {
-                return null;
-            }
+            return Json(await _vehicleTypeService.GetAsync(id));
         }
 
         [HttpGet("/search")]
         public async Task<IActionResult> Get([FromQuery] string search)
         {
-            var result = await _vehicleTypeService.SearchAsync(search);
-            if (result != null)
-            {
-                return Json(result);
-            }
-            else
-            {
-                return null;
-            }
+            return Json(await _vehicleTypeService.SearchAsync(search));
         }
 
         [HttpPost]
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Create([FromBody] VehicleTypeDTO vehicleTypeDto)
         {
-            var createdDto = await _vehicleTypeService.CreateAsync(vehicleTypeDto);
-            if (createdDto != null)
-            {
-                return CreatedAtAction(nameof(Create), createdDto);
-            }
-            else
-            {
-                return null;
-            }
+            return CreatedAtAction(nameof(Create), await _vehicleTypeService.CreateAsync(vehicleTypeDto));
         }
 
         [HttpPut("{id}")]
@@ -86,17 +54,7 @@ namespace TransIT.API.Controllers
         public async Task<IActionResult> Update(int id, [FromBody] VehicleTypeDTO vehicleTypeDto)
         {
             vehicleTypeDto.Id = id;
-
-            var result = await _vehicleTypeService.UpdateAsync(vehicleTypeDto);
-
-            if (result != null)
-            {
-                return NoContent();
-            }
-            else
-            {
-                return null;
-            }
+            return Json(await _vehicleTypeService.UpdateAsync(vehicleTypeDto));
         }
 
         [HttpDelete("{id}")]

@@ -27,48 +27,33 @@ namespace TransIT.API.Controllers
         [HttpGet]
         public virtual async Task<IActionResult> Get([FromQuery] uint offset = 0, uint amount = 1000)
         {
-            var result = await _malfunctionSubgroupService.GetRangeAsync(offset, amount);
-            return result != null
-                ? Json(result)
-                : null;
+            return Json(await _malfunctionSubgroupService.GetRangeAsync(offset, amount));
         }
 
         [HttpGet("{id}")]
         public virtual async Task<IActionResult> Get(int id)
         {
-            var result = await _malfunctionSubgroupService.GetAsync(id);
-            return result != null
-                ? Json(result)
-                : null;
+            return Json(await _malfunctionSubgroupService.GetAsync(id));
         }
 
         [HttpGet("/search")]
         public virtual async Task<IActionResult> Get([FromQuery] string search)
         {
-            var result = await _malfunctionSubgroupService.SearchAsync(search);
-            return result != null
-                ? Json(result)
-                : null;
+            return Json(await _malfunctionSubgroupService.SearchAsync(search));
         }
 
         [HttpGet]
         [Route("getbygroupname")]
         public async Task<IActionResult> GetByGroupName(string groupName)
         {
-            var result = await _malfunctionSubgroupService.GetByGroupNameAsync(groupName);
-            return result != null
-                ? Json(result)
-                : null;
+            return Json(await _malfunctionSubgroupService.GetByGroupNameAsync(groupName));
         }
 
         [HttpPost]
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Create([FromBody] MalfunctionSubgroupDTO obj)
         {
-            var createdEntity = await _malfunctionSubgroupService.CreateAsync(obj);
-            return createdEntity != null
-                ? CreatedAtAction(nameof(Create), createdEntity)
-                : null;
+            return CreatedAtAction(nameof(Create), await _malfunctionSubgroupService.CreateAsync(obj));
         }
 
         [HttpPut("{id}")]
@@ -76,11 +61,7 @@ namespace TransIT.API.Controllers
         public async Task<IActionResult> Update(int id, [FromBody] MalfunctionSubgroupDTO obj)
         {
             obj.Id = id;
-
-            var result = await _malfunctionSubgroupService.UpdateAsync(obj);
-            return result != null
-                ? NoContent()
-                : null;
+            return Json(await _malfunctionSubgroupService.UpdateAsync(obj));
         }
 
         [HttpDelete("{id}")]

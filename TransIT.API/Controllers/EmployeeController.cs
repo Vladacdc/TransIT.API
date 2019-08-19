@@ -18,71 +18,36 @@ namespace TransIT.API.Controllers
     public class EmployeeController : FilterController<EmployeeDTO>
     {
         private readonly IEmployeeService _employeeService;
-        private readonly ILogger<EmployeeController> _logger;
 
-        public EmployeeController(IServiceFactory serviceFactory, IFilterServiceFactory filterServiceFactory, ILogger<EmployeeController> logger)
+        public EmployeeController(IServiceFactory serviceFactory, IFilterServiceFactory filterServiceFactory)
             : base(filterServiceFactory)
         {
             _employeeService = serviceFactory.EmployeeService;
-            _logger = logger;
         }
 
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] uint offset = 0, uint amount = 1000)
         {
-            var result = await _employeeService.GetRangeAsync(offset, amount);
-            if (result != null)
-            {
-                return Json(result);
-            }
-            else
-            {
-                return null;
-            }
+            return Json(await _employeeService.GetRangeAsync(offset, amount));
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            var result = await _employeeService.GetAsync(id);
-            if (result != null)
-            {
-                return Json(result);
-            }
-            else
-            {
-                return null;
-            }
+            return Json(await _employeeService.GetAsync(id));
         }
 
         [HttpGet("/search")]
         public async Task<IActionResult> Get([FromQuery] string search)
         {
-            var result = await _employeeService.SearchAsync(search);
-            if (result != null)
-            {
-                return Json(result);
-            }
-            else
-            {
-                return null;
-            }
+            return Json(await _employeeService.SearchAsync(search));
         }
 
         [HttpPost]
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Create([FromBody] EmployeeDTO employeeDTO)
         {
-            var createdDTO = await _employeeService.CreateAsync(employeeDTO);
-
-            if (createdDTO != null)
-            {
-                return CreatedAtAction(nameof(Create), createdDTO);
-            }
-            else
-            {
-                return null;
-            }
+            return CreatedAtAction(nameof(Create), await _employeeService.CreateAsync(employeeDTO));
         }
 
         [HttpGet("boardnumber/{number}")]
@@ -142,17 +107,7 @@ namespace TransIT.API.Controllers
         public async Task<IActionResult> Update(int id, [FromBody] EmployeeDTO employeeDTO)
         {
             employeeDTO.Id = id;
-
-            var result = await _employeeService.UpdateAsync(employeeDTO);
-
-            if (result != null)
-            {
-                return NoContent();
-            }
-            else
-            {
-                return null;
-            }
+            return Json(await _employeeService.UpdateAsync(employeeDTO));
         }
 
         [HttpDelete("{id}")]

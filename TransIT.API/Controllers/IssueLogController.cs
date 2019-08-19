@@ -33,46 +33,31 @@ namespace TransIT.API.Controllers
         [HttpGet(IssueLogByIssueUrl)]
         public virtual async Task<IActionResult> GetByIssue(int issueId)
         {
-            var result = await _issueLogService.GetRangeByIssueIdAsync(issueId);
-            return result != null
-                ? Json(result)
-                : null;
+            return Json(await _issueLogService.GetRangeByIssueIdAsync(issueId));
         }
 
         [HttpGet]
         public virtual async Task<IActionResult> Get([FromQuery] uint offset = 0, uint amount = 1000)
         {
-            var result = await _issueLogService.GetRangeAsync(offset, amount);
-            return result != null
-                ? Json(result)
-                : null;
+            return Json(await _issueLogService.GetRangeAsync(offset, amount));
         }
 
         [HttpGet("{id}")]
         public virtual async Task<IActionResult> Get(int id)
         {
-            var result = await _issueLogService.GetAsync(id);
-            return result != null
-                ? Json(result)
-                : null;
+            return Json(await _issueLogService.GetAsync(id));
         }
 
         [HttpGet("/search")]
         public virtual async Task<IActionResult> Get([FromQuery] string search)
         {
-            var result = await _issueLogService.SearchAsync(search);
-            return result != null
-                ? Json(result)
-                : null;
+            return Json(await _issueLogService.SearchAsync(search));
         }
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] IssueLogDTO obj)
         {
-            var result = await _issueLogService.CreateAsync(obj);
-            return result != null
-                ? CreatedAtAction(nameof(Create), result)
-                : null;
+            return CreatedAtAction(nameof(Create), await _issueLogService.CreateAsync(obj));
         }
 
         [HttpPut("{id}")]
@@ -81,10 +66,7 @@ namespace TransIT.API.Controllers
         {
             obj.Id = id;
 
-            var result = await _issueLogService.UpdateAsync(obj);
-            return result != null
-                ? NoContent()
-                : null;
+            return Json(await _issueLogService.UpdateAsync(obj));
         }
 
         [HttpDelete("{id}")]

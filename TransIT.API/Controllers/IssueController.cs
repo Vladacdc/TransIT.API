@@ -59,19 +59,13 @@ namespace TransIT.API.Controllers
         [HttpGet("{id}")]
         public virtual async Task<IActionResult> Get(int id)
         {
-            var result = await _issueService.GetAsync(id);
-            return result != null
-                ? Json(result)
-                : null;
+            return Json(await _issueService.GetAsync(id));
         }
 
         [HttpGet("/search")]
         public virtual async Task<IActionResult> Get([FromQuery] string search)
         {
-            var result = await _issueService.SearchAsync(search);
-            return result != null
-                ? Json(result)
-                : null;
+            return Json(await _issueService.SearchAsync(search));
         }
 
         [HttpPost]
@@ -79,20 +73,14 @@ namespace TransIT.API.Controllers
         {
             var createdEntity = await _issueService.CreateAsync(obj);
             await _issueHub.Clients.Group(RoleNames.Engineer).SendAsync("ReceiveIssues");
-            return createdEntity != null
-                ? CreatedAtAction(nameof(Create), createdEntity)
-                : null;
+            return CreatedAtAction(nameof(Create), createdEntity);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] IssueDTO obj)
         {
             obj.Id = id;
-
-            var result = await _issueService.UpdateAsync(obj);
-            return result != null
-                ? NoContent()
-                : null;
+            return Json(await _issueService.UpdateAsync(obj));
         }
 
         [HttpDelete("{id}")]
