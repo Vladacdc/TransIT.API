@@ -25,7 +25,6 @@ namespace TransIT.API.Controllers
             _filterServiceFactory = filterServiceFactory;
         }
 
-        [DataTableFilterExceptionFilter]
         [HttpPost(DataTableTemplateUri)]
         public virtual async Task<IActionResult> Filter(DataTableRequestDTO model)
         {

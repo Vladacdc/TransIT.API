@@ -27,111 +27,34 @@ namespace TransIT.API.Controllers
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] uint offset = 0, uint amount = 1000)
         {
-            try
-            {
-                var result = await _stateService.GetRangeAsync(offset, amount);
-                if (result != null)
-                {
-                    return Json(result);
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, e.Message);
-            }
+            return Json(await _stateService.GetRangeAsync(offset, amount));
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            try
-            {
-                var result = await _stateService.GetAsync(id);
-                if (result != null)
-                {
-                    return Json(result);
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, e.Message);
-            }
+            return Json(await _stateService.GetAsync(id));
         }
 
         [HttpGet("/search")]
         public async Task<IActionResult> Get([FromQuery] string search)
         {
-            try
-            {
-                var result = await _stateService.SearchAsync(search);
-                if (result != null)
-                {
-                    return Json(result);
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, e.Message);
-            }
+            return Json(await _stateService.SearchAsync(search));
         }
 
         [HttpPost]
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Create([FromBody] StateDTO stateDto)
         {
-            try
-            {
-                var createdDto = await _stateService.CreateAsync(stateDto);
-                if (createdDto != null)
-                {
-                    return CreatedAtAction(nameof(Create), createdDto);
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
+            return Json(await _stateService.CreateAsync(stateDto));
         }
 
         [HttpPut("{id}")]
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Update(int id, [FromBody] StateDTO stateDto)
         {
-            try
-            {
-                stateDto.Id = id;
-
-                var result = await _stateService.UpdateAsync(stateDto);
-
-                if (result != null)
-                {
-                    return NoContent();
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
+            stateDto.Id = id;
+            return Json(await _stateService.UpdateAsync(stateDto));
         }
 
         [HttpDelete("{id}")]
