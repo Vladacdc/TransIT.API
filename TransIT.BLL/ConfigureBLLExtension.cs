@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -6,10 +7,12 @@ using TransIT.BLL.DTOs;
 using TransIT.BLL.Factories;
 using TransIT.BLL.Mappings;
 using TransIT.BLL.Services;
+using TransIT.BLL.Services.ServicesOptions;
 using TransIT.BLL.Services.FilterServices;
 using TransIT.BLL.Services.ImplementedServices;
 using TransIT.BLL.Services.Interfaces;
 using TransIT.DAL;
+using TransIT.DAL.Exceptions;
 
 namespace TransIT.BLL
 {
@@ -23,6 +26,8 @@ namespace TransIT.BLL
 
             services.AddScoped<IServiceFactory, ServiceFactory>();
             services.AddScoped<IFilterServiceFactory, FilterServiceFactory>();
+
+            services.ConfigureDocumentService(configuration);
 
             services.ConfigureDAL(configuration, hostingEnvironment);
         }
@@ -49,6 +54,8 @@ namespace TransIT.BLL
             services.AddScoped<ITransitionService, TransitionService>();
             services.AddScoped<ILocationService, LocationService>();
             services.AddScoped<IStatisticsService, StatisticsService>();
+            services.AddScoped<IUnitService, UnitService>();
+            services.AddScoped<IManufacturerService, ManufacturerService>();
         }
 
         private static void ConfigureFilterServices(this IServiceCollection services)
@@ -72,6 +79,8 @@ namespace TransIT.BLL
             services.AddScoped<IFilterService<TransitionDTO>, TransitionFilterService>();
             services.AddScoped<IFilterService<LocationDTO>, LocationFilterService>();
             services.AddScoped<IFilterService<UserDTO>, UserFilterService>();
+            services.AddScoped<IFilterService<UnitDTO>, UnitFilterService>();
+            services.AddScoped<IFilterService<ManufacturerDTO>, ManufacturerFilterService>();
         }
 
         private static void ConfigureAutoMapper(this IServiceCollection services)
@@ -98,7 +107,50 @@ namespace TransIT.BLL
                 c.AddProfile(new EmployeeProfile());
                 c.AddProfile(new TransitionProfile());
                 c.AddProfile(new LocationProfile());
+                c.AddProfile(new UnitProfile());
+                c.AddProfile(new ManufacturerProfile());
             }).CreateMapper());
+        }
+
+        private static void ConfigureDocumentService(
+            this IServiceCollection services,
+            IConfiguration configuration)
+        {
+            services.Configure<DocumentServiceOptions>((options) =>
+            {
+                long maximumSize;
+                var documentServiceOptions = configuration.GetSection(nameof(DocumentServiceOptions));
+
+                if (documentServiceOptions.Exists())
+                {
+                    var maximumSizeConfiguration = documentServiceOptions.GetSection(nameof(options.MaximumSize));
+
+                    if (maximumSizeConfiguration.Exists())
+                    {
+                        long bytesInMb = 1024 * 1024;
+
+                        //Here Convert class is used instead of parse method,
+                        //because when devops specifies incorrect configuration value,
+                        //he will see an exception right away.
+                        maximumSize = Convert.ToInt64(maximumSizeConfiguration.Value) * bytesInMb;
+                    }
+                    else
+                    {
+                        maximumSize = Int64.MaxValue;
+                    }
+                }
+                else
+                {
+                    maximumSize = Int64.MaxValue;
+                }
+
+                if (maximumSize <= 0)
+                {
+                    throw new InvalidValueException("Size cannot be zero or negative");
+                }
+
+                options.MaximumSize = maximumSize;
+            });
         }
     }
 }

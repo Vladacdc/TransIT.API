@@ -15,8 +15,8 @@ namespace TransIT.BLL.Mappings
                 .ForMember(i => i.VehicleId, opt => opt.MapFrom(d => d.Vehicle.Id))
                 .ForMember(i => i.MalfunctionId, opt => opt.MapFrom(d => d.Malfunction.Id))
 
-                .ForMember(i => i.StateId, opt => opt.Ignore())
-                .ForMember(i => i.State, opt => opt.Ignore())
+                .ForMember(i => i.StateId, opt => opt.MapFrom(d => d.State.Id))
+                .ForMember(i => i.State, opt => opt.MapFrom(d => d.State))
                 .ForMember(i => i.Mod, opt => opt.Ignore())
                 .ForMember(i => i.Bill, opt => opt.Ignore())
                 .ForMember(i => i.Create, opt => opt.Ignore())

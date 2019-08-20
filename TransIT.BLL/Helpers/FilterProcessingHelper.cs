@@ -33,6 +33,7 @@ namespace TransIT.BLL.Helpers
             }
         }
 
+        //TODO: Rewrite all filter, this solution causes bugs and bad architecture
         public static object TryParseStringValue(string stringValue)
         {
             object result;

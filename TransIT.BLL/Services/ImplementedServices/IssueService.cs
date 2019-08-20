@@ -91,7 +91,7 @@ namespace TransIT.BLL.Services.ImplementedServices
         {
             var model = _mapper.Map<Issue>(dto);
 
-            _unitOfWork.IssueRepository.UpdateWithIgnoreProperty(model, x => x.StateId);
+            _unitOfWork.IssueRepository.Update(model);
             await _unitOfWork.SaveAsync();
             return _mapper.Map<IssueDTO>(model);
         }
@@ -104,13 +104,13 @@ namespace TransIT.BLL.Services.ImplementedServices
                 throw new UnauthorizedAccessException("Current user doesn't have access to delete this issue");
             }
 
-            _unitOfWork.IssueRepository.Remove(issueToDelete.Id);
+            await _unitOfWork.IssueRepository.RemoveAsync(issueToDelete.Id);
             await _unitOfWork.SaveAsync();
         }
 
         public async Task DeleteAsync(int id)
         {
-            _unitOfWork.IssueRepository.Remove(id);
+            await _unitOfWork.IssueRepository.RemoveAsync(id);
             await _unitOfWork.SaveAsync();
         }
 

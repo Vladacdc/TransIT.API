@@ -1,11 +1,18 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TransIT.BLL.Factories;
 using TransIT.BLL.Services.Interfaces;
 
 namespace TransIT.API.Controllers
 {
+    [ApiController]
+    [EnableCors("CorsPolicy")]
+    [Produces("application/json")]
+    [Route("api/v1/[controller]")]
+    [Authorize(Roles = "ANALYST")]
     public class StatisticsController : Controller
     {
         private readonly IStatisticsService _statisticsService;
@@ -16,138 +23,72 @@ namespace TransIT.API.Controllers
         }
 
         [HttpGet]
-        [Route("api/v1/[controller]/countmalfunction")]
+        [Route("countMalfunction")]
         public async Task<IActionResult> CountMalfunction(string malfunctionName, string vehicleTypeName)
         {
-            try
-            {
-                var result = await _statisticsService.CountMalfunction(malfunctionName, vehicleTypeName);
-                if (result != null)
-                {
-                    return Json(result);
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, e.Message);
-            }
+            int result = await _statisticsService.CountMalfunction(malfunctionName, vehicleTypeName);
+
+            return Json(result);
         }
 
         [HttpGet]
-        [Route("api/v1/[controller]/countmalfunctionsubgroup")]
+        [Route("countMalfunctionSubgroup")]
         public async Task<IActionResult> CountMalfunctionSubgroup(string malfunctionSubgroupName, string vehicleTypeName)
         {
-            try
-            {
-                var result = await _statisticsService.CountMalfunctionSubGroup(malfunctionSubgroupName, vehicleTypeName);
-                if (result != null)
-                {
-                    return Json(result);
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, e.Message);
-            }
+            int result = await _statisticsService.CountMalfunctionSubGroup(malfunctionSubgroupName, vehicleTypeName);
+
+            return Json(result);
         }
 
         [HttpGet]
-        [Route("api/v1/[controller]/countmalfunctiongroup")]
+        [Route("countMalfunctionGroup")]
         public async Task<IActionResult> CountMalfunctionGroup(string malfunctionGroupName, string vehicleTypeName)
         {
-            try
-            {
-                var result = await _statisticsService.CountMalfunctionGroup(malfunctionGroupName, vehicleTypeName);
-                if (result != null)
-                {
-                    return Json(result);
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, e.Message);
-            }
+            int result = await _statisticsService.CountMalfunctionGroup(malfunctionGroupName, vehicleTypeName);
+
+            return Json(result);
         }
 
         [HttpGet]
-        [Route("api/v1/[controller]/malfunctionstatistics")]
+        [Route("malfunctionStatistics")]
         public async Task<IActionResult> GetMalfunctionStatistics(string malfunctionName)
         {
-            try
-            {
-                var result = await _statisticsService.GetMalfunctionStatistics(malfunctionName);
-
-                if (result != null)
-                {
-                    return Json(result);
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, e.Message);
-            }
+            return Json(await _statisticsService.GetMalfunctionStatistics(malfunctionName));
         }
 
         [HttpGet]
-        [Route("api/v1/[controller]/malfunctiongroupstatistics")]
+        [Route("malfunctionGroupStatistics")]
         public async Task<IActionResult> GetMalfunctionGroupStatistics(string malfunctionGroupName)
         {
-            try
-            {
-                var result = await _statisticsService.GetMalfunctionGroupStatistics(malfunctionGroupName);
-
-                if (result != null)
-                {
-                    return Json(result);
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, e.Message);
-            }
+            return Json(await _statisticsService.GetMalfunctionGroupStatistics(malfunctionGroupName));
         }
 
         [HttpGet]
-        [Route("api/v1/[controller]/malfunctionsubgroupstatistics")]
+        [Route("malfunctionSubgroupStatistics")]
         public async Task<IActionResult> GetMalfunctionSubGroupStatistics(string malfunctionSubGroupName)
         {
-            try
-            {
-                var result = await _statisticsService.GetMalfunctionSubGroupStatistics(malfunctionSubGroupName);
+            return Json(await _statisticsService.GetMalfunctionSubGroupStatistics(malfunctionSubGroupName));
+        }
 
-                if (result != null)
-                {
-                    return Json(result);
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, e.Message);
-            }
+        [HttpGet]
+        [Route("allMalfunctionsStatistics")]
+        public async Task<IActionResult> GetAllMalfunctionsStatistics(string malfunctionSubgroupName)
+        {
+            return Json(await _statisticsService.GetAllMalfunctionsStatistics(malfunctionSubgroupName));
+        }
+
+        [HttpGet]
+        [Route("allMalfunctionGroupsStatistics")]
+        public async Task<IActionResult> GetAllMalfunctionGroupsStatistics()
+        {
+            return Json(await _statisticsService.GetAllGroupsStatistics());
+        }
+
+        [HttpGet]
+        [Route("allMalfunctionSubgroupsStatistics")]
+        public async Task<IActionResult> GetAllMalfunctionSubgroupsStatistics(string malfunctionGroupName)
+        {
+            return Json(await _statisticsService.GetAllSubgroupsStatistics(malfunctionGroupName));
         }
     }
 }

@@ -27,110 +27,32 @@ namespace TransIT.API.Controllers
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] uint offset = 0, uint amount = 1000)
         {
-            try
-            {
-                var result = await _billService.GetRangeAsync(offset, amount);
-                if (result != null)
-                {
-                    return Json(result);
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, e.Message);
-            }
+            return Json(await _billService.GetRangeAsync(offset, amount));
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            try
-            {
-                var result = await _billService.GetAsync(id);
-                if (result != null)
-                {
-                    return Json(result);
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, e.Message);
-            }
+            return Json(await _billService.GetAsync(id));
         }
 
         [HttpGet("/search")]
         public async Task<IActionResult> Get([FromQuery] string search)
         {
-            try
-            {
-                var result = await _billService.SearchAsync(search);
-                if (result != null)
-                {
-                    return Json(result);
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, e.Message);
-            }
+            return Json(await _billService.SearchAsync(search));
         }
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] BillDTO billDTO)
         {
-            try
-            {
-                var createdDTO = await _billService.CreateAsync(billDTO);
-
-                if (createdDTO != null)
-                {
-                    return CreatedAtAction(nameof(Create), createdDTO);
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
+            return CreatedAtAction(nameof(Create), await _billService.CreateAsync(billDTO));
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] BillDTO billDTO)
         {
-            try
-            {
-                billDTO.Id = id;
-
-                var result = await _billService.UpdateAsync(billDTO);
-
-                if (result != null)
-                {
-                    return NoContent();
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
+            billDTO.Id = id;
+            return Json(await _billService.UpdateAsync(billDTO));
         }
 
         [HttpDelete("{id}")]

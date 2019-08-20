@@ -9,5 +9,6 @@
         public string ShortName { get; set; }
         public int BoardNumber { get; set; }
         public PostDTO Post { get; set; }
+        public UserDTO AttachedUser { get; set; }
     }
 }

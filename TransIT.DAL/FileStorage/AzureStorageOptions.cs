@@ -1,6 +1,6 @@
 ﻿namespace TransIT.DAL.FileStorage
 {
-    public class AzureStorageOptions
+    internal class AzureStorageOptions
     {
         public string AccountName{get; set; }
         public string AccountKey {get; set;}

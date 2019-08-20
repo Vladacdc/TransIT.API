@@ -17,6 +17,7 @@ namespace TransIT.BLL.Mappings
                 .ForMember(d => d.IssueLogId, opt => opt.Condition((dto, model) => dto.IssueLog != null))
                 .ForMember(d => d.IssueLogId, opt => opt.MapFrom(x => x.IssueLog.Id))
                 .ForMember(d => d.IssueLog, opt => opt.Ignore());
+
             CreateMap<Document, DocumentDTO>();
         }
     }

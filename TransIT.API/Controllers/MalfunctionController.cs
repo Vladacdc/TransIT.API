@@ -27,85 +27,41 @@ namespace TransIT.API.Controllers
         [HttpGet]
         public virtual async Task<IActionResult> Get([FromQuery] uint offset = 0, uint amount = 1000)
         {
-            try
-            {
-                var result = await _malfunctionService.GetRangeAsync(offset, amount);
-                return result != null
-                    ? Json(result)
-                    : null;
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500,e.Message);
-            }
+            return Json(await _malfunctionService.GetRangeAsync(offset, amount));
         }
 
         [HttpGet("{id}")]
         public virtual async Task<IActionResult> Get(int id)
         {
-            try
-            {
-                var result = await _malfunctionService.GetAsync(id);
-                return result != null
-                    ? Json(result)
-                    : null;
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, e.Message);
-            }
+            return Json(await _malfunctionService.GetAsync(id));
+        }
+
+        [HttpGet]
+        [Route("getbysubgroupname")]
+        public async Task<IActionResult> GetBySubgroupName(string subgroupName)
+        {
+            return Json(await _malfunctionService.GetBySubgroupNameAsync(subgroupName));
         }
 
         [HttpGet("/search")]
         public virtual async Task<IActionResult> Get([FromQuery] string search)
         {
-            try
-            {
-                var result = await _malfunctionService.SearchAsync(search);
-                return result != null
-                    ? Json(result)
-                    : null;
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, e.Message);
-            }
+            return Json(await _malfunctionService.SearchAsync(search));
         }
 
         [HttpPost]
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Create([FromBody] MalfunctionDTO obj)
         {
-            try
-            {
-                var createdEntity = await _malfunctionService.CreateAsync(obj);
-                return createdEntity != null
-                    ? CreatedAtAction(nameof(Create), createdEntity)
-                    : null;
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
+            return CreatedAtAction(nameof(Create), await _malfunctionService.CreateAsync(obj));
         }
 
         [HttpPut("{id}")]
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Update(int id, [FromBody] MalfunctionDTO obj)
         {
-            try
-            {
-                obj.Id = id;
-
-                var result = await _malfunctionService.UpdateAsync(obj);
-                return result != null
-                    ? NoContent()
-                    : null;
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
+            obj.Id = id;
+            return Json(await _malfunctionService.UpdateAsync(obj));
         }
 
         [HttpDelete("{id}")]

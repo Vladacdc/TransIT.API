@@ -3,28 +3,29 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using TransIT.DAL.Exceptions;
+using TransIT.DAL.FileStorage;
 using TransIT.DAL.Models;
 using TransIT.DAL.Models.Entities;
 using TransIT.DAL.Repositories;
 using TransIT.DAL.Repositories.ImplementedRepositories;
 using TransIT.DAL.Repositories.InterfacesRepositories;
 using TransIT.DAL.UnitOfWork;
-using TransIT.DAL.FileStorage;
 
 namespace TransIT.DAL
 {
     public static class ConfigureDALExtension
     {
         public static void ConfigureDAL(
-            this IServiceCollection services, 
+            this IServiceCollection services,
             IConfiguration configuration,
             IHostingEnvironment environment)
         {
             services.ConfigureRepositories();
             services.ConfigureQueryRepositories();
-            services.ConfigureDbContext(configuration, environment);
+            services.ConfigureDbContext(configuration);
             services.ConfigureIdentity();
-            services.ConfigureFileStorage(configuration,environment);
+            services.ConfigureFileStorage(configuration);
 
             services.AddScoped<IUnitOfWork, UnitOfWork.UnitOfWork>();
         }
@@ -52,6 +53,8 @@ namespace TransIT.DAL
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<UserManager<User>>();
             services.AddScoped<RoleManager<Role>>();
+            services.AddScoped<IUnitRepository, UnitRepository>();
+            services.AddScoped<IManufacturerRepository, ManufacturerRepository>();
         }
 
         private static void ConfigureQueryRepositories(this IServiceCollection services)
@@ -75,26 +78,18 @@ namespace TransIT.DAL
             services.AddScoped<IQueryRepository<Transition>, TransitionRepository>();
             services.AddScoped<IQueryRepository<Location>, LocationRepository>();
             services.AddScoped<IQueryRepository<User>, UserQueryRepository>();
+            services.AddScoped<IQueryRepository<Unit>, UnitRepository>();
+            services.AddScoped<IQueryRepository<Manufacturer>, ManufacturerRepository>();
         }
 
         private static void ConfigureDbContext(
-            this IServiceCollection services, 
-            IConfiguration configuration, 
-            IHostingEnvironment environment)
+            this IServiceCollection services,
+            IConfiguration configuration)
         {
             void ConfigureConnection(DbContextOptionsBuilder options)
             {
-                if (environment.IsDevelopment())
-                {
-                    options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
-                        b => b.MigrationsAssembly("TransIT.API"));
-                }
-
-                if (environment.IsProduction())
-                {
-                    options.UseSqlServer(configuration.GetConnectionString("AzureConnection"),
-                        b => b.MigrationsAssembly("TransIT.API"));
-                }
+                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
+                    b => b.MigrationsAssembly("TransIT.API"));
             }
 
             services.AddDbContext<TransITDBContext>(ConfigureConnection);
@@ -117,29 +112,38 @@ namespace TransIT.DAL
                 options.Password.RequiredUniqueChars = 1;
             });
         }
+
         private static void ConfigureFileStorage(
             this IServiceCollection services,
-            IConfiguration configuration,
-            IHostingEnvironment environment)
+            IConfiguration configuration)
         {
-            if (environment.IsProduction())
+            var fileStorage = configuration.GetSection("FileStorage");
+            switch (fileStorage["Type"].ToLower())
             {
-                services.AddScoped<IFileStorage, AzureFileStorage>();
-            }
-            if (environment.IsDevelopment())
-            {
-                services.AddScoped<IFileStorage, LocalFileStorage>();
-            }
+                case "azure":
+                    services.AddScoped<IFileStorage, AzureFileStorage>();
+                    services.Configure<AzureStorageOptions>((options) =>
+                    {
+                        var azureOptions = fileStorage.GetSection(nameof(AzureStorageOptions));
 
-            services.Configure<AzureStorageOptions>((options) =>
-            {
-                var azureOptions = configuration.GetSection(nameof(AzureStorageOptions));
+                        options.AccountName = azureOptions[nameof(AzureStorageOptions.AccountName)];
+                        options.AccountKey = azureOptions[nameof(AzureStorageOptions.AccountKey)];
+                        options.ConnectionString = azureOptions[nameof(AzureStorageOptions.ConnectionString)];
+                    });
+                    break;
+                case "local":
+                    services.AddScoped<IFileStorage, LocalFileStorage>();
 
-                options.AccountName = azureOptions[nameof(AzureStorageOptions.AccountName)];
-                options.AccountKey = azureOptions[nameof(AzureStorageOptions.AccountKey)];
-                options.ConnectionString = azureOptions[nameof(AzureStorageOptions.ConnectionString)];
-            });
+                    services.Configure<LocalStorageOptions>((options) =>
+                    {
+                        var localOptions = fileStorage.GetSection(nameof(LocalStorageOptions));
+
+                        options.FolderPath = localOptions[nameof(LocalStorageOptions.FolderPath)];
+                    });
+                    break;
+                default:
+                    throw new InvalidStorageTypeException($"{fileStorage["Type"]} isn't valid file storage type");
+            }
         }
-
     }
 }
