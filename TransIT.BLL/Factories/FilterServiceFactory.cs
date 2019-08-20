@@ -45,6 +45,8 @@ namespace TransIT.BLL.Factories
 
         public IFilterService<UnitDTO> UnitFilterService { get; }
 
+        public IFilterService<ManufacturerDTO> ManufacturerFilterService { get; }
+
         public IFilterService<TEntityDTO> GetService<TEntityDTO>() where TEntityDTO : class, new()
         {
             switch (typeof(TEntityDTO).Name)
@@ -149,6 +151,11 @@ namespace TransIT.BLL.Factories
                     return (IFilterService<TEntityDTO>) UnitFilterService;
                 }
 
+                case nameof(ManufacturerDTO):
+                {
+                    return (IFilterService<TEntityDTO>) MalfunctionFilterService;
+                }
+
                 default:
                 {
                     return null;
@@ -175,7 +182,8 @@ namespace TransIT.BLL.Factories
             IFilterService<UserDTO> userFilterService,
             IFilterService<VehicleDTO> vehicleFilterService,
             IFilterService<VehicleTypeDTO> vehicleTypeFilterService, 
-            IFilterService<UnitDTO> unitFilterService)
+            IFilterService<UnitDTO> unitFilterService, 
+            IFilterService<ManufacturerDTO> manufacturerFilterService)
         {
             ActionTypeFilterService = actionTypeFilterService;
             BillFilterService = billFilterService;
@@ -197,6 +205,7 @@ namespace TransIT.BLL.Factories
             VehicleFilterService = vehicleFilterService;
             VehicleTypeFilterService = vehicleTypeFilterService;
             UnitFilterService = unitFilterService;
+            ManufacturerFilterService = manufacturerFilterService;
         }
     }
 }

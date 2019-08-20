@@ -45,6 +45,8 @@ namespace TransIT.BLL.Factories
 
         IFilterService<UnitDTO> UnitFilterService { get; }
 
+        IFilterService<ManufacturerDTO> ManufacturerFilterService { get; }
+
         IFilterService<TEntityDTO> GetService<TEntityDTO>() where TEntityDTO : class, new();
     }
 }
