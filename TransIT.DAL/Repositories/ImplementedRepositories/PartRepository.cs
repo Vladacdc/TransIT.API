@@ -22,14 +22,9 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
 
             foreach (string keyword in strs)
             {
-                string temp = keyword;
-                if (decimal.TryParse(temp, out decimal parsedDecimal))
-                {
-                    //TODO
-                    //predicate = predicate.And(entity =>
-                    //    entity.Sum == parsedDecimal
-                    //);
-                }
+                predicate = predicate.And(entity =>
+                   EF.Functions.Like(entity.Name, '%' + keyword + '%')
+                   );
             }
 
             return Task.FromResult(
@@ -42,7 +37,8 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
         protected override IQueryable<Part> ComplexEntities => Entities.
            Include(p => p.Create).
            Include(p => p.Mod).
-            //TODO
+           Include(p => p.Unit).
+           Include(p => p.Manufacturer).
            OrderByDescending(u => u.UpdatedDate).ThenByDescending(x => x.CreatedDate);
     }
 }

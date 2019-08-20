@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using TransIT.DAL.Models.Entities.Abstractions;
 
 namespace TransIT.DAL.Models.Entities
@@ -22,5 +23,7 @@ namespace TransIT.DAL.Models.Entities
         public DateTime? CreatedDate { get; set; }
 
         public DateTime? UpdatedDate { get; set; }
+
+        public virtual ICollection<Part> Parts { get; set; }
     }
 }

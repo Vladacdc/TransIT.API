@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using TransIT.DAL.Models.Entities.Abstractions;
 
 namespace TransIT.DAL.Models.Entities
@@ -20,5 +21,7 @@ namespace TransIT.DAL.Models.Entities
         public virtual User Create { get; set; }
 
         public virtual User Mod { get; set; }
+
+        public virtual ICollection<Part> Parts { get; set; }
     }
 }

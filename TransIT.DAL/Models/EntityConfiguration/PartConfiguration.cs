@@ -16,6 +16,10 @@ namespace TransIT.DAL.Models
 
             builder.Property(e => e.Code).HasColumnName("CODE");
 
+            builder.Property(e => e.UnitId).HasColumnName("UNIT");
+
+            builder.Property(e => e.ManufacturerId).HasColumnName("MANUFACTURER");
+                
             builder.Property(e => e.CreatedDate)
                 .HasColumnName("CREATE_DATE")
                 .HasColumnType("datetime")
@@ -30,7 +34,15 @@ namespace TransIT.DAL.Models
 
             builder.Property(e => e.UpdatedById).HasColumnName("MOD_ID");
 
-            //TODO
+            builder.HasOne(e => e.Manufacturer)
+                .WithMany(m => m.Parts)
+                .HasForeignKey(p => p.ManufacturerId)
+                .HasConstraintName("FK_PART_MANUFACTURER");
+
+            builder.HasOne(e => e.Unit)
+               .WithMany(m => m.Parts)
+               .HasForeignKey(p => p.UnitId)
+               .HasConstraintName("FK_PART_UNIT");
         }
     }
 }
