@@ -7,7 +7,7 @@ using TransIT.DAL.Models.Entities;
 using TransIT.DAL.Repositories.ImplementedRepositories;
 using Xunit;
 
-namespace TransIT.Tests
+namespace TransIT.Tests.Repository
 {
     public class EmployeeRepositoryTests
     {
