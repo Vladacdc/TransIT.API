@@ -49,6 +49,10 @@ namespace TransIT.DAL.UnitOfWork
 
         UserManager<User> UserManager { get; }
 
+        IUnitRepository UnitRepository { get; }
+
+        IManufacturerRepository ManufacturerRepository { get; }
+
         Task<int> SaveAsync();
     }
 }
