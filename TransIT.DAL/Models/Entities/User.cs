@@ -46,8 +46,12 @@ namespace TransIT.DAL.Models.Entities
             VehicleTypeCreate = new HashSet<VehicleType>();
             VehicleTypeMod = new HashSet<VehicleType>();
             Employees = new HashSet<Employee>();
+            UnitCreate = new HashSet<Unit>();
+            UnitMod = new HashSet<Unit>();
+            ManufacturerCreate = new HashSet<Manufacturer>();
+            ManufacturerMod = new HashSet<Manufacturer>();
         }
-        
+
         public string FirstName { get; set; }
 
         public string MiddleName { get; set; }
