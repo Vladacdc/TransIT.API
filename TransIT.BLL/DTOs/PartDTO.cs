@@ -7,6 +7,8 @@ namespace TransIT.BLL.DTOs
         public int Id { get; set; }
         public string Name { get; set; }
         public string Code { get; set; }
+        public ManufacturerDTO Manufacturer { get; set; }
+        public UnitDTO Unit { get; set; }
 
         public DateTime? CreateDate { get; set; }
         public DateTime? ModDate { get; set; }
