@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using TransIT.DAL.Models.Entities;
 using TransIT.DAL.Models.Entities.Abstractions;
+using TransIT.DAL.Models.EntityConfiguration;
 
 namespace TransIT.DAL.Models
 {
@@ -46,6 +47,9 @@ namespace TransIT.DAL.Models
         public virtual DbSet<Transition> Transition { get; set; }
         public virtual DbSet<Vehicle> Vehicle { get; set; }
         public virtual DbSet<VehicleType> VehicleType { get; set; }
+        public virtual DbSet<Unit> Units { get; set; }
+        public virtual DbSet<Manufacturer> Manufacturers { get; set; }
+
         public string CurrentUserId
         {
             get => _currentUserId;
@@ -60,7 +64,7 @@ namespace TransIT.DAL.Models
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            if (CurrentUserId != null && CurrentUserId != null)
+            if (CurrentUserId != null)
             {
                 IEnumerable<EntityEntry> unsavedItems = ChangeTracker.Entries()
                         .Where(entity => entity.Entity is IAuditableEntity &&
@@ -116,6 +120,8 @@ namespace TransIT.DAL.Models
             modelBuilder.ApplyConfiguration(new VehicleConfiguration());
             modelBuilder.ApplyConfiguration(new VehicleTypeConfiguration());
             modelBuilder.ApplyConfiguration(new UserRoleConfiguration());
+            modelBuilder.ApplyConfiguration(new UnitConfiguration());
+            modelBuilder.ApplyConfiguration(new ManufacturerConfiguration());
             #endregion
         }
     }
