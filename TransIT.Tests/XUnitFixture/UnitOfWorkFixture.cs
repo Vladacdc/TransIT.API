@@ -68,7 +68,9 @@ namespace TransIT.Tests
                 new LocationRepository(transITDBContext),
                 new UserRepository(transITDBContext),
                 MockHelpers.TestRoleManager(roleStore),
-                MockHelpers.TestUserManager(userStore)
+                MockHelpers.TestUserManager(userStore),
+                new UnitRepository(transITDBContext),
+                new ManufacturerRepository(transITDBContext)
             );
 
             unitOfWork.RoleManager.CreateAsync(new Role { Name = "ADMIN", TransName = "Адмін" }).Wait();
