@@ -43,18 +43,21 @@ namespace TransIT.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Create([FromBody] PartInDTO dto)
         {
             return CreatedAtAction(nameof(Create), await _partsInService.CreateAsync(dto));
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Update([FromBody] PartInDTO dto)
         {
             return Json(await _partsInService.UpdateAsync(dto));
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Delete(int id)
         {
             await _partsInService.DeleteAsync(id);

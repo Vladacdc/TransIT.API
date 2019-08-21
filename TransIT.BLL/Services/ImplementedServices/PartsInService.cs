@@ -52,7 +52,9 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<IEnumerable<PartInDTO>> SearchAsync(string search)
         {
-            var issues = await _unitOfWork.IssueRepository.SearchExpressionAsync(new SearchEntries(search));
+            var issues = await _unitOfWork.IssueRepository.SearchAsync(
+                new SearchTokenCollection(search)
+            );
             return _mapper.Map<IEnumerable<PartInDTO>>(await issues.ToListAsync());
         }
 

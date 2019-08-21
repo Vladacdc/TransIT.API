@@ -3,25 +3,25 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace TransIT.BLL.Helpers
+namespace TransIT.BLL
 {
     /// <summary>
     /// Using this class to avoid duplication of code in services.
     /// The goal of this class is to split input search string into tokens.
-    /// And it can be user as <see cref="IEnumerable{String}"/>
+    /// And it can be used as <see cref="IEnumerable{T}"/>
     /// </summary>
     /// <example> For example:
     /// <code>
-    ///    foreach(var item in new SearchEntries(searchString))
+    ///    foreach(var item in new SearchTokenCollection(searchString))
     ///    {
     ///    }
     /// </code>
     /// </example>
-    public class SearchEntries : IEnumerable<string>
+    public class SearchTokenCollection : IEnumerable<string>
     {
-        private IEnumerable<string> _source;
+        private readonly IEnumerable<string> _source;
 
-        public SearchEntries(string input)
+        public SearchTokenCollection(string input)
         {
             _source = input
                 .Split(new[] { ' ', ',', '.' }, StringSplitOptions.RemoveEmptyEntries)

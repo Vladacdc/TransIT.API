@@ -57,10 +57,8 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<IEnumerable<StateDTO>> SearchAsync(string search)
         {
-            var states = await _unitOfWork.StateRepository.SearchExpressionAsync(
-                search
-                    .Split(new[] { ' ', ',', '.' }, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(x => x.Trim().ToUpperInvariant())
+            var states = await _unitOfWork.StateRepository.SearchAsync(
+                    new SearchTokenCollection(search)
                 );
 
             return _mapper.Map<IEnumerable<StateDTO>>(await states.ToListAsync());

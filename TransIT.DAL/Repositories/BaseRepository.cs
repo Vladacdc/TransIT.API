@@ -92,7 +92,7 @@ namespace TransIT.DAL.Repositories
             }
         }
 
-        public abstract Task<IQueryable<TEntity>> SearchExpressionAsync(IEnumerable<string> strs);
+        public abstract Task<IQueryable<TEntity>> SearchAsync(IEnumerable<string> strs);
 
         public IQueryable<TEntity> GetQueryable()
         {

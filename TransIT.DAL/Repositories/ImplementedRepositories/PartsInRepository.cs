@@ -16,7 +16,19 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
         {
         }
 
-        public override Task<IQueryable<PartIn>> SearchExpressionAsync(IEnumerable<string> strs)
+        protected override IQueryable<PartIn> ComplexEntities
+        {
+            get
+            {
+                return Entities
+                    .Include(e => e.Unit)
+                    .Include(e => e.Currency)
+                    .OrderByDescending(u => u.UpdatedDate)
+                    .ThenByDescending(x => x.CreatedDate);
+            }
+        }
+
+        public override Task<IQueryable<PartIn>> SearchAsync(IEnumerable<string> strs)
         {
             var predicate = PredicateBuilder.New<PartIn>();
 

@@ -13,6 +13,11 @@ namespace TransIT.BLL.DTOs
         }
 
         public int Id { get; set; }
+        public int UnitId { get; set; }
+        public int? PartId { get; set; }
+        public int CurrencyId { get; set; }
+
+        public string Batch { get; set; }
         public uint Amount
         {
             get => amount;
@@ -36,10 +41,7 @@ namespace TransIT.BLL.DTOs
             }
         }
         public DateTime ArrivalDate { get; set; }
-        public string Batch { get; set; }
-        public int? UnitId { get; set; }
-        public int? PartId { get; set; }
-        public int CurrencyId { get; set; }
         public CurrencyDTO Currency { get; set; }
+        public UnitDTO Unit { get; set; }
     }
 }

@@ -16,7 +16,7 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
         {
         }
         
-         public override Task<IQueryable<Post>> SearchExpressionAsync(IEnumerable<string> strs)
+         public override Task<IQueryable<Post>> SearchAsync(IEnumerable<string> strs)
         {
             var predicate = PredicateBuilder.New<Post>();
 

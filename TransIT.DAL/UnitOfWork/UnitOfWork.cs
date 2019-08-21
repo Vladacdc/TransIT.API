@@ -11,7 +11,9 @@ namespace TransIT.DAL.UnitOfWork
         private readonly TransITDBContext _context;
 
         public  IActionTypeRepository ActionTypeRepository { get; }
+
         public  ICountryRepository CountryRepository { get; }
+
         public  ICurrencyRepository CurrencyRepository { get; }
 
         public  IBillRepository BillRepository { get; }
@@ -51,6 +53,9 @@ namespace TransIT.DAL.UnitOfWork
         public IUserRepository UserRepository { get; }
 
         public IPartsInRepository PartsInRepository { get; }
+        public IUnitRepository UnitRepository { get; }
+
+        public IManufacturerRepository ManufacturerRepository { get; }
 
         public UnitOfWork(
             TransITDBContext context,
@@ -75,7 +80,9 @@ namespace TransIT.DAL.UnitOfWork
             IUserRepository userRepository,
             IPartsInRepository partsInRepository,
             RoleManager<Role> roleManager,
-            UserManager<User> userManager)
+            UserManager<User> userManager, 
+            IUnitRepository unitRepository, 
+            IManufacturerRepository manufacturerRepository)
         {
             _context = context;
             ActionTypeRepository = actionTypeRepository;
@@ -100,6 +107,8 @@ namespace TransIT.DAL.UnitOfWork
             PartsInRepository = partsInRepository;
             RoleManager = roleManager;
             UserManager = userManager;
+            UnitRepository = unitRepository;
+            ManufacturerRepository = manufacturerRepository;
         }
 
         public Task<int> SaveAsync()

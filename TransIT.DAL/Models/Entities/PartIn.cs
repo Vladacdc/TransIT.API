@@ -19,7 +19,7 @@ namespace TransIT.DAL.Models.Entities
         /// Номер партії.
         /// </summary>
         public string Batch { get; set; }
-        public int? UnitId { get; set; }
+        public int UnitId { get; set; }
         public int? PartId { get; set; }
         public int CurrencyId { get; set; }
         public string CreatedById { get; set; }
@@ -27,5 +27,6 @@ namespace TransIT.DAL.Models.Entities
         public DateTime? CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public Currency Currency { get; set; }
+        public Unit Unit { get; set; }
     }
 }

@@ -44,10 +44,8 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<IEnumerable<SupplierDTO>> SearchAsync(string search)
         {
-            var suppliers = await _unitOfWork.SupplierRepository.SearchExpressionAsync(
-                search
-                    .Split(new[] { ' ', ',', '.' }, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(x => x.Trim().ToUpperInvariant())
+            var suppliers = await _unitOfWork.SupplierRepository.SearchAsync(
+                    new SearchTokenCollection(search)
                 );
 
             return _mapper.Map<IEnumerable<SupplierDTO>>(await suppliers.ToListAsync());

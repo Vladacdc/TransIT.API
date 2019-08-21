@@ -16,7 +16,7 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
         {
         }
         
-         public override Task<IQueryable<MalfunctionSubgroup>> SearchExpressionAsync(IEnumerable<string> strs)
+         public override Task<IQueryable<MalfunctionSubgroup>> SearchAsync(IEnumerable<string> strs)
         {
             var predicate = PredicateBuilder.New<MalfunctionSubgroup>();
 

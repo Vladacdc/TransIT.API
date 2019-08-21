@@ -15,7 +15,7 @@ namespace TransIT.Tests
         public async Task Employee_Repository_Should_Add_Employee()
         {
             // Arrange
-            var context = CreateDbContext();
+            var context = new DbContextFromMemory();
             var repository = new EmployeeRepository(context);
             var expectedEntity = new Employee(new Post() { Name = "Big Boss" , Id = 5 })
             {
@@ -37,7 +37,7 @@ namespace TransIT.Tests
         public async Task Employee_Repository_Should_Get_All()
         {
             // Arrange
-            var context = CreateDbContext();
+            var context = new DbContextFromMemory();
             var repository = new EmployeeRepository(context);
             var expectedEntity = new Employee(new Post() { Name = "Big Boss", Id = 5 })
             {
@@ -53,16 +53,6 @@ namespace TransIT.Tests
             var entities = await repository.GetAllAsync();
             // Assert
             Assert.Single(entities.ToList());
-        }
-
-        private TransITDBContext CreateDbContext()
-        {
-            return new TransITDBContext(
-                new DbContextOptionsBuilder<TransITDBContext>()
-                   .UseInMemoryDatabase(Guid.NewGuid().ToString())
-                   .EnableSensitiveDataLogging()
-                   .Options
-            );
         }
     }
 }

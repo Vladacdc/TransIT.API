@@ -47,5 +47,9 @@ namespace TransIT.BLL.Factories
         IVehicleTypeService VehicleTypeService { get; }
 
         IPartsInService PartsInService { get; }
+
+        IUnitService UnitService { get; }
+
+        IManufacturerService ManufacturerService { get; }
     }
 }

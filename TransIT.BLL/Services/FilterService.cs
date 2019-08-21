@@ -35,7 +35,7 @@ namespace TransIT.BLL.Services
 
             if (searchNotEmpty)
             {
-                entities = await _queryRepository.SearchExpressionAsync(dataFilter.SearchEntries);
+                entities = await _queryRepository.SearchAsync(dataFilter.SearchEntries);
             }
             else
             {
