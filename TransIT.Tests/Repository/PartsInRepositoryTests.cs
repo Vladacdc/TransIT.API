@@ -28,6 +28,16 @@ namespace TransIT.Tests
                 Id = 4,
                 Name = "wtf"
             };
+            var part = new Part()
+            {
+                Id = 121,
+                Name = "Артек шоколадний.",
+                Manufacturer = new Manufacturer()
+                {
+                    Id = 1212,
+                    Name = "Світоч"
+                }
+            };
             var expectedEntity = new PartIn()
             {
                 Id = 20,
@@ -35,15 +45,19 @@ namespace TransIT.Tests
                 Batch = "abcdf12345",
                 ArrivalDate = DateTime.Now,
                 Price = 15.0f,
-                CurrencyId = 5,
+                CurrencyId = currency.Id,
                 Currency = currency,
-                UnitId = 4,
-                Unit = unit
+                UnitId = unit.Id,
+                Unit = unit,
+                Part = part,
+                PartId = part.Id,
             };
 
             // Act
             await context.AddAsync(currency);
             await context.AddAsync(unit);
+            await context.AddAsync(part);
+            await context.AddAsync(part.Manufacturer);
             await context.SaveChangesAsync();
             await repository.AddAsync(expectedEntity);
             await context.SaveChangesAsync();
@@ -79,6 +93,23 @@ namespace TransIT.Tests
                 Id = 44,
                 Name = "Метр квадратний"
             };
+            var manufacturer = new Manufacturer()
+            {
+                Id = 1212,
+                Name = "Світоч"
+            };
+            var part = new Part()
+            {
+                Id = 121,
+                Name = "Артек шоколадний.",
+                Manufacturer = manufacturer
+            };
+            var newPart = new Part()
+            {
+                Id = 122,
+                Name = "Артек горіховий.",
+                Manufacturer = manufacturer
+            };
             var expectedEntity = new PartIn()
             {
                 Id = 20,
@@ -86,15 +117,19 @@ namespace TransIT.Tests
                 Batch = "abcdf12345",
                 ArrivalDate = DateTime.Now,
                 Price = 15.0f,
-                CurrencyId = 5,
+                CurrencyId = currency.Id,
                 Currency = currency,
-                UnitId = 4,
-                Unit = unit
+                UnitId = unit.Id,
+                Unit = unit,
+                Part = part,
+                PartId = part.Id
             };
 
             // Act
+            await context.AddAsync(manufacturer);
             await context.AddRangeAsync(new Currency[] { currency, newCurrency });
             await context.AddRangeAsync(new Unit[] { unit, newUnit });
+            await context.AddRangeAsync(new Part[] { part, newPart });
             await context.SaveChangesAsync();
 
             await repository.AddAsync(expectedEntity);
@@ -103,6 +138,7 @@ namespace TransIT.Tests
             expectedEntity.Price = 10;
             expectedEntity.UnitId = newUnit.Id;
             expectedEntity.CurrencyId = newCurrency.Id;
+            expectedEntity.PartId = newPart.Id;
 
             repository.Update(expectedEntity);
 

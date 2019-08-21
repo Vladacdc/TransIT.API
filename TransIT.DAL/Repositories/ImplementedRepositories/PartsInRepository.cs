@@ -23,6 +23,8 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
                 return Entities
                     .Include(e => e.Unit)
                     .Include(e => e.Currency)
+                    .Include(e => e.Part)
+                        .ThenInclude(e => e.Manufacturer)
                     .OrderByDescending(u => u.UpdatedDate)
                     .ThenByDescending(x => x.CreatedDate);
             }

@@ -3,6 +3,9 @@ using TransIT.DAL.Models.Entities.Abstractions;
 
 namespace TransIT.DAL.Models.Entities
 {
+    /// <summary>
+    /// Parts deliveries (поставки деталей).
+    /// </summary>
     public class PartIn : IAuditableEntity, IBaseEntity
     {
         public PartIn()
@@ -20,7 +23,7 @@ namespace TransIT.DAL.Models.Entities
         /// </summary>
         public string Batch { get; set; }
         public int UnitId { get; set; }
-        public int? PartId { get; set; }
+        public int PartId { get; set; }
         public int CurrencyId { get; set; }
         public string CreatedById { get; set; }
         public string UpdatedById { get; set; }
@@ -28,5 +31,6 @@ namespace TransIT.DAL.Models.Entities
         public DateTime? UpdatedDate { get; set; }
         public Currency Currency { get; set; }
         public Unit Unit { get; set; }
+        public Part Part { get; set; }
     }
 }

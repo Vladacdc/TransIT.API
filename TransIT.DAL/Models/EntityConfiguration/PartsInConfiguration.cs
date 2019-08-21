@@ -45,6 +45,12 @@ namespace TransIT.DAL.Models
                    .HasForeignKey(e => e.UnitId)
                    .OnDelete(DeleteBehavior.ClientSetNull)
                    .IsRequired();
+
+            builder.HasOne(e => e.Part)
+                   .WithMany(e => e.PartsInNavigation)
+                   .HasForeignKey(e => e.PartId)
+                   .OnDelete(DeleteBehavior.ClientSetNull)
+                   .IsRequired();
         }
     }
 }

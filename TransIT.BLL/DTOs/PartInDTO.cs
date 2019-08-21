@@ -43,5 +43,6 @@ namespace TransIT.BLL.DTOs
         public DateTime ArrivalDate { get; set; }
         public CurrencyDTO Currency { get; set; }
         public UnitDTO Unit { get; set; }
+        public PartDTO Part { get; set; }
     }
 }
