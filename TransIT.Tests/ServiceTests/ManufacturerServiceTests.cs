@@ -1,7 +1,7 @@
-﻿using AutoMapper;
-using Moq;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using AutoMapper;
+using Moq;
 using TransIT.BLL.DTOs;
 using TransIT.BLL.Services.ImplementedServices;
 using TransIT.DAL.Models;
@@ -12,23 +12,23 @@ using Xunit;
 
 namespace TransIT.Tests.ServiceTests
 {
-    public class UnitServiceTests : IClassFixture<MapperFixture>
+    public class ManufacturerServiceTests : IClassFixture<MapperFixture>
     {
         private readonly IMapper _mapper;
 
         private Mock<IUnitOfWork> _unitOfWork;
 
-        public UnitServiceTests(MapperFixture fixture)
+        public ManufacturerServiceTests(MapperFixture fixture)
         {
             _mapper = fixture.Mapper;
         }
 
         [Fact]
-        public async Task UnitService_Should_Get_Null_When_Unit_Not_Exist()
+        public async Task ManufacturerService_Should_Get_Null_When_Manufacturer_Not_Exist()
         {
             // Arrange
-            SetUpUnitOfWork();
-            var service = new UnitService(_unitOfWork.Object, _mapper);
+            SetUpManufacturerOfWork();
+            var service = new ManufacturerService(_unitOfWork.Object, _mapper);
 
             // Act
             var entity = await service.GetAsync((new Random()).Next());
@@ -38,15 +38,14 @@ namespace TransIT.Tests.ServiceTests
         }
 
         [Fact]
-        public async Task UnitService_Should_Create_Unit_Async()
+        public async Task ManufacturerService_Should_Create_Manufacturer_Async()
         {
             // Arrange
-            SetUpUnitOfWork();
-            var service = new UnitService(_unitOfWork.Object, _mapper);
-            var expectedEntity = new UnitDTO()
+            SetUpManufacturerOfWork();
+            var service = new ManufacturerService(_unitOfWork.Object, _mapper);
+            var expectedEntity = new ManufacturerDTO()
             {
                 Name = "TestName",
-                ShortName = "TestSN",
             };
 
             // Act
@@ -56,25 +55,22 @@ namespace TransIT.Tests.ServiceTests
             // Assert
             Assert.NotNull(actualEntity);
             Assert.Equal(expectedEntity.Name, actualEntity.Name);
-            Assert.Equal(expectedEntity.ShortName, actualEntity.ShortName);
         }
 
         [Fact]
-        public async Task UnitService_Should_Update_Unit()
+        public async Task ManufacturerService_Should_Update_Manufacturer()
         {
             // Arrange
-            SetUpUnitOfWork();
-            var service = new UnitService(_unitOfWork.Object, _mapper);
-            var entity = new UnitDTO()
+            SetUpManufacturerOfWork();
+            var service = new ManufacturerService(_unitOfWork.Object, _mapper);
+            var entity = new ManufacturerDTO()
             {
                 Name = "TestName",
-                ShortName = "TestSN",
             };
 
-            var newEntity = new UnitDTO()
+            var newEntity = new ManufacturerDTO()
             {
                 Name = "NewTestName",
-                ShortName = "NewTestSN",
             };
 
             await service.CreateAsync(entity);
@@ -82,26 +78,23 @@ namespace TransIT.Tests.ServiceTests
 
             // Act
             entity.Name = newEntity.Name;
-            entity.ShortName = newEntity.ShortName;
             await service.UpdateAsync(entity);
             await _unitOfWork.Object.SaveAsync();
 
             // Assert
             Assert.NotNull(entity);
             Assert.Equal(newEntity.Name, entity.Name);
-            Assert.Equal(newEntity.ShortName, entity.ShortName);
         }
 
         [Fact]
-        public async Task UnitService_Should_Delete_Unit_Async()
+        public async Task ManufacturerService_Should_Delete_Manufacturer_Async()
         {
             // Arrange
-            SetUpUnitOfWork();
-            var service = new UnitService(_unitOfWork.Object, _mapper);
-            var entity = new UnitDTO()
+            SetUpManufacturerOfWork();
+            var service = new ManufacturerService(_unitOfWork.Object, _mapper);
+            var entity = new ManufacturerDTO()
             {
                 Name = "TestName",
-                ShortName = "TestSN",
             };
 
             entity = await service.CreateAsync(entity);
@@ -115,18 +108,18 @@ namespace TransIT.Tests.ServiceTests
             Assert.Null(await service.GetAsync(entity.Id));
         }
 
-        private void SetUpUnitOfWork()
+        private void SetUpManufacturerOfWork()
         {
             _unitOfWork = new Mock<IUnitOfWork>();
-            SetUpUnitRepository(TestSetUpHelper.CreateDbContext());
+            SetUpManufacturerRepository(TestSetUpHelper.CreateDbContext());
         }
 
-        private void SetUpUnitRepository(TransITDBContext context)
+        private void SetUpManufacturerRepository(TransITDBContext context)
         {
-            var unitRepository = new UnitRepository(context);
+            var manufacturerRepository = new ManufacturerRepository(context);
 
             _unitOfWork.Setup(u => u.SaveAsync()).Returns(() => context.SaveChangesAsync());
-            _unitOfWork.Setup(u => u.UnitRepository).Returns(() => unitRepository);
+            _unitOfWork.Setup(u => u.ManufacturerRepository).Returns(() => manufacturerRepository);
         }
     }
 }
