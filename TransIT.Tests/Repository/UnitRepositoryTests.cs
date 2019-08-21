@@ -1,10 +1,8 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using TransIT.DAL.Models;
 using TransIT.DAL.Models.Entities;
 using TransIT.DAL.Repositories.ImplementedRepositories;
+using TransIT.Tests.Helper;
 using Xunit;
 
 namespace TransIT.Tests.Repository
@@ -15,7 +13,7 @@ namespace TransIT.Tests.Repository
         public async Task Unit_Repository_Should_Add_Unit()
         {
             // Arrange
-            var context = CreateDbContext();
+            var context = TestSetUpHelper.CreateDbContext();
             var repository = new UnitRepository(context);
             var expectedEntity = new Unit()
             {
@@ -37,7 +35,7 @@ namespace TransIT.Tests.Repository
         public async Task Unit_Repository_Should_Get_All_Async()
         {
             // Arrange
-            var context = CreateDbContext();
+            var context = TestSetUpHelper.CreateDbContext();
             var repository = new UnitRepository(context);
             var expectedEntity = new Unit()
             {
@@ -60,7 +58,7 @@ namespace TransIT.Tests.Repository
         public async Task Unit_Repository_Should_Remove_Unit_Async()
         {
             // Arrange
-            var context = CreateDbContext();
+            var context = TestSetUpHelper.CreateDbContext();
             var repository = new UnitRepository(context);
             var expectedEntity = new Unit()
             {
@@ -85,7 +83,7 @@ namespace TransIT.Tests.Repository
         public async Task Unit_Repository_Should_Update_Unit()
         {
             // Arrange
-            var context = CreateDbContext();
+            var context = TestSetUpHelper.CreateDbContext();
             var repository = new UnitRepository(context);
             var oldUnit = new Unit()
             {
@@ -113,16 +111,6 @@ namespace TransIT.Tests.Repository
             // Assert
             Assert.Equal(newUnit.Name, oldUnit.Name);
             Assert.Equal(newUnit.ShortName, oldUnit.ShortName);
-        }
-
-        private TransITDBContext CreateDbContext()
-        {
-            return new TransITDBContext(
-                new DbContextOptionsBuilder<TransITDBContext>()
-                    .UseInMemoryDatabase(Guid.NewGuid().ToString())
-                    .EnableSensitiveDataLogging()
-                    .Options
-            );
         }
     }
 }

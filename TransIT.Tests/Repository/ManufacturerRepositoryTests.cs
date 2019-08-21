@@ -1,10 +1,8 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using TransIT.DAL.Models;
 using TransIT.DAL.Models.Entities;
 using TransIT.DAL.Repositories.ImplementedRepositories;
+using TransIT.Tests.Helper;
 using Xunit;
 
 namespace TransIT.Tests.Repository
@@ -15,7 +13,7 @@ namespace TransIT.Tests.Repository
         public async Task Manufacturer_Repository_Should_Add_Manufacturer()
         {
             // Arrange
-            var context = CreateDbContext();
+            var context = TestSetUpHelper.CreateDbContext();
             var repository = new ManufacturerRepository(context);
             var expectedEntity = new Manufacturer()
             {
@@ -36,7 +34,7 @@ namespace TransIT.Tests.Repository
         public async Task Manufacturer_Repository_Should_Get_All_Async()
         {
             // Arrange
-            var context = CreateDbContext();
+            var context = TestSetUpHelper.CreateDbContext();
             var repository = new ManufacturerRepository(context);
             var expectedEntity = new Manufacturer()
             {
@@ -58,7 +56,7 @@ namespace TransIT.Tests.Repository
         public async Task Manufacturer_Repository_Should_Remove_Manufacturer_Async()
         {
             // Arrange
-            var context = CreateDbContext();
+            var context = TestSetUpHelper.CreateDbContext();
             var repository = new ManufacturerRepository(context);
             var expectedEntity = new Manufacturer()
             {
@@ -82,7 +80,7 @@ namespace TransIT.Tests.Repository
         public async Task Manufacturer_Repository_Should_Update_Manufacturer()
         {
             // Arrange
-            var context = CreateDbContext();
+            var context = TestSetUpHelper.CreateDbContext();
             var repository = new ManufacturerRepository(context);
             var oldManufacturer = new Manufacturer()
             {
@@ -106,16 +104,6 @@ namespace TransIT.Tests.Repository
 
             // Assert
             Assert.Equal(newManufacturer.Name, oldManufacturer.Name);
-        }
-
-        private TransITDBContext CreateDbContext()
-        {
-            return new TransITDBContext(
-                new DbContextOptionsBuilder<TransITDBContext>()
-                    .UseInMemoryDatabase(Guid.NewGuid().ToString())
-                    .EnableSensitiveDataLogging()
-                    .Options
-            );
         }
     }
 }
