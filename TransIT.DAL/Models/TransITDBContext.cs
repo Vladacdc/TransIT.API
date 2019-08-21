@@ -47,6 +47,7 @@ namespace TransIT.DAL.Models
         public virtual DbSet<Transition> Transition { get; set; }
         public virtual DbSet<Vehicle> Vehicle { get; set; }
         public virtual DbSet<VehicleType> VehicleType { get; set; }
+        public virtual DbSet<WorkType> WorkType { get; set; }
         public virtual DbSet<Unit> Units { get; set; }
         public virtual DbSet<Manufacturer> Manufacturers { get; set; }
 
@@ -118,6 +119,7 @@ namespace TransIT.DAL.Models
             modelBuilder.ApplyConfiguration(new UserConfiguration());
             modelBuilder.ApplyConfiguration(new VehicleConfiguration());
             modelBuilder.ApplyConfiguration(new VehicleTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new WorkTypeConfiguration());
             modelBuilder.ApplyConfiguration(new UserRoleConfiguration());
             modelBuilder.ApplyConfiguration(new UnitConfiguration());
             modelBuilder.ApplyConfiguration(new ManufacturerConfiguration());
