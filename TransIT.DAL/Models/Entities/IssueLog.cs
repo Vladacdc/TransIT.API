@@ -32,5 +32,7 @@ namespace TransIT.DAL.Models.Entities
         public virtual State OldState { get; set; }
         public virtual Supplier Supplier { get; set; }
         public virtual ICollection<Document> Document { get; set; }
+
+        public ICollection<IssueLogParts> IssueLogParts { get; set; }
     }
 }
