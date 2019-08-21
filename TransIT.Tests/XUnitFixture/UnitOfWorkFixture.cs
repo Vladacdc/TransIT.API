@@ -63,6 +63,7 @@ namespace TransIT.Tests
                 new VehicleRepository(transITDBContext),
                 new VehicleTypeRepository(transITDBContext),
                 new EmployeeRepository(transITDBContext),
+                new PartRepository(transITDBContext),
                 new PostRepository(transITDBContext),
                 new TransitionRepository(transITDBContext),
                 new LocationRepository(transITDBContext),

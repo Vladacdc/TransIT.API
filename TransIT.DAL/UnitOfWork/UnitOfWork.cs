@@ -40,6 +40,8 @@ namespace TransIT.DAL.UnitOfWork
 
         public  IEmployeeRepository EmployeeRepository { get; }
 
+        public IPartRepository PartRepository { get; }
+
         public  IPostRepository PostRepository { get; }
 
         public  ITransitionRepository TransitionRepository { get; }
@@ -74,6 +76,7 @@ namespace TransIT.DAL.UnitOfWork
             IVehicleRepository vehicleRepository,
             IVehicleTypeRepository vehicleTypeRepository,
             IEmployeeRepository employeeRepository,
+            IPartRepository partRepository,
             IPostRepository postRepository,
             ITransitionRepository transitionRepository,
             ILocationRepository locationRepository,
@@ -100,6 +103,7 @@ namespace TransIT.DAL.UnitOfWork
             VehicleRepository = vehicleRepository;
             VehicleTypeRepository = vehicleTypeRepository;
             EmployeeRepository = employeeRepository;
+            PartRepository = partRepository;
             PostRepository = postRepository;
             TransitionRepository = transitionRepository;
             LocationRepository = locationRepository;

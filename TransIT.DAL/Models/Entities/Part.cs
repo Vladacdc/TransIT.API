@@ -1,31 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
 using TransIT.DAL.Models.Entities.Abstractions;
 
 namespace TransIT.DAL.Models.Entities
 {
-    public class Unit : IBaseEntity, IAuditableEntity
+    public class Part : IAuditableEntity, IBaseEntity
     {
         public int Id { get; set; }
-
-        public string ShortName { get; set; }
-
         public string Name { get; set; }
-
-        public ICollection<PartIn> PartsInNavigation { get; set; }
-
+        public string Code { get; set; }
+        public int UnitId { get; set; }
+        public int ManufacturerId { get; set; }
         public string CreatedById { get; set; }
-
-        public virtual User Create { get; set; }
-
         public string UpdatedById { get; set; }
-
-        public virtual User Mod { get; set; }
-
         public DateTime? CreatedDate { get; set; }
-
         public DateTime? UpdatedDate { get; set; }
 
-        public virtual ICollection<Part> Parts { get; set; }
+        public Unit Unit { get; set; }
+        public Manufacturer Manufacturer{ get; set; }
+        public virtual User Create { get; set; }
+        public virtual User Mod { get; set; }
     }
 }

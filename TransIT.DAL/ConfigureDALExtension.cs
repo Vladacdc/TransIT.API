@@ -47,6 +47,7 @@ namespace TransIT.DAL
             services.AddScoped<ICurrencyRepository, CurrencyRepository>();
             services.AddScoped<ICountryRepository, CountryRepository>();
             services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            services.AddScoped<IPartRepository, PartRepository>();
             services.AddScoped<IPostRepository, PostRepository>();
             services.AddScoped<ITransitionRepository, TransitionRepository>();
             services.AddScoped<ILocationRepository, LocationRepository>();
@@ -75,6 +76,7 @@ namespace TransIT.DAL
             services.AddScoped<IQueryRepository<Currency>, CurrencyRepository>();
             services.AddScoped<IQueryRepository<Country>, CountryRepository>();
             services.AddScoped<IQueryRepository<Employee>, EmployeeRepository>();
+            services.AddScoped<IQueryRepository<Part>, PartRepository>();
             services.AddScoped<IQueryRepository<Post>, PostRepository>();
             services.AddScoped<IQueryRepository<Transition>, TransitionRepository>();
             services.AddScoped<IQueryRepository<Location>, LocationRepository>();

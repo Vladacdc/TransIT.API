@@ -30,6 +30,8 @@ namespace TransIT.BLL.Factories
 
         IMalfunctionSubgroupService MalfunctionSubgroupService { get; }
 
+        IPartService PartService { get; }
+
         IPostService PostService { get; }
 
         IStateService StateService { get; }
