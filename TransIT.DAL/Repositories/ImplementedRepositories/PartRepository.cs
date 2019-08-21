@@ -39,6 +39,7 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
            Include(p => p.Mod).
            Include(p => p.Unit).
            Include(p => p.Manufacturer).
+           Include(p => p.SuppliersParts).
            OrderByDescending(u => u.UpdatedDate).ThenByDescending(x => x.CreatedDate);
     }
 }
