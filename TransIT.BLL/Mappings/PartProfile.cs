@@ -9,8 +9,6 @@ namespace TransIT.BLL.Mappings
         public PartProfile()
         {
             CreateMap<PartDTO, Part>()
-                .ForMember(e => e.UpdatedById, opt => opt.Ignore())
-                .ForMember(e => e.CreatedById, opt => opt.Ignore())
                 .ForMember(e => e.UpdatedDate, opt => opt.Ignore())
                 .ForMember(e => e.CreatedDate, opt => opt.Ignore())
                 .ForMember(e => e.UnitId, opt => opt.MapFrom(e => e.Unit.Id))
