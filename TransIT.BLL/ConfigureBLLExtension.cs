@@ -50,6 +50,7 @@ namespace TransIT.BLL
             services.AddScoped<ICurrencyService, CurrencyService>();
             services.AddScoped<ICountryService, CountryService>();
             services.AddScoped<IEmployeeService, EmployeeService>();
+            services.AddScoped<IPartService, PartService>();
             services.AddScoped<IPostService, PostService>();
             services.AddScoped<ITransitionService, TransitionService>();
             services.AddScoped<ILocationService, LocationService>();
@@ -76,6 +77,7 @@ namespace TransIT.BLL
             services.AddScoped<IFilterService<CurrencyDTO>, CurrencyFilterService>();
             services.AddScoped<IFilterService<CountryDTO>, CountryFilterService>();
             services.AddScoped<IFilterService<EmployeeDTO>, EmployeeFilterService>();
+            services.AddScoped<IFilterService<PartDTO>, PartFilterService>();
             services.AddScoped<IFilterService<PostDTO>, PostFilterService>();
             services.AddScoped<IFilterService<TransitionDTO>, TransitionFilterService>();
             services.AddScoped<IFilterService<LocationDTO>, LocationFilterService>();
@@ -105,6 +107,7 @@ namespace TransIT.BLL
                 c.AddProfile(new SupplierProfile());
                 c.AddProfile(new CurrencyProfile());
                 c.AddProfile(new CountryProfile());
+                c.AddProfile(new PartProfile());
                 c.AddProfile(new PostProfile());
                 c.AddProfile(new EmployeeProfile());
                 c.AddProfile(new TransitionProfile());

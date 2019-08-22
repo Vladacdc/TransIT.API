@@ -111,6 +111,7 @@ namespace TransIT.DAL.Models
             modelBuilder.ApplyConfiguration(new MalfunctionConfiguration());
             modelBuilder.ApplyConfiguration(new MalfunctionGroupConfiguration());
             modelBuilder.ApplyConfiguration(new MalfunctionSubgroupConfiguration());
+            modelBuilder.ApplyConfiguration(new PartConfiguration());
             modelBuilder.ApplyConfiguration(new PostConfiguration());
             modelBuilder.ApplyConfiguration(new RoleConfiguration());
             modelBuilder.ApplyConfiguration(new StateConfiguration());
