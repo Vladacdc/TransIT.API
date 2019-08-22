@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TransIT.BLL.DTOs;
 using TransIT.BLL.Factories;
@@ -7,6 +8,11 @@ using TransIT.BLL.Services.Interfaces;
 
 namespace TransIT.API.Controllers
 {
+    [ApiController]
+    [EnableCors("CorsPolicy")]
+    [Produces("application/json")]
+    [Route("api/v1/[controller]")]
+    [Authorize(Roles = "ADMIN,ENGINEER,REGISTER,ANALYST")]
     public class WorkTypeController : FilterController<WorkTypeDTO>
     {
         private readonly IWorkTypeService _workTypeService;
