@@ -364,6 +364,15 @@ namespace TransIT.DAL.Models
                 brokenPump);
             #endregion
 
+            #region WorkTypes
+
+            var painting = new WorkType() { Name = "Фарбування", EstimatedCost = 100, EstimatedTime = 2 };
+            var partChanging = new WorkType() { Name = "Заміна деталі", EstimatedCost = 80, EstimatedTime = 1.5 };
+            var diagnostic = new WorkType() { Name = "Діагностика", EstimatedCost = 150, EstimatedTime = 1 };
+
+            context.WorkType.AddRange(painting,partChanging,diagnostic);
+            #endregion
+
             #region Issues
             var userController = services.GetRequiredService<UserManager<User>>();
             var findRegister = userController.FindByNameAsync("testRegister");

@@ -19,6 +19,7 @@ namespace TransIT.DAL.Models.Entities
         public int? SupplierId { get; set; }
         public int? ActionTypeId { get; set; }
         public int? IssueId { get; set; }
+        public int? WorkTypeId { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public string CreatedById { get; set; }
@@ -31,6 +32,7 @@ namespace TransIT.DAL.Models.Entities
         public virtual State NewState { get; set; }
         public virtual State OldState { get; set; }
         public virtual Supplier Supplier { get; set; }
+        public virtual WorkType WorkType { get; set; }
         public virtual ICollection<Document> Document { get; set; }
     }
 }

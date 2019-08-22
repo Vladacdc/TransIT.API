@@ -70,6 +70,7 @@ namespace TransIT.Tests
                 MockHelpers.TestRoleManager(roleStore),
                 MockHelpers.TestUserManager(userStore),
                 new UnitRepository(transITDBContext),
+                new WorkTypeRepository(transITDBContext), 
                 new ManufacturerRepository(transITDBContext)
             );
 
