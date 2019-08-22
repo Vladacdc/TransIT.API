@@ -29,6 +29,8 @@ namespace TransIT.BLL.Factories
 
         public IFilterService<MalfunctionSubgroupDTO> MalfunctionSubgroupFilterService { get; }
 
+        public IFilterService<PartDTO> PartFilterService { get; }
+
         public IFilterService<PostDTO> PostFilterService { get; }
 
         public IFilterService<StateDTO> StateFilterService { get; }
@@ -156,6 +158,11 @@ namespace TransIT.BLL.Factories
                     return (IFilterService<TEntityDTO>) MalfunctionFilterService;
                 }
 
+                case nameof(PartDTO):
+                {
+                    return (IFilterService<TEntityDTO>) PartFilterService;
+                }
+
                 default:
                 {
                     return null;
@@ -176,6 +183,7 @@ namespace TransIT.BLL.Factories
             IFilterService<MalfunctionGroupDTO> malfunctionGroupFilterService,
             IFilterService<MalfunctionSubgroupDTO> malfunctionSubgroupFilterService,
             IFilterService<PostDTO> postFilterService,
+            IFilterService<PartDTO> partFilterService,
             IFilterService<StateDTO> stateFilterService,
             IFilterService<SupplierDTO> supplierFilterService,
             IFilterService<TransitionDTO> transitionFilterService,
@@ -198,6 +206,7 @@ namespace TransIT.BLL.Factories
             MalfunctionGroupFilterService = malfunctionGroupFilterService;
             MalfunctionSubgroupFilterService = malfunctionSubgroupFilterService;
             PostFilterService = postFilterService;
+            PartFilterService = partFilterService;
             StateFilterService = stateFilterService;
             SupplierFilterService = supplierFilterService;
             TransitionFilterService = transitionFilterService;
