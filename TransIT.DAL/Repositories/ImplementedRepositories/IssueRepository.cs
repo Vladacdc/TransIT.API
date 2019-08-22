@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using LinqKit;
 using Microsoft.EntityFrameworkCore;
@@ -26,42 +24,50 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
             return await base.AddAsync(issue);
         } 
 
-        public override Expression<Func<Issue, bool>> MakeFilteringExpression(string keyword)
+        public override Task<IQueryable<Issue>> SearchExpressionAsync(IEnumerable<string> strs)
         {
-            Expression<Func<Issue, bool>> expression =
-                entity =>
-                       EF.Functions.Like(entity.Summary, '%' + keyword + '%')
-                    || EF.Functions.Like(entity.Malfunction.Name, '%' + keyword + '%')
-                    || EF.Functions.Like(entity.Malfunction.MalfunctionSubgroup.Name, '%' + keyword + '%')
-                    || EF.Functions.Like(entity.Malfunction.MalfunctionSubgroup.MalfunctionGroup.Name,
-                         '%' + keyword + '%')
-                    || entity.State.TransName != null && entity.State.TransName != string.Empty &&
-                           EF.Functions.Like(entity.State.TransName, '%' + keyword + '%')
-                    || entity.Vehicle.Brand != null && entity.Vehicle.Brand != string.Empty &&
-                           EF.Functions.Like(entity.Vehicle.Brand, '%' + keyword + '%')
-                    || entity.Vehicle.InventoryId != null && entity.Vehicle.InventoryId != string.Empty &&
-                           EF.Functions.Like(entity.Vehicle.InventoryId, '%' + keyword + '%')
-                    || entity.Vehicle.Model != null && entity.Vehicle.Model != string.Empty &&
-                           EF.Functions.Like(entity.Vehicle.Model, '%' + keyword + '%')
-                    || entity.Vehicle.RegNum != null && entity.Vehicle.RegNum != string.Empty &&
-                           EF.Functions.Like(entity.Vehicle.RegNum, '%' + keyword + '%')
-                    || entity.Vehicle.Vincode != null && entity.Vehicle.Vincode != string.Empty &&
-                           EF.Functions.Like(entity.Vehicle.Vincode, '%' + keyword + '%');
+            var predicate = PredicateBuilder.New<Issue>();
 
-            if (int.TryParse(keyword, out int parsedInteger))
+            foreach (string keyword in strs)
             {
-                Expression<Func<Issue, bool>> integerExpression =
-                    entity => entity.Number == parsedInteger
+                string temp = keyword;
+               
+                predicate = predicate.And(entity =>
+                       EF.Functions.Like(entity.Summary, '%' + temp + '%')
+                    || EF.Functions.Like(entity.Malfunction.Name, '%' + temp + '%')
+                    || EF.Functions.Like(entity.Malfunction.MalfunctionSubgroup.Name, '%' + temp + '%')
+                    || EF.Functions.Like(entity.Malfunction.MalfunctionSubgroup.MalfunctionGroup.Name, 
+                         '%' + temp + '%')
+                    || entity.State.TransName != null && entity.State.TransName != string.Empty &&
+                           EF.Functions.Like(entity.State.TransName, '%' + temp + '%')
+                    || entity.Vehicle.Brand != null && entity.Vehicle.Brand != string.Empty &&
+                           EF.Functions.Like(entity.Vehicle.Brand, '%' + temp + '%')
+                    || entity.Vehicle.InventoryId != null && entity.Vehicle.InventoryId != string.Empty &&
+                           EF.Functions.Like(entity.Vehicle.InventoryId, '%' + temp + '%')
+                    || entity.Vehicle.Model != null && entity.Vehicle.Model != string.Empty &&
+                           EF.Functions.Like(entity.Vehicle.Model, '%' + temp + '%')
+                    || entity.Vehicle.RegNum != null && entity.Vehicle.RegNum != string.Empty &&
+                           EF.Functions.Like(entity.Vehicle.RegNum, '%' + temp + '%')
+                    || entity.Vehicle.Vincode != null && entity.Vehicle.Vincode != string.Empty &&
+                           EF.Functions.Like(entity.Vehicle.Vincode, '%' + temp + '%')
+                    );
+                if (int.TryParse(temp, out int parsedInteger))
+                {
+                    predicate = predicate.And(entity =>
+                           entity.Number == parsedInteger
                         || entity.Date.Year == parsedInteger
                         || entity.Date.Month == parsedInteger
-                        || entity.Date.Day == parsedInteger;
-
-                expression = PredicateBuilder.New<Issue>().And(expression).And(integerExpression);
+                        || entity.Date.Day == parsedInteger
+                    );
+                }
             }
 
-            return expression;
+            return Task.FromResult(
+                GetQueryable()
+                .AsExpandable()
+                .Where(predicate)
+            );
         }
-
         protected override IQueryable<Issue> ComplexEntities => Entities
             .Include(i => i.AssignedTo)
             .Include(i => i.Create)

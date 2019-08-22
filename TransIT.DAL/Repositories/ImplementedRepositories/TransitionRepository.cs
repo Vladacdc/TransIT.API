@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using LinqKit;
 using Microsoft.EntityFrameworkCore;
@@ -18,15 +16,28 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
         {
         }
 
-        public override Expression<Func<Transition, bool>> MakeFilteringExpression(string keyword)
+        public override Task<IQueryable<Transition>> SearchExpressionAsync(IEnumerable<string> strs)
         {
-            return entity =>
-                   entity.FromState.TransName != null && entity.FromState.TransName != string.Empty &&
-                       EF.Functions.Like(entity.FromState.TransName, '%' + keyword + '%')
-                || entity.ToState.TransName != null && entity.ToState.TransName != string.Empty &&
-                       EF.Functions.Like(entity.ToState.TransName, '%' + keyword + '%')
-                || entity.ActionType.Name != null && entity.ActionType.Name != string.Empty &&
-                       EF.Functions.Like(entity.ActionType.Name, '%' + keyword + '%');
+            var predicate = PredicateBuilder.New<Transition>();
+
+            foreach (string keyword in strs)
+            {
+                string temp = keyword;
+                predicate = predicate.And(entity =>
+                       entity.FromState.TransName != null && entity.FromState.TransName != string.Empty &&
+                           EF.Functions.Like(entity.FromState.TransName, '%' + temp + '%')
+                    || entity.ToState.TransName != null && entity.ToState.TransName != string.Empty &&
+                           EF.Functions.Like(entity.ToState.TransName, '%' + temp + '%')
+                    || entity.ActionType.Name != null && entity.ActionType.Name != string.Empty &&
+                           EF.Functions.Like(entity.ActionType.Name, '%' + temp + '%')
+                    );
+            }
+
+            return Task.FromResult(
+                GetQueryable()
+                .AsExpandable()
+                .Where(predicate)
+            );
         }
 
         protected override IQueryable<Transition> ComplexEntities => Entities.

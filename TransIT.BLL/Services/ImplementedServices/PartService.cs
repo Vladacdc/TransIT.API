@@ -41,7 +41,9 @@ namespace TransIT.BLL.Services.ImplementedServices
         public async Task<IEnumerable<PartDTO>> SearchAsync(string search)
         {
             var parts = await _unitOfWork.PartRepository.SearchExpressionAsync(
-                    new SearchTokenCollection(search)
+                search
+                    .Split(new[] { ' ', ',', '.' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(x => x.Trim().ToUpperInvariant())
                 );
 
             return _mapper.Map<IEnumerable<PartDTO>>(await parts.ToListAsync());

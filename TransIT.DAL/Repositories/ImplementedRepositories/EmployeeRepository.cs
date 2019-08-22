@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using LinqKit;
 using Microsoft.EntityFrameworkCore;
@@ -18,28 +16,37 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
         {
         }
 
-        public override Expression<Func<Employee, bool>> MakeFilteringExpression(string keyword)
+        public override Task<IQueryable<Employee>> SearchExpressionAsync(IEnumerable<string> strs)
         {
-            Expression<Func<Employee, bool>> expression =
-                entity =>
-                       EF.Functions.Like(entity.Post.Name, '%' + keyword + '%')
-                    || entity.FirstName != null && entity.FirstName != string.Empty &&
-                           EF.Functions.Like(entity.FirstName, '%' + keyword + '%')
-                    || entity.MiddleName != null && entity.MiddleName != string.Empty &&
-                           EF.Functions.Like(entity.MiddleName, '%' + keyword + '%')
-                    || entity.LastName != null && entity.LastName != string.Empty &&
-                           EF.Functions.Like(entity.LastName, '%' + keyword + '%')
-                    || EF.Functions.Like(entity.ShortName, '%' + keyword + '%');
+            var predicate = PredicateBuilder.New<Employee>();
 
-            if (int.TryParse(keyword, out int parsedInteger))
+            foreach (string keyword in strs)
             {
-                Expression<Func<Employee, bool>> integerExpression =
-                    entity => entity.BoardNumber == parsedInteger;
+                string temp = keyword;
+                predicate = predicate.And(entity =>
+                       EF.Functions.Like(entity.Post.Name, '%' + temp + '%')
+                    || entity.FirstName != null && entity.FirstName != string.Empty &&
+                           EF.Functions.Like(entity.FirstName, '%' + temp + '%')
+                    || entity.MiddleName != null && entity.MiddleName != string.Empty &&
+                           EF.Functions.Like(entity.MiddleName, '%' + temp + '%')
+                    || entity.LastName != null && entity.LastName != string.Empty &&
+                           EF.Functions.Like(entity.LastName, '%' + temp + '%')
+                    || EF.Functions.Like(entity.ShortName, '%' + temp + '%')
+                    );
 
-                expression = PredicateBuilder.New<Employee>().And(expression).And(integerExpression);
+                if (int.TryParse(temp, out int parsedInteger))
+                {
+                    predicate = predicate.And(
+                        entity => entity.BoardNumber == parsedInteger
+                    );
+                }
             }
 
-            return expression;
+            return Task.FromResult(
+                GetQueryable()
+                .AsExpandable()
+                .Where(predicate)
+            );
         }
 
         protected override IQueryable<Employee> ComplexEntities => Entities

@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using LinqKit;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +14,28 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
         public DocumentRepository(TransITDBContext context)
             : base(context)
         {
+        }
+
+        public override Task<IQueryable<Document>> SearchExpressionAsync(IEnumerable<string> strs)
+        {
+            var predicate = PredicateBuilder.New<Document>();
+
+            foreach (string keyword in strs)
+            {
+                string temp = keyword;
+                predicate = predicate.And(entity =>
+                       entity.Name != null && entity.Name != string.Empty &&
+                           EF.Functions.Like(entity.Name, '%' + temp + '%')
+                    || entity.Description != null && entity.Description != string.Empty &&
+                           EF.Functions.Like(entity.Description, '%' + temp + '%')
+                    );
+            }
+
+            return Task.FromResult(
+                GetQueryable()
+                .AsExpandable()
+                .Where(predicate)
+            );
         }
 
         protected override IQueryable<Document> ComplexEntities => Entities
@@ -40,15 +60,5 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
             .Include(a => a.Mod)
             .OrderByDescending(u => u.UpdatedDate)
             .ThenByDescending(x => x.CreatedDate);
-
-        public override Expression<Func<Document, bool>> MakeFilteringExpression(string keyword)
-        {
-            return entity => entity.Name != null &&
-                             entity.Name != string.Empty &&
-                             EF.Functions.Like(entity.Name, '%' + keyword + '%') ||
-                             entity.Description != null &&
-                             entity.Description != string.Empty &&
-                             EF.Functions.Like(entity.Description, '%' + keyword + '%');
-        }
     }
 }

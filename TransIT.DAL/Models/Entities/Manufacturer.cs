@@ -6,11 +6,6 @@ namespace TransIT.DAL.Models.Entities
 {
     public class Manufacturer : IAuditableEntity, IBaseEntity
     {
-        public Manufacturer()
-        {
-            Parts = new List<Part>();
-        }
-
         public int Id { get; set; }
 
         public string Name { get; set; }

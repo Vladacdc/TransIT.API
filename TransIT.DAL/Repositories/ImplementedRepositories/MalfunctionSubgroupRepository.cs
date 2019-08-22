@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using LinqKit;
 using Microsoft.EntityFrameworkCore;
@@ -17,12 +15,25 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
             : base(context)
         {
         }
-
-        public override Expression<Func<MalfunctionSubgroup, bool>> MakeFilteringExpression(string keyword)
+        
+         public override Task<IQueryable<MalfunctionSubgroup>> SearchExpressionAsync(IEnumerable<string> strs)
         {
-            return entity => entity.Name != null &&
-                             entity.Name != string.Empty &&
-                             EF.Functions.Like(entity.Name, '%' + keyword + '%');
+            var predicate = PredicateBuilder.New<MalfunctionSubgroup>();
+
+            foreach (string keyword in strs)
+            {
+                string temp = keyword;
+                predicate = predicate.And(entity =>
+                       entity.Name != null && entity.Name != string.Empty &&
+                           EF.Functions.Like(entity.Name, '%' + temp + '%')
+                    );
+            }
+
+            return Task.FromResult(
+                GetQueryable()
+                .AsExpandable()
+                .Where(predicate)
+            );
         }
 
         protected override IQueryable<MalfunctionSubgroup> ComplexEntities => Entities
