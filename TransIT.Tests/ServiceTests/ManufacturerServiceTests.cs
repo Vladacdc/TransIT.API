@@ -27,7 +27,7 @@ namespace TransIT.Tests.ServiceTests
         public async Task ManufacturerService_Should_Get_Null_When_Manufacturer_Not_Exist()
         {
             // Arrange
-            SetUpManufacturerOfWork();
+            SetUpUnitOfWork();
             var service = new ManufacturerService(_unitOfWork.Object, _mapper);
 
             // Act
@@ -41,7 +41,7 @@ namespace TransIT.Tests.ServiceTests
         public async Task ManufacturerService_Should_Create_Manufacturer_Async()
         {
             // Arrange
-            SetUpManufacturerOfWork();
+            SetUpUnitOfWork();
             var service = new ManufacturerService(_unitOfWork.Object, _mapper);
             var expectedEntity = new ManufacturerDTO()
             {
@@ -61,7 +61,7 @@ namespace TransIT.Tests.ServiceTests
         public async Task ManufacturerService_Should_Update_Manufacturer()
         {
             // Arrange
-            SetUpManufacturerOfWork();
+            SetUpUnitOfWork();
             var service = new ManufacturerService(_unitOfWork.Object, _mapper);
             var entity = new ManufacturerDTO()
             {
@@ -90,7 +90,7 @@ namespace TransIT.Tests.ServiceTests
         public async Task ManufacturerService_Should_Delete_Manufacturer_Async()
         {
             // Arrange
-            SetUpManufacturerOfWork();
+            SetUpUnitOfWork();
             var service = new ManufacturerService(_unitOfWork.Object, _mapper);
             var entity = new ManufacturerDTO()
             {
@@ -108,7 +108,7 @@ namespace TransIT.Tests.ServiceTests
             Assert.Null(await service.GetAsync(entity.Id));
         }
 
-        private void SetUpManufacturerOfWork()
+        private void SetUpUnitOfWork()
         {
             _unitOfWork = new Mock<IUnitOfWork>();
             SetUpManufacturerRepository(TestSetUpHelper.CreateDbContext());
