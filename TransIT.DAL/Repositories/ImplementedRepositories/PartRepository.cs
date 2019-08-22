@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using LinqKit;
 using Microsoft.EntityFrameworkCore;
@@ -34,6 +36,11 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
             );
         }
         
+        public override Expression<Func<Part, bool>> MakeFilteringExpression(string keyword)
+        {
+            return part => EF.Functions.Like(part.Name, '%' + keyword + '%');
+        }
+
         protected override IQueryable<Part> ComplexEntities => Entities.
            Include(p => p.Create).
            Include(p => p.Mod).
