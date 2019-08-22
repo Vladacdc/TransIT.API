@@ -17,24 +17,6 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
                : base(context)
         {
         }
-
-        public override Task<IQueryable<Part>> SearchExpressionAsync(IEnumerable<string> strs)
-        {
-            var predicate = PredicateBuilder.New<Part>();
-
-            foreach (string keyword in strs)
-            {
-                predicate = predicate.And(entity =>
-                   EF.Functions.Like(entity.Name, '%' + keyword + '%')
-                   );
-            }
-
-            return Task.FromResult(
-                GetQueryable()
-                .AsExpandable()
-                .Where(predicate)
-            );
-        }
         
         public override Expression<Func<Part, bool>> MakeFilteringExpression(string keyword)
         {
