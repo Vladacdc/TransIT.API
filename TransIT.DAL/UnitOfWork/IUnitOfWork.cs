@@ -37,6 +37,8 @@ namespace TransIT.DAL.UnitOfWork
 
         IEmployeeRepository EmployeeRepository { get; }
 
+        IPartRepository PartRepository { get; }
+
         IPostRepository PostRepository { get; }
 
         ITransitionRepository TransitionRepository { get; }

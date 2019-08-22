@@ -1,10 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using TransIT.DAL.Models.Entities.Abstractions;
 
 namespace TransIT.DAL.Models.Entities
 {
     public class Manufacturer : IAuditableEntity, IBaseEntity
     {
+        public Manufacturer()
+        {
+            Parts = new List<Part>();
+        }
+
         public int Id { get; set; }
 
         public string Name { get; set; }
@@ -20,5 +26,7 @@ namespace TransIT.DAL.Models.Entities
         public virtual User Create { get; set; }
 
         public virtual User Mod { get; set; }
+
+        public virtual ICollection<Part> Parts { get; set; }
     }
 }

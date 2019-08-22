@@ -27,6 +27,7 @@ namespace TransIT.Tests
             c.AddProfile(new SupplierProfile());
             c.AddProfile(new CurrencyProfile());
             c.AddProfile(new CountryProfile());
+            c.AddProfile(new PartProfile());
             c.AddProfile(new PostProfile());
             c.AddProfile(new EmployeeProfile());
             c.AddProfile(new TransitionProfile());
