@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using LinqKit;
 using Microsoft.EntityFrameworkCore;
@@ -16,28 +18,18 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
         {
         }
 
-        public override Task<IQueryable<Bill>> SearchAsync(IEnumerable<string> strs)
+        public override Expression<Func<Bill, bool>> MakeFilteringExpression(string keyword)
         {
             var predicate = PredicateBuilder.New<Bill>();
-
-            foreach (string keyword in strs)
+            if (decimal.TryParse(keyword, out decimal parsedDecimal))
             {
-                string temp = keyword;
-                if (decimal.TryParse(temp, out decimal parsedDecimal))
-                {
-                    predicate = predicate.And(entity =>
-                        entity.Sum == parsedDecimal
-                    );
-                }
+                predicate = predicate.And(entity =>
+                    entity.Sum == parsedDecimal
+                );
             }
-
-            return Task.FromResult(
-                GetQueryable()
-                .AsExpandable()
-                .Where(predicate)
-            );
+            return predicate;
         }
-        
+
         protected override IQueryable<Bill> ComplexEntities => Entities.
            Include(t => t.Create).
            Include(a => a.Document).

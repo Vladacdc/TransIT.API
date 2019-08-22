@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using LinqKit;
 using Microsoft.EntityFrameworkCore;
 using TransIT.DAL.Models;
 using TransIT.DAL.Models.Entities.Abstractions;
@@ -92,7 +93,31 @@ namespace TransIT.DAL.Repositories
             }
         }
 
-        public abstract Task<IQueryable<TEntity>> SearchAsync(IEnumerable<string> strs);
+        /// <summary>
+        /// By default no items will be returned, so return false.
+        /// </summary>
+        /// <param name="keyword">A part of search string.</param>
+        /// <returns>An expression predicate for given entity.</returns>
+        public virtual Expression<Func<TEntity, bool>> MakeFilteringExpression(string keyword)
+        {
+            return entity => false;
+        }
+
+        public virtual Task<IQueryable<TEntity>> SearchAsync(IEnumerable<string> strs)
+        {
+            var predicate = PredicateBuilder.New<TEntity>();
+
+            foreach (string keyword in strs)
+            {
+                predicate = predicate.And(MakeFilteringExpression(keyword));
+            }
+
+            return Task.FromResult(
+                GetQueryable()
+                .AsExpandable()
+                .Where(predicate)
+            );
+        }
 
         public IQueryable<TEntity> GetQueryable()
         {

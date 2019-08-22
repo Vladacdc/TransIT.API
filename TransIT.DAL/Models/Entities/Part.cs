@@ -6,6 +6,11 @@ namespace TransIT.DAL.Models.Entities
 {
     public class Part : IAuditableEntity, IBaseEntity
     {
+        public Part()
+        {
+            PartsInNavigation = new List<PartIn>();
+        }
+
         public int Id { get; set; }
         public string Name { get; set; }
         public string Code { get; set; }
@@ -16,11 +21,7 @@ namespace TransIT.DAL.Models.Entities
         public DateTime? CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
 
-        /// <summary>
-        /// Navigation property.
-        /// </summary>
         public ICollection<PartIn> PartsInNavigation { get; set; }
-
         public Unit Unit { get; set; }
         public Manufacturer Manufacturer{ get; set; }
         public virtual User Create { get; set; }

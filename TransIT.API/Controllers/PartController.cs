@@ -12,7 +12,7 @@ namespace TransIT.API.Controllers
     [EnableCors("CorsPolicy")]
     [Produces("application/json")]
     [Route("api/v1/[controller]")]
-    [Authorize(Roles = "ADMIN,ENGINEER,REGISTER,ANALYST")]
+    [Authorize(Roles = "ENGINEER,REGISTER,ANALYST")]
     public class PartController : FilterController<PartDTO>
     {
         private readonly IPartService _partService;

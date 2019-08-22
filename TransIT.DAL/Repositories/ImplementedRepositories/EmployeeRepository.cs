@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using LinqKit;
 using Microsoft.EntityFrameworkCore;
@@ -16,37 +18,28 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
         {
         }
 
-        public override Task<IQueryable<Employee>> SearchAsync(IEnumerable<string> strs)
+        public override Expression<Func<Employee, bool>> MakeFilteringExpression(string keyword)
         {
-            var predicate = PredicateBuilder.New<Employee>();
-
-            foreach (string keyword in strs)
-            {
-                string temp = keyword;
-                predicate = predicate.And(entity =>
-                       EF.Functions.Like(entity.Post.Name, '%' + temp + '%')
+            Expression<Func<Employee, bool>> expression =
+                entity =>
+                       EF.Functions.Like(entity.Post.Name, '%' + keyword + '%')
                     || entity.FirstName != null && entity.FirstName != string.Empty &&
-                           EF.Functions.Like(entity.FirstName, '%' + temp + '%')
+                           EF.Functions.Like(entity.FirstName, '%' + keyword + '%')
                     || entity.MiddleName != null && entity.MiddleName != string.Empty &&
-                           EF.Functions.Like(entity.MiddleName, '%' + temp + '%')
+                           EF.Functions.Like(entity.MiddleName, '%' + keyword + '%')
                     || entity.LastName != null && entity.LastName != string.Empty &&
-                           EF.Functions.Like(entity.LastName, '%' + temp + '%')
-                    || EF.Functions.Like(entity.ShortName, '%' + temp + '%')
-                    );
+                           EF.Functions.Like(entity.LastName, '%' + keyword + '%')
+                    || EF.Functions.Like(entity.ShortName, '%' + keyword + '%');
 
-                if (int.TryParse(temp, out int parsedInteger))
-                {
-                    predicate = predicate.And(
-                        entity => entity.BoardNumber == parsedInteger
-                    );
-                }
+            if (int.TryParse(keyword, out int parsedInteger))
+            {
+                Expression<Func<Employee, bool>> integerExpression =
+                    entity => entity.BoardNumber == parsedInteger;
+
+                expression = PredicateBuilder.New<Employee>().And(expression).And(integerExpression);
             }
 
-            return Task.FromResult(
-                GetQueryable()
-                .AsExpandable()
-                .Where(predicate)
-            );
+            return expression;
         }
 
         protected override IQueryable<Employee> ComplexEntities => Entities

@@ -69,13 +69,11 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<IssueLogDTO> CreateAsync(IssueLogDTO issueLogDTO)
         {
+            //load previous state of issue and change AssignedTo, State, Deadline fields
             var oldIssueDTO = issueLogDTO.Issue;
             issueLogDTO.Issue =
                 _mapper.Map<IssueDTO>(await _unitOfWork.IssueRepository.GetByIdAsync((int)issueLogDTO.Issue.Id));
-            issueLogDTO.OldState.Id = issueLogDTO.Issue.State.Id;
-            issueLogDTO.Issue.State.Id = issueLogDTO.NewState.Id;
-            issueLogDTO.Issue.Deadline = oldIssueDTO.Deadline;
-            issueLogDTO.Issue.AssignedTo = oldIssueDTO.AssignedTo;
+            issueLogDTO.OldState = issueLogDTO.Issue.State;
 
             if (issueLogDTO.OldState != issueLogDTO.NewState
                 && !(await _unitOfWork.TransitionRepository.GetAllAsync(x =>
@@ -83,11 +81,15 @@ namespace TransIT.BLL.Services.ImplementedServices
                         && x.ActionTypeId == issueLogDTO.ActionType.Id
                         && x.ToStateId == issueLogDTO.NewState.Id)
                     ).Any())
-                throw new ConstraintException("Can not move to the state according to transition settings.");
+                throw new ConstraintException("Cannot change state according to the transition settings.");
 
             var model = _mapper.Map<IssueLog>(issueLogDTO);
 
             await _unitOfWork.IssueLogRepository.AddAsync(model);
+            //changed this fields in models, not DTO because GetByIdAsync and mapping doesn't allow saving changes
+            model.Issue.StateId = model.NewStateId;
+            model.Issue.AssignedToId = oldIssueDTO.AssignedTo.Id;
+            model.Issue.Deadline = oldIssueDTO.Deadline;
             await _unitOfWork.SaveAsync();
             return _mapper.Map<IssueLogDTO>(model);
         }

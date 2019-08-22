@@ -1,7 +1,9 @@
 ﻿using LinqKit;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using TransIT.DAL.Models;
 using TransIT.DAL.Models.Entities;
@@ -15,24 +17,9 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
             : base(context)
         {
         }
-
-        public override Task<IQueryable<Currency>> SearchAsync(IEnumerable<string> strs)
+        public override Expression<Func<Currency, bool>> MakeFilteringExpression(string keyword)
         {
-            var predicate = PredicateBuilder.New<Currency>();
-
-            foreach (string keyword in strs)
-            {
-                string temp = keyword;
-                predicate = predicate.And(entity =>
-                        EF.Functions.Like(entity.ShortName, '%' + temp + '%')
-                    );
-            }
-
-            return Task.FromResult(
-                GetQueryable()
-                .AsExpandable()
-                .Where(predicate)
-            );
+            return entity => EF.Functions.Like(entity.ShortName, '%' + keyword + '%');
         }
     }
 }
