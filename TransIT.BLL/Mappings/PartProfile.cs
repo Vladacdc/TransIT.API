@@ -8,8 +8,6 @@ namespace TransIT.BLL.Mappings
     {
         public PartProfile()
         {
-            CreateMap<PartDTO, Part>().ReverseMap();
-
             CreateMap<PartDTO, Part>()
                 .ForMember(e => e.UnitId, opt => opt.MapFrom(e => e.Unit.Id))
                 .ForMember(e => e.ManufacturerId, opt => opt.MapFrom(e => e.Manufacturer.Id))
