@@ -35,13 +35,11 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<IEnumerable<WorkTypeDTO>> SearchAsync(string search)
         {
-            var vehicleTypes = await _unitOfWork.WorkTypeRepository.SearchExpressionAsync(
-                search
-                    .Split(new[] { ' ', ',', '.' }, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(x => x.Trim().ToUpperInvariant())
+            var workTypes = await _unitOfWork.WorkTypeRepository.SearchExpressionAsync(
+                new SearchTokenCollection(search)
             );
 
-            return _mapper.Map<IEnumerable<WorkTypeDTO>>(await vehicleTypes.ToListAsync());
+            return _mapper.Map<IEnumerable<WorkTypeDTO>>(await workTypes.ToListAsync());
         }
 
         public async Task<WorkTypeDTO> CreateAsync(WorkTypeDTO dto)
