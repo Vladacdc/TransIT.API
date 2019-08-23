@@ -50,6 +50,8 @@ namespace TransIT.BLL.Factories
 
         public IUnitService UnitService { get; }
 
+        public IWorkTypeService WorkTypeService { get; }
+
         public IManufacturerService ManufacturerService { get; }
 
         public ServiceFactory(IAuthenticationService authenticationService,
@@ -74,7 +76,8 @@ namespace TransIT.BLL.Factories
             IUserService userService,
             IVehicleService vehicleService,
             IVehicleTypeService vehicleTypeService, 
-            IUnitService unitService, 
+            IUnitService unitService,
+            IWorkTypeService workTypeService,
             IManufacturerService manufacturerService)
         {
             AuthenticationService = authenticationService;
@@ -100,6 +103,7 @@ namespace TransIT.BLL.Factories
             VehicleService = vehicleService;
             VehicleTypeService = vehicleTypeService;
             UnitService = unitService;
+            WorkTypeService = workTypeService;
             ManufacturerService = manufacturerService;
         }
     }

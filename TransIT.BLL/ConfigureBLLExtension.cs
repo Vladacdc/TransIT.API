@@ -57,6 +57,7 @@ namespace TransIT.BLL
             services.AddScoped<IStatisticsService, StatisticsService>();
             services.AddScoped<IUnitService, UnitService>();
             services.AddScoped<IManufacturerService, ManufacturerService>();
+            services.AddScoped<IWorkTypeService, WorkTypeService>();
         }
 
         private static void ConfigureFilterServices(this IServiceCollection services)
@@ -83,6 +84,7 @@ namespace TransIT.BLL
             services.AddScoped<IFilterService<UserDTO>, UserFilterService>();
             services.AddScoped<IFilterService<UnitDTO>, UnitFilterService>();
             services.AddScoped<IFilterService<ManufacturerDTO>, ManufacturerFilterService>();
+            services.AddScoped<IFilterService<WorkTypeDTO>,WorkTypeFilterService>();
         }
 
         private static void ConfigureAutoMapper(this IServiceCollection services)
@@ -112,6 +114,7 @@ namespace TransIT.BLL
                 c.AddProfile(new LocationProfile());
                 c.AddProfile(new UnitProfile());
                 c.AddProfile(new ManufacturerProfile());
+                c.AddProfile(new WorkTypeProfile());
             }).CreateMapper());
         }
 
