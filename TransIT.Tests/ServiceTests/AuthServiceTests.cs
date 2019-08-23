@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity.Test;
+using Moq;
+using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity.Test;
-using Moq;
 using TransIT.BLL.DTOs;
 using TransIT.BLL.Factories;
 using TransIT.BLL.Services.ImplementedServices;
@@ -12,7 +12,7 @@ using TransIT.DAL.Models.Entities;
 using TransIT.DAL.UnitOfWork;
 using Xunit;
 
-namespace TransIT.Tests
+namespace TransIT.Tests.ServiceTests
 {
     public class AuthServiceTests
     {
