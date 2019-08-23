@@ -9,6 +9,7 @@ namespace TransIT.DAL.Models.Entities
         public IssueLog()
         {
             Document = new HashSet<Document>();
+            IssueLogParts = new HashSet<IssueLogPart>();
         }
 
         public int Id { get; set; }
@@ -33,6 +34,8 @@ namespace TransIT.DAL.Models.Entities
         public virtual State OldState { get; set; }
         public virtual Supplier Supplier { get; set; }
         public virtual WorkType WorkType { get; set; }
+
         public virtual ICollection<Document> Document { get; set; }
+        public virtual ICollection<IssueLogPart> IssueLogParts { get; set; }
     }
 }

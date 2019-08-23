@@ -17,7 +17,7 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
                : base(context)
         {
         }
-
+        
         public override Expression<Func<Part, bool>> MakeFilteringExpression(string keyword)
         {
             return part => EF.Functions.Like(part.Name, '%' + keyword + '%');
@@ -28,6 +28,8 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
            Include(p => p.Mod).
            Include(p => p.Unit).
            Include(p => p.Manufacturer).
+           Include(p => p.SupplierParts).
+           ThenInclude(x => x.Supplier).
            OrderByDescending(u => u.UpdatedDate).ThenByDescending(x => x.CreatedDate);
     }
 }
