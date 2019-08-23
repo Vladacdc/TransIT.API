@@ -11,12 +11,12 @@ namespace TransIT.DAL.Models
             builder.HasKey(ur => new { ur.SupplierId, ur.PartId });
 
             builder.HasOne(ur => ur.Supplier)
-                .WithMany(r => r.SupplierPart)
+                .WithMany(r => r.SupplierParts)
                 .HasForeignKey(ur => ur.SupplierId)
                 .IsRequired();
 
             builder.HasOne(ur => ur.Part)
-                .WithMany(r => r.SupplierPart)
+                .WithMany(r => r.SupplierParts)
                 .HasForeignKey(ur => ur.PartId)
                 .IsRequired();
         }

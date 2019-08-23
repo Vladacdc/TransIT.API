@@ -7,8 +7,9 @@ namespace TransIT.DAL.Models.Entities
     public class Supplier : IAuditableEntity, IBaseEntity
     {
         public Supplier()
-        {
+        { 
             IssueLog = new HashSet<IssueLog>();
+            SupplierParts = new HashSet<SupplierPart>();
         }
 
         public int Id { get; set; }
@@ -28,6 +29,6 @@ namespace TransIT.DAL.Models.Entities
         public virtual User Mod { get; set; }
 
         public virtual ICollection<IssueLog> IssueLog { get; set; }
-        public virtual ICollection<SupplierPart> SupplierPart { get; set; }
+        public virtual ICollection<SupplierPart> SupplierParts { get; set; }
     }
 }
