@@ -1,5 +1,6 @@
 ﻿using TransIT.BLL.DTOs;
 using TransIT.BLL.Services;
+using TransIT.BLL.Services.Interfaces;
 
 namespace TransIT.BLL.Factories
 {
@@ -46,6 +47,8 @@ namespace TransIT.BLL.Factories
         public IFilterService<VehicleTypeDTO> VehicleTypeFilterService { get; }
 
         public IFilterService<UnitDTO> UnitFilterService { get; }
+
+        public IFilterService<WorkTypeDTO> WorkTypeFilterService { get; }
 
         public IFilterService<ManufacturerDTO> ManufacturerFilterService { get; }
 
@@ -153,6 +156,11 @@ namespace TransIT.BLL.Factories
                     return (IFilterService<TEntityDTO>) UnitFilterService;
                 }
 
+                case nameof(WorkTypeDTO):
+                {
+                    return (IFilterService<TEntityDTO>) WorkTypeFilterService;
+                }
+
                 case nameof(ManufacturerDTO):
                 {
                     return (IFilterService<TEntityDTO>) MalfunctionFilterService;
@@ -191,6 +199,7 @@ namespace TransIT.BLL.Factories
             IFilterService<VehicleDTO> vehicleFilterService,
             IFilterService<VehicleTypeDTO> vehicleTypeFilterService, 
             IFilterService<UnitDTO> unitFilterService, 
+            IFilterService<WorkTypeDTO> workTypeFilterService,
             IFilterService<ManufacturerDTO> manufacturerFilterService)
         {
             ActionTypeFilterService = actionTypeFilterService;
@@ -214,6 +223,7 @@ namespace TransIT.BLL.Factories
             VehicleFilterService = vehicleFilterService;
             VehicleTypeFilterService = vehicleTypeFilterService;
             UnitFilterService = unitFilterService;
+            WorkTypeFilterService = workTypeFilterService;
             ManufacturerFilterService = manufacturerFilterService;
         }
     }

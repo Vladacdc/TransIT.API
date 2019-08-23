@@ -50,6 +50,8 @@ namespace TransIT.BLL.Factories
 
         IUnitService UnitService { get; }
 
+        IWorkTypeService WorkTypeService { get; }
+
         IManufacturerService ManufacturerService { get; }
     }
 }

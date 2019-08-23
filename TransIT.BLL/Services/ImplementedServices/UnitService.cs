@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using TransIT.BLL.DTOs;
 using TransIT.BLL.Services.Interfaces;
 using TransIT.DAL.Models.Entities;
@@ -61,13 +59,11 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<IEnumerable<UnitDTO>> SearchAsync(string search)
         {
-            var units = await _unitOfWork.UnitRepository.SearchExpressionAsync(
-                search
-                    .Split(new[] { ' ', ',', '.' }, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(x => x.Trim().ToUpperInvariant())
-            );
+            var parts = await _unitOfWork.UnitRepository.SearchExpressionAsync(
+                    new SearchTokenCollection(search)
+                );
 
-            return _mapper.Map<IEnumerable<UnitDTO>>(await units.ToListAsync());
+            return _mapper.Map<IEnumerable<UnitDTO>>(await parts.ToListAsync());
         }
     }
 }

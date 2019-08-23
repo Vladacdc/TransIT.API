@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 using LinqKit;
 using Microsoft.EntityFrameworkCore;
 using TransIT.DAL.Models;
@@ -62,6 +60,7 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
             .Include(x => x.Document)
             .Include(x => x.IssueLogPart)
             .ThenInclude(x => x.Part)
+            .Include(w => w.WorkType)
             .OrderByDescending(u => u.UpdatedDate)
             .ThenByDescending(x => x.CreatedDate);
     }

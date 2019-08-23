@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -11,20 +11,20 @@ using TransIT.DAL.Repositories.InterfacesRepositories;
 
 namespace TransIT.DAL.Repositories.ImplementedRepositories
 {
-    public class ManufacturerRepository : BaseRepository<Manufacturer>, IManufacturerRepository
+    public class WorkTypeRepository :BaseRepository<WorkType>,IWorkTypeRepository
     {
-        public ManufacturerRepository(TransITDBContext context) : base(context)
+        public WorkTypeRepository(TransITDBContext context) : base(context)
         {
         }
 
-        public override Expression<Func<Manufacturer, bool>> MakeFilteringExpression(string keyword)
+        public override Expression<Func<WorkType, bool>> MakeFilteringExpression(string keyword)
         {
-            return entity => entity.Name != null &&
-                             entity.Name != string.Empty &&
-                             EF.Functions.Like(entity.Name, '%' + keyword + '%');
+            return workType => EF.Functions.Like(workType.Name, '%' + keyword + '%') || 
+                           EF.Functions.Like(workType.EstimatedCost.ToString(), '%' + keyword + '%') || 
+                           EF.Functions.Like(workType.EstimatedTime.ToString(), '%' + keyword + '%');
         }
 
-        protected override IQueryable<Manufacturer> ComplexEntities
+        protected override IQueryable<WorkType> ComplexEntities
         {
             get
             {

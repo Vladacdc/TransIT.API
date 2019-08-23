@@ -56,6 +56,8 @@ namespace TransIT.DAL.UnitOfWork
 
         public IUnitRepository UnitRepository { get; }
 
+        public IWorkTypeRepository WorkTypeRepository { get; }
+
         public IManufacturerRepository ManufacturerRepository { get; }
 
         public UnitOfWork(
@@ -82,7 +84,8 @@ namespace TransIT.DAL.UnitOfWork
             IUserRepository userRepository,
             RoleManager<Role> roleManager,
             UserManager<User> userManager, 
-            IUnitRepository unitRepository, 
+            IUnitRepository unitRepository,
+            IWorkTypeRepository workTypeRepository,
             IManufacturerRepository manufacturerRepository)
         {
             _context = context;
@@ -109,6 +112,7 @@ namespace TransIT.DAL.UnitOfWork
             RoleManager = roleManager;
             UserManager = userManager;
             UnitRepository = unitRepository;
+            WorkTypeRepository = workTypeRepository;
             ManufacturerRepository = manufacturerRepository;
         }
 

@@ -1,13 +1,11 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using TransIT.DAL.Models;
 using TransIT.DAL.Models.Entities;
 using TransIT.DAL.Repositories.ImplementedRepositories;
+using TransIT.Tests.Helper;
 using Xunit;
 
-namespace TransIT.Tests
+namespace TransIT.Tests.Repository
 {
     public class EmployeeRepositoryTests
     {
@@ -15,9 +13,9 @@ namespace TransIT.Tests
         public async Task Employee_Repository_Should_Add_Employee()
         {
             // Arrange
-            var context = CreateDbContext();
+            var context = TestSetUpHelper.CreateDbContext();
             var repository = new EmployeeRepository(context);
-            var expectedEntity = new Employee(new Post() { Name = "Big Boss" , Id = 5 })
+            var expectedEntity = new Employee(new Post() { Name = "Big Boss", Id = 5 })
             {
                 FirstName = "Vitalii",
                 LastName = "Maksymiv",
@@ -37,7 +35,7 @@ namespace TransIT.Tests
         public async Task Employee_Repository_Should_Get_All()
         {
             // Arrange
-            var context = CreateDbContext();
+            var context = TestSetUpHelper.CreateDbContext();
             var repository = new EmployeeRepository(context);
             var expectedEntity = new Employee(new Post() { Name = "Big Boss", Id = 5 })
             {
@@ -53,16 +51,6 @@ namespace TransIT.Tests
             var entities = await repository.GetAllAsync();
             // Assert
             Assert.Single(entities.ToList());
-        }
-
-        private TransITDBContext CreateDbContext()
-        {
-            return new TransITDBContext(
-                new DbContextOptionsBuilder<TransITDBContext>()
-                   .UseInMemoryDatabase(Guid.NewGuid().ToString())
-                   .EnableSensitiveDataLogging()
-                   .Options
-            );
         }
     }
 }

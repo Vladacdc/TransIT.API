@@ -32,6 +32,8 @@ namespace TransIT.Tests
             c.AddProfile(new EmployeeProfile());
             c.AddProfile(new TransitionProfile());
             c.AddProfile(new LocationProfile());
+            c.AddProfile(new UnitProfile());
+            c.AddProfile(new ManufacturerProfile());
         }).CreateMapper();
 
         public void Dispose()
