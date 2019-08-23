@@ -1,13 +1,11 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using TransIT.DAL.Models;
 using TransIT.DAL.Models.Entities;
 using TransIT.DAL.Repositories.ImplementedRepositories;
+using TransIT.Tests.Helper;
 using Xunit;
 
-namespace TransIT.Tests
+namespace TransIT.Tests.Repository
 {
     public class EmployeeRepositoryTests
     {
@@ -17,7 +15,7 @@ namespace TransIT.Tests
             // Arrange
             var context = new DbContextFromMemory();
             var repository = new EmployeeRepository(context);
-            var expectedEntity = new Employee(new Post() { Name = "Big Boss" , Id = 5 })
+            var expectedEntity = new Employee(new Post() { Name = "Big Boss", Id = 5 })
             {
                 FirstName = "Vitalii",
                 LastName = "Maksymiv",

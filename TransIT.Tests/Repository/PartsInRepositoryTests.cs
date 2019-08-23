@@ -8,7 +8,7 @@ using TransIT.DAL.Repositories.ImplementedRepositories;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace TransIT.Tests
+namespace TransIT.Tests.Repository
 {
     public class PartsInRepositoryTests
     {

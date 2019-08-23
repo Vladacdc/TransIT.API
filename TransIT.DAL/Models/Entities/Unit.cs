@@ -9,6 +9,7 @@ namespace TransIT.DAL.Models.Entities
         public Unit()
         {
             Parts = new List<Part>();
+            PartsInNavigation = new List<PartIn>();
         }
 
         public int Id { get; set; }

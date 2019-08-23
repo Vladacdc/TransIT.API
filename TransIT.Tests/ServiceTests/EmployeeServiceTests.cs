@@ -1,30 +1,30 @@
-﻿using System;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity.Test;
+using Moq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
-using Microsoft.AspNetCore.Identity.Test;
-using Microsoft.EntityFrameworkCore;
-using Moq;
 using TransIT.BLL.DTOs;
 using TransIT.BLL.Services.ImplementedServices;
 using TransIT.DAL.Models;
 using TransIT.DAL.Models.Entities;
 using TransIT.DAL.Repositories.ImplementedRepositories;
 using TransIT.DAL.UnitOfWork;
+using TransIT.Tests.Helper;
 using Xunit;
 
-namespace TransIT.Tests
+namespace TransIT.Tests.ServiceTests
 {
-    public partial class EmployeeServiceTests : IClassFixture<MapperFixture>
+    public class EmployeeServiceTests : IClassFixture<MapperFixture>
     {
-        private readonly string SomeUserId = Guid.NewGuid().ToString();
+        private readonly string _someUserId = Guid.NewGuid().ToString();
 
         private Employee _sampleEmployee;
         private Employee _someOtherEmployee;
         private User _sampleUser;
         private Mock<IUnitOfWork> _unitOfWork;
-        private IMapper _mapper;
+        private readonly IMapper _mapper;
 
         public EmployeeServiceTests(MapperFixture fixture)
         {
@@ -41,7 +41,7 @@ namespace TransIT.Tests
             var employees = new EmployeeService(fake.Object, _mapper);
             // Act
             await employees.CreateAsync(_mapper.Map<EmployeeDTO>(_sampleEmployee));
-            var actual = await employees.AttachUserAsync(_sampleEmployee.Id, SomeUserId);
+            var actual = await employees.AttachUserAsync(_sampleEmployee.Id, _someUserId);
             // Assert
             Assert.NotNull(actual);
             Assert.NotNull(actual.AttachedUser);
@@ -56,7 +56,7 @@ namespace TransIT.Tests
             var fake = CreateUnitOfWork();
             var employees = new EmployeeService(fake.Object, _mapper);
             // Act
-            var actual = await employees.AttachUserAsync(1, SomeUserId);
+            var actual = await employees.AttachUserAsync(1, _someUserId);
             // Assert
             Assert.Null(actual);
         }
@@ -71,8 +71,8 @@ namespace TransIT.Tests
             // Act
             await employees.CreateAsync(_mapper.Map<EmployeeDTO>(_sampleEmployee));
             await employees.CreateAsync(_mapper.Map<EmployeeDTO>(_someOtherEmployee));
-            await employees.AttachUserAsync(_sampleEmployee.Id, SomeUserId);
-            var actual = await employees.AttachUserAsync(_someOtherEmployee.Id, SomeUserId);
+            await employees.AttachUserAsync(_sampleEmployee.Id, _someUserId);
+            var actual = await employees.AttachUserAsync(_someOtherEmployee.Id, _someUserId);
             // Assert
             Assert.Null(actual);
         }
@@ -101,7 +101,7 @@ namespace TransIT.Tests
             var dto = _mapper.Map<EmployeeDTO>(_sampleEmployee);
             // Act
             await employees.CreateAsync(dto);
-            await employees.AttachUserAsync(_sampleEmployee.Id, SomeUserId);
+            await employees.AttachUserAsync(_sampleEmployee.Id, _someUserId);
             var actual = await employees.RemoveUserAsync(_sampleEmployee.Id);
             // Assert
             Assert.NotNull(dto);
@@ -116,7 +116,7 @@ namespace TransIT.Tests
             var fake = CreateUnitOfWork();
             var employees = new EmployeeService(fake.Object, _mapper);
             // Act
-            await employees.AttachUserAsync(1, SomeUserId);
+            await employees.AttachUserAsync(1, _someUserId);
             var actual = await employees.RemoveUserAsync(1);
             // Assert
             Assert.Null(actual);
@@ -132,8 +132,8 @@ namespace TransIT.Tests
             // Act
             EmployeeDTO expected = _mapper.Map<EmployeeDTO>(_sampleEmployee);
             await employees.CreateAsync(expected);
-            await employees.AttachUserAsync(_sampleEmployee.Id, SomeUserId);
-            var actual = await employees.GetEmployeeForUserAsync(SomeUserId);
+            await employees.AttachUserAsync(_sampleEmployee.Id, _someUserId);
+            var actual = await employees.GetEmployeeForUserAsync(_someUserId);
             // Assert
             Assert.Equal(expected, actual, new EmployeeComparer());
         }
@@ -147,7 +147,7 @@ namespace TransIT.Tests
             var employees = new EmployeeService(fake.Object, _mapper);
             // Act
             await employees.CreateAsync(_mapper.Map<EmployeeDTO>(_sampleEmployee));
-            await employees.AttachUserAsync(_sampleEmployee.Id, SomeUserId);
+            await employees.AttachUserAsync(_sampleEmployee.Id, _someUserId);
             var actual = await employees.GetNotAttachedUsersAsync();
             // Assert
             Assert.Equal(2, actual.Count);
@@ -176,23 +176,13 @@ namespace TransIT.Tests
             {
                 UserName = "bbbbc",
                 IsActive = true,
-                Id = SomeUserId
+                Id = _someUserId
             };
-        }
-
-        private TransITDBContext CreateFakeDbContext()
-        {
-            return new TransITDBContext(
-                new DbContextOptionsBuilder<TransITDBContext>()
-                   .UseInMemoryDatabase(Guid.NewGuid().ToString())
-                   .EnableSensitiveDataLogging()
-                   .Options
-            );
         }
 
         private Mock<IUnitOfWork> CreateWithMockedUsers()
         {
-            var context = CreateFakeDbContext();
+            var context = TestSetUpHelper.CreateDbContext();
 
             _unitOfWork = new Mock<IUnitOfWork>();
             _unitOfWork.Setup(u => u.UserManager)
@@ -207,7 +197,7 @@ namespace TransIT.Tests
                });
 
             context.Users.AddRange(
-                new User[] 
+                new User[]
                 {
                     _sampleUser,
                     new User()
@@ -240,14 +230,14 @@ namespace TransIT.Tests
                    mock.Setup(m => m.FindByIdAsync(It.IsNotNull<string>()))
                        .Returns((string id) =>
                        {
-                           return id == SomeUserId
+                           return id == _someUserId
                                ? Task.FromResult(_sampleUser)
                                : Task.FromResult<User>(null);
                        });
                    return mock.Object;
                });
 
-            SetupEmployeeRepository(CreateFakeDbContext());
+            SetupEmployeeRepository(TestSetUpHelper.CreateDbContext());
 
             return _unitOfWork;
         }

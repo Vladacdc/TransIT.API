@@ -29,6 +29,7 @@ namespace TransIT.DAL.Models.Entities
         public string UpdatedById { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
+
         public Currency Currency { get; set; }
         public Unit Unit { get; set; }
         public Part Part { get; set; }

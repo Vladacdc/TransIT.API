@@ -57,6 +57,7 @@ namespace TransIT.DAL
             services.AddScoped<RoleManager<Role>>();
             services.AddScoped<IUnitRepository, UnitRepository>();
             services.AddScoped<IManufacturerRepository, ManufacturerRepository>();
+            services.AddScoped<IWorkTypeRepository, WorkTypeRepository>();
         }
 
         private static void ConfigureQueryRepositories(this IServiceCollection services)
@@ -84,6 +85,7 @@ namespace TransIT.DAL
             services.AddScoped<IQueryRepository<PartIn>, PartsInRepository>();
             services.AddScoped<IQueryRepository<Unit>, UnitRepository>();
             services.AddScoped<IQueryRepository<Manufacturer>, ManufacturerRepository>();
+            services.AddScoped<IQueryRepository<WorkType>, WorkTypeRepository>();
         }
 
         private static void ConfigureDbContext(

@@ -24,7 +24,8 @@ namespace TransIT.BLL.Mappings
                 .ForMember(i => i.ActionTypeId, opt => opt.MapFrom(x => x.ActionType.Id))
                 .ForMember(i => i.NewState, opt => opt.Ignore())
                 .ForMember(i => i.OldState, opt => opt.Ignore())
-                .ForMember(i => i.ActionType, opt => opt.Ignore());
+                .ForMember(i => i.ActionType, opt => opt.Ignore())
+                .ForMember(i=>i.WorkType,opt=>opt.MapFrom(x=>x.WorkTypeDto));
 
             CreateMap<IssueLog, IssueLogDTO>()
                 .ForMember(i => i.Documents, opt => opt.MapFrom(x => x.Document))

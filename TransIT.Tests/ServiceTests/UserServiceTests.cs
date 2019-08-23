@@ -5,10 +5,9 @@ using System.Threading.Tasks;
 using TransIT.BLL.Comparers;
 using TransIT.BLL.DTOs;
 using TransIT.BLL.Services.ImplementedServices;
-using TransIT.DAL.UnitOfWork;
 using Xunit;
 
-namespace TransIT.Tests
+namespace TransIT.Tests.ServiceTests
 {
     public class UserServiceTests : IClassFixture<UnitOfWorkFixture>, IClassFixture<MapperFixture>
     {

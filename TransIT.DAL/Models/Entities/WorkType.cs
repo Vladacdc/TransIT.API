@@ -4,17 +4,17 @@ using TransIT.DAL.Models.Entities.Abstractions;
 
 namespace TransIT.DAL.Models.Entities
 {
-    public class Currency : IAuditableEntity, IBaseEntity
+    public class WorkType : IAuditableEntity, IBaseEntity
     {
-        public Currency()
+        public WorkType()
         {
-            Supplier = new List<Supplier>();
-            PartInNavigation = new List<PartIn>();
+            IssueLog = new HashSet<IssueLog>();
         }
 
         public int Id { get; set; }
-        public string ShortName { get; set; }
-        public string FullName { get; set; }
+        public string Name { get; set; }
+        public double EstimatedTime { get; set; }
+        public double EstimatedCost { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public string CreatedById { get; set; }
@@ -22,8 +22,7 @@ namespace TransIT.DAL.Models.Entities
 
         public virtual User Create { get; set; }
         public virtual User Mod { get; set; }
-        
-        public virtual ICollection<Supplier> Supplier { get; set; }
-        public virtual ICollection<PartIn> PartInNavigation { get; set; }
+
+        public virtual ICollection<IssueLog> IssueLog { get; set; }
     }
 }
