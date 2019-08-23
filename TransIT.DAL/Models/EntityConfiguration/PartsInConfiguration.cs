@@ -35,7 +35,7 @@ namespace TransIT.DAL.Models
                    .IsRequired();
 
             builder.HasOne(e => e.Currency)
-                   .WithMany(e => e.PartInNavigation)
+                   .WithMany(e => e.PartsInNavigation)
                    .HasForeignKey(e => e.CurrencyId)
                    .OnDelete(DeleteBehavior.ClientSetNull)
                    .IsRequired();
