@@ -8,6 +8,7 @@ namespace TransIT.DAL.Models.Entities
     {
         public WorkType()
         {
+            IssueLog = new HashSet<IssueLog>();
         }
 
         public int Id { get; set; }

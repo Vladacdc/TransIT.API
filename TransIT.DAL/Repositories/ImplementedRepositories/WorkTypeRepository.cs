@@ -19,7 +19,9 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
 
         public override Expression<Func<WorkType, bool>> MakeFilteringExpression(string keyword)
         {
-            return part => EF.Functions.Like(part.Name, '%' + keyword + '%');
+            return workType => EF.Functions.Like(workType.Name, '%' + keyword + '%') || 
+                           EF.Functions.Like(workType.EstimatedCost.ToString(), '%' + keyword + '%') || 
+                           EF.Functions.Like(workType.EstimatedTime.ToString(), '%' + keyword + '%');
         }
 
         protected override IQueryable<WorkType> ComplexEntities

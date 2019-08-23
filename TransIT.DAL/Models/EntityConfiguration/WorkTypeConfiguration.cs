@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using TransIT.DAL.Models.Entities;
 
@@ -13,8 +10,7 @@ namespace TransIT.DAL.Models.EntityConfiguration
         {
             builder.ToTable("WORK_TYPE");
 
-            builder.HasIndex(e => e.Id)
-                .IsUnique();
+            builder.HasKey(e => e.Id);
 
             builder.Property(e => e.Id).HasColumnName("ID");
 
