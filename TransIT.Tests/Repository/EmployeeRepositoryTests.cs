@@ -13,7 +13,7 @@ namespace TransIT.Tests.Repository
         public async Task Employee_Repository_Should_Add_Employee()
         {
             // Arrange
-            var context = new DbContextFromMemory();
+            var context = TestSetUpHelper.CreateDbContext();
             var repository = new EmployeeRepository(context);
             var expectedEntity = new Employee(new Post() { Name = "Big Boss", Id = 5 })
             {
@@ -35,7 +35,7 @@ namespace TransIT.Tests.Repository
         public async Task Employee_Repository_Should_Get_All()
         {
             // Arrange
-            var context = new DbContextFromMemory();
+            var context = TestSetUpHelper.CreateDbContext();
             var repository = new EmployeeRepository(context);
             var expectedEntity = new Employee(new Post() { Name = "Big Boss", Id = 5 })
             {
