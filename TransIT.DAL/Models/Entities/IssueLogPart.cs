@@ -1,6 +1,6 @@
 ﻿namespace TransIT.DAL.Models.Entities
 {
-    public class IssueLogParts
+    public class IssueLogPart
     {
         public int IssueLogId { get; set; }
         public virtual IssueLog IssueLog { get; set; }

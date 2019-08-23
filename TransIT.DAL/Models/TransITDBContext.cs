@@ -122,8 +122,8 @@ namespace TransIT.DAL.Models
             modelBuilder.ApplyConfiguration(new UserRoleConfiguration());
             modelBuilder.ApplyConfiguration(new UnitConfiguration());
             modelBuilder.ApplyConfiguration(new ManufacturerConfiguration());
-            modelBuilder.ApplyConfiguration(new IssueLogPartsConfiguration());
-            modelBuilder.ApplyConfiguration(new SuppliersPartsConfiguration());
+            modelBuilder.ApplyConfiguration(new IssueLogPartConfiguration());
+            modelBuilder.ApplyConfiguration(new SupplierPartConfiguration());
             #endregion
         }
     }

@@ -21,7 +21,7 @@ namespace TransIT.DAL.Models.Entities
         public virtual User Create { get; set; }
         public virtual User Mod { get; set; }
 
-        public ICollection<IssueLogParts> IssueLogParts { get; set; }
-        public ICollection<SuppliersParts> SuppliersParts { get; set; }
+        public ICollection<IssueLogPart> IssueLogPart { get; set; }
+        public ICollection<SupplierPart> SupplierPart { get; set; }
     }
 }

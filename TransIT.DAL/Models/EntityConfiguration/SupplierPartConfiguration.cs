@@ -4,19 +4,19 @@ using TransIT.DAL.Models.Entities;
 
 namespace TransIT.DAL.Models
 {
-    public class SuppliersPartsConfiguration : IEntityTypeConfiguration<SuppliersParts>
+    public class SupplierPartConfiguration : IEntityTypeConfiguration<SupplierPart>
     {
-        public void Configure(EntityTypeBuilder<SuppliersParts> builder)
+        public void Configure(EntityTypeBuilder<SupplierPart> builder)
         {
             builder.HasKey(ur => new { ur.SupplierId, ur.PartId });
 
             builder.HasOne(ur => ur.Supplier)
-                .WithMany(r => r.SuppliersParts)
+                .WithMany(r => r.SupplierPart)
                 .HasForeignKey(ur => ur.SupplierId)
                 .IsRequired();
 
             builder.HasOne(ur => ur.Part)
-                .WithMany(r => r.SuppliersParts)
+                .WithMany(r => r.SupplierPart)
                 .HasForeignKey(ur => ur.PartId)
                 .IsRequired();
         }
