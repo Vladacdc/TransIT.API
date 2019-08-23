@@ -1,6 +1,6 @@
 ﻿namespace TransIT.DAL.Models.Entities
 {
-    public class SuppliersParts
+    public class SupplierPart
     {
         public int SupplierId { get; set; }
         public virtual Supplier Supplier { get; set; }

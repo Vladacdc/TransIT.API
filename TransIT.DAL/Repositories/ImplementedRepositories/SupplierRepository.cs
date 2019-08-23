@@ -39,6 +39,7 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
                    .Include(c => c.Currency)
                    .Include(c => c.Country)
                    .Include(c => c.SuppliersParts)
+                   .ThenInclude(x => x.Part)
                    .OrderByDescending(u => u.UpdatedDate)
                    .ThenByDescending(x => x.CreatedDate);
     }

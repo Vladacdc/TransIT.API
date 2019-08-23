@@ -33,6 +33,6 @@ namespace TransIT.DAL.Models.Entities
         public virtual Supplier Supplier { get; set; }
 
         public virtual ICollection<Document> Document { get; set; }
-        public virtual ICollection<IssueLogParts> IssueLogParts { get; set; }
+        public virtual ICollection<IssueLogPart> IssueLogPart { get; set; }
     }
 }
