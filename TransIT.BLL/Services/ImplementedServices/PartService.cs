@@ -40,7 +40,7 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<IEnumerable<PartDTO>> SearchAsync(string search)
         {
-            var parts = await _unitOfWork.PartRepository.SearchExpressionAsync(
+            var parts = await _unitOfWork.PartRepository.SearchAsync(
                     new SearchTokenCollection(search)
                 );
 

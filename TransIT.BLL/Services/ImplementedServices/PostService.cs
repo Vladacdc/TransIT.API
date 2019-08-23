@@ -44,10 +44,8 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<IEnumerable<PostDTO>> SearchAsync(string search)
         {
-            var posts = await _unitOfWork.PostRepository.SearchExpressionAsync(
-                search
-                    .Split(new[] { ' ', ',', '.' }, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(x => x.Trim().ToUpperInvariant())
+            var posts = await _unitOfWork.PostRepository.SearchAsync(
+                    new SearchTokenCollection(search)
                 );
 
             return _mapper.Map<IEnumerable<PostDTO>>(await posts.ToListAsync());

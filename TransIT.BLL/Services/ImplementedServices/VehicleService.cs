@@ -44,10 +44,8 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<IEnumerable<VehicleDTO>> SearchAsync(string search)
         {
-            var vehicles = await _unitOfWork.VehicleRepository.SearchExpressionAsync(
-            search
-                .Split(new[] { ' ', ',', '.' }, StringSplitOptions.RemoveEmptyEntries)
-                .Select(x => x.Trim().ToUpperInvariant())
+            var vehicles = await _unitOfWork.VehicleRepository.SearchAsync(
+                new SearchTokenCollection(search)
             );
 
             return _mapper.Map<IEnumerable<VehicleDTO>>(await vehicles.ToListAsync());

@@ -54,6 +54,7 @@ namespace TransIT.DAL.UnitOfWork
 
         public IUserRepository UserRepository { get; }
 
+        public IPartsInRepository PartsInRepository { get; }
         public IUnitRepository UnitRepository { get; }
 
         public IWorkTypeRepository WorkTypeRepository { get; }
@@ -82,6 +83,7 @@ namespace TransIT.DAL.UnitOfWork
             ITransitionRepository transitionRepository,
             ILocationRepository locationRepository,
             IUserRepository userRepository,
+            IPartsInRepository partsInRepository,
             RoleManager<Role> roleManager,
             UserManager<User> userManager, 
             IUnitRepository unitRepository,
@@ -109,6 +111,7 @@ namespace TransIT.DAL.UnitOfWork
             TransitionRepository = transitionRepository;
             LocationRepository = locationRepository;
             UserRepository = userRepository;
+            PartsInRepository = partsInRepository;
             RoleManager = roleManager;
             UserManager = userManager;
             UnitRepository = unitRepository;

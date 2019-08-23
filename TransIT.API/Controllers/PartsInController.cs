@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
@@ -12,55 +13,54 @@ namespace TransIT.API.Controllers
     [EnableCors("CorsPolicy")]
     [Produces("application/json")]
     [Route("api/v1/[controller]")]
-    [Authorize(Roles = "ADMIN,ENGINEER,REGISTER,ANALYST")]
-    public class WorkTypeController : FilterController<WorkTypeDTO>
+    [Authorize(Roles = "ADMIN,ANALYST")]
+    public class PartsInController : FilterController<PartInDTO>
     {
-        private readonly IWorkTypeService _workTypeService;
+        private readonly IPartsInService _partsInService;
 
-        public WorkTypeController(IServiceFactory serviceFactory, IFilterServiceFactory filterServiceFactory)
+        public PartsInController(IServiceFactory serviceFactory, IFilterServiceFactory filterServiceFactory)
             : base(filterServiceFactory)
         {
-            _workTypeService = serviceFactory.WorkTypeService;
+            _partsInService = serviceFactory.PartsInService;
         }
 
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] uint offset = 0, uint amount = 1000)
         {
-            return Json(await _workTypeService.GetRangeAsync(offset, amount));
+            return Json(await _partsInService.GetRangeAsync(offset, amount));
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            return Json(await _workTypeService.GetAsync(id));
+            return Json(await _partsInService.GetAsync(id));
         }
 
         [HttpGet("/search")]
         public async Task<IActionResult> Get([FromQuery] string search)
         {
-            return Json(await _workTypeService.SearchAsync(search));
+            return Json(await _partsInService.SearchAsync(search));
         }
 
         [HttpPost]
         [Authorize(Roles = "ADMIN")]
-        public async Task<IActionResult> Create([FromBody] WorkTypeDTO workTypeDto)
+        public async Task<IActionResult> Create([FromBody] PartInDTO dto)
         {
-            return CreatedAtAction(nameof(Create), await _workTypeService.CreateAsync(workTypeDto));
+            return CreatedAtAction(nameof(Create), await _partsInService.CreateAsync(dto));
         }
 
         [HttpPut("{id}")]
         [Authorize(Roles = "ADMIN")]
-        public async Task<IActionResult> Update(int id, [FromBody] WorkTypeDTO workTypeDto)
+        public async Task<IActionResult> Update([FromBody] PartInDTO dto)
         {
-            workTypeDto.Id = id;
-            return Json(await _workTypeService.UpdateAsync(workTypeDto));
+            return Json(await _partsInService.UpdateAsync(dto));
         }
 
         [HttpDelete("{id}")]
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Delete(int id)
         {
-            await _workTypeService.DeleteAsync(id);
+            await _partsInService.DeleteAsync(id);
             return NoContent();
         }
     }

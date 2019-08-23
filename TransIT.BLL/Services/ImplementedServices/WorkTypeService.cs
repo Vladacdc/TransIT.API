@@ -35,7 +35,7 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<IEnumerable<WorkTypeDTO>> SearchAsync(string search)
         {
-            var workTypes = await _unitOfWork.WorkTypeRepository.SearchExpressionAsync(
+            var workTypes = await _unitOfWork.WorkTypeRepository.SearchAsync(
                 new SearchTokenCollection(search)
             );
 

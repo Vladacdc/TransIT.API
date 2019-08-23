@@ -59,11 +59,11 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<IEnumerable<ManufacturerDTO>> SearchAsync(string search)
         {
-            var parts = await _unitOfWork.ManufacturerRepository.SearchExpressionAsync(
-                    new SearchTokenCollection(search)
-                );
+            var manufacturers = await _unitOfWork.ManufacturerRepository.SearchAsync(
+                new SearchTokenCollection(search)
+            );
 
-            return _mapper.Map<IEnumerable<ManufacturerDTO>>(await parts.ToListAsync());
+            return _mapper.Map<IEnumerable<ManufacturerDTO>>(await manufacturers.ToListAsync());
         }
     }
 }

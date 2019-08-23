@@ -52,6 +52,7 @@ namespace TransIT.DAL
             services.AddScoped<ITransitionRepository, TransitionRepository>();
             services.AddScoped<ILocationRepository, LocationRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IPartsInRepository, PartsInRepository>();
             services.AddScoped<UserManager<User>>();
             services.AddScoped<RoleManager<Role>>();
             services.AddScoped<IUnitRepository, UnitRepository>();
@@ -81,6 +82,7 @@ namespace TransIT.DAL
             services.AddScoped<IQueryRepository<Transition>, TransitionRepository>();
             services.AddScoped<IQueryRepository<Location>, LocationRepository>();
             services.AddScoped<IQueryRepository<User>, UserQueryRepository>();
+            services.AddScoped<IQueryRepository<PartIn>, PartsInRepository>();
             services.AddScoped<IQueryRepository<Unit>, UnitRepository>();
             services.AddScoped<IQueryRepository<Manufacturer>, ManufacturerRepository>();
             services.AddScoped<IQueryRepository<WorkType>, WorkTypeRepository>();

@@ -30,7 +30,7 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
             return _users;
         }
 
-        public Task<IQueryable<User>> SearchExpressionAsync(IEnumerable<string> strs)
+        public Task<IQueryable<User>> SearchAsync(IEnumerable<string> strs)
         {
             var predicate = PredicateBuilder.New<User>();
             var secondPredicate = PredicateBuilder.New<UserRole>();

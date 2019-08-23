@@ -8,7 +8,8 @@ namespace TransIT.DAL.Models.Entities
     {
         public Currency()
         {
-            Supplier = new HashSet<Supplier>();
+            Supplier = new List<Supplier>();
+            PartsInNavigation = new List<PartIn>();
         }
 
         public int Id { get; set; }
@@ -23,5 +24,6 @@ namespace TransIT.DAL.Models.Entities
         public virtual User Mod { get; set; }
         
         public virtual ICollection<Supplier> Supplier { get; set; }
+        public virtual ICollection<PartIn> PartsInNavigation { get; set; }
     }
 }
