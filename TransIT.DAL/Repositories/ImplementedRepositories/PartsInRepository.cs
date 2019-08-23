@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using TransIT.DAL.Models;
 using TransIT.DAL.Models.Entities;
@@ -30,38 +31,29 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
             }
         }
 
-        public override Task<IQueryable<PartIn>> SearchAsync(IEnumerable<string> strs)
+        public override Expression<Func<PartIn, bool>> MakeFilteringExpression(string keyword)
         {
-            var predicate = PredicateBuilder.New<PartIn>();
-
-            foreach (string keyword in strs)
-            {
-                string temp = keyword;
-                predicate = predicate.And(entity =>
-                       entity.Batch != null && entity.Batch != string.Empty &&
-                           EF.Functions.Like(entity.Batch, '%' + temp + '%')
+            Expression<Func<PartIn, bool>> expression =
+                entity => entity.Batch != null && entity.Batch != string.Empty &&
+                           EF.Functions.Like(entity.Batch, '%' + keyword + '%')
                     || entity.Currency.FullName != null && entity.Currency.FullName != string.Empty &&
-                           EF.Functions.Like(entity.Currency.FullName, '%' + temp + '%')
+                           EF.Functions.Like(entity.Currency.FullName, '%' + keyword + '%')
                     || entity.Currency.ShortName != null && entity.Currency.ShortName != string.Empty &&
-                           EF.Functions.Like(entity.Currency.ShortName, '%' + temp + '%')
-                    );
-                if (int.TryParse(temp, out int integer))
-                {
-                    predicate = predicate.And(entity =>
-                           (int)entity.Price == integer 
+                           EF.Functions.Like(entity.Currency.ShortName, '%' + keyword + '%');
+
+            if (int.TryParse(keyword, out int integer))
+            {
+                Expression<Func<PartIn, bool>> integerExpression = 
+                    entity => (int)entity.Price == integer
                         || entity.Amount == integer
                         || entity.ArrivalDate.Year == integer
                         || entity.ArrivalDate.Month == integer
-                        || entity.ArrivalDate.Day == integer
-                    );
-                }
+                        || entity.ArrivalDate.Day == integer;
+
+                expression = PredicateBuilder.New<PartIn>().And(expression).And(integerExpression);
             }
 
-            return Task.FromResult(
-                GetQueryable()
-                .AsExpandable()
-                .Where(predicate)
-            );
+            return expression;
         }
     }
 }
