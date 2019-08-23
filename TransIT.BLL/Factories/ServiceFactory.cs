@@ -30,6 +30,8 @@ namespace TransIT.BLL.Factories
 
         public IMalfunctionSubgroupService MalfunctionSubgroupService { get; }
 
+        public IPartService PartService { get; }
+
         public IPostService PostService { get; }
 
         public IStateService StateService { get; }
@@ -48,6 +50,8 @@ namespace TransIT.BLL.Factories
 
         public IUnitService UnitService { get; }
 
+        public IWorkTypeService WorkTypeService { get; }
+
         public IManufacturerService ManufacturerService { get; }
 
         public ServiceFactory(IAuthenticationService authenticationService,
@@ -64,6 +68,7 @@ namespace TransIT.BLL.Factories
             IMalfunctionService malfunctionService,
             IMalfunctionSubgroupService malfunctionSubgroupService,
             IPostService postService,
+            IPartService partService,
             IStateService stateService,
             IStatisticsService statisticService,
             ISupplierService supplierService,
@@ -71,7 +76,8 @@ namespace TransIT.BLL.Factories
             IUserService userService,
             IVehicleService vehicleService,
             IVehicleTypeService vehicleTypeService, 
-            IUnitService unitService, 
+            IUnitService unitService,
+            IWorkTypeService workTypeService,
             IManufacturerService manufacturerService)
         {
             AuthenticationService = authenticationService;
@@ -87,6 +93,7 @@ namespace TransIT.BLL.Factories
             MalfunctionGroupService = malfunctionGroupService;
             MalfunctionService = malfunctionService;
             MalfunctionSubgroupService = malfunctionSubgroupService;
+            PartService = partService;
             PostService = postService;
             StateService = stateService;
             StatisticService = statisticService;
@@ -96,6 +103,7 @@ namespace TransIT.BLL.Factories
             VehicleService = vehicleService;
             VehicleTypeService = vehicleTypeService;
             UnitService = unitService;
+            WorkTypeService = workTypeService;
             ManufacturerService = manufacturerService;
         }
     }

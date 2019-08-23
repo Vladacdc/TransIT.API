@@ -47,6 +47,7 @@ namespace TransIT.DAL
             services.AddScoped<ICurrencyRepository, CurrencyRepository>();
             services.AddScoped<ICountryRepository, CountryRepository>();
             services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            services.AddScoped<IPartRepository, PartRepository>();
             services.AddScoped<IPostRepository, PostRepository>();
             services.AddScoped<ITransitionRepository, TransitionRepository>();
             services.AddScoped<ILocationRepository, LocationRepository>();
@@ -55,6 +56,7 @@ namespace TransIT.DAL
             services.AddScoped<RoleManager<Role>>();
             services.AddScoped<IUnitRepository, UnitRepository>();
             services.AddScoped<IManufacturerRepository, ManufacturerRepository>();
+            services.AddScoped<IWorkTypeRepository, WorkTypeRepository>();
         }
 
         private static void ConfigureQueryRepositories(this IServiceCollection services)
@@ -74,12 +76,14 @@ namespace TransIT.DAL
             services.AddScoped<IQueryRepository<Currency>, CurrencyRepository>();
             services.AddScoped<IQueryRepository<Country>, CountryRepository>();
             services.AddScoped<IQueryRepository<Employee>, EmployeeRepository>();
+            services.AddScoped<IQueryRepository<Part>, PartRepository>();
             services.AddScoped<IQueryRepository<Post>, PostRepository>();
             services.AddScoped<IQueryRepository<Transition>, TransitionRepository>();
             services.AddScoped<IQueryRepository<Location>, LocationRepository>();
             services.AddScoped<IQueryRepository<User>, UserQueryRepository>();
             services.AddScoped<IQueryRepository<Unit>, UnitRepository>();
             services.AddScoped<IQueryRepository<Manufacturer>, ManufacturerRepository>();
+            services.AddScoped<IQueryRepository<WorkType>, WorkTypeRepository>();
         }
 
         private static void ConfigureDbContext(

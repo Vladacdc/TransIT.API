@@ -50,12 +50,14 @@ namespace TransIT.BLL
             services.AddScoped<ICurrencyService, CurrencyService>();
             services.AddScoped<ICountryService, CountryService>();
             services.AddScoped<IEmployeeService, EmployeeService>();
+            services.AddScoped<IPartService, PartService>();
             services.AddScoped<IPostService, PostService>();
             services.AddScoped<ITransitionService, TransitionService>();
             services.AddScoped<ILocationService, LocationService>();
             services.AddScoped<IStatisticsService, StatisticsService>();
             services.AddScoped<IUnitService, UnitService>();
             services.AddScoped<IManufacturerService, ManufacturerService>();
+            services.AddScoped<IWorkTypeService, WorkTypeService>();
         }
 
         private static void ConfigureFilterServices(this IServiceCollection services)
@@ -75,12 +77,14 @@ namespace TransIT.BLL
             services.AddScoped<IFilterService<CurrencyDTO>, CurrencyFilterService>();
             services.AddScoped<IFilterService<CountryDTO>, CountryFilterService>();
             services.AddScoped<IFilterService<EmployeeDTO>, EmployeeFilterService>();
+            services.AddScoped<IFilterService<PartDTO>, PartFilterService>();
             services.AddScoped<IFilterService<PostDTO>, PostFilterService>();
             services.AddScoped<IFilterService<TransitionDTO>, TransitionFilterService>();
             services.AddScoped<IFilterService<LocationDTO>, LocationFilterService>();
             services.AddScoped<IFilterService<UserDTO>, UserFilterService>();
             services.AddScoped<IFilterService<UnitDTO>, UnitFilterService>();
             services.AddScoped<IFilterService<ManufacturerDTO>, ManufacturerFilterService>();
+            services.AddScoped<IFilterService<WorkTypeDTO>,WorkTypeFilterService>();
         }
 
         private static void ConfigureAutoMapper(this IServiceCollection services)
@@ -103,12 +107,14 @@ namespace TransIT.BLL
                 c.AddProfile(new SupplierProfile());
                 c.AddProfile(new CurrencyProfile());
                 c.AddProfile(new CountryProfile());
+                c.AddProfile(new PartProfile());
                 c.AddProfile(new PostProfile());
                 c.AddProfile(new EmployeeProfile());
                 c.AddProfile(new TransitionProfile());
                 c.AddProfile(new LocationProfile());
                 c.AddProfile(new UnitProfile());
                 c.AddProfile(new ManufacturerProfile());
+                c.AddProfile(new WorkTypeProfile());
             }).CreateMapper());
         }
 

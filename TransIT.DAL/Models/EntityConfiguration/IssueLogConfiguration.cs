@@ -42,6 +42,8 @@ namespace TransIT.DAL.Models
 
             builder.Property(e => e.SupplierId).HasColumnName("SUPPLIER_ID");
 
+            builder.Property(e => e.WorkTypeId).HasColumnName("WORK_TYPE_ID");
+
             builder.HasOne(d => d.ActionType)
                 .WithMany(p => p.IssueLog)
                 .HasForeignKey(d => d.ActionTypeId)
@@ -80,6 +82,11 @@ namespace TransIT.DAL.Models
                 .WithMany(p => p.IssueLog)
                 .HasForeignKey(d => d.SupplierId)
                 .HasConstraintName("FK_ISSUE_LOG_SUPPLIER");
+
+            builder.HasOne(w => w.WorkType)
+                .WithMany(i => i.IssueLog)
+                .HasForeignKey(w => w.Id)
+                .HasConstraintName("FK_ISSUE_LOG_WORK_TYPE");
         }
     }
 }

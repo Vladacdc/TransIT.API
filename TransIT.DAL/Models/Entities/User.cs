@@ -46,6 +46,8 @@ namespace TransIT.DAL.Models.Entities
             VehicleTypeCreate = new HashSet<VehicleType>();
             VehicleTypeMod = new HashSet<VehicleType>();
             Employees = new HashSet<Employee>();
+            WorkTypeCreate = new HashSet<WorkType>();
+            WorkTypeMod = new HashSet<WorkType>();
             UnitCreate = new HashSet<Unit>();
             UnitMod = new HashSet<Unit>();
             ManufacturerCreate = new HashSet<Manufacturer>();
@@ -151,6 +153,10 @@ namespace TransIT.DAL.Models.Entities
         public virtual ICollection<VehicleType> VehicleTypeCreate { get; set; }
 
         public virtual ICollection<VehicleType> VehicleTypeMod { get; set; }
+
+        public virtual ICollection<WorkType> WorkTypeCreate { get; set; }
+
+        public virtual ICollection<WorkType> WorkTypeMod { get; set; }
 
         public virtual ICollection<Unit> UnitCreate { get; set; }
 

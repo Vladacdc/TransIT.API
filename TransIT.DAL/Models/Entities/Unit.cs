@@ -1,10 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using TransIT.DAL.Models.Entities.Abstractions;
 
 namespace TransIT.DAL.Models.Entities
 {
     public class Unit : IBaseEntity, IAuditableEntity
     {
+        public Unit()
+        {
+            Parts = new List<Part>();
+        }
+
         public int Id { get; set; }
 
         public string ShortName { get; set; }
@@ -22,5 +28,7 @@ namespace TransIT.DAL.Models.Entities
         public DateTime? CreatedDate { get; set; }
 
         public DateTime? UpdatedDate { get; set; }
+
+        public virtual ICollection<Part> Parts { get; set; }
     }
 }

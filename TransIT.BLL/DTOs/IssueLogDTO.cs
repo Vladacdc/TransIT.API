@@ -12,6 +12,7 @@ namespace TransIT.BLL.DTOs
         public SupplierDTO Supplier { get; set; }
         public ActionTypeDTO ActionType { get; set; }
         public IssueDTO Issue { get; set; }
+        public WorkTypeDTO WorkTypeDto { get; set; }
         public UserDTO Create { get; set; }
         public UserDTO Mod { get; set; }
         public DateTime? CreateDate { get; set; }

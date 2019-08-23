@@ -1,5 +1,6 @@
 ﻿using TransIT.BLL.DTOs;
 using TransIT.BLL.Services;
+using TransIT.BLL.Services.Interfaces;
 
 namespace TransIT.BLL.Factories
 {
@@ -29,6 +30,8 @@ namespace TransIT.BLL.Factories
 
         public IFilterService<MalfunctionSubgroupDTO> MalfunctionSubgroupFilterService { get; }
 
+        public IFilterService<PartDTO> PartFilterService { get; }
+
         public IFilterService<PostDTO> PostFilterService { get; }
 
         public IFilterService<StateDTO> StateFilterService { get; }
@@ -44,6 +47,8 @@ namespace TransIT.BLL.Factories
         public IFilterService<VehicleTypeDTO> VehicleTypeFilterService { get; }
 
         public IFilterService<UnitDTO> UnitFilterService { get; }
+
+        public IFilterService<WorkTypeDTO> WorkTypeFilterService { get; }
 
         public IFilterService<ManufacturerDTO> ManufacturerFilterService { get; }
 
@@ -151,9 +156,19 @@ namespace TransIT.BLL.Factories
                     return (IFilterService<TEntityDTO>) UnitFilterService;
                 }
 
+                case nameof(WorkTypeDTO):
+                {
+                    return (IFilterService<TEntityDTO>) WorkTypeFilterService;
+                }
+
                 case nameof(ManufacturerDTO):
                 {
                     return (IFilterService<TEntityDTO>) MalfunctionFilterService;
+                }
+
+                case nameof(PartDTO):
+                {
+                    return (IFilterService<TEntityDTO>) PartFilterService;
                 }
 
                 default:
@@ -176,6 +191,7 @@ namespace TransIT.BLL.Factories
             IFilterService<MalfunctionGroupDTO> malfunctionGroupFilterService,
             IFilterService<MalfunctionSubgroupDTO> malfunctionSubgroupFilterService,
             IFilterService<PostDTO> postFilterService,
+            IFilterService<PartDTO> partFilterService,
             IFilterService<StateDTO> stateFilterService,
             IFilterService<SupplierDTO> supplierFilterService,
             IFilterService<TransitionDTO> transitionFilterService,
@@ -183,6 +199,7 @@ namespace TransIT.BLL.Factories
             IFilterService<VehicleDTO> vehicleFilterService,
             IFilterService<VehicleTypeDTO> vehicleTypeFilterService, 
             IFilterService<UnitDTO> unitFilterService, 
+            IFilterService<WorkTypeDTO> workTypeFilterService,
             IFilterService<ManufacturerDTO> manufacturerFilterService)
         {
             ActionTypeFilterService = actionTypeFilterService;
@@ -198,6 +215,7 @@ namespace TransIT.BLL.Factories
             MalfunctionGroupFilterService = malfunctionGroupFilterService;
             MalfunctionSubgroupFilterService = malfunctionSubgroupFilterService;
             PostFilterService = postFilterService;
+            PartFilterService = partFilterService;
             StateFilterService = stateFilterService;
             SupplierFilterService = supplierFilterService;
             TransitionFilterService = transitionFilterService;
@@ -205,6 +223,7 @@ namespace TransIT.BLL.Factories
             VehicleFilterService = vehicleFilterService;
             VehicleTypeFilterService = vehicleTypeFilterService;
             UnitFilterService = unitFilterService;
+            WorkTypeFilterService = workTypeFilterService;
             ManufacturerFilterService = manufacturerFilterService;
         }
     }
