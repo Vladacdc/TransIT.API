@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using TransIT.DAL.Models;
 using TransIT.DAL.Models.Entities;
 using TransIT.DAL.Repositories.ImplementedRepositories;
+using TransIT.Tests.Helper;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -16,7 +17,7 @@ namespace TransIT.Tests.Repository
         public async Task PartsInRepository_Should_Add_Item()
         {
             // Arrange
-            var context = new DbContextFromMemory();
+            var context = TestSetUpHelper.CreateDbContext();
             var repository = new PartsInRepository(context);
             var currency = new Currency()
             {
@@ -71,7 +72,7 @@ namespace TransIT.Tests.Repository
         public async Task PartsInRepository_Should_Update_Item()
         {
             // Arrange
-            var context = new DbContextFromMemory();
+            var context = TestSetUpHelper.CreateDbContext();
             var repository = new PartsInRepository(context);
             var currency = new Currency()
             {
