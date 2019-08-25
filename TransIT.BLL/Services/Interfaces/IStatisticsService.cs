@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using TransIT.BLL.DTOs;
 
@@ -6,6 +7,8 @@ namespace TransIT.BLL.Services.Interfaces
 {
     public interface IStatisticsService
     {
+        void SetDateRange(DateTime startDate, DateTime endDate);
+
         Task<int> CountMalfunction(string malfunctionName, string vehicleTypeName);
 
         Task<int> CountMalfunctionSubGroup(string malfunctionSubgroupName, string vehicleTypeName);

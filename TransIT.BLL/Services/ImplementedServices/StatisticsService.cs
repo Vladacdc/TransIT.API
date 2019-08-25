@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TransIT.BLL.DTOs;
@@ -10,6 +11,10 @@ namespace TransIT.BLL.Services.ImplementedServices
 {
     public class StatisticsService : IStatisticsService
     {
+        private DateTime StartDate;
+
+        private DateTime EndDate;
+
         private readonly IUnitOfWork _unitOfWork;
 
         /// <summary>
@@ -21,10 +26,19 @@ namespace TransIT.BLL.Services.ImplementedServices
             _unitOfWork = unitOfWork;
         }
 
+        public void SetDateRange(DateTime startDate, DateTime endDate)
+        {
+            StartDate = startDate;
+            EndDate = endDate;
+        }
+
         public async Task<int> CountMalfunction(string malfunctionName, string vehicleTypeName)
         {
-            var issues = await _unitOfWork.IssueRepository.GetAllAsync(
-                i =>i.Vehicle.VehicleType.Name == vehicleTypeName && i.Malfunction.Name==malfunctionName);
+            var issues = await _unitOfWork.IssueRepository.GetAllAsync(i =>
+                i.Vehicle.VehicleType.Name == vehicleTypeName &&
+                i.Malfunction.Name == malfunctionName &&
+                (StartDate == null ? true : i.CreatedDate >= StartDate) &&
+                (EndDate == null ? true : i.CreatedDate <= EndDate));
             return issues.Count();
         }
 
