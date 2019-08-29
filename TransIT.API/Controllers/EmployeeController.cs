@@ -53,25 +53,25 @@ namespace TransIT.API.Controllers
         [HttpGet("boardnumber/{number}")]
         public async Task<IActionResult> GetByBoardNumber(int number)
         {
-            return Ok(await _employeeService.GetByBoardNumberAsync(number));
+            return Json(await _employeeService.GetByBoardNumberAsync(number));
         }
 
         [HttpGet("boardnumbers")]
         public async Task<IActionResult> GetBoardNumbers()
         {
-            return Ok(await _employeeService.GetBoardNumbersAsync());
+            return Json(await _employeeService.GetBoardNumbersAsync());
         }
 
         [HttpGet("attach/users")]
         public async Task<IActionResult> GetNotAttachedUsers()
         {
-            return Ok(await _employeeService.GetNotAttachedUsersAsync());
+            return Json(await _employeeService.GetNotAttachedUsersAsync());
         }
 
         [HttpGet("attach/{userId}")]
         public async Task<IActionResult> GetEmployeeForUserAsync([FromRoute] string userId)
         {
-            return Ok(await _employeeService.GetEmployeeForUserAsync(userId));
+            return Json(await _employeeService.GetEmployeeForUserAsync(userId));
         }
 
         [HttpPost("attach/{employee}/{user}")]
@@ -84,7 +84,7 @@ namespace TransIT.API.Controllers
             }
             else
             {
-                return Ok(attachResult);
+                return Json(attachResult);
             }
         }
 
