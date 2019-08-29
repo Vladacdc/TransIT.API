@@ -33,7 +33,7 @@ namespace TransIT.API.Controllers
             obj.Id = id;
             var result = await _userService.UpdateAsync(obj);
             return result != null
-                ? Ok(result)
+                ? Json(result)
                 : (IActionResult)BadRequest("User doesn't exist");
         }
 
@@ -52,11 +52,11 @@ namespace TransIT.API.Controllers
             switch (User.FindFirst(RoleNames.Schema)?.Value)
             {
                 case RoleNames.Admin:
-                    return Ok(await _userService.GetRangeAsync(offset, amount));
+                    return Json(await _userService.GetRangeAsync(offset, amount));
                 case RoleNames.Engineer:
                     var result = await _userService.GetAssignees(offset, amount);
                     return result != null
-                        ? Ok(result)
+                        ? Json(result)
                         : (IActionResult)BadRequest();
                 default:
                     return StatusCode(StatusCodes.Status500InternalServerError);
