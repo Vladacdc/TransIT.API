@@ -1,10 +1,8 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using TransIT.API.EndpointFilters.OnException;
 using TransIT.BLL.DTOs;
 using TransIT.BLL.Factories;
 using TransIT.BLL.Services.Interfaces;

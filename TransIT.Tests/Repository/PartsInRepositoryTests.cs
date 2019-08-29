@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using TransIT.DAL.Models;
 using TransIT.DAL.Models.Entities;
 using TransIT.DAL.Repositories.ImplementedRepositories;
 using TransIT.Tests.Helper;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace TransIT.Tests.Repository
 {

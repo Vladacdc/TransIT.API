@@ -1,9 +1,7 @@
-using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using TransIT.BLL.DTOs;
 using TransIT.BLL.Factories;
 using TransIT.BLL.Services.Interfaces;
