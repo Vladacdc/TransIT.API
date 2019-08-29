@@ -5,9 +5,6 @@ namespace TransIT.BLL.DTOs
 {
     public class PartInDTO
     {
-        private uint amount;
-        private float price;
-
         public PartInDTO()
         {
 
