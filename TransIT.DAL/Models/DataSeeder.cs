@@ -438,9 +438,29 @@ namespace TransIT.DAL.Models
                 ibrokenWindows, inoGas);
             #endregion
 
+            #region Units
+            context.AddRange(new Unit[] {
+                new Unit() {
+                    Name = "Штуки",
+                    ShortName = "шт",
+                },
+                new Unit() {
+                    Name = "Метри",
+                    ShortName = "м",
+                },
+                new Unit() {
+                    Name = "Метри квадратні",
+                    ShortName = "м2",
+                },
+                new Unit() {
+                    Name = "Кілограми",
+                    ShortName = "кг",
+                }
+            });
+            #endregion
+
             context.SaveChanges();
         }
-
 
         private static async Task SeedUserAsync(
             UserManager<User> userManager,
