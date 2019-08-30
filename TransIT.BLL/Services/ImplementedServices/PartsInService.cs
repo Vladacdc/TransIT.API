@@ -63,7 +63,7 @@ namespace TransIT.BLL.Services.ImplementedServices
             var entity = _mapper.Map<PartIn>(dto);
             _repository.Update(entity);
             await _unitOfWork.SaveAsync();
-            return _mapper.Map<PartInDTO>(entity);
+            return _mapper.Map<PartInDTO>(await _repository.GetByIdAsync(entity.Id));
         }
     }
 }

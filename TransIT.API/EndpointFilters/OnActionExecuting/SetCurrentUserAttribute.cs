@@ -1,22 +1,26 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc.Filters;
 using TransIT.BLL.Factories;
+using TransIT.BLL.Services.Interfaces;
 
 namespace TransIT.API.EndpointFilters.OnActionExecuting
 {
     public class SetCurrentUserAttribute : ActionFilterAttribute
     {
-        private readonly IServiceFactory _services;
+        private readonly IUserService _userService;
 
-        public SetCurrentUserAttribute(IServiceFactory services)
+        public SetCurrentUserAttribute(IUserService userService)
         {
-            _services = services;
+            _userService = userService;
         }
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             var id = context?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            _services.UserService.UpdateCurrentUserId(id);
+            if (!string.IsNullOrEmpty(id))
+            {
+                _userService.UpdateCurrentUserId(id);
+            }
         }
     }
 }
