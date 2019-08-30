@@ -22,16 +22,17 @@ namespace TransIT.BLL.Services.ImplementedServices
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<int> CountMalfunction(string malfunctionName, string vehicleTypeName, DateTime startDate, DateTime endDate)
+        public async Task<int> CountMalfunction(string malfunctionName, string vehicleTypeName, DateTime? startDate, DateTime? endDate)
         {
-            throw new Exception("TODO");
-
             var issues = await _unitOfWork.IssueRepository.GetAllAsync(
-                i =>i.Vehicle.VehicleType.Name == vehicleTypeName && i.Malfunction.Name==malfunctionName);
+                i => i.Vehicle.VehicleType.Name == vehicleTypeName &&
+                i.Malfunction.Name == malfunctionName &&
+                (startDate == null || i.CreatedDate >= startDate) &&
+                (endDate == null || i.CreatedDate < endDate));
             return issues.Count();
         }
 
-        public async Task<int> CountMalfunctionSubGroup(string malfunctionSubgroupName, string vehicleTypeName, DateTime startDate, DateTime endDate)
+        public async Task<int> CountMalfunctionSubGroup(string malfunctionSubgroupName, string vehicleTypeName, DateTime? startDate, DateTime? endDate)
         {
             int count = 0;
             var malfunctions = 
@@ -49,7 +50,7 @@ namespace TransIT.BLL.Services.ImplementedServices
             return count;
         }
 
-        public async Task<int> CountMalfunctionGroup(string malfunctionGroupName, string vehicleTypeName, DateTime startDate, DateTime endDate)
+        public async Task<int> CountMalfunctionGroup(string malfunctionGroupName, string vehicleTypeName, DateTime? startDate, DateTime? endDate)
         {
             int count = 0;
             var malfunctionSubgroups = 
@@ -67,7 +68,7 @@ namespace TransIT.BLL.Services.ImplementedServices
             return count;
         }
 
-        public async Task<List<int>> GetMalfunctionStatistics(string malfunctionName, DateTime startDate, DateTime endDate)
+        public async Task<List<int>> GetMalfunctionStatistics(string malfunctionName, DateTime? startDate, DateTime? endDate)
         {
             var vehicleTypes = await _unitOfWork.VehicleTypeRepository.GetAllAsync();
             List<int> result = new List<int>();
@@ -80,7 +81,7 @@ namespace TransIT.BLL.Services.ImplementedServices
             return result;
         }
 
-        public async Task<List<int>> GetMalfunctionSubGroupStatistics(string malfunctionSubGroupName, DateTime startDate, DateTime endDate)
+        public async Task<List<int>> GetMalfunctionSubGroupStatistics(string malfunctionSubGroupName, DateTime? startDate, DateTime? endDate)
         {
             var vehicleTypes = await _unitOfWork.VehicleTypeRepository.GetAllAsync();
             List<int> result = new List<int>();
@@ -93,7 +94,7 @@ namespace TransIT.BLL.Services.ImplementedServices
             return result;
         }
 
-        public async Task<List<int>> GetMalfunctionGroupStatistics(string malfunctionGroupName, DateTime startDate, DateTime endDate)
+        public async Task<List<int>> GetMalfunctionGroupStatistics(string malfunctionGroupName, DateTime? startDate, DateTime? endDate)
         {
             var vehicleTypes = await _unitOfWork.VehicleTypeRepository.GetAllAsync();
             List<int> result = new List<int>();
@@ -106,7 +107,7 @@ namespace TransIT.BLL.Services.ImplementedServices
             return result;
         }
 
-        public async Task<List<StatisticsDTO>> GetAllGroupsStatistics(DateTime startDate, DateTime endDate)
+        public async Task<List<StatisticsDTO>> GetAllGroupsStatistics(DateTime? startDate, DateTime? endDate)
         {
             var malfunctionGroups = await _unitOfWork.MalfunctionGroupRepository.GetAllAsync();
             List<StatisticsDTO> result = new List<StatisticsDTO>();
@@ -123,7 +124,7 @@ namespace TransIT.BLL.Services.ImplementedServices
             return result;
         }
 
-        public async Task<List<StatisticsDTO>> GetAllSubgroupsStatistics(DateTime startDate, DateTime endDate, string groupName = null)
+        public async Task<List<StatisticsDTO>> GetAllSubgroupsStatistics(DateTime? startDate, DateTime? endDate, string groupName = null)
         {
             List<StatisticsDTO> result = new List<StatisticsDTO>();
             IEnumerable<MalfunctionSubgroup> malfunctionSubgroups;
@@ -150,7 +151,7 @@ namespace TransIT.BLL.Services.ImplementedServices
             return result;
         }
 
-        public async Task<List<StatisticsDTO>> GetAllMalfunctionsStatistics(DateTime startDate, DateTime endDate, string subgroupName = null)
+        public async Task<List<StatisticsDTO>> GetAllMalfunctionsStatistics(DateTime? startDate, DateTime? endDate, string subgroupName = null)
         {
             List<StatisticsDTO> result = new List<StatisticsDTO>();
             IEnumerable<Malfunction> malfunctions;
