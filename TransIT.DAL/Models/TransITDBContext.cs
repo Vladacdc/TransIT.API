@@ -50,6 +50,7 @@ namespace TransIT.DAL.Models
         public virtual DbSet<WorkType> WorkType { get; set; }
         public virtual DbSet<Unit> Units { get; set; }
         public virtual DbSet<Manufacturer> Manufacturers { get; set; }
+        public virtual DbSet<Part> Parts { get; set; }
 
         public string CurrentUserId
         {
