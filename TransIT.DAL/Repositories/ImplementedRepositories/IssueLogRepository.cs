@@ -59,7 +59,8 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
             .Include(e => e.Supplier)
             .Include(x => x.Document)
             .Include(w => w.WorkType)
-            .OrderByDescending(u => u.UpdatedDate)
-            .ThenByDescending(x => x.CreatedDate);
+            //.Include(cd => cd.CreatedDate)
+            //.Include(ud => ud.UpdatedDate)
+            .OrderByDescending(u => u.UpdatedDate);
     }
 }

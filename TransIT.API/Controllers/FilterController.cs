@@ -27,7 +27,7 @@ namespace TransIT.API.Controllers
 
         [HttpPost(DataTableTemplateUri)]
         public virtual async Task<IActionResult> Filter(DataTableRequestDTO model)
-        {
+      {
             return Json(
                 ComposeDataTableResponseDto(
                     await GetMappedEntitiesByModel(model),
