@@ -24,8 +24,8 @@ namespace TransIT.BLL
             services.ConfigureServices();
             services.ConfigureFilterServices();
 
-            services.AddScoped<IServiceFactory, ServiceFactory>();
-            services.AddScoped<IFilterServiceFactory, FilterServiceFactory>();
+            services.AddSingleton<IServiceFactory, ServiceFactory>();
+            services.AddSingleton<IFilterServiceFactory, FilterServiceFactory>();
 
             services.ConfigureDocumentService(configuration);
 
