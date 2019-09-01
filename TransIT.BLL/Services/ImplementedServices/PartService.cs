@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
@@ -40,7 +38,7 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<IEnumerable<PartDTO>> SearchAsync(string search)
         {
-            var parts = await _unitOfWork.PartRepository.SearchExpressionAsync(
+            var parts = await _unitOfWork.PartRepository.SearchAsync(
                     new SearchTokenCollection(search)
                 );
 

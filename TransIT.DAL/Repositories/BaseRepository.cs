@@ -103,7 +103,7 @@ namespace TransIT.DAL.Repositories
             return entity => false;
         }
 
-        public virtual Task<IQueryable<TEntity>> SearchExpressionAsync(IEnumerable<string> strs)
+        public virtual Task<IQueryable<TEntity>> SearchAsync(IEnumerable<string> strs)
         {
             var predicate = PredicateBuilder.New<TEntity>();
 

@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using TransIT.API.EndpointFilters.OnException;
 using TransIT.BLL.DTOs;
 using TransIT.BLL.Factories;
 

@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
-using LinqKit;
 using Microsoft.EntityFrameworkCore;
 using TransIT.DAL.Models;
 using TransIT.DAL.Models.Entities;
@@ -38,6 +35,8 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
                    .Include(z => z.Mod)
                    .Include(c => c.Currency)
                    .Include(c => c.Country)
+                   .Include(c => c.SupplierParts)
+                   .ThenInclude(x => x.Part)
                    .OrderByDescending(u => u.UpdatedDate)
                    .ThenByDescending(x => x.CreatedDate);
     }

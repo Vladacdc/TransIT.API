@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -43,10 +42,8 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<IEnumerable<EmployeeDTO>> SearchAsync(string search)
         {
-            var employees = await _unitOfWork.EmployeeRepository.SearchExpressionAsync(
-                search
-                    .Split(new[] { ' ', ',', '.' }, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(x => x.Trim().ToUpperInvariant())
+            var employees = await _unitOfWork.EmployeeRepository.SearchAsync(
+                    new SearchTokenCollection(search)
                 );
 
             return _mapper.Map<IEnumerable<EmployeeDTO>>(await employees.ToListAsync());

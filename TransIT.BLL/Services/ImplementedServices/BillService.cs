@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
@@ -40,10 +38,8 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<IEnumerable<BillDTO>> SearchAsync(string search)
         {
-            var bills = await _unitOfWork.BillRepository.SearchExpressionAsync(
-                search
-                    .Split(new[] { ' ', ',', '.' }, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(x => x.Trim().ToUpperInvariant())
+            var bills = await _unitOfWork.BillRepository.SearchAsync(
+                    new SearchTokenCollection(search)
                 );
 
             return _mapper.Map<IEnumerable<BillDTO>>(await bills.ToListAsync());

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
@@ -44,10 +42,8 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<IEnumerable<MalfunctionGroupDTO>> SearchAsync(string search)
         {
-            var malfunctionGroupsDTO = await _unitOfWork.MalfunctionGroupRepository.SearchExpressionAsync(
-                search
-                    .Split(new[] { ' ', ',', '.' }, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(x => x.Trim().ToUpperInvariant())
+            var malfunctionGroupsDTO = await _unitOfWork.MalfunctionGroupRepository.SearchAsync(
+                    new SearchTokenCollection(search)
                 );
 
             return _mapper.Map<IEnumerable<MalfunctionGroupDTO>>(await malfunctionGroupsDTO.ToListAsync());

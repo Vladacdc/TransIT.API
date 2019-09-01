@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
@@ -36,10 +34,8 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<IEnumerable<LocationDTO>> SearchAsync(string search)
         {
-            var locations = await _unitOfWork.LocationRepository.SearchExpressionAsync(
-                search
-                    .Split(new[] { ' ', ',', '.' }, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(x => x.Trim().ToUpperInvariant())
+            var locations = await _unitOfWork.LocationRepository.SearchAsync(
+                    new SearchTokenCollection(search)
                 );
 
             return _mapper.Map<IEnumerable<LocationDTO>>(await locations.ToListAsync());

@@ -52,6 +52,7 @@ namespace TransIT.BLL
             services.AddScoped<IEmployeeService, EmployeeService>();
             services.AddScoped<IPartService, PartService>();
             services.AddScoped<IPostService, PostService>();
+            services.AddScoped<IPartsInService, PartsInService>();
             services.AddScoped<ITransitionService, TransitionService>();
             services.AddScoped<ILocationService, LocationService>();
             services.AddScoped<IStatisticsService, StatisticsService>();
@@ -82,6 +83,7 @@ namespace TransIT.BLL
             services.AddScoped<IFilterService<TransitionDTO>, TransitionFilterService>();
             services.AddScoped<IFilterService<LocationDTO>, LocationFilterService>();
             services.AddScoped<IFilterService<UserDTO>, UserFilterService>();
+            services.AddScoped<IFilterService<PartInDTO>, PartsInFilterService>();
             services.AddScoped<IFilterService<UnitDTO>, UnitFilterService>();
             services.AddScoped<IFilterService<ManufacturerDTO>, ManufacturerFilterService>();
             services.AddScoped<IFilterService<WorkTypeDTO>,WorkTypeFilterService>();
@@ -112,6 +114,7 @@ namespace TransIT.BLL
                 c.AddProfile(new EmployeeProfile());
                 c.AddProfile(new TransitionProfile());
                 c.AddProfile(new LocationProfile());
+                c.AddProfile(new PartInProfile());
                 c.AddProfile(new UnitProfile());
                 c.AddProfile(new ManufacturerProfile());
                 c.AddProfile(new WorkTypeProfile());

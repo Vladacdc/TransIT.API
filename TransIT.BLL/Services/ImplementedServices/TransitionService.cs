@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
@@ -37,12 +36,9 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<IEnumerable<TransitionDTO>> SearchAsync(string search)
         {
-            var transitions = await _unitOfWork.TransitionRepository.SearchExpressionAsync(
-                            search
-                                .Split(new[] { ' ', ',', '.' }, StringSplitOptions.RemoveEmptyEntries)
-                                .Select(x => x.Trim().ToUpperInvariant())
-                            );
-
+            var transitions = await _unitOfWork.TransitionRepository.SearchAsync(
+                new SearchTokenCollection(search)
+            );
             return _mapper.Map<IEnumerable<TransitionDTO>>(await transitions.ToListAsync());
         }
 

@@ -1,6 +1,5 @@
 ﻿using TransIT.BLL.DTOs;
 using TransIT.BLL.Services;
-using TransIT.BLL.Services.Interfaces;
 
 namespace TransIT.BLL.Factories
 {
@@ -51,6 +50,8 @@ namespace TransIT.BLL.Factories
         public IFilterService<WorkTypeDTO> WorkTypeFilterService { get; }
 
         public IFilterService<ManufacturerDTO> ManufacturerFilterService { get; }
+
+        public IFilterService<PartInDTO> PartInFilterService { get; }
 
         public IFilterService<TEntityDTO> GetService<TEntityDTO>() where TEntityDTO : class, new()
         {
@@ -171,6 +172,11 @@ namespace TransIT.BLL.Factories
                     return (IFilterService<TEntityDTO>) PartFilterService;
                 }
 
+                case nameof(PartInDTO):
+                {
+                    return (IFilterService<TEntityDTO>)PartInFilterService;
+                }
+
                 default:
                 {
                     return null;
@@ -192,6 +198,7 @@ namespace TransIT.BLL.Factories
             IFilterService<MalfunctionSubgroupDTO> malfunctionSubgroupFilterService,
             IFilterService<PostDTO> postFilterService,
             IFilterService<PartDTO> partFilterService,
+            IFilterService<PartInDTO> partInFilterService,
             IFilterService<StateDTO> stateFilterService,
             IFilterService<SupplierDTO> supplierFilterService,
             IFilterService<TransitionDTO> transitionFilterService,
@@ -216,6 +223,7 @@ namespace TransIT.BLL.Factories
             MalfunctionSubgroupFilterService = malfunctionSubgroupFilterService;
             PostFilterService = postFilterService;
             PartFilterService = partFilterService;
+            PartInFilterService = partInFilterService;
             StateFilterService = stateFilterService;
             SupplierFilterService = supplierFilterService;
             TransitionFilterService = transitionFilterService;

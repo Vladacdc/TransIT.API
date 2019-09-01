@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace TransIT.BLL.Services.ServicesOptions
+﻿namespace TransIT.BLL.Services.ServicesOptions
 {
     public class DocumentServiceOptions
     {

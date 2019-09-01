@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
-using System.Text;
 using LinqKit;
 using Microsoft.EntityFrameworkCore;
 using TransIT.DAL.Models;
@@ -30,7 +27,7 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
             return _users;
         }
 
-        public Task<IQueryable<User>> SearchExpressionAsync(IEnumerable<string> strs)
+        public Task<IQueryable<User>> SearchAsync(IEnumerable<string> strs)
         {
             var predicate = PredicateBuilder.New<User>();
             var secondPredicate = PredicateBuilder.New<UserRole>();

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
@@ -35,7 +33,7 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<IEnumerable<WorkTypeDTO>> SearchAsync(string search)
         {
-            var workTypes = await _unitOfWork.WorkTypeRepository.SearchExpressionAsync(
+            var workTypes = await _unitOfWork.WorkTypeRepository.SearchAsync(
                 new SearchTokenCollection(search)
             );
 

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
@@ -45,10 +43,8 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<IEnumerable<CountryDTO>> SearchAsync(string search)
         {
-            var countries = await _unitOfWork.CountryRepository.SearchExpressionAsync(
-                search
-                    .Split(new[] { ' ', ',', '.' }, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(x => x.Trim().ToUpperInvariant())
+            var countries = await _unitOfWork.CountryRepository.SearchAsync(
+                    new SearchTokenCollection(search)
                 );
 
             return _mapper.Map<IEnumerable<CountryDTO>>(await countries.ToListAsync());

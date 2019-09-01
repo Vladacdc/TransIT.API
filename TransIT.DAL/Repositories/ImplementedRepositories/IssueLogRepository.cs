@@ -58,6 +58,8 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
             .Include(d => d.OldState)
             .Include(e => e.Supplier)
             .Include(x => x.Document)
+            .Include(x => x.IssueLogParts)
+            .ThenInclude(x => x.Part)
             .Include(w => w.WorkType)
             //.Include(cd => cd.CreatedDate)
             //.Include(ud => ud.UpdatedDate)

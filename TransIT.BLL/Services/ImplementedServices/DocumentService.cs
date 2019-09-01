@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using TransIT.BLL.DTOs;
@@ -71,10 +69,8 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<IEnumerable<DocumentDTO>> SearchAsync(string search)
         {
-            var documents = await _unitOfWork.DocumentRepository.SearchExpressionAsync(
-                search
-                    .Split(new[] { ' ', ',', '.' }, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(x => x.Trim().ToUpperInvariant())
+            var documents = await _unitOfWork.DocumentRepository.SearchAsync(
+                    new SearchTokenCollection(search)
                 );
 
             return _mapper.Map<IEnumerable<DocumentDTO>>(await documents.ToListAsync());

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -51,10 +50,8 @@ namespace TransIT.BLL.Services.ImplementedServices
 
         public async Task<IEnumerable<IssueLogDTO>> SearchAsync(string search)
         {
-            var issueLogs = await _unitOfWork.IssueLogRepository.SearchExpressionAsync(
-                search
-                    .Split(new[] { ' ', ',', '.' }, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(x => x.Trim().ToUpperInvariant())
+            var issueLogs = await _unitOfWork.IssueLogRepository.SearchAsync(
+                new SearchTokenCollection(search)
             );
 
             return _mapper.Map<IEnumerable<IssueLogDTO>>(await issueLogs.ToListAsync());

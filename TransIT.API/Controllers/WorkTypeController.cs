@@ -17,7 +17,8 @@ namespace TransIT.API.Controllers
     {
         private readonly IWorkTypeService _workTypeService;
 
-        public WorkTypeController(IServiceFactory serviceFactory,IFilterServiceFactory filterServiceFactory) : base(filterServiceFactory)
+        public WorkTypeController(IServiceFactory serviceFactory, IFilterServiceFactory filterServiceFactory)
+            : base(filterServiceFactory)
         {
             _workTypeService = serviceFactory.WorkTypeService;
         }

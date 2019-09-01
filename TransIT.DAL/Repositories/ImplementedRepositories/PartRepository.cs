@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
-using LinqKit;
 using Microsoft.EntityFrameworkCore;
 using TransIT.DAL.Models;
 using TransIT.DAL.Models.Entities;
@@ -17,7 +14,7 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
                : base(context)
         {
         }
-
+        
         public override Expression<Func<Part, bool>> MakeFilteringExpression(string keyword)
         {
             return part => EF.Functions.Like(part.Name, '%' + keyword + '%');
@@ -28,6 +25,8 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
            Include(p => p.Mod).
            Include(p => p.Unit).
            Include(p => p.Manufacturer).
+           Include(p => p.SupplierParts).
+           ThenInclude(x => x.Supplier).
            OrderByDescending(u => u.UpdatedDate).ThenByDescending(x => x.CreatedDate);
     }
 }

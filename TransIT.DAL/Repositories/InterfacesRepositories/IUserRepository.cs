@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using TransIT.DAL.Models.Entities;
-
-namespace TransIT.DAL.Repositories.InterfacesRepositories
+﻿namespace TransIT.DAL.Repositories.InterfacesRepositories
 {
     public interface IUserRepository
     {
