@@ -164,7 +164,7 @@ namespace TransIT.BLL.Factories
 
                 case nameof(ManufacturerDTO):
                 {
-                    return (IFilterService<TEntityDTO>) MalfunctionFilterService;
+                    return (IFilterService<TEntityDTO>) ManufacturerFilterService;
                 }
 
                 case nameof(PartDTO):

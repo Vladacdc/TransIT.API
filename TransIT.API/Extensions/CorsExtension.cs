@@ -12,7 +12,7 @@ namespace TransIT.API.Extensions
                     .AllowCredentials()
                     .AllowAnyMethod()
                     .WithOrigins("http://localhost:4200")
-                    .WithOrigins("http://transitclient.azurewebsites.net")
+                    .WithOrigins("https://transitclient.azurewebsites.net")
                     .WithOrigins("https://transitapi.azurewebsites.net")));
         }
     }
