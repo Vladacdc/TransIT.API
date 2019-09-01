@@ -61,7 +61,8 @@ namespace TransIT.DAL.Repositories.ImplementedRepositories
             .Include(x => x.IssueLogParts)
             .ThenInclude(x => x.Part)
             .Include(w => w.WorkType)
-            .OrderByDescending(u => u.UpdatedDate)
-            .ThenByDescending(x => x.CreatedDate);
+            //.Include(cd => cd.CreatedDate)
+            //.Include(ud => ud.UpdatedDate)
+            .OrderByDescending(u => u.UpdatedDate);
     }
 }

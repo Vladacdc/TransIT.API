@@ -10,8 +10,6 @@ namespace TransIT.DAL.Models.EntityConfiguration
         {
             builder.ToTable("WORK_TYPE");
 
-            builder.HasKey(e => e.Id);
-
             builder.Property(e => e.Id).HasColumnName("ID");
 
             builder.Property(e => e.Name).IsRequired().HasColumnName("NAME").HasMaxLength(50);
