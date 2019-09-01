@@ -83,9 +83,9 @@ namespace TransIT.DAL.Models
                 .HasForeignKey(d => d.SupplierId)
                 .HasConstraintName("FK_ISSUE_LOG_SUPPLIER");
 
-            builder.HasOne(w => w.WorkType)
-                .WithMany(i => i.IssueLog)
-                .HasForeignKey(w => w.Id)
+            builder.HasOne(i => i.WorkType)
+                .WithMany(w => w.IssueLog)
+                .HasForeignKey(i => i.WorkTypeId)
                 .HasConstraintName("FK_ISSUE_LOG_WORK_TYPE");
         }
     }
