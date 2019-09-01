@@ -27,7 +27,7 @@ namespace TransIT.DAL
             services.ConfigureIdentity();
             services.ConfigureFileStorage(configuration);
 
-            services.AddSingleton<IUnitOfWork, UnitOfWork.UnitOfWork>();
+            services.AddScoped<IUnitOfWork, UnitOfWork.UnitOfWork>();
         }
 
         private static void ConfigureRepositories(this IServiceCollection services)
