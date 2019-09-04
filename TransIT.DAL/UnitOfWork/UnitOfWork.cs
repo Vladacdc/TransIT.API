@@ -1,8 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using TransIT.DAL.Models;
 using TransIT.DAL.Models.Entities;
 using TransIT.DAL.Repositories.InterfacesRepositories;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace TransIT.DAL.UnitOfWork
 {
@@ -10,114 +12,118 @@ namespace TransIT.DAL.UnitOfWork
     {
         private readonly TransITDBContext _context;
 
-        public  IActionTypeRepository ActionTypeRepository { get; }
+        private readonly IServiceProvider _serviceProvider;
 
-        public  ICountryRepository CountryRepository { get; }
+        private IActionTypeRepository _actionTypeRepository;
 
-        public  ICurrencyRepository CurrencyRepository { get; }
+        private ICountryRepository _countryRepository;
 
-        public  IBillRepository BillRepository { get; }
+        private ICurrencyRepository _currencyRepository;
 
-        public  IDocumentRepository DocumentRepository { get; }
+        private IBillRepository _billRepository;
 
-        public  IIssueRepository IssueRepository { get; }
+        private IDocumentRepository _documentRepository;
 
-        public  IIssueLogRepository IssueLogRepository { get; }
+        private IIssueRepository _issueRepository;
 
-        public  IMalfunctionRepository MalfunctionRepository { get; }
+        private IIssueLogRepository _issueLogRepository;
 
-        public  IMalfunctionGroupRepository MalfunctionGroupRepository { get; }
+        private IMalfunctionRepository _malfunctionRepository;
 
-        public  IMalfunctionSubgroupRepository MalfunctionSubgroupRepository { get; }
+        private IMalfunctionGroupRepository _malfunctionGroupRepository;
 
-        public  IStateRepository StateRepository { get; }
+        private IMalfunctionSubgroupRepository _malfunctionSubgroupRepository;
 
-        public  ISupplierRepository SupplierRepository { get; }
+        private IStateRepository _stateRepository;
 
-        public  IVehicleRepository VehicleRepository { get; }
+        private ISupplierRepository _supplierRepository;
 
-        public  IVehicleTypeRepository VehicleTypeRepository { get; }
+        private IVehicleRepository _vehicleRepository;
 
-        public  IEmployeeRepository EmployeeRepository { get; }
+        private IVehicleTypeRepository _vehicleTypeRepository;
 
-        public IPartRepository PartRepository { get; }
+        private IEmployeeRepository _employeeRepository;
 
-        public  IPostRepository PostRepository { get; }
+        private IPartRepository _partRepository;
 
-        public  ITransitionRepository TransitionRepository { get; }
+        private IPostRepository _postRepository;
 
-        public  ILocationRepository LocationRepository { get; }
+        private ITransitionRepository _transitionRepository;
 
-        public RoleManager<Role> RoleManager { get; }
+        private ILocationRepository _locationRepository;
 
-        public UserManager<User> UserManager { get; }
+        private RoleManager<Role> _roleManager;
 
-        public IUserRepository UserRepository { get; }
+        private UserManager<User> _userManager;
 
-        public IPartsInRepository PartsInRepository { get; }
-        public IUnitRepository UnitRepository { get; }
+        private IUserRepository _userRepository;
 
-        public IWorkTypeRepository WorkTypeRepository { get; }
+        private IPartsInRepository _partsInRepository;
 
-        public IManufacturerRepository ManufacturerRepository { get; }
+        private IUnitRepository _unitRepository;
 
-        public UnitOfWork(
-            TransITDBContext context,
-            IActionTypeRepository actionTypeRepository,
-            ICountryRepository countryRepository,
-            ICurrencyRepository currencyRepository, 
-            IBillRepository billRepository, 
-            IDocumentRepository documentRepository,
-            IIssueRepository issueRepository,
-            IIssueLogRepository issueLogRepository,
-            IMalfunctionRepository malfunctionRepository,
-            IMalfunctionGroupRepository malfunctionGroupRepository,
-            IMalfunctionSubgroupRepository malfunctionSubgroupRepository,
-            IStateRepository stateRepository,
-            ISupplierRepository supplierRepository,
-            IVehicleRepository vehicleRepository,
-            IVehicleTypeRepository vehicleTypeRepository,
-            IEmployeeRepository employeeRepository,
-            IPartRepository partRepository,
-            IPostRepository postRepository,
-            ITransitionRepository transitionRepository,
-            ILocationRepository locationRepository,
-            IUserRepository userRepository,
-            IPartsInRepository partsInRepository,
-            RoleManager<Role> roleManager,
-            UserManager<User> userManager, 
-            IUnitRepository unitRepository,
-            IWorkTypeRepository workTypeRepository,
-            IManufacturerRepository manufacturerRepository)
+        private IWorkTypeRepository _workTypeRepository;
+
+        private IManufacturerRepository _manufacturerRepository;
+
+        public UnitOfWork(TransITDBContext context,
+                          IServiceProvider serviceProvider)
         {
             _context = context;
-            ActionTypeRepository = actionTypeRepository;
-            CountryRepository = countryRepository;
-            CurrencyRepository = currencyRepository;
-            BillRepository = billRepository;
-            DocumentRepository = documentRepository;
-            IssueRepository = issueRepository;
-            IssueLogRepository = issueLogRepository;
-            MalfunctionRepository = malfunctionRepository;
-            MalfunctionGroupRepository = malfunctionGroupRepository;
-            MalfunctionSubgroupRepository = malfunctionSubgroupRepository;
-            StateRepository = stateRepository;
-            SupplierRepository = supplierRepository;
-            VehicleRepository = vehicleRepository;
-            VehicleTypeRepository = vehicleTypeRepository;
-            EmployeeRepository = employeeRepository;
-            PartRepository = partRepository;
-            PostRepository = postRepository;
-            TransitionRepository = transitionRepository;
-            LocationRepository = locationRepository;
-            UserRepository = userRepository;
-            PartsInRepository = partsInRepository;
-            RoleManager = roleManager;
-            UserManager = userManager;
-            UnitRepository = unitRepository;
-            WorkTypeRepository = workTypeRepository;
-            ManufacturerRepository = manufacturerRepository;
+            _serviceProvider = serviceProvider;
         }
+
+        public  IActionTypeRepository ActionTypeRepository => _actionTypeRepository ?? (_actionTypeRepository = _serviceProvider.GetService<IActionTypeRepository>());
+
+        public  ICountryRepository CountryRepository => _countryRepository ?? (_countryRepository = _serviceProvider.GetService<ICountryRepository>());
+
+        public  ICurrencyRepository CurrencyRepository => _currencyRepository ?? (_currencyRepository = _serviceProvider.GetService<ICurrencyRepository>());
+
+        public  IBillRepository BillRepository => _billRepository ?? (_billRepository = _serviceProvider.GetService<IBillRepository>());
+
+        public  IDocumentRepository DocumentRepository => _documentRepository ?? (_documentRepository = _serviceProvider.GetService<IDocumentRepository>());
+
+        public  IIssueRepository IssueRepository => _issueRepository ?? (_issueRepository = _serviceProvider.GetService<IIssueRepository>());
+
+        public  IIssueLogRepository IssueLogRepository => _issueLogRepository ?? (_issueLogRepository = _serviceProvider.GetService<IIssueLogRepository>());
+
+        public  IMalfunctionRepository MalfunctionRepository => _malfunctionRepository ?? (_malfunctionRepository = _serviceProvider.GetService<IMalfunctionRepository>());
+
+        public  IMalfunctionGroupRepository MalfunctionGroupRepository => _malfunctionGroupRepository ?? (_malfunctionGroupRepository = _serviceProvider.GetService<IMalfunctionGroupRepository>());
+
+        public  IMalfunctionSubgroupRepository MalfunctionSubgroupRepository => _malfunctionSubgroupRepository ?? (_malfunctionSubgroupRepository = _serviceProvider.GetService<IMalfunctionSubgroupRepository>());
+
+        public  IStateRepository StateRepository => _stateRepository ?? (_stateRepository = _serviceProvider.GetService<IStateRepository>());
+
+        public  ISupplierRepository SupplierRepository => _supplierRepository ?? (_supplierRepository = _serviceProvider.GetService<ISupplierRepository>());
+
+        public  IVehicleRepository VehicleRepository => _vehicleRepository ?? (_vehicleRepository = _serviceProvider.GetService<IVehicleRepository>());
+
+        public  IVehicleTypeRepository VehicleTypeRepository => _vehicleTypeRepository ?? (_vehicleTypeRepository = _serviceProvider.GetService<IVehicleTypeRepository>());
+
+        public  IEmployeeRepository EmployeeRepository => _employeeRepository ?? (_employeeRepository = _serviceProvider.GetService<IEmployeeRepository>());
+
+        public IPartRepository PartRepository => _partRepository ?? (_partRepository = _serviceProvider.GetService<IPartRepository>());
+
+        public  IPostRepository PostRepository => _postRepository ?? (_postRepository = _serviceProvider.GetService<IPostRepository>());
+
+        public  ITransitionRepository TransitionRepository => _transitionRepository ?? (_transitionRepository = _serviceProvider.GetService<ITransitionRepository>());
+
+        public  ILocationRepository LocationRepository => _locationRepository ?? (_locationRepository = _serviceProvider.GetService<ILocationRepository>());
+
+        public RoleManager<Role> RoleManager => _roleManager ?? (_roleManager = _serviceProvider.GetService<RoleManager<Role>>());
+
+        public UserManager<User> UserManager => _userManager ?? (_userManager = _serviceProvider.GetService<UserManager<User>>());
+
+        public IUserRepository UserRepository => _userRepository ?? (_userRepository = _serviceProvider.GetService<IUserRepository>());
+
+        public IPartsInRepository PartsInRepository => _partsInRepository ?? (_partsInRepository = _serviceProvider.GetService<IPartsInRepository>());
+
+        public IUnitRepository UnitRepository => _unitRepository ?? (_unitRepository = _serviceProvider.GetService<IUnitRepository>());
+
+        public IWorkTypeRepository WorkTypeRepository => _workTypeRepository ?? (_workTypeRepository = _serviceProvider.GetService<IWorkTypeRepository>());
+
+        public IManufacturerRepository ManufacturerRepository => _manufacturerRepository ?? (_manufacturerRepository = _serviceProvider.GetService<IManufacturerRepository>());
 
         public Task<int> SaveAsync()
         {

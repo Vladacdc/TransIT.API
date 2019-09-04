@@ -1,113 +1,120 @@
-﻿using TransIT.BLL.Services.Interfaces;
+﻿using System;
+using TransIT.BLL.Services.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace TransIT.BLL.Factories
 {
     public class ServiceFactory : IServiceFactory
     {
-        public IAuthenticationService AuthenticationService { get; }
+        private readonly IServiceProvider _serviceProvider;
+        
+        private IAuthenticationService _authenticationService;
 
-        public IActionTypeService ActionTypeService { get; }
+        private IActionTypeService _actionTypeService;
 
-        public IBillService BillService { get; }
+        private IBillService _billService;
 
-        public ICountryService CountryService { get; }
+        private ICountryService _countryService;
 
-        public ICurrencyService CurrencyService { get; }
+        private ICurrencyService _currencyService;
 
-        public IDocumentService DocumentService { get; }
+        private IDocumentService _documentService;
 
-        public IEmployeeService EmployeeService { get; }
+        private IEmployeeService _employeeService;
 
-        public IIssueLogService IssueLogService { get; }
+        private IIssueLogService _issueLogService;
 
-        public IIssueService IssueService { get; }
+        private IIssueService _issueService;
 
-        public ILocationService LocationService { get; }
+        private ILocationService _locationService;
 
-        public IMalfunctionGroupService MalfunctionGroupService { get; }
+        private IMalfunctionGroupService _malfunctionGroupService;
 
-        public IMalfunctionService MalfunctionService { get; }
+        private IPartService _partService;
 
-        public IMalfunctionSubgroupService MalfunctionSubgroupService { get; }
+        private IPostService _postService;
 
-        public IPartService PartService { get; }
+        private IStateService _stateService;
 
-        public IPostService PostService { get; }
+        private IStatisticsService _statisticsService;
 
-        public IStateService StateService { get; }
+        private ISupplierService _supplierService;
 
-        public IStatisticsService StatisticService { get; }
+        private ITransitionService _transitionService;
 
-        public ISupplierService SupplierService { get; }
+        private IUserService _userService;
 
-        public ITransitionService TransitionService { get; }
+        private IVehicleService _vehicleService;
 
-        public IUserService UserService { get; }
+        private IVehicleTypeService _vehicleTypeService;
 
-        public IVehicleService VehicleService { get; }
+        private IPartsInService _partsInService;
 
-        public IVehicleTypeService VehicleTypeService { get; }
+        private IUnitService _unitService;
 
-        public IPartsInService PartsInService { get; }
-        public IUnitService UnitService { get; }
+        private IWorkTypeService _workTypeService;
 
-        public IWorkTypeService WorkTypeService { get; }
+        private IManufacturerService _manufacturerService;
 
-        public IManufacturerService ManufacturerService { get; }
+        private IMalfunctionSubgroupService _malfunctionSubgroupService;
 
-        public ServiceFactory(IAuthenticationService authenticationService,
-            IActionTypeService actionTypeService,
-            IBillService billService,
-            ICountryService countryService,
-            ICurrencyService currencyService,
-            IDocumentService documentService,
-            IEmployeeService employeeService,
-            IIssueLogService issueLogService,
-            IIssueService issueService,
-            ILocationService locationService,
-            IMalfunctionGroupService malfunctionGroupService,
-            IMalfunctionService malfunctionService,
-            IMalfunctionSubgroupService malfunctionSubgroupService,
-            IPostService postService,
-            IPartService partService,
-            IStateService stateService,
-            IStatisticsService statisticService,
-            ISupplierService supplierService,
-            ITransitionService transitionService,
-            IUserService userService,
-            IVehicleService vehicleService, 
-            IPartsInService partsInService,
-            IUnitService unitService, 
-            IVehicleTypeService vehicleTypeService,
-            IWorkTypeService workTypeService,
-            IManufacturerService manufacturerService)
+        private IMalfunctionService _malfunctionService;
+
+        public ServiceFactory(IServiceProvider serviceProvider)
         {
-            AuthenticationService = authenticationService;
-            ActionTypeService = actionTypeService;
-            BillService = billService;
-            CountryService = countryService;
-            CurrencyService = currencyService;
-            DocumentService = documentService;
-            EmployeeService = employeeService;
-            IssueLogService = issueLogService;
-            IssueService = issueService;
-            LocationService = locationService;
-            MalfunctionGroupService = malfunctionGroupService;
-            MalfunctionService = malfunctionService;
-            MalfunctionSubgroupService = malfunctionSubgroupService;
-            PartService = partService;
-            PostService = postService;
-            StateService = stateService;
-            StatisticService = statisticService;
-            SupplierService = supplierService;
-            TransitionService = transitionService;
-            UserService = userService;
-            VehicleService = vehicleService;
-            VehicleTypeService = vehicleTypeService;
-            PartsInService = partsInService;
-            UnitService = unitService;
-            WorkTypeService = workTypeService;
-            ManufacturerService = manufacturerService;
+            _serviceProvider = serviceProvider;
         }
+
+        public IAuthenticationService AuthenticationService => _authenticationService ?? (_authenticationService = _serviceProvider.GetService<IAuthenticationService>());
+
+        public IActionTypeService ActionTypeService => _actionTypeService ?? (_actionTypeService = _serviceProvider.GetService<IActionTypeService>());
+
+        public IBillService BillService => _billService ?? (_billService = _serviceProvider.GetService<IBillService>());
+
+        public ICountryService CountryService => _countryService ?? (_countryService = _serviceProvider.GetService<ICountryService>());
+
+        public ICurrencyService CurrencyService => _currencyService ?? (_currencyService = _serviceProvider.GetService<ICurrencyService>());
+
+        public IDocumentService DocumentService => _documentService ?? (_documentService = _serviceProvider.GetService<IDocumentService>());
+
+        public IEmployeeService EmployeeService => _employeeService ?? (_employeeService = _serviceProvider.GetService<IEmployeeService>());
+
+        public IIssueLogService IssueLogService => _issueLogService ?? (_issueLogService = _serviceProvider.GetService<IIssueLogService>());
+
+        public IIssueService IssueService => _issueService ?? (_issueService = _serviceProvider.GetService<IIssueService>());
+
+        public ILocationService LocationService => _locationService ?? (_locationService = _serviceProvider.GetService<ILocationService>());
+
+        public IMalfunctionGroupService MalfunctionGroupService => _malfunctionGroupService ?? (_malfunctionGroupService = _serviceProvider.GetService<IMalfunctionGroupService>());
+
+        public IMalfunctionService MalfunctionService => _malfunctionService ?? (_malfunctionService = _serviceProvider.GetService<IMalfunctionService>());
+
+        public IMalfunctionSubgroupService MalfunctionSubgroupService => _malfunctionSubgroupService ?? (_malfunctionSubgroupService = _serviceProvider.GetService<IMalfunctionSubgroupService>());
+
+        public IPartService PartService => _partService ?? (_partService = _serviceProvider.GetService<IPartService>());
+
+        public IPostService PostService => _postService ?? (_postService = _serviceProvider.GetService<IPostService>());
+
+        public IStateService StateService => _stateService ?? (_stateService = _serviceProvider.GetService<IStateService>());
+
+        public IStatisticsService StatisticService => _statisticsService ?? (_statisticsService = _serviceProvider.GetService<IStatisticsService>());
+
+        public ISupplierService SupplierService => _supplierService ?? (_supplierService = _serviceProvider.GetService<ISupplierService>());
+
+        public ITransitionService TransitionService => _transitionService ?? (_transitionService = _serviceProvider.GetService<ITransitionService>());
+
+        public IUserService UserService => _userService ?? (_userService = _serviceProvider.GetService<IUserService>());
+
+        public IVehicleService VehicleService => _vehicleService ?? (_vehicleService = _serviceProvider.GetService<IVehicleService>());
+
+        public IVehicleTypeService VehicleTypeService => _vehicleTypeService ?? (_vehicleTypeService = _serviceProvider.GetService<IVehicleTypeService>());
+
+        public IPartsInService PartsInService => _partsInService ?? (_partsInService = _serviceProvider.GetService<IPartsInService>());
+
+        public IUnitService UnitService => _unitService ?? (_unitService = _serviceProvider.GetService<IUnitService>());
+
+        public IWorkTypeService WorkTypeService => _workTypeService ?? (_workTypeService = _serviceProvider.GetService<IWorkTypeService>());
+
+        public IManufacturerService ManufacturerService => _manufacturerService ?? (_manufacturerService = _serviceProvider.GetService<IManufacturerService>());
     }
 }
