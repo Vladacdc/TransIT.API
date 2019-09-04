@@ -1,57 +1,113 @@
-﻿using TransIT.BLL.DTOs;
+﻿using System;
+using TransIT.BLL.DTOs;
 using TransIT.BLL.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace TransIT.BLL.Factories
 {
     public class FilterServiceFactory : IFilterServiceFactory
     {
-        public IFilterService<ActionTypeDTO> ActionTypeFilterService { get; }
+        private readonly IServiceProvider _serviceProvider;
 
-        public IFilterService<BillDTO> BillFilterService { get; }
+        private IFilterService<ActionTypeDTO> _actionTypeFilterService;
 
-        public IFilterService<CountryDTO> CountryFilterService { get; }
+        private IFilterService<BillDTO> _billFilterService;
 
-        public IFilterService<CurrencyDTO> CurrencyFilterService { get; }
+        private IFilterService<CountryDTO> _countryFilterService;
 
-        public IFilterService<DocumentDTO> DocumentFilterService { get; }
+        private IFilterService<CurrencyDTO> _currencyFilterService;
 
-        public IFilterService<EmployeeDTO> EmployeeFilterService { get; }
+        private IFilterService<DocumentDTO> _documentFilterService;
 
-        public IFilterService<IssueLogDTO> IssueLogFilterService { get; }
+        private IFilterService<EmployeeDTO> _employeeFilterService;
 
-        public IFilterService<IssueDTO> IssueFilterService { get; }
+        private IFilterService<IssueLogDTO> _issueLogFilterService;
 
-        public IFilterService<LocationDTO> LocationFilterService { get; }
+        private IFilterService<IssueDTO> _issueFilterService;
 
-        public IFilterService<MalfunctionDTO> MalfunctionFilterService { get; }
+        private IFilterService<LocationDTO> _locationFilterService;
 
-        public IFilterService<MalfunctionGroupDTO> MalfunctionGroupFilterService { get; }
+        private IFilterService<MalfunctionDTO> _malfunctionFilterService;
 
-        public IFilterService<MalfunctionSubgroupDTO> MalfunctionSubgroupFilterService { get; }
+        private IFilterService<MalfunctionGroupDTO> _malfunctionGroupFilterService;
 
-        public IFilterService<PartDTO> PartFilterService { get; }
+        private IFilterService<MalfunctionSubgroupDTO> _malfunctionSubgroupFilterService;
 
-        public IFilterService<PostDTO> PostFilterService { get; }
+        private IFilterService<PartDTO> _partFilterService;
 
-        public IFilterService<StateDTO> StateFilterService { get; }
+        private IFilterService<PostDTO> _postFilterService;
 
-        public IFilterService<SupplierDTO> SupplierFilterService { get; }
+        private IFilterService<StateDTO> _stateFilterService;
 
-        public IFilterService<TransitionDTO> TransitionFilterService { get; }
+        private IFilterService<SupplierDTO> _supplierFilterService;
 
-        public IFilterService<UserDTO> UserFilterService { get; }
+        private IFilterService<TransitionDTO> _transitionFilterService;
 
-        public IFilterService<VehicleDTO> VehicleFilterService { get; }
+        private IFilterService<UserDTO> _userFilterService;
 
-        public IFilterService<VehicleTypeDTO> VehicleTypeFilterService { get; }
+        private IFilterService<VehicleDTO> _vehicleFilterService;
 
-        public IFilterService<UnitDTO> UnitFilterService { get; }
+        private IFilterService<VehicleTypeDTO> _vehicleTypeFilterService;
 
-        public IFilterService<WorkTypeDTO> WorkTypeFilterService { get; }
+        private IFilterService<UnitDTO> _unitFilterService;
 
-        public IFilterService<ManufacturerDTO> ManufacturerFilterService { get; }
+        private IFilterService<WorkTypeDTO> _workTypeFilterService;
 
-        public IFilterService<PartInDTO> PartInFilterService { get; }
+        private IFilterService<ManufacturerDTO> _manufacturerFilterService;
+
+        private IFilterService<PartInDTO> _partInFilterService;
+        public FilterServiceFactory(IServiceProvider serviceProvider)
+        {
+            _serviceProvider = serviceProvider;
+        }
+
+        public IFilterService<ActionTypeDTO> ActionTypeFilterService => _actionTypeFilterService ?? (_actionTypeFilterService = _serviceProvider.GetService<IFilterService<ActionTypeDTO>>());
+
+        public IFilterService<BillDTO> BillFilterService => _billFilterService ?? (_billFilterService = _serviceProvider.GetService<IFilterService<BillDTO>>());
+
+        public IFilterService<CountryDTO> CountryFilterService => _countryFilterService ?? (_countryFilterService = _serviceProvider.GetService<IFilterService<CountryDTO>>());
+
+        public IFilterService<CurrencyDTO> CurrencyFilterService => _currencyFilterService ?? (_currencyFilterService = _serviceProvider.GetService<IFilterService<CurrencyDTO>>());
+
+        public IFilterService<DocumentDTO> DocumentFilterService => _documentFilterService ?? (_documentFilterService = _serviceProvider.GetService<IFilterService<DocumentDTO>>());
+
+        public IFilterService<EmployeeDTO> EmployeeFilterService => _employeeFilterService ?? (_employeeFilterService = _serviceProvider.GetService<IFilterService<EmployeeDTO>>());
+
+        public IFilterService<IssueLogDTO> IssueLogFilterService => _issueLogFilterService ?? (_issueLogFilterService = _serviceProvider.GetService<IFilterService<IssueLogDTO>>());
+
+        public IFilterService<IssueDTO> IssueFilterService => _issueFilterService ?? (_issueFilterService = _serviceProvider.GetService<IFilterService<IssueDTO>>());
+
+        public IFilterService<LocationDTO> LocationFilterService => _locationFilterService ?? (_locationFilterService = _serviceProvider.GetService<IFilterService<LocationDTO>>());
+
+        public IFilterService<MalfunctionDTO> MalfunctionFilterService => _malfunctionFilterService ?? (_malfunctionFilterService = _serviceProvider.GetService<IFilterService<MalfunctionDTO>>());
+
+        public IFilterService<MalfunctionGroupDTO> MalfunctionGroupFilterService => _malfunctionGroupFilterService ?? (_malfunctionGroupFilterService = _serviceProvider.GetService<IFilterService<MalfunctionGroupDTO>>());
+
+        public IFilterService<MalfunctionSubgroupDTO> MalfunctionSubgroupFilterService => _malfunctionSubgroupFilterService ?? (_malfunctionSubgroupFilterService = _serviceProvider.GetService<IFilterService<MalfunctionSubgroupDTO>>());
+
+        public IFilterService<PartDTO> PartFilterService => _partFilterService ?? (_partFilterService = _serviceProvider.GetService<IFilterService<PartDTO>>());
+
+        public IFilterService<PostDTO> PostFilterService => _postFilterService ?? (_postFilterService = _serviceProvider.GetService<IFilterService<PostDTO>>());
+
+        public IFilterService<StateDTO> StateFilterService => _stateFilterService ?? (_stateFilterService = _serviceProvider.GetService<IFilterService<StateDTO>>());
+
+        public IFilterService<SupplierDTO> SupplierFilterService => _supplierFilterService ?? (_supplierFilterService = _serviceProvider.GetService<IFilterService<SupplierDTO>>());
+
+        public IFilterService<TransitionDTO> TransitionFilterService => _transitionFilterService ?? (_transitionFilterService = _serviceProvider.GetService<IFilterService<TransitionDTO>>());
+
+        public IFilterService<UserDTO> UserFilterService => _userFilterService ?? (_userFilterService = _serviceProvider.GetService<IFilterService<UserDTO>>());
+
+        public IFilterService<VehicleDTO> VehicleFilterService => _vehicleFilterService ?? (_vehicleFilterService = _serviceProvider.GetService<IFilterService<VehicleDTO>>());
+
+        public IFilterService<VehicleTypeDTO> VehicleTypeFilterService => _vehicleTypeFilterService ?? (_vehicleTypeFilterService = _serviceProvider.GetService<IFilterService<VehicleTypeDTO>>());
+
+        public IFilterService<UnitDTO> UnitFilterService => _unitFilterService ?? (_unitFilterService = _serviceProvider.GetService<IFilterService<UnitDTO>>());
+
+        public IFilterService<WorkTypeDTO> WorkTypeFilterService => _workTypeFilterService ?? (_workTypeFilterService = _serviceProvider.GetService<IFilterService<WorkTypeDTO>>());
+
+        public IFilterService<ManufacturerDTO> ManufacturerFilterService => _manufacturerFilterService ?? (_manufacturerFilterService = _serviceProvider.GetService<IFilterService<ManufacturerDTO>>());
+
+        public IFilterService<PartInDTO> PartInFilterService => _partInFilterService ?? (_partInFilterService = _serviceProvider.GetService<IFilterService<PartInDTO>>());
 
         public IFilterService<TEntityDTO> GetService<TEntityDTO>() where TEntityDTO : class, new()
         {
@@ -182,57 +238,6 @@ namespace TransIT.BLL.Factories
                     return null;
                 }
             }
-        }
-
-        public FilterServiceFactory(IFilterService<ActionTypeDTO> actionTypeFilterService,
-            IFilterService<BillDTO> billFilterService,
-            IFilterService<CountryDTO> countryFilterService,
-            IFilterService<CurrencyDTO> currencyFilterService,
-            IFilterService<DocumentDTO> documentFilterService,
-            IFilterService<EmployeeDTO> employeeFilterService,
-            IFilterService<IssueLogDTO> issueLogFilterService,
-            IFilterService<IssueDTO> issueFilterService,
-            IFilterService<LocationDTO> locationFilterService,
-            IFilterService<MalfunctionDTO> malfunctionFilterService,
-            IFilterService<MalfunctionGroupDTO> malfunctionGroupFilterService,
-            IFilterService<MalfunctionSubgroupDTO> malfunctionSubgroupFilterService,
-            IFilterService<PostDTO> postFilterService,
-            IFilterService<PartDTO> partFilterService,
-            IFilterService<PartInDTO> partInFilterService,
-            IFilterService<StateDTO> stateFilterService,
-            IFilterService<SupplierDTO> supplierFilterService,
-            IFilterService<TransitionDTO> transitionFilterService,
-            IFilterService<UserDTO> userFilterService,
-            IFilterService<VehicleDTO> vehicleFilterService,
-            IFilterService<VehicleTypeDTO> vehicleTypeFilterService, 
-            IFilterService<UnitDTO> unitFilterService, 
-            IFilterService<WorkTypeDTO> workTypeFilterService,
-            IFilterService<ManufacturerDTO> manufacturerFilterService)
-        {
-            ActionTypeFilterService = actionTypeFilterService;
-            BillFilterService = billFilterService;
-            CountryFilterService = countryFilterService;
-            CurrencyFilterService = currencyFilterService;
-            DocumentFilterService = documentFilterService;
-            EmployeeFilterService = employeeFilterService;
-            IssueLogFilterService = issueLogFilterService;
-            IssueFilterService = issueFilterService;
-            LocationFilterService = locationFilterService;
-            MalfunctionFilterService = malfunctionFilterService;
-            MalfunctionGroupFilterService = malfunctionGroupFilterService;
-            MalfunctionSubgroupFilterService = malfunctionSubgroupFilterService;
-            PostFilterService = postFilterService;
-            PartFilterService = partFilterService;
-            PartInFilterService = partInFilterService;
-            StateFilterService = stateFilterService;
-            SupplierFilterService = supplierFilterService;
-            TransitionFilterService = transitionFilterService;
-            UserFilterService = userFilterService;
-            VehicleFilterService = vehicleFilterService;
-            VehicleTypeFilterService = vehicleTypeFilterService;
-            UnitFilterService = unitFilterService;
-            WorkTypeFilterService = workTypeFilterService;
-            ManufacturerFilterService = manufacturerFilterService;
         }
     }
 }
