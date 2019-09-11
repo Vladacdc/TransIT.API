@@ -10,10 +10,8 @@ namespace TransIT.API.Extensions
                 .AddPolicy("CorsPolicy", x => x
                     .AllowAnyHeader()
                     .AllowCredentials()
-                    .AllowAnyMethod()
-                    .WithOrigins("http://localhost:4200")
-                    .WithOrigins("https://transitclient.azurewebsites.net")
-                    .WithOrigins("https://transitapi.azurewebsites.net")));
+                    .WithMethods("GET", "POST", "PUT", "HEAD", "DEBUG", "PUT", "DELETE", "PATCH", "OPTIONS")
+                    .WithOrigins("https://localhost")));
         }
     }
 }
