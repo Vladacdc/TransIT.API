@@ -10,7 +10,7 @@ namespace TransIT.API.Extensions
                 .AddPolicy("CorsPolicy", x => x
                     .AllowAnyHeader()
                     .AllowCredentials()
-                    .WithMethods("GET", "POST", "PUT", "HEAD", "DEBUG", "PUT", "DELETE", "PATCH", "OPTIONS")
+                    .WithMethods("GET", "POST", "PUT", "DELETE")
                     .WithOrigins("https://localhost")));
         }
     }
