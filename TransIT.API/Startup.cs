@@ -32,7 +32,7 @@ namespace TransIT.API
 
             services.AddSignalR();
             services.ConfigureAuthentication(Configuration);
-            services.ConfigureCors();
+            services.ConfigureCors(Configuration);
 
             services.ConfigureSwagger();
 
