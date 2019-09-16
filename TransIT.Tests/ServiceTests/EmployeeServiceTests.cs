@@ -156,16 +156,18 @@ namespace TransIT.Tests.ServiceTests
 
         private void InitializeConstants()
         {
-            _sampleEmployee = new Employee(new Post() { Name = "Big Boss", Id = 5 })
+            _sampleEmployee = new Employee()
             {
+                Post = new Post() { Name = "Big Boss", Id = 5 },
                 FirstName = "Vitalii",
                 LastName = "Maksymiv",
                 ShortName = "lv420",
                 BoardNumber = 228,
                 Id = 20
             };
-            _someOtherEmployee = new Employee(new Post() { Name = "Soft serve Director", Id = 4 })
+            _someOtherEmployee = new Employee()
             {
+                Post = new Post() { Name = "Soft serve Director", Id = 4 },
                 FirstName = "Sviatoslav",
                 LastName = "Bachynskyi",
                 ShortName = "lv420",
