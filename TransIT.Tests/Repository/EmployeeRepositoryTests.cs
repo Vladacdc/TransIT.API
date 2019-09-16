@@ -15,8 +15,9 @@ namespace TransIT.Tests.Repository
             // Arrange
             var context = TestSetUpHelper.CreateDbContext();
             var repository = new EmployeeRepository(context);
-            var expectedEntity = new Employee(new Post() { Name = "Big Boss", Id = 5 })
+            var expectedEntity = new Employee()
             {
+                Post = new Post() { Name = "Big Boss", Id = 5 },
                 FirstName = "Vitalii",
                 LastName = "Maksymiv",
                 ShortName = "lv420",
@@ -37,8 +38,9 @@ namespace TransIT.Tests.Repository
             // Arrange
             var context = TestSetUpHelper.CreateDbContext();
             var repository = new EmployeeRepository(context);
-            var expectedEntity = new Employee(new Post() { Name = "Big Boss", Id = 5 })
+            var expectedEntity = new Employee()
             {
+                Post = new Post() { Name = "Big Boss", Id = 5 },
                 FirstName = "Vitalii",
                 LastName = "Maksymiv",
                 ShortName = "lv420",
