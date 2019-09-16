@@ -19,7 +19,7 @@ namespace TransIT.DAL.Models
                 .IsUnique();
 
             builder.Property(e => e.Id).HasColumnName("ID");
-
+             
             builder.Property(e => e.PostId).HasColumnName("POST_ID");
 
             builder.Property(e => e.BoardNumber).HasColumnName("BOARD_NUMBER");
