@@ -50,6 +50,8 @@ namespace TransIT.DAL.Models
 
             builder.Property(e => e.UpdatedById).HasColumnName("MOD_ID");
 
+            builder.Property(e => e.PostId).HasColumnName("POST_ID");
+             
             builder.Property(e => e.ShortName)
                 .IsRequired()
                 .HasColumnName("SHORT_NAME")
