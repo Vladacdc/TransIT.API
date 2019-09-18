@@ -10,7 +10,7 @@ namespace TransIT.DAL.Models.Entities
         {
             Issue = new HashSet<Issue>();
         }
-          
+
         public int Id { get; set; }
         public string FirstName { get; set; }
         public string MiddleName { get; set; }
