@@ -8,6 +8,7 @@ namespace TransIT.BLL.Mappings
     {
         public EmployeeProfile()
         {
+            CreateMap<Employee, EmployeeDTO>();
             CreateMap<EmployeeDTO, Employee>()
                 .ForMember(t => t.UpdatedById, opt => opt.Ignore())
                 .ForMember(t => t.CreatedById, opt => opt.Ignore())
@@ -15,9 +16,8 @@ namespace TransIT.BLL.Mappings
                 .ForMember(t => t.Create, opt => opt.Ignore())
                 .ForMember(t => t.UpdatedDate, opt => opt.Ignore())
                 .ForMember(t => t.CreatedDate, opt => opt.Ignore())
-                .ForMember(t => t.PostId, opt => opt.MapFrom(d => d.Post.Id))
-                .ForMember(t => t.Post, opt => opt.Ignore());
-            CreateMap<Employee, EmployeeDTO>();
+                .ForMember(t => t.Post, opt => opt.Ignore())
+                .ForMember(t => t.PostId, opt => opt.MapFrom(d => d.Post.Id));
         }
     }
 }

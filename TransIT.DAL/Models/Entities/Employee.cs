@@ -10,7 +10,19 @@ namespace TransIT.DAL.Models.Entities
         {
             Issue = new HashSet<Issue>();
         }
-          
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="Employee"/> class.
+        /// </summary>
+        /// <param name="post">
+        /// A required property to work CORRECT.
+        /// If it's null, every test just breaks.
+        /// </param>
+        public Employee(Post post)
+        {
+            Post = post;
+        }
+
         public int Id { get; set; }
         public string FirstName { get; set; }
         public string MiddleName { get; set; }

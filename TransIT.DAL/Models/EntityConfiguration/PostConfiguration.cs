@@ -14,7 +14,7 @@ namespace TransIT.DAL.Models
                 .HasName("UQ__POST__D9C1FA00297EABB2")
                 .IsUnique();
 
-            builder.HasKey(e => e.Id);
+            builder.Property(e => e.Id).HasColumnName("ID");
 
             builder.Property(e => e.CreatedDate)
                 .HasColumnName("CREATE_DATE")
