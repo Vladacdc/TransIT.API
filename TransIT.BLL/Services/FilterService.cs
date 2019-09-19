@@ -86,16 +86,19 @@ namespace TransIT.BLL.Services
 
         private IQueryable<TEntity> TableOrderBy(DataTableRequestDTO dataFilter, IQueryable<TEntity> data)
         {
-            data = data.OrderBy(
-                dataFilter.Columns[dataFilter.Order[0].Column].Data,
-                dataFilter.Order[0].Dir == DataTableRequestDTO.DataTableDescending
-            );
-            for (var i = 1; i < dataFilter.Order.Length; ++i)
+            if (dataFilter.Columns[dataFilter.Order[0].Column].Data != null)
             {
-                data = data.ThenBy(
-                    dataFilter.Columns[dataFilter.Order[i].Column].Data,
-                    dataFilter.Order[i].Dir == DataTableRequestDTO.DataTableDescending
+                data = data.OrderBy(
+                    dataFilter.Columns[dataFilter.Order[0].Column].Data,
+                    dataFilter.Order[0].Dir == DataTableRequestDTO.DataTableDescending
                 );
+                for (var i = 1; i < dataFilter.Order.Length; ++i)
+                {
+                    data = data.ThenBy(
+                        dataFilter.Columns[dataFilter.Order[i].Column].Data,
+                        dataFilter.Order[i].Dir == DataTableRequestDTO.DataTableDescending
+                    );
+                }
             }
 
             return data;
